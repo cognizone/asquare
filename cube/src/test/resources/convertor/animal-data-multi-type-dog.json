@@ -1,0 +1,11 @@
+{
+  "data": {
+    "uri": "http://demo.com/data#fido",
+    "type": ["Mammal", "Animal", "Dog"],
+    "attributes": {
+      "name": {
+        "xsd:string": "Fido"
+      }
+    }
+  }
+}

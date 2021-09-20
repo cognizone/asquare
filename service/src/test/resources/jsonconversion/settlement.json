@@ -1,0 +1,58 @@
+
+{
+  "data" : {
+    "uri" : "http://dbpedia.org/resource/Němčice_(Prachatice_District)",
+    "type" : "Settlement",
+    "attributes" : {
+      "abstract" : {
+        "rdf:langString" : {
+          "de" : "Němčice (deutsch Niemtschitz) ist eine Gemeinde in Tschechien. Sie liegt sechs Kilometer südöstlich von Netolice und gehört zum Okres Prachatice.",
+          "pt" : "Němčice é uma comuna checa localizada na região da Boêmia do Sul, distrito de Prachatice.",
+          "en" : "Němčice is a village and municipality (obec) in Prachatice District in the South Bohemian Region of the Czech Republic. The municipality covers an area of 4.14 square kilometres (1.60 sq mi), and has a population of 187 (as at 28 August 2006). Němčice lies approximately 21 kilometres (13 mi) east of Prachatice, 17 km (11 mi) north-west of České Budějovice, and 118 km (73 mi) south of Prague.",
+          "it" : "Němčice è un comune della Repubblica Ceca facente parte del distretto di Prachatice, nella regione della Boemia meridionale.",
+          "fr" : "Němčice (en allemand : Niemtschitz) est une commune du district de Prachatice, dans la région de Bohême-du-Sud, en République tchèque. Sa population s'élevait à 198 habitants en 2016.",
+          "nl" : "Němčice (Duits: Niemtschitz) is een Tsjechische gemeente in de regio Zuid-Bohemen, en maakt deel uit van het district Prachatice.Němčice telt 187 inwoners."
+        }
+      },
+      "demographicsAsOf" : {
+        "xsd:date" : "2009-04-03"
+      },
+      "lat" : {
+        "xsd:float" : 49.0331
+      },
+      "name" : {
+        "rdf:langString" : {
+          "en" : "Němčice"
+        }
+      },
+      "populationTotal" : {
+        "xsd:nonNegativeInteger" : 187
+      }
+    },
+    "references" : {
+      "country" : "http://dbpedia.org/resource/Czech_Republic"
+    }
+  },
+  "included" : [ {
+    "uri" : "http://dbpedia.org/resource/Czech_Republic",
+    "type" : "Country",
+    "attributes" : {
+      "label" : {
+        "rdf:langString" : {
+          "ar" : [ "التشيك" ],
+          "de" : [ "Tschechien" ],
+          "ru" : [ "Чехия" ],
+          "pt" : [ "República Checa" ],
+          "ja" : [ "チェコ" ],
+          "en" : [ "Czech Republic" ],
+          "it" : [ "Repubblica Ceca" ],
+          "pl" : [ "Czechy" ],
+          "fr" : [ "République tchèque" ],
+          "es" : [ "República Checa" ],
+          "nl" : [ "Tsjechië" ],
+          "zh" : [ "捷克" ]
+        }
+      }
+    }
+  } ]
+}

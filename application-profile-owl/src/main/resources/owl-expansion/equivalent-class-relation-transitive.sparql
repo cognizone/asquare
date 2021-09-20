@@ -1,0 +1,16 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+  ?c1 owl:equivalentClass ?c3.
+}
+where {
+  ?c1 owl:equivalentClass ?c2.
+  ?c2 owl:equivalentClass ?c3.
+
+  filter (!isblank(?c1))
+  filter (!isblank(?c2))
+  filter (!isblank(?c3))
+  filter (?c1 != ?c3)
+}

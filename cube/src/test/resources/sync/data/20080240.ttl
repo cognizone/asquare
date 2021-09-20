@@ -1,0 +1,167 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ns1:    <http://data.legilux.public.lu/resource/ontology/jolux#> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    rdf:type ns1:InitialDraft .
+
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns3:    <http://purl.org/dc/terms/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns3:modified          "2008-12-03T09:00:00Z"^^xsd:dateTime ;
+    ns1:parliamentDraftId "5967" ;
+    ns1:parliamentDraftUrl
+                          "http://www.chd.lu/wps/portal/public/Accueil/TravailALaChambre/Recherche/RoleDesAffaires?action=doDocpaDetails&id=5967"^^xsd:anyURI .
+
+@prefix ns4:    <http://data.legilux.public.lu/resource/authority/draft-status/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns1:statusDraft ns4:publie ;
+    ns1:titleDraft  "<p>Projet de r\u00E9vision de l'article 34 de la Constitution.</p>" .
+
+@prefix ns5:    <http://cogni.zone/internal/properties/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns5:id "54995"^^xsd:int .
+
+@prefix ns6:    <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns1:draftHasTask ns6:taskAtMinistry, ns6:taskAtSCL .
+
+@prefix ns7:    <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/TaskAtChambreDeputes/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns1:draftHasTask ns7:VOT1, ns7:VOT2, ns6:TaskAtChambreDeputes,
+                     <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/TaskAtCommitteeChambreDepute/1>,
+                     <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/TaskAtCommitteeConseilEtat/1> ;
+    ns1:draftId      "20080240" .
+
+@prefix ns8:    <http://data.legilux.public.lu/resource/authority/type-projet/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns1:eventType          ns8:PC ;
+    ns1:altShortTitleDraft "R\u00E9vision de l'article 34 de la Constitution" ;
+    ns1:created            "2008-12-03T09:00:00Z"^^xsd:dateTime ;
+    ns1:hasOpinion         <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/1>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/2>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/AVCE/1>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/1> ;
+    ns1:initialTitleDraft  "Projet de r\u00E9vision de l'article 34 de la Constitution." .
+
+@prefix ns9:    <http://data.legilux.public.lu/eli/etat/leg/loi/2009/03/12/n1/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240>
+    ns1:hasResultingLegalResource ns9:jo ;
+    ns5:lastSynchronizationDate   "2019-10-14T19:13:06.494+02:00"^^xsd:dateTime .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/1>
+    rdf:type ns1:OpinionConseilEtat .
+
+@prefix ns10:    <http://data.legilux.public.lu/resource/authority/legal-institution/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/1>
+    ns1:institutionInChargeOfTheTask ns10:CE ;
+    ns1:isOpinionOf                  ns10:CE ;
+    ns1:opinionReference             "48.250" .
+
+@prefix ns11:    <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/opinionConseilEtat/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/1>
+    ns1:answerToOpinionRequest ns11:opinionRequest ;
+    ns1:dueDate                "2099-12-31"^^xsd:date ;
+    ns1:rapporteur             <http://data.legilux.public.lu/resource/authority/person/00196> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/OpinionConseilEtat/AVCE/1>
+    rdf:type        ns1:OpinionConseilEtat ;
+    ns1:opinionDate "2008-12-09"^^xsd:date ;
+    ns1:eventType   ns8:AVCE .
+
+ns6:TaskAtChambreDeputes
+    rdf:type                          ns1:TaskAtChambreDeputes ;
+    ns1:institutionInChargeOfTheTask  ns10:CHD ;
+    ns1:rapporteurChambreDeputes      <http://data.legilux.public.lu/resource/authority/person/00116> ;
+    ns1:rapporteurChambreDeputesLabel "Paul-Henri Meyers" ;
+    ns1:depositDate                   "2008-12-03"^^xsd:date .
+
+ns7:VOT1
+    rdf:type          ns1:TaskAtChambreDeputes ;
+    ns1:eventType     ns8:VOT1 ;
+    ns1:finalVoteDate "2009-03-12"^^xsd:date .
+
+ns7:VOT2
+    rdf:type                 ns1:TaskAtChambreDeputes ;
+    ns1:eventType            ns8:VOT2 ;
+    ns1:firstLectureVoteDate "2008-12-11"^^xsd:date .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/TaskAtCommitteeChambreDepute/1>
+    rdf:type ns1:TaskAtCommitteeChambreDepute .
+
+@prefix ns12:    <http://data.legilux.public.lu/resource/authority/committee/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/TaskAtCommitteeChambreDepute/1>
+    ns1:committeeInChargeOfTheTask ns12:CHD-CORECO .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/TaskAtCommitteeConseilEtat/1>
+    rdf:type                       ns1:TaskAtCommitteeConseilEtat ;
+    ns5:restrictedByPermission     "seeCommissiontabCE" ;
+    ns1:committeeInChargeOfTheTask ns12:CE-IAP .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/1>
+    rdf:type                         ns1:OpinionProfessionalOrganisation ;
+    ns1:institutionInChargeOfTheTask ns10:CFEP ;
+    ns1:opinionDate                  "2008-12-05"^^xsd:date ;
+    ns1:opinionReference             "A-2207/08-65" ;
+    ns1:eventType                    ns8:AVIS .
+
+@prefix ns13:    <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/opinionProfessionalOrganisation/1/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/1>
+    ns1:answerToOpinionRequest ns13:opinionRequest .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/2>
+    rdf:type                         ns1:OpinionProfessionalOrganisation ;
+    ns1:institutionInChargeOfTheTask ns10:CHC ;
+    ns1:opinionDate                  "2009-02-19"^^xsd:date ;
+    ns1:opinionReference             "KMR/PPA" ;
+    ns1:eventType                    ns8:AVIS .
+
+@prefix ns14:    <http://data.legilux.public.lu/eli/etat/proj/pc/20080240/opinionProfessionalOrganisation/2/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/20080240/evenement/avis/2>
+    ns1:answerToOpinionRequest ns14:opinionRequest .
+
+ns11:opinionRequest
+    rdf:type                           ns1:OpinionRequest ;
+    ns1:institutionInChargeOfTheTask   ns10:ME ;
+    ns1:opinionRequestTo               ns10:CE ;
+    ns1:referralDate                   "2008-12-03"^^xsd:date ;
+    ns1:opinionRequestReceivedResponse "true"^^xsd:boolean .
+
+ns13:opinionRequest
+    rdf:type                         ns1:OpinionRequest ;
+    ns1:institutionInChargeOfTheTask ns10:ME ;
+    ns1:opinionRequestTo             ns10:CFEP ;
+    ns1:referralDate                 "2008-12-03"^^xsd:date ;
+    ns1:referralLetterReference      "ETAT" .
+
+ns14:opinionRequest
+    rdf:type                         ns1:OpinionRequest ;
+    ns1:institutionInChargeOfTheTask ns10:ME ;
+    ns1:opinionRequestTo             ns10:CHC ;
+    ns1:referralDate                 "2008-12-04"^^xsd:date ;
+    ns1:referralLetterReference      "ETAT" .
+
+ns6:taskAtMinistry
+    rdf:type                         ns1:TaskAtMinistry ;
+    ns1:institutionInChargeOfTheTask ns10:ME ;
+    ns1:otherConcernedMinistry       ns10:MJ ;
+    ns1:referenceMinistryLetter      "aucune" ;
+    ns5:id                           "54997"^^xsd:int ;
+    ns1:dateMinistryLetter           "2008-12-05"^^xsd:date .
+
+ns6:taskAtSCL
+    rdf:type                                ns1:TaskAtSCL ;
+    ns1:outgoingCorrespondanceDepartureDate "2008-12-03"^^xsd:date ;
+    ns5:id                                  "54999"^^xsd:int ;
+    ns1:referenceSCL                        "L4385" .

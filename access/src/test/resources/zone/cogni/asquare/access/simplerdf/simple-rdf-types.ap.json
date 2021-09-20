@@ -1,0 +1,36 @@
+{
+  "uri": "http://example.cogni.zone/ontology",
+  "GenderConceptScheme": {
+    "constraints": {
+      "rdfType": "skos:ConceptScheme",
+      "resourceReference" : "http://example.cogni.zone/data/gender"
+    },
+    "name": {
+      "uri": "http://xmlns.com/foaf/0.1/name",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    "concepts" : {
+      "uri": "skos:hasTopConcept",
+      "range" : {
+        "classId" : "GenderConcept"
+        //,
+        // TODO needs to be added here too, else it does not work!
+        // "inScheme" : "http://example.cogni.zone/data/gender"
+      }
+    }
+  },
+  "GenderConcept": {
+    "constraints": {
+      "rdfType": "skos:Concept",
+      "inScheme" : "http://example.cogni.zone/data/gender"
+    },
+    "prefLabel": {
+      "uri": "skos:prefLabel",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    }
+  }
+}

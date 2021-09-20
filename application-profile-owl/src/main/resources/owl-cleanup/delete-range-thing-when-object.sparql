@@ -1,0 +1,15 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+  ?p1 rdfs:range owl:Thing.
+}
+where {
+  ?p1 a owl:ObjectProperty.
+  ?p1 rdfs:range ?r1.
+  ?p1 rdfs:range ?r2.
+
+  filter (!isblank(?p1))
+  filter (?r1 != ?r2)
+}

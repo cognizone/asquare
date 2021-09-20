@@ -1,0 +1,226 @@
+{
+  prefixes: {
+    person: "http://demo.com/person/model#",
+    xsd: "http://www.w3.org/2001/XMLSchema#"
+  },
+  operationGroups: [
+    {
+      id: "person-data",
+      operations: [
+        {
+          id: "top-is-true",
+          template: "true"
+        },
+        {
+          id: "talking-heads",
+          requires: [["children*", "talks"]]
+        },
+        {
+          id: "named-children",
+          requires: [["children*", "has-name"]]
+        },
+        {
+          id: "married-children",
+          requires: [["children*", "has-spouse"]]
+        }
+      ],
+      operationGroups: [
+        {
+          id: "simple-operations",
+          operations: [
+            {
+              id: "is-true",
+              template: "true"
+            },
+            {
+              id: "is-false",
+              template: "false"
+            },
+            {
+              id: "has-name",
+              template: "ask { <#{[uri]}> person:name ?name }"
+            },
+            {
+              id: "has-brain",
+              template: "ask { <#{[uri]}> person:brain ?brain }"
+            }
+          ]
+        },
+        {
+          id: "requires-group",
+          selectorQuery: "select ?uri { <#{[uri]}> person:spouse ?uri. }",
+          operations: [
+            {
+              id: "is-true",
+              template: "true"
+            },
+            {
+              id: "is-false",
+              template: "false"
+            },
+            {
+              id: "same-level-requires-true",
+              requires: [["is-true"]]
+            },
+            {
+              id: "same-level-requires-false",
+              requires: [["is-false"]]
+            },
+            {
+              id: "same-level-requires-multiple",
+              requires: [["is-true"], ["is-false"]]
+            },
+            {
+              id: "nested-requires",
+              requires: [
+                ["requires-nested", "is-true-nested"]
+              ]
+            },
+            {
+              id: "up-requires",
+              requires: [
+                ["..", "top-is-true"]
+              ]
+            },
+            {
+              id: "up-branch-requires",
+              requires: [
+                ["..", "simple-operations", "is-true"]
+              ]
+            },
+            {
+              id: "multiple-requires",
+              requires: [
+                ["is-true"],
+                ["requires-nested", "is-true-nested"],
+                ["..", "top-is-true"],
+                ["..", "simple-operations", "is-true"]
+              ]
+            }
+          ],
+          operationGroups: [
+            {
+              id: "requires-nested",
+              operations: [
+                {
+                  id: "is-true-nested",
+                  template: "true"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: "optional-group",
+          selectorQuery: "select ?uri { <#{[uri]}> person:spouse ?uri. }",
+          operations: [
+            {
+              id: "is-true",
+              template: "true"
+            },
+            {
+              id: "is-false",
+              template: "false"
+            },
+            {
+              id: "same-level-optional-true",
+              optional: [["is-true"]]
+            },
+            {
+              id: "same-level-optional-false",
+              optional: [["is-false"]]
+            },
+            {
+              id: "same-level-optional-multiple",
+              optional: [["is-true"], ["is-false"]]
+            },
+            {
+              id: "nested-optional",
+              optional: [
+                ["optional-nested", "is-true-nested"]
+              ]
+            },
+            {
+              id: "up-optional",
+              optional: [
+                ["..", "top-is-true"]
+              ]
+            },
+            {
+              id: "up-branch-optional",
+              optional: [
+                ["..", "simple-operations", "is-true"]
+              ]
+            },
+            {
+              id: "multiple-optional",
+              optional: [
+                ["is-true"],
+                ["optional-nested", "is-true-nested"],
+                ["..", "top-is-true"],
+                ["..", "simple-operations", "is-true"]
+              ]
+            }
+          ],
+          operationGroups: [
+            {
+              id: "optional-nested",
+              operations: [
+                {
+                  id: "is-true-nested",
+                  template: "true"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: "empty-group",
+          selectorQuery: "select ?uri { <#{[uri]}> person:mistress ?uri. }",
+          operationGroups: [
+            {
+              id: "nested-empty-group"
+            }
+          ],
+          operations: [
+            {
+              id: "empty-is-true",
+              template: "true"
+            }
+          ]
+        },
+        {
+          id: "children",
+          multiselect: true,
+          selectorQuery: "select ?uri { <#{[uri]}> person:hasChild ?uri. }",
+          operationGroups: [
+            {
+              id: "children-nested"
+            },
+            {
+              id: "children-siblings",
+              multiselect: true,
+              selectorQuery: "select distinct ?uri { ?parent person:hasChild <#{[uri]}>, ?uri. FILTER (<#{[uri]}> != ?uri) }"
+            }
+          ],
+          operations: [
+            {
+              id: "talks",
+              template: "ask { <#{[uri]}> person:talks true }"
+            },
+            {
+              id: "has-name",
+              template: "ask \
+                         { <#{[uri]}> person:name ?name }"
+            },
+            {
+              id: "has-spouse",
+              template: "ask \
+                         { <#{[uri]}> person:spouse ?spouse }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

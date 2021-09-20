@@ -1,0 +1,81 @@
+{
+  "uri": "http://example.cogni.zone/ontology",
+  "Person": {
+    "constraints": {
+      "rdfType": "http://example.cogni.zone/ontology/Person"
+    },
+    "name": {
+      "uri": "http://xmlns.com/foaf/0.1/name",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    "related": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept"
+    },
+    "stringRelated": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    "intRelated": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#int"
+      }
+    },
+    "relatedConcept": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept",
+      "range": {
+        "classId": "Concept"
+      }
+    },
+    "unrelatedConcept": {
+      "uri": "http://example.cogni.zone/ontology/unrelatedConcept",
+      "range": {
+        "classId": "Concept"
+      }
+    },
+    "gender": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept",
+      "range": {
+        "and": {
+          "classId": "Concept",
+          "inScheme": "http://example.cogni.zone/data/gender"
+        }
+      }
+    },
+    "orRelated": {
+      "uri": "http://example.cogni.zone/ontology/relatedConcept",
+      "range": {
+        "or": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#string",
+          "classId": "Concept"
+        }
+      }
+    }
+  },
+  "ConceptScheme": {
+    "constraints": {
+      "rdfType": "skos:ConceptScheme"
+    },
+    "name": {
+      "uri": "http://xmlns.com/foaf/0.1/name",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    }
+  },
+  "Concept": {
+    "constraints": {
+      "rdfType": "skos:Concept"
+    },
+    "prefLabel": {
+      "uri": "skos:prefLabel",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    }
+  }
+}

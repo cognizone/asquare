@@ -1,0 +1,69 @@
+{
+  "uri": "http://www.w3.org/ns/shacl#",
+  "ValidationReport": {
+    "constraints": {
+      "rdfType": "http://www.w3.org/ns/shacl#ValidationReport"
+    },
+    "result": {
+      "uri": "http://www.w3.org/ns/shacl#result",
+      "range": {
+        "classId": "ValidationResult"
+      }
+    }
+  },
+  "ValidationResult": {
+    "constraints": {
+      "rdfType": "http://www.w3.org/ns/shacl#ValidationResult"
+    },
+    "resultSeverity": {
+      "uri": "http://www.w3.org/ns/shacl#resultSeverity",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "sourceConstraintComponent": {
+      "uri": "http://www.w3.org/ns/shacl#sourceConstraintComponent",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "maxCardinality": 1
+    },
+    "resultMessage": {
+      "uri": "http://www.w3.org/ns/shacl#resultMessage",
+      "range": {
+        "datatype": "rdf:langString"
+      },
+      "minLangCardinality": 1,
+      "maxLangCardinality": 1
+    },
+    "resultPath": {
+      "uri": "http://www.w3.org/ns/shacl#resultPath",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "maxCardinality": 1
+    },
+    "focusNode": {
+      "uri": "http://www.w3.org/ns/shacl#focusNode",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "maxCardinality": 1
+    },
+    "value": {
+      "uri": "http://www.w3.org/ns/shacl#value",
+      "range": {
+        "datatype": "rdfs:Literal"
+      },
+      "maxCardinality": 1
+    },
+    "details": {
+      "uri": "http://www.w3.org/ns/shacl#details",
+      "range": {
+        "classId": "ValidationResult"
+      }
+    }
+  }
+}

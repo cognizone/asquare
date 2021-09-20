@@ -1,0 +1,9 @@
+@base           <http://demo.com/data#>.
+@prefix person: <http://demo.com/person/model#>.
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<#octo>
+  a               person:Animal ;
+  person:name     "Octo" ;
+  person:weird    "weird field";
+.

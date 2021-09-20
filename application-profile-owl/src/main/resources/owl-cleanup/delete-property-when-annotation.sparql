@@ -1,0 +1,11 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+construct {
+  ?p1 a rdf:Property.
+}
+where {
+  ?p1 a owl:AnnotationProperty.
+
+  filter (!isblank(?p1))
+}

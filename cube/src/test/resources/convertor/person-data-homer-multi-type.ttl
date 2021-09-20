@@ -1,0 +1,27 @@
+@base           <http://demo.com/data#>
+@prefix person: <http://demo.com/person/model#>
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<#homer>
+    a               person:Person ;
+    a               person:Father ;
+    a               person:PowerPlantEmployee ;
+    a               person:MoesTavernClient ;
+    person:name     "Homer Simpson" ;
+    person:spouse   <#marge> ;
+    person:hasChild <#bart> ;
+    person:hasDate "2021-04-29"^^xsd:date ;
+    person:website "http://demo.com/homer/simpson"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
+    person:hasId    "123.456"^^<http://demo.com/data-type/id-type> ;
+
+.
+
+<#marge>
+    a               person:Person ;
+    person:name     "Marge Simpson" ;
+.
+
+<#bart>
+    a            person:Person ;
+    person:name  "Bart Simpson" ;
+.

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "uri": "http://demo.com/data#santaslittlehelper",
+    "type": "Animal",
+    "references": {
+      "ownedBy": "http://demo.com/data#homer"
+    }
+  },
+  "included": [
+    {
+      "uri": "http://demo.com/data#homer",
+      "type": "Person"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "prefixes": {
+    "jolux": "http://data.legilux.public.lu/resource/ontology/jolux#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "operationGroups": [
+    {
+      "id": "consultation.create",
+      "operationGroups": [
+        {
+          "id": "left-menu",
+          "operations": [ ]
+        },
+        {
+          "id": "create-form",
+          "selectorQuery": "select ?uri { <#{[uri]}> jolux:draftHasTask ?uri. ?uri a jolux:Consultation. }",
+          "operations": [
+            {
+              "id": "create-button",
+              "description": "Create requires sections: Title and description, Responsibles and Foreseen dates.",
+              "label": "Create consultation",
+              "requires": [
+                [ "title-and-description", "publish-check" ],
+                [ "responsibles", "publish-check" ]
+              ]
+            }
+          ],
+          "operationGroups": [
+            {
+              "id": "title-and-description",
+              "operations": [
+                {
+                  "id": "publish-check",
+                  "label": "Title and description",
+                  "description": "During create title and description must be filled in at least one language.",
+                  "template": "ASK { \
+                                 <#{[uri]}> jolux:eventTitle ?title; \
+                                            jolux:eventDescription ?description. \
+                                            FILTER (lang(?title) = lang(?description)) \
+                               }"
+                }
+              ]
+            },
+            {
+              "id": "responsibles",
+              "operations": [
+                {
+                  "id": "publish-check",
+                  "description": "Responsibles of level 1 and 2 must be filled",
+                  "label": "Responsibles",
+                  "template": "ASK {\
+                      <#{[uri]}> jolux:institutionInChargeOfTheEvent ?level1; \
+                                 jolux:institutionInChargeOfTheEventLevel2 ?level2.\
+                    }"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

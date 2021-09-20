@@ -1,0 +1,22 @@
+@base <http://zone.cogni/data/>
+
+@prefix onto: <http://example.cogni.zone/example-ontology/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+<jan> a onto:Person;
+      rdfs:label "Jan";
+      onto:spouse <jeanne>;
+      onto:hasChild <pierre>, <penny>.
+
+<jeanne> a onto:Person;
+         rdfs:label "Jeanne";
+         onto:spouse <jan>;
+         onto:hasChild <pierre>, <penny>.
+
+<pierre> a onto:Person;
+         rdfs:label "Pierre" .
+
+<penny> a onto:Person;
+        rdfs:label "Penny" .
+
+

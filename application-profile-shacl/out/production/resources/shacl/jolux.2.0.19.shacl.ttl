@@ -1,0 +1,3323 @@
+<http://data.legilux.public.lu/resource/shacl/jolux#TreatySubjectThemeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TreatySubjectTheme> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EULegalResourceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEndApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEndApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "euLegalResourceId" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#euLegalResourceId>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "implementedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#implementedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transposedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transposedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#EULegalResource> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TaskShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "institutionInChargeOfTheTask" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheTask>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isTaskOfDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isTaskOfDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "priorityLevel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#priorityLevel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "taskObservation" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#taskObservation>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "taskReference" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#taskReference>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Task> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionRequestShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionRequestAbout" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionRequestAbout>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionRequestTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionRequestTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referralDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referralDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referralLetterReference" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referralLetterReference>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#OpinionRequest> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#MemorialSerialShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#MemorialSerial> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ArticleAbstractShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ArticleAbstract> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EventShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "eventType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#eventType>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasResultingWork" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasResultingWork>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isSubEventOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isSubEventOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "observation" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#observation>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Event> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ProcessTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ProcessType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EnforcementStatusShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#EnforcementStatus> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#StatusVersionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#StatusVersion> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TranspositionCompletionStatusShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TranspositionCompletionStatus> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalResourceAbstractShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalResourceAbstract> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#FullPowersSignatureShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "fullPowerSignatureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#fullPowerSignatureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "fullPowersSignatureBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#fullPowersSignatureBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#FullPowersSignature> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ActShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "changes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#changes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "needForImplementingRegulation" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#needForImplementingRegulation>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "modifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#modifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transposes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transposes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rectifies" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rectifies>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "conditionalApplicabilityRemark" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#conditionalApplicabilityRemark>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionCompletion" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionCompletion>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "basisFor" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#basisFor>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "repealedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#repealedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "processType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#processType>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "modifies" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#modifies>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rectifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rectifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "basedOn" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#basedOn>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "consolidatedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#consolidatedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "conditionalApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#conditionalApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "repeals" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#repeals>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inForceStatus" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#inForceStatus>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "changedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#changedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Act> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#InternationalActor> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EntryIntoForceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#and>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#ExchangeOfNoteShape> <http://data.legilux.public.lu/resource/shacl/jolux#InstrumentShape> ) ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "entryIntoForceBasedOn" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceBasedOn>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "entryIntoForceDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#and>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape> <http://data.legilux.public.lu/resource/shacl/jolux#LegalInstitutionShape> ) ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "entryIntoForceFor" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceFor>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "entryIntoForceRelatedAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceRelatedAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "reservationAndDeclaration" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#reservationAndDeclaration>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#EntryIntoForce> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#DraftDocumentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesBase" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesBase>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesCitation" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesCitation>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesModification" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesModification>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesRepeal" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesRepeal>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesTransposition" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesTransposition>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isResultingDraftDocumentOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isResultingDraftDocumentOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#DraftDocument> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#InitialDraftShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasAmendment" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasAmendment>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#InitialDraft> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TransmissionMarechalatShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signatureDateDeposit" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signatureDateDeposit>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signatureDateRetrival" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signatureDateRetrival>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transmissionDateDeposit" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transmissionDateDeposit>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transmissionDateRetrieval" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transmissionDateRetrieval>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TransmissionMarechalat> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#NotificationTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#NotificationType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CountryShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Country> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalResourceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "cites" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#cites>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEntryInForce" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEntryInForce>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEndApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEndApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateDocument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateDocument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateNoLongerInForce" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateNoLongerInForce>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "citedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#citedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inForceStatus" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#inForceStatus>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "applicabilityArea" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#applicabilityArea>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "responsibilityOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#responsibilityOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "publicationDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#publicationDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalResource> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#WorkShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "description" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#description>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleAlternative" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleAlternative>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isResultingWorkOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isResultingWorkOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isMemberOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isMemberOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "typeDocument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#typeDocument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleShort" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleShort>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "title" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#title>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isRealizedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isRealizedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Work> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EUReglementationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "basisFor" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#basisFor>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#EUReglementation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalSubjectThemeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectTheme> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ComplexWorkShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasMember" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasMember>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ComplexWork> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TreatyDomainShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TreatyDomain> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TreatyProcessShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyType>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignatureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignatureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySubject" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySubject>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyProcessHasTaskDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyProcessHasTaskDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyProcessHasTask" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyProcessHasTask>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyDomain" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyDomain>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyParty" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyParty>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "needForRatification" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#needForRatification>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyBasisForTreaty" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyBasisForTreaty>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyPartyCountry" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyPartyCountry>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyComment" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyComment>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleTreaty" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleTreaty>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyBasedOnTreaty" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyBasedOnTreaty>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyPartyOrganisation" ;
+                  <http://www.w3.org/ns/shacl#or>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape> <http://data.legilux.public.lu/resource/shacl/jolux#LegalInstitutionShape> ) ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyPartyOrganisation>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "bilateral" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#bilateral>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyInForceStatusForLux" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyInForceStatusForLux>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "documentIdAtChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#documentIdAtChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignaturePlace" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignaturePlace>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "approbationAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#approbationAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyInForceStatus" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyInForceStatus>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TreatyProcess> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalInstitutionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "counterSigns" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#counterSigns>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isResponsibleFor" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isResponsibleFor>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasReceivedExplanatoryMemorandumRequestFrom" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasReceivedExplanatoryMemorandumRequestFrom>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signsFullPowers" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signsFullPowers>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasRightsOn" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasRightsOn>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "initiates" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#initiates>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasRequestedExplanatoryMemorandum" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasRequestedExplanatoryMemorandum>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isPublisherOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isPublisherOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalInstitution> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#NotificationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationDepositary" ;
+                  <http://www.w3.org/ns/shacl#or>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#CountryShape> <http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape> ) ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationDepositary>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationEntryInForceDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationEntryInForceDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationFrom" ;
+                  <http://www.w3.org/ns/shacl#or>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#CountryShape> <http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape> ) ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationFrom>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationRelatedAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationRelatedAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationScope" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationScope>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "notificationType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#notificationType>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Notification> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#NationalLegalResourceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "countersignedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#countersignedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "personInCharge" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#personInCharge>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "subjectLevel2" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#subjectLevel2>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "subject" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#subject>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "jurisdiction" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#jurisdiction>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "historicalLegalId" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#historicalLegalId>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "formerVersionOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#formerVersionOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "implements" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#implements>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "responsibilityOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#responsibilityOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "formerVersion" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#formerVersion>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isPartOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isPartOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signaturePlace" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signaturePlace>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "subjectLevel1" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#subjectLevel1>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#NationalLegalResource> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LanguageShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Language> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TranspositionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "institutionInChargeOfTheTransposition" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheTransposition>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "resultingAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#resultingAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionDeadline" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionDeadline>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionProvisionalDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionProvisionalDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transposedEUDirective" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transposedEUDirective>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionEndDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionEndDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionCompletion" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionCompletion>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Transposition> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#DraftShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasResultingDraftDocument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasResultingDraftDocument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "initialTitleDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#initialTitleDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftObservation" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftObservation>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "withdrawalDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#withdrawalDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "expectedEmpoweringAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#expectedEmpoweringAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#anyURI> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "consolidationDraftURL" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#consolidationDraftURL>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#anyURI> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "parliamentDraftUrl" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#parliamentDraftUrl>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftId" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftId>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasOpinion" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasOpinion>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "institutionInChargeOfTheDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftHasTask" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftHasTask>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "provisionalFirstDateEntryInForce" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#provisionalFirstDateEntryInForce>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateSecondVote" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateSecondVote>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "parliamentDraftId" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#parliamentDraftId>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transpositionProcess" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transpositionProcess>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "acceptanceCGDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#acceptanceCGDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "statusDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#statusDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "foreseesChangeOnLegalResource" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#foreseesChangeOnLegalResource>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "altShortTitleDraft" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#altShortTitleDraft>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftIsTaskOfTreatyProcess" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftIsTaskOfTreatyProcess>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "institutionInChargeOfTheDraftLevel2" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheDraftLevel2>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "provisionalDateApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#provisionalDateApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasResultingLegalResource" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasResultingLegalResource>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "withdrawalReason" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#withdrawalReason>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Draft> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TaskForTreatyShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isTaskOfTreatyProcess" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isTaskOfTreatyProcess>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TaskForTreaty> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TreatySignatureShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyLanguage" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyLanguage>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyLuxembourgSignatureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyLuxembourgSignatureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatyLuxembourgSignaturePlace" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatyLuxembourgSignaturePlace>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignatureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignatureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignaturePlace" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignaturePlace>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignedForLuxembourgBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignedForLuxembourgBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "treatySignedForOtherPartiesBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#treatySignedForOtherPartiesBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TreatySignature> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#StatusDraftShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#StatusDraft> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#UserFormatShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#UserFormat> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#BaseActShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isBasicActOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isBasicActOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#BaseAct> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ProjectTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ProjectType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ExpressionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isEmbodiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isEmbodiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "language" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#language>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "realizes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#realizes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "title" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#title>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleAlternative" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleAlternative>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "titleShort" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#titleShort>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Expression> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LicenseShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#License> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CollectionAbstractShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#CollectionAbstract> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "answerToOpinionRequest" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#answerToOpinionRequest>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dueDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dueDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isDissidentOpinonOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isDissidentOpinonOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "conseilEtatFormalOpposition" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#conseilEtatFormalOpposition>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasResultingOpinionDocument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasResultingOpinionDocument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "committeeInChargeLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#committeeInChargeLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#dateTime> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateCommittee" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateCommittee>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionReference" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionReference>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isOpinionOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isOpinionOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionIsAbout" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionIsAbout>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rapporteur" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rapporteur>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rapporteurLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rapporteurLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "committeeInCharge" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#committeeInCharge>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Opinion> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#SignedTreatyReceptionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signedTreatyCopyReceptionDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signedTreatyCopyReceptionDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signedTreatyReceptionDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signedTreatyReceptionDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#SignedTreatyReception> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#AmendmentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateIncomingConseilEtat" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateIncomingConseilEtat>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateOutgoingChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateOutgoingChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isAmendmentOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isAmendmentOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateIncomingChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateIncomingChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateOutgoingConseilEtat" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateOutgoingConseilEtat>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateAmendment" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateAmendment>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "amendmentComment" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#amendmentComment>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateAdoptionByParliamentaryCommission" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateAdoptionByParliamentaryCommission>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Amendment> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalSubjectShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalSubject> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalSubjectOrganisationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectOrganisation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TaskAtSCLShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "authorOfPriorityRequest" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#authorOfPriorityRequest>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isSubTaskOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isSubTaskOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "motivationOfPriorityRequest" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#motivationOfPriorityRequest>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "priorityLevelSCL" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#priorityLevelSCL>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TaskAtSCL> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#PriorityLevelShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#PriorityLevel> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#EUDirectiveShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "euDirectiveTranspositionProcess" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#euDirectiveTranspositionProcess>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#EUDirective> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#FullPowersDeliveryShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "fullPowersDeliveredTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#fullPowersDeliveredTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "fullPowersDeliveringDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#fullPowersDeliveringDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#FullPowersDelivery> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ExchangeOfNoteShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "noteDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#noteDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "noteFrom" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#noteFrom>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "noteTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#noteTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "reservationAndDeclaration" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#reservationAndDeclaration>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ExchangeOfNote> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#InstrumentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "instrumentSignatureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#instrumentSignatureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "instrumentSignedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#instrumentSignedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "instrumentType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#instrumentType>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Instrument> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalSubjectLegalResourceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectLegalResource> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalSubjectPlaceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectPlace> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#AgentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "contactPoint" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#contactPoint>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signs" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signs>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Agent> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ActAbstractShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ActAbstract> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TransmissionOfInstrumentSignatureShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TransmissionOfInstrumentSignature> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#PersonShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "contactInfo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#contactInfo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "familyName" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#familyName>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "givenName" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#givenName>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Person> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionProfessionalOrganisationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#OpinionProfessionalOrganisation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#RegistrationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "registrationBy" ;
+                  <http://www.w3.org/ns/shacl#or>
+                          ( <http://data.legilux.public.lu/resource/shacl/jolux#CountryShape> <http://data.legilux.public.lu/resource/shacl/jolux#InternationalActorShape> ) ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#registrationBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "registrationDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#registrationDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "registrationId" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#registrationId>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Registration> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ManifestationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#integer> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "positionInDocument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#positionInDocument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "publishedIn" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#publishedIn>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#integer> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorialPage" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorialPage>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "publisher" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#publisher>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isExemplifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isExemplifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#anyURI> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "previousIsExemplifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#previousIsExemplifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorialSequence" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorialSequence>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "publishes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#publishes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "annexIsExemplifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#annexIsExemplifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "format" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#format>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "embodies" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#embodies>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "legalValue" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#legalValue>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rightsHolder" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rightsHolder>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "userFormat" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#userFormat>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signatureIsExemplifiedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signatureIsExemplifiedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "license" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#license>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rights" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rights>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Manifestation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ContactPointShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#anyURI> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "email" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#email>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "telephone" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#telephone>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ContactPoint> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LegalResourceDocumentTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LegalResourceDocumentType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionStatusShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#OpinionStatus> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionDocumentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isResultingOpinionDocumentOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isResultingOpinionDocumentOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionDocumentIsAbout" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionDocumentIsAbout>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#OpinionDocument> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ReferralToConseilGouvernementShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorandumOnAgendaOnDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorandumOnAgendaOnDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referralFrom" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referralFrom>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referralTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referralTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ReferralToConseilGouvernement> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CodeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEndApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEndApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "initiatedBy" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#initiatedBy>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "version" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#version>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Code> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CodeAbstractShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEntryInForce" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEntryInForce>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateNoLongerInForce" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateNoLongerInForce>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#CodeAbstract> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#RemarkShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "created" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#created>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "creator" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#creator>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "remarkIsRelatedTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#remarkIsRelatedTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "remarkText" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#remarkText>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Remark> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ExplanatoryMemorandumRequestShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "explanatoryMemorandumReceptionDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumReceptionDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "explanatoryMemorandumRequestDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "explanatoryMemorandumRequestFrom" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestFrom>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "explanatoryMemorandumRequestTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasResumption" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasResumption>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "resumptionOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#resumptionOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#ExplanatoryMemorandumRequest> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TransmissionTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TransmissionType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CompilationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#boolean> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "upToDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#upToDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Compilation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CollectionShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "integratesLegalResource" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#integratesLegalResource>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Collection> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TaskAtMinistryShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "responsiblePersonLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#responsiblePersonLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "arreteGDDepositDateToStateMinistry" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#arreteGDDepositDateToStateMinistry>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "personInChargeOfTheTask" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#personInChargeOfTheTask>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateMinistryLetter" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateMinistryLetter>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "serviceInCharge" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#serviceInCharge>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "responsiblePerson" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#responsiblePerson>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referenceMinistryLetter" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referenceMinistryLetter>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftSignatureRequestTransmissionDateToStateMinistry" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftSignatureRequestTransmissionDateToStateMinistry>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "otherConcernedMinistry" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#otherConcernedMinistry>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "motivationOfPriorityRequest" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#motivationOfPriorityRequest>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TaskAtMinistry> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TreatyTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TreatyType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TransmissionTaskAtSCLShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateCreationDraftAtSCL" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateCreationDraftAtSCL>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "incomingCorrespondenceArrivalDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondenceArrivalDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "incomingCorrespondenceObject" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondenceObject>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "incomingCorrespondenceIssuer" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondenceIssuer>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceObject" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceObject>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceAddressee" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceAddressee>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceAnnex" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceAnnex>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceReference" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceReference>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "transmissionType" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#transmissionType>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "outgoingCorrespondenceDepartureDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondenceDepartureDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "incomingCorrespondenceDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondenceDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "incomingCorrespondenceAnnex" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondenceAnnex>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TransmissionTaskAtSCL> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#DocumentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://xmlns.com/foaf/0.1/Document> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#AdministrativeAreaShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#AdministrativeArea> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TaskAtChambreDeputesShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "secondVoteConstitutionalDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#secondVoteConstitutionalDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rapporteurChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rapporteurChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "committeeInCharge" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#committeeInCharge>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "depositDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#depositDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#anyURI> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftUrlChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftUrlChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "rapporteurChambreDeputesLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#rapporteurChambreDeputesLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "committeeInChargeLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#committeeInChargeLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "finalVoteDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#finalVoteDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "documentIdAtChambreDeputes" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#documentIdAtChambreDeputes>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "firstLectureVoteDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#firstLectureVoteDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "arreteGDRetrieval" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#arreteGDRetrieval>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "arreteGDDeposit" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#arreteGDDeposit>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#dateTime> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "requestSecondVoteExemption" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#requestSecondVoteExemption>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TaskAtChambreDeputes> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#OpinionConseilEtatShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "plenaryDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#plenaryDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasSupplementaryOpinion" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasSupplementaryOpinion>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isSupplementaryOpinionOf" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isSupplementaryOpinionOf>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "draftStatusConseilEtat" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#draftStatusConseilEtat>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referenceArticleConstitutionLabel" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referenceArticleConstitutionLabel>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateRefusalExemption2ndVote" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateRefusalExemption2ndVote>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateExemption2ndVote" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateExemption2ndVote>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "referenceArticleConstitution" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#referenceArticleConstitution>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "opinionReference" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#opinionReference>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#OpinionConseilEtat> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#MediaTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "inScheme" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://www.w3.org/2004/02/skos/core#inScheme>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#MediaType> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#TransmissionOfSignedInstrumentShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "relatedInstrument" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#relatedInstrument>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "reservationAndDeclaration" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#reservationAndDeclaration>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#date> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signedInstrumentTransmissionDate" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signedInstrumentTransmissionDate>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "signedInstrumentTransmissionTo" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#signedInstrumentTransmissionTo>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#TransmissionOfSignedInstrument> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#ConsolidationShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "basicAct" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#basicAct>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "consolidates" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#consolidates>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "dateEndApplicability" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#dateEndApplicability>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "isIntegratedInCollection" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#isIntegratedInCollection>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "version" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#version>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Consolidation> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#LuxActAndEULegalResourceShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "basisFor" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#basisFor>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#LuxActAndEULegalResource> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#CommitteeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Committee> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#MemorialShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "hasPart" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#hasPart>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2000/01/rdf-schema#Literal> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorialName" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorialName>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#integer> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorialNumber" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorialNumber>
+                ] ;
+        <http://www.w3.org/ns/shacl#property>
+                [ a       <http://www.w3.org/ns/shacl#PropertyShape> ;
+                  <http://www.w3.org/ns/shacl#datatype>
+                          <http://www.w3.org/2001/XMLSchema#integer> ;
+                  <http://www.w3.org/ns/shacl#maxCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#minCount>
+                          "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                  <http://www.w3.org/ns/shacl#name>
+                          "memorialYear" ;
+                  <http://www.w3.org/ns/shacl#path>
+                          <http://data.legilux.public.lu/resource/ontology/jolux#memorialYear>
+                ] ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#Memorial> .
+
+<http://data.legilux.public.lu/resource/shacl/jolux#InstrumentTypeShape>
+        a       <http://www.w3.org/ns/shacl#NodeShape> ;
+        <http://www.w3.org/ns/shacl#targetClass>
+                <http://data.legilux.public.lu/resource/ontology/jolux#InstrumentType> .

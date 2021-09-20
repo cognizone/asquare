@@ -1,0 +1,8 @@
+PREFIX person: <http://demo.com/person/model#>
+
+select
+  ('spouseName' as ?facetName)
+  ?spouseName
+where {
+  ?s person:spouse/person:name ?spouseName
+}

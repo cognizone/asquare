@@ -1,0 +1,236 @@
+
+# wrong case in second infringement
+
+infringementProcedureStageOfinfringementProcedure
+
+# following inverseOf relations point to a string
+
+jolux:transpositionInitiatedByEUDossier
+        owl:inverseOf  "inverse euDossierInitiatesTransposition" .
+
+jolux:transpositionHasTranspositionAction
+        owl:inverseOf       "inverse transpositionActionOfTransposition" .
+
+jolux:transpositionActionOfTransposition
+        owl:inverseOf       "inverse transpositionHasTranspositionAction" ;
+        owl:inverseOf       jolux:transpositionHasTranspositionAction .
+
+
+# following skos schemes definition seem not to be used
+
+<http://publications.europa.eu/resource/authority/concept-status>
+        a       owl:NamedIndividual , skos:ConceptScheme .
+
+<http://data.legilux.public.lu/resource/authority/legal-institution-history>
+        a       owl:NamedIndividual , skos:ConceptScheme .
+
+<http://data.legilux.public.lu/resource/authority/legal-institution>
+        a       owl:NamedIndividual , skos:ConceptScheme .
+
+
+# same property has 2 qualified restrictions
+
+jolux:InfringementProcedureStage
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:InfringementProcedureStageAnswerStatus ;
+                           owl:onProperty               jolux:infringementProcedureStageAnswerToProcedureStage
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:InfringementProcedureStage ;
+                           owl:onProperty               jolux:infringementProcedureStageAnswerToProcedureStage
+                         ] ;
+
+# documentType property has range DeadlineType ?
+
+jolux:documentType  a  owl:ObjectProperty ;
+        rdfs:comment  "type de document"@fr ;
+        rdfs:domain   jolux:Document ;
+        rdfs:label    "type de document"@fr ;
+        rdfs:range    jolux:DocumentType .
+
+jolux:Document  a        owl:Class ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               jolux:DeadlineType ;
+                           owl:onProperty            jolux:documentType ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+
+
+# onClass and range do not seem to match up
+
+jolux:administrativeProvisionIsResultOfAdministrationProvisionDraft
+        a            owl:ObjectProperty ;
+        rdfs:domain  jolux:AdministrativeProvision ;
+        rdfs:label   "mesure administrative résultant du projet de mesure administrative"@fr ;
+        rdfs:range   jolux:AdministrativeProvisionDraft .
+
+
+jolux:AdministrativeProvision
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               jolux:AdministrativeProvision ;
+                           owl:onProperty            jolux:administrativeProvisionIsResultOfAdministrationProvisionDraft ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+# not wrong but very confusing basicAct has as range BaseAct
+# BaseAct is subclass if Act
+# and cardinality mentions Act (not the more correct BaseAct)
+
+jolux:basicAct  a               owl:ObjectProperty ;
+        rdfs:comment            "Indique l'acte de base consolidé par la consolidation décrite." ;
+        rdfs:domain             jolux:Consolidation ;
+        rdfs:label              "Acte de base"@fr ;
+        rdfs:range              jolux:BaseAct ;
+        rdfs:subPropertyOf      jolux:consolidates ;
+        jolux:alignmentComment  "pas d'alignement eli"@fr ;
+        owl:inverseOf           jolux:isBasicActOf .
+
+
+jolux:BaseAct  a         owl:Class ;
+        rdfs:comment     "Acte de base. C'est l'acte de base qui fait l'objet d'une consolidation avec les actes modificateurs."@fr ;
+        rdfs:label       "Acte de base"@fr ;
+        rdfs:subClassOf  jolux:Act .
+
+jolux:Consolidation  a    owl:Class ;
+        rdfs:subClassOf   [ a                         owl:Restriction ;
+                            owl:onClass               jolux:Act ;
+                            owl:onProperty            jolux:basicAct ;
+                            owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                          ] ;
+
+
+# infringementProcedureStageType onClass and domain do not match
+
+jolux:infringementProcedureStageType
+        a             owl:ObjectProperty ;
+        rdfs:comment  "type d'étape de la procédure"@fr ;
+        rdfs:domain   jolux:InfringementProcedureStage ;
+        rdfs:label    "type d'étape de la procédure"@fr ;
+        rdfs:range    jolux:InfringementProcedureStageType .
+
+jolux:InfringementProcedure
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               jolux:InfringementProcedureType ;
+                           owl:onProperty            jolux:infringementProcedureStageType ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+
+
+# id with range date seems weird
+
+jolux:AdministrativeProvisionDraft
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:date ;
+                           owl:onProperty               jolux:administrativeProvisionDraftId
+
+
+# onClass and range do not match
+
+jolux:euDossierProducesResourceLegal
+        a              owl:ObjectProperty ;
+        rdfs:comment   "Resource légale de l'UE issue de la procédure législative"@fr ;
+        rdfs:domain    jolux:EUDossier ;
+        rdfs:label     "Dossier UE produit une ressource légale"@fr ;
+        rdfs:range     jolux:EULegalResource ;
+        owl:inverseOf  jolux:resourceLegalProducedByDossier .
+
+jolux:EUDossier  a       owl:Class ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:EUDossierType ;
+                           owl:onProperty               jolux:euDossierProducesResourceLegal
+                         ] ;
+
+# again onClass and range do not match
+
+jolux:eventAlertType  a  owl:ObjectProperty ;
+        rdfs:comment  "type d'alerte associé à l'événement"@fr ;
+        rdfs:domain   jolux:Event ;
+        rdfs:label    "Type d'alerte associé à l'événement"@fr ;
+        rdfs:range    jolux:EventAlertType .
+
+jolux:Event  a           owl:Class ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:Event ;
+                           owl:onProperty               jolux:eventAlertType
+                         ] ;
+
+
+# another two: eventHasRisk and eventRiskLevel
+
+jolux:eventHasRisk  a  owl:ObjectProperty ;
+        rdfs:comment  "le niveau de risque est évalué sur les procédures pour non conformité, sur les projets législatifs (jolux:Draft), sur les projets de mesures administratives (jolux:AdministrativeProvisionDraft) et sur les tâches à faire (jolux:ToDo). Une synthèse du risque est calculé pour le processus de transposition (jolux:Transposition)"@fr ;
+        rdfs:domain   jolux:Event ;
+        rdfs:label    "Evénement à un niveau de risque"@fr ;
+        rdfs:range    jolux:EventRisk .
+
+jolux:eventRiskLevel  a  owl:ObjectProperty ;
+        rdfs:comment  "décrit la probabilité de risque associée à l'événement"@fr ;
+        rdfs:domain   jolux:Event ;
+        rdfs:label    "Niveau de risque de l'événement"@fr ;
+        rdfs:range    jolux:EventRiskLevel .
+
+jolux:Event  a           owl:Class ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:Event ;
+                           owl:onProperty               jolux:eventHasRisk
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  jolux:Event ;
+                           owl:onProperty               jolux:eventRiskLevel
+                         ] ;
+
+# and also
+
+* eventStatus => which has a really weird range StatusType
+* infringementProcedureStageAnswerToProcedureStage
+
+
+# committeeInChargeOfTheTask range and where it is used does not match up
+
+jolux:committeeInChargeOfTheTask
+        a                   owl:ObjectProperty ;
+        rdfs:domain         jolux:TaskAtCommittee ;
+        rdfs:label          "Commission en charge du projet"@fr ;
+        rdfs:range          jolux:Committee ;
+        rdfs:subPropertyOf  <http://purl.org/NET/c4dm/event.owl#agent> .
+
+# mix of xsd:date and xsd:dateTime => should be xsd:date
+
+
+jolux:secondVoteConstitutionalDate
+        a            owl:DatatypeProperty ;
+        rdfs:domain  jolux:TaskAtChambreDeputes ;
+        rdfs:label   "Date du second vote constitutionnel"@fr ;
+        rdfs:range   xsd:date .
+
+jolux:TaskAtChambreDeputes
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:dateTime ;
+                           owl:onProperty               jolux:secondVoteConstitutionalDate
+                         ] .
+
+# same problem for dateExemption2ndVote
+
+jolux:dateExemption2ndVote
+        a            owl:DatatypeProperty ;
+        rdfs:domain  jolux:OpinionConseilEtat ;
+        rdfs:label   "Date de la dispense du second vote par le Conseil d'Etat"@fr ;
+        rdfs:range   xsd:date .
+
+jolux:OpinionConseilEtat
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:dateTime ;
+                           owl:onProperty               jolux:dateExemption2ndVote
+                         ] ;
+
+# and for dateRefusalExemption2ndVote
+# and signatureDateDeposit

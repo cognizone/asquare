@@ -1,0 +1,30 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+delete {
+
+  ?class rdfs:subClassOf ?restriction.
+  ?restriction a owl:Restriction.
+  ?restriction owl:allValuesFrom ?range.
+  ?restriction owl:onProperty ?property.
+
+}
+where {
+  ?class rdfs:subClassOf ?restriction.
+  ?restriction a owl:Restriction.
+  ?restriction owl:allValuesFrom ?range.
+  ?restriction owl:onProperty ?property.
+
+  ?property rdfs:range ?range.
+
+  # only cleanup if there is exactly one range
+  {
+    select ?property (count(?range) as ?total) {
+      ?property rdfs:range ?range.
+    }
+    group by ?property
+  }
+  filter (?total = 1)
+}
+

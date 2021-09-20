@@ -1,0 +1,16 @@
+{
+  "uri": "http://demo.com/applicationprofile/1",
+  "Car": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Car"
+    },
+    "basisFor": {
+      "uri": "http://demo.com/onto/basisFor",
+      "range": {
+        "not": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#int"
+        }
+      }
+    }
+  }
+}

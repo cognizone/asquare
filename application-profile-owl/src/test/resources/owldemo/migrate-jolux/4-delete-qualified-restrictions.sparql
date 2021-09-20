@@ -1,0 +1,28 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+delete {
+  ?class rdfs:subClassOf ?restriction.
+
+  ?restriction a owl:Restriction;
+    ?qualified ?cardinality;
+    owl:onProperty ?property;
+    owl:onDataRange ?onDataRange;
+    owl:onClass ?onClass.
+
+}
+where {
+  ?class rdfs:subClassOf ?restriction.
+  ?restriction a owl:Restriction.
+  ?restriction ?qualified ?cardinality.
+  ?restriction owl:onProperty ?property.
+  OPTIONAL {
+    ?restriction owl:onDataRange ?onDataRange.
+  }
+  OPTIONAL {
+    ?restriction owl:onClass ?onClass.
+  }
+
+  FILTER (?qualified in (owl:maxQualifiedCardinality, owl:minQualifiedCardinality, owl:qualifiedCardinality))
+}

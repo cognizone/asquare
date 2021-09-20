@@ -1,0 +1,24 @@
+@base          <http://demo.com/data#>
+@prefix jolux: <http://data.legilux.public.lu/resource/ontology/jolux#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<#draft>
+    a                  jolux:Draft, jolux:InitialDraft, jolux:Event ;
+    jolux:draftHasTask <#consultation> ;
+.
+
+<#consultation>
+    a                           jolux:Consultation, jolux:LegislativeTask, jolux:Event ;
+    jolux:eventTitle            "title"@en ;
+    jolux:eventDescription      "description"@en ;
+    jolux:hasSubTask            <#consultation-phase> ;
+    jolux:hasSubTask            <#consultation-preparation>
+.
+
+<#consultation-phase>
+    a jolux:ConsultationPhase, jolux:ConsultationTask, jolux:LegislativeTask, jolux:Event ;
+.
+<#consultation-preparation>
+    a jolux:ConsultationPreparation, jolux:ConsultationTask, jolux:LegislativeTask, jolux:Event
+.
+

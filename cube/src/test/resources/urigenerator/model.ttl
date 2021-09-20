@@ -1,0 +1,8 @@
+@prefix demo: <http://demo.com/model#>.
+
+<http://resource/1> a demo:One ;
+                    demo:id "5" .
+
+<http://resource/2> a demo:Two ;
+                    demo:year "2021" ;
+                    demo:sequence "0005" .

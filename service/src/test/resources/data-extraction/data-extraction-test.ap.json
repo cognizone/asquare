@@ -1,0 +1,130 @@
+{
+  "Settlement": {
+    "constraints": {
+      "rdfType": "http://dbpedia.org/ontology/Settlement"
+    },
+    "name": {
+      "uri": "http://xmlns.com/foaf/0.1/name",
+      "range": {
+        "or": {
+          "datatype": [
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString",
+            "http://www.w3.org/2001/XMLSchema#string"
+          ]
+        }
+      },
+      "maxLangCardinality": 1
+    },
+    "abstract": {
+      "uri": "http://dbpedia.org/ontology/abstract",
+      "range": {
+        "or": {
+          "datatype": [
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString",
+            "http://www.w3.org/2001/XMLSchema#string"
+          ]
+        }
+      },
+      "maxLangCardinality": 1
+    },
+    "populationTotal": {
+      "uri": "http://dbpedia.org/ontology/populationTotal",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+      },
+      "maxCardinality": 1
+    },
+    "demographicsAsOf": {
+      "uri": "http://dbpedia.org/ontology/demographicsAsOf",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#date"
+      },
+      "maxCardinality": 1
+    },
+    "area": {
+      "uri": "http://dbpedia.org/ontology/area",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#double"
+      },
+      "maxCardinality": 1
+    },
+    "lat": {
+      "uri": "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#float"
+      },
+      "maxCardinality": 1
+    },
+    "yearMeanC": {
+      "uri": "http://dbpedia.org/property/yearMeanC",
+      "range": {
+        "or": {
+          "datatype": [
+            "http://www.w3.org/2001/XMLSchema#double",
+            "http://www.w3.org/2001/XMLSchema#integer"
+          ]
+        }
+      },
+      "maxCardinality": 1
+    },
+    "yearHighC": {
+      "uri": "http://dbpedia.org/property/yearHighC",
+      "range": {
+        "or": {
+          "datatype": [
+            "http://www.w3.org/2001/XMLSchema#double",
+            "http://www.w3.org/2001/XMLSchema#integer"
+          ]
+        }
+      },
+      "maxCardinality": 1
+    },
+    "settlementType": {
+      "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "range": {
+        "datatype": "rdfs:Resource"
+      }
+    },
+    "country": {
+      "uri": "http://dbpedia.org/ontology/country",
+      "range": {
+        "classId": "Country"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Country": {
+    "constraints": {
+      "rdfType": "http://dbpedia.org/ontology/Country"
+    },
+    "label": {
+      "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+      "range": {
+        "or": {
+          "datatype": [
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString",
+            "http://www.w3.org/2001/XMLSchema#string"
+          ]
+        }
+      }
+    }
+  },
+  "RecursiveType": {
+    "constraints": {
+      "rdfType": "http://asquare-test/DuplicatingType"
+    },
+    "prefLabel": {
+      "uri": "http://www.w3.org/2004/02/skos/core#prefLabel",
+      "range": {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+      },
+      "maxLangCardinality": 1
+    },
+    "recurseProperty": {
+      "uri": "http://asquare-test/recurseProperty",
+      "range": {
+        "classId": "RecursiveType"
+      }
+    }
+  }
+}

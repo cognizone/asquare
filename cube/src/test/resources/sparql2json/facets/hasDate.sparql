@@ -1,0 +1,8 @@
+PREFIX person: <http://demo.com/person/model#>
+
+select
+  ('hasDates' as ?facetName)
+  (?hasDate as ?hasDate_List)
+where {
+  ?s person:hasDate ?hasDate
+}

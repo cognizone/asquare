@@ -1,0 +1,64 @@
+{
+  "uri": "http://demo.com/",
+  "Organization": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Org"
+    },
+    "orgField" : {
+      "uri": "http://demo.com/onto/orgField"
+    },
+    "minField": {
+      "uri": "http://demo.com/onto/minField",
+      "minCardinality": 1
+    },
+    "rangeClassIdInherit": {
+      "uri": "http://demo.com/onto/rangeClassIdInherit",
+      "range" : {
+        "classId" : "Organization"
+      }
+    }
+  },
+  "RegisteredOrganization": {
+    "constraints": {
+      "subClassOf": [
+        "Organization"
+      ],
+      "rdfType": "http://demo.com/onto/RegOrg"
+    },
+    "regOrgField" : {
+      "uri": "http://demo.com/onto/regOrgField"
+    },
+    "minField": {
+      "uri": "http://demo.com/onto/minField",
+      "minCardinality": 2
+    }
+  },
+  "BelgianRegisteredOrganization": {
+    "constraints": {
+      "subClassOf": [
+        "RegisteredOrganization"
+      ],
+      "rdfType": "http://demo.com/onto/RegOrgBe"
+    },
+    "beRegOrgField" : {
+      "uri": "http://demo.com/onto/beRegOrgField"
+    },
+    "minField": {
+      "uri": "http://demo.com/onto/minField",
+      "minCardinality": 1
+    },
+    "rangeClassId": {
+      "uri": "http://demo.com/onto/rangeClassId",
+      "range" : {
+        "classId" : "Organization"
+      }
+    },
+    "rangeClassIdInherit": {
+      "uri": "http://demo.com/onto/rangeClassIdInherit",
+      "range" : {
+        "classId" : "BelgianRegisteredOrganization"
+      }
+    }
+  }
+
+}
