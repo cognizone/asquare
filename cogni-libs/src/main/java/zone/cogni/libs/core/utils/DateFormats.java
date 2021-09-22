@@ -4,17 +4,22 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.bind.DatatypeConverter;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- */
 public class DateFormats {
   public static final String XML_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
@@ -219,20 +224,48 @@ public class DateFormats {
     return format(date, Format.READABLEDATETIME);
   }
 
+  /**
+   * Formats a (deprecated) Java date to an ISO datetime including current default timezone.
+   * Note: this method removes insignificant 0s at end of millis, so 900 becomes 9.
+   *
+   * @param date to be formatted
+   * @return ISO datetime including timezone (based on OS defaults)
+   */
   public static String formatXsdDateTimeFormat(Date date) {
+    Instant instant = Instant.ofEpochMilli(date.getTime());
+    ZoneId defaultZone = ZoneId.systemDefault();
+    ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.ofInstant(instant, defaultZone), defaultZone);
+    return zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+  }
+
+  /**
+   * Kept for emergency cases, only as a fallback if new implementation has some issues.
+   * Note: parseXsdDateTimeFormat works on new method too, so should not be a problem.
+   */
+  @Deprecated
+  public static String formatXsdDateTimeFormatOld(Date date) {
+    // copy from zone.cogni.core.util.DateFormats: to avoid use of DatatypeConverter
+    // note: GregorianCalendar is not threadsafe, please use with care
     Calendar calendar = Calendar.getInstance();
+    if (!(calendar instanceof GregorianCalendar)) {
+      throw new IllegalStateException("Only GregorianCalendar is supported.");
+    }
+
     calendar.setTime(date);
-    return DatatypeConverter.printDateTime(calendar);
+    try {
+      return DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) calendar).toXMLFormat();
+    }
+    catch (DatatypeConfigurationException e) {
+      throw new IllegalStateException(e);
+    }
+//    Calendar calendar = Calendar.getInstance();
+//    calendar.setTime(date);
+//    return DatatypeConverter.printDateTime(calendar);
   }
 
   public static Date parseXsdDateTimeFormat(String date) {
-    try {
-      Calendar calendar = DatatypeConverter.parseDateTime(date);
-      return calendar.getTime();
-    }
-    catch (Exception ignored) {
-      return null;
-    }
+    ZonedDateTime zonedDateTime = ZonedDateTime.parse(date);
+    return new Date(zonedDateTime.toInstant().toEpochMilli());
   }
 
   private DateFormats() {

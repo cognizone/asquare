@@ -335,6 +335,9 @@ project('cogni-libs') {
 
     // spring
     implementation('org.springframework.boot:spring-boot-starter-web')
+
+    // test
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
   }
 }
 
