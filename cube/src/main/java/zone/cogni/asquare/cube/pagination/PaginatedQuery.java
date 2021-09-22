@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.template.JenaQueryUtils;
@@ -18,26 +16,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * smartBatching is used for getModel method
+ * and handle cases where the expected model can have size greater than the 'batchSize'.
+ * In this case, smartBatchingLimit is used as a limit to finish model's construction
+ * and could have value << 'batchSize'.
+ * eg. batchSize: 10000, smartBatchingLimit: 2000
+ */
 public class PaginatedQuery {
 
-  private static final Logger log = LoggerFactory.getLogger(PaginatedQuery.class);
-  /**
-   * smartBatching is used for getModel method
-   * and handle cases where the expected model can have size greater than the 'batchSize'.
-   * In this case, smartBatchingLimit is used as a limit to finish model's construction
-   * and could have value << 'batchSize'.
-   * eg. batchSize: 10000, smartBatchingLimit: 2000
-   */
-
-  private final int batchSize;
+  private final long batchSize;
   private final boolean smartBatching;
-  private final int smartBatchingLimit;
+  private final long smartBatchingLimit;
 
-  public PaginatedQuery(int batchSize) {
+  public PaginatedQuery(long batchSize) {
     this(batchSize, false, 1);
   }
 
-  public PaginatedQuery(int batchSize, boolean smartBatching, int smartBatchingLimit) {
+  public PaginatedQuery(long batchSize, boolean smartBatching, long smartBatchingLimit) {
     Preconditions.checkState(batchSize > 0, "invalid batch size " + batchSize);
     Preconditions.checkState(smartBatchingLimit > 0 && smartBatchingLimit < batchSize,
                              "invalid smart batching limit " + smartBatchingLimit);
@@ -62,8 +58,8 @@ public class PaginatedQuery {
   public Model getModel(RdfStoreService rdfStore, String constructQuery) {
     Model model = ModelFactory.createDefaultModel();
 
-    int batchNumber = 0;
-    int triplesAdded = 0;
+    long batchNumber = 0;
+    long triplesAdded = 0;
     while (true) {
       if (smartBatching) {
         Model part = getModel(rdfStore, constructQuery, triplesAdded);
@@ -85,7 +81,7 @@ public class PaginatedQuery {
   }
 
   @Nonnull
-  private Model getModel(RdfStoreService rdfStore, String constructQuery, int offset) {
+  private Model getModel(RdfStoreService rdfStore, String constructQuery, long offset) {
     String limit = " limit " + batchSize + " offset " + offset;
     String batchQuery = constructQuery + limit;
 
@@ -93,7 +89,7 @@ public class PaginatedQuery {
   }
 
   public List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query) {
-    int batchNumber = 0;
+    long batchNumber = 0;
     List<Map<String, RDFNode>> result = new ArrayList<>();
     while (true) {
       List<Map<String, RDFNode>> batchMap = select(rdfStore, query, batchNumber);
@@ -106,7 +102,7 @@ public class PaginatedQuery {
     return result;
   }
 
-  private List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query, int batchNumber) {
+  private List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query, long batchNumber) {
     String limit = " limit " + batchSize + " offset " + (batchSize * batchNumber);
     String batchQuery = query + limit;
 

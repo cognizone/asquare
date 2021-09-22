@@ -22,6 +22,19 @@ class PaginatedQueryTest {
   PaginatedQuery simplePaginatedQuery;
 
   @Test
+  public void test_construction() {
+    // given
+    int batchSize = 100;
+    int smartBatchingLimit = 10;
+
+    // when
+    PaginatedQuery shortConstructorCall = new PaginatedQuery(batchSize);
+    PaginatedQuery longConstructorCall = new PaginatedQuery(batchSize, true, smartBatchingLimit);
+
+    // then it compiles!
+  }
+
+  @Test
   public void test_smart() {
     Model model = JenaUtils.read(new ClassPathResource("pagination/homer.ttl"));
     String constructQuery = "construct { ?s ?p ?o } where { ?s ?p ?o }";
