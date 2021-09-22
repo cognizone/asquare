@@ -111,7 +111,7 @@ subprojects {
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
 
-  group = 'zone.cogni.asquare'
+  group = System.properties['project.groupid']
   version = scmVersion.version
 
   compileJava.options.encoding = "UTF-8"
@@ -141,7 +141,7 @@ subprojects {
           username = System.properties['archiva.user']
           password = System.properties['archiva.password']
         }
-        name = 'cognizone'
+        name = 'public'
         url = System.properties['archiva.url']
       }
     }
