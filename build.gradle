@@ -93,6 +93,7 @@ subprojects {
       dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+      // netflix zuul 2.2.3 is aligned with spring boot 2.2.9!
       dependency("org.springframework.cloud:spring-cloud-starter-netflix-zuul:2.2.3.RELEASE")
       dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
       dependency('org.javassist:javassist:3.20.0-GA')
