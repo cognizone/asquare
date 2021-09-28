@@ -1,0 +1,32 @@
+{
+  "uri": "http://example.cogni.zone/example-ontology",
+  "Person": {
+    "constraints": {
+      "rdfType": "http://example.cogni.zone/example-ontology/Person"
+    },
+    "name": {
+      "uri": "http://xmlns.com/foaf/0.1/name",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    "spouse": {
+      "uri": "http://example.cogni.zone/example-ontology/spouse",
+      "range": {
+        "classId": "Person"
+      }
+    },
+    "child": {
+      "uri": "http://example.cogni.zone/example-ontology/child",
+      "range": {
+        "classId": "Person"
+      }
+    },
+    "parent" : {
+      "snippet" : "?parent cz-onto:child $this. ?parent a ?type.",
+      "range": {
+        "classId": "Person"
+      }
+    }
+  }
+}

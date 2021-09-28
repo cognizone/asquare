@@ -1,0 +1,18 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+  ?s ?p ?o
+}
+where {
+  ?s ?p ?o.
+
+  filter (?p in (
+        <http://www.w3.org/2000/01/rdf-schema#comment>,
+        <http://data.legilux.public.lu/resource/ontology/jolux#alignmentComment>,
+        <http://www.w3.org/2004/02/skos/core#altLabel>,
+        rdfs:label,
+        <http://www.w3.org/2004/02/skos/core#editorialNote>
+  ))
+}

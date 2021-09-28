@@ -1,0 +1,22 @@
+{
+  prefixes: {
+    demo: "http://demo.com/model#"
+  },
+  generators: [
+    {
+      id: "One",
+      uriSelector: "select ?uri { ?uri a demo:One }",
+      variableSelector: "select ?id where { <#{[uri]}> demo:id ?id }",
+      uriTemplate: "#{[baseUri]}/#{[id]}"
+    },
+    {
+      id: "Two",
+      uriSelector: "select ?uri { ?uri a demo:Two }",
+      variableSelector: "select ?year ?sequence where { \
+                           <#{[uri]}> demo:year ?year ; \
+                                      demo:sequence ?sequence \
+                         }",
+      uriTemplate: "#{[baseUri]}/#{[year]}/#{[sequence]}"
+    }
+  ]
+}

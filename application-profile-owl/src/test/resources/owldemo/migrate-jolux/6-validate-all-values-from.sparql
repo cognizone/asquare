@@ -1,0 +1,18 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select  ?class ?property ?range ?range2 {
+  ?class rdfs:subClassOf ?restriction.
+  ?restriction a owl:Restriction.
+  ?restriction owl:allValuesFrom ?range.
+  ?restriction owl:onProperty ?property.
+
+  ?class rdfs:subClassOf ?restriction2.
+  ?restriction2 a owl:Restriction.
+  ?restriction2 owl:allValuesFrom ?range2.
+  ?restriction2 owl:onProperty ?property.
+
+  FILTER (?restriction != ?restriction2)
+
+}

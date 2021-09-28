@@ -1,0 +1,154 @@
+{
+  "uri": "http://zone.cogni/asquare/model",
+  "Repository": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/Repository"
+    }
+  },
+  "RdfRepository": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/RdfRepository",
+      "subClassOf": [
+        "Repository"
+      ]
+    },
+    "database": {
+      "uri": "http://zone.cogni/asquare/model/database",
+      "range": {
+        "classId": "RdfDatabase"
+      }
+    }
+  },
+  "ElasticsearchRepository": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/ElasticsearchRepository",
+      "subClassOf": [
+        "Repository"
+      ]
+    }
+  },
+  "RdfDatabase": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/RdfDatabase"
+    }
+  },
+  "InMemoryDatabase": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/InMemoryDatabase",
+      "subClassOf": [
+        "RdfDatabase"
+      ]
+    },
+    "jenaModel": {
+      "uri": "http://zone.cogni/asquare/model/jenaModel",
+      "range": {
+        "classId": "JenaModel"
+      }
+    }
+  },
+  "JenaModel": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/JenaModel"
+    },
+    "resource": {
+      "uri": "http://zone.cogni/asquare/model/resource",
+      "range": {
+        "datatype": "xsd:string"
+      }
+    }
+  },
+  "SparqlEndpointDatabase": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/SparqlEndpointDatabase",
+      "subClassOf": [
+        "RdfDatabase"
+      ]
+    },
+    "resource": {
+      "uri": "http://zone.cogni/asquare/model/resource",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ApplicationView": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/ApplicationView"
+    },
+    "repository": {
+      "uri": "http://zone.cogni/asquare/model/repository",
+      "range": {
+        "classId": "Repository"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "applicationProfile": {
+      "uri": "http://zone.cogni/asquare/model/applicationProfile",
+      "range": {
+        "classId": "ApplicationProfile"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ApplicationProfile": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/ApplicationProfile"
+    },
+    "resource": {
+      "uri": "http://zone.cogni/asquare/model/resource",
+      "range": {
+        "or": {
+          "classId": [
+            "ResourceSupplier",
+            "TemplatedResourceSupplier"
+          ]
+        }
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ResourceSupplier": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/ResourceSupplier"
+    },
+    "resource": {
+      "uri": "http://zone.cogni/asquare/model/resource",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  // TODO code !!
+  "TemplatedResourceSupplier": {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/TemplatedResourceSupplier"
+    },
+    "resource": {
+      "uri": "http://zone.cogni/asquare/model/resource",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ApplicationViewToJson" : {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/ApplicationViewToJson"
+    }
+
+  },
+  "CachedApplicationViewToJson" : {
+    "constraints": {
+      "rdfType": "http://zone.cogni/asquare/model/CachedApplicationViewToJson"
+    }
+
+  }
+}

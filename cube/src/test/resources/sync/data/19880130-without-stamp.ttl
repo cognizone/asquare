@@ -1,0 +1,102 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ns1:    <http://data.legilux.public.lu/resource/ontology/jolux#> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    rdf:type ns1:InitialDraft .
+
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns3:    <http://purl.org/dc/terms/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    ns1:parliamentDraftId "3226" ;
+    ns1:parliamentDraftUrl
+                          "http://www.chd.lu/wps/portal/public/Accueil/TravailALaChambre/Recherche/RechercheArchives?lqs_fmid=&lqs_dpid=3226"^^xsd:anyURI .
+
+@prefix ns4:    <http://data.legilux.public.lu/resource/authority/draft-status/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    ns1:statusDraft    ns4:retire ;
+    ns1:titleDraft
+                       "<p>Proposition de loi portant r\u00E9vision de l'article 28 de la Constitution. (Astrid Lulling)</p>" ;
+    ns1:withdrawalDate "2017-07-20"^^xsd:date .
+
+@prefix ns5:    <http://cogni.zone/internal/properties/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    ns5:id "92854"^^xsd:int .
+
+@prefix ns6:    <http://data.legilux.public.lu/eli/etat/proj/pc/19880130/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    ns1:draftHasTask ns6:taskAtSCL, ns6:taskAtMinistry,
+                     <http://data.legilux.public.lu/eli/etat/proj/pc/19880130/TaskAtCommitteeChambreDepute/1>,
+                     ns6:TaskAtChambreDeputes ;
+    ns1:draftId      "19880130" .
+
+@prefix ns7:    <http://data.legilux.public.lu/resource/authority/type-projet/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    ns1:eventType          ns7:PC ;
+    ns1:altShortTitleDraft "R\u00E9vision de la Constitution - art. 28 (Lulling)" ;
+    ns1:created            "1988-08-10T08:00:00Z"^^xsd:dateTime ;
+    ns1:hasOpinion         <http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/AVCE/1>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/1> ;
+    ns1:initialTitleDraft
+                           "Proposition de loi portant r\u00E9vision de l'article 28 de la Constitution. (Astrid Lulling)" .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/1>
+    rdf:type ns1:OpinionConseilEtat .
+
+@prefix ns8:    <http://data.legilux.public.lu/resource/authority/legal-institution/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/1>
+    ns1:institutionInChargeOfTheTask ns8:CE ;
+    ns1:isOpinionOf                  ns8:CE ;
+    ns1:opinionReference             "36.718" .
+
+@prefix ns9:    <http://data.legilux.public.lu/eli/etat/proj/pc/19880130/opinionConseilEtat/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/1>
+    ns1:answerToOpinionRequest ns9:opinionRequest ;
+    ns1:dueDate                "1900-01-01"^^xsd:date ;
+    ns1:rapporteur             <http://data.legilux.public.lu/resource/authority/person/00331> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/OpinionConseilEtat/AVCE/1>
+    rdf:type        ns1:OpinionConseilEtat ;
+    ns1:opinionDate "1989-02-21"^^xsd:date ;
+    ns1:eventType   ns7:AVCE .
+
+ns6:TaskAtChambreDeputes
+    rdf:type                         ns1:TaskAtChambreDeputes ;
+    ns1:institutionInChargeOfTheTask ns8:CHD ;
+    ns1:arreteGDDeposit              "Astrid Lulling" ;
+    ns1:depositDate                  "1988-07-19"^^xsd:date .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/TaskAtCommitteeChambreDepute/1>
+    rdf:type ns1:TaskAtCommitteeChambreDepute .
+
+@prefix ns10:    <http://data.legilux.public.lu/resource/authority/committee/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130/TaskAtCommitteeChambreDepute/1>
+    ns1:committeeInChargeOfTheTask ns10:CHD-CORECO .
+
+ns9:opinionRequest
+    rdf:type                           ns1:OpinionRequest ;
+    ns1:institutionInChargeOfTheTask   ns8:CHD ;
+    ns1:opinionRequestTo               ns8:CE ;
+    ns1:referralDate                   "1988-08-10"^^xsd:date ;
+    ns1:referralLetterReference        "Lettre scl" ;
+    ns1:opinionRequestReceivedResponse "false"^^xsd:boolean .
+
+ns6:taskAtMinistry
+    rdf:type                    ns1:TaskAtMinistry ;
+    ns1:otherConcernedMinistry  ns8:MFI, ns8:MJ ;
+    ns1:referenceMinistryLetter "3226" ;
+    ns5:id                      "92849"^^xsd:int ;
+    ns1:dateMinistryLetter      "1988-07-19"^^xsd:date .
+
+ns6:taskAtSCL
+    rdf:type                                ns1:TaskAtSCL ;
+    ns1:outgoingCorrespondanceDepartureDate "1988-08-10"^^xsd:date ;
+    ns5:id                                  "92850"^^xsd:int ;
+    ns1:referenceSCL                        "L2312" .

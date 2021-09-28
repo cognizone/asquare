@@ -1,0 +1,719 @@
+{
+  "uri": "http://data.legilux.public.lu/resource/ontology/jolux#",
+  "CivilServant": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#CivilServant",
+      "subClassOf": ["Person"]
+    },
+    "contactPoint": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#contactPoint",
+      "range": {
+        "classId": "ContactPoint"
+      }
+    },
+    "familyName": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#familyName",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    "givenName": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#givenName",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Concept": {
+    "constraints": {
+      "rdfType": "http://www.w3.org/2004/02/skos/core#Concept"
+    }
+  },
+  "Consultation": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Consultation",
+      "subClassOf": ["LegislativeTask"]
+    },
+    "consultationStage": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStage",
+      "range": {
+        "classId": "ConsultationStage"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "consultationStatus": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStatus",
+      "range": {
+        "classId": "ConsultationStatus"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "created": {
+      "uri": "http://purl.org/dc/terms/created",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    //ontology says max 1 but designs hint multiple values
+    "foreseenImpactToLegalResource": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#foreseenImpactToLegalResource",
+      "range": {
+        "classId": "LegalResource"
+      }
+    },
+    //does not exist yet, inverse of "isSubTaskOf"
+    "hasSubTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasSubTask",
+      "range": {
+        "classId": "ConsultationTask"
+      }
+    },
+    "hasConsultationStatusHistory": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasConsultationStatusHistory",
+      "range": {
+        "classId": "ConsultationStatusHistory"
+      }
+    },
+    "isOpinionOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isOpinionOf",
+      "range": {
+        "classId": "LegalInstitution"
+      }
+    }
+  },
+  //ontology says subClass of ConsultationPhase
+  "ConsultationModificationHistory": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationModificationHistory",
+      "subClassOf": ["Event"]
+    },
+    "consultationModificationDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationModificationDate",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "maxCardinality": 1
+    },
+    "consultationStage": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStage",
+      "range": {
+        "classId": "ConsultationStage"
+      },
+      "maxCardinality": 1
+    },
+    "consultationStageDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStageDate",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "maxCardinality": 1
+    },
+    "publicationDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publicationDate",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "ConsultationPhase": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationPhase",
+      "subClassOf": ["ConsultationTask"]
+    },
+    "legalInstitutionForLegalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalInstitutionForLegalSupport",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "minCardinality": 1
+    },
+    "legalInstitutionForOpinion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalInstitutionForOpinion",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1,
+      "minCardinality": 1
+    },
+    "legalInstitutionForTechnicalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalInstitutionForTechnicalSupport",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "minCardinality": 1
+    },
+    "opinionIsAboutDraftDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionIsAboutDraftDocument",
+      "range": {
+        "classId": "DraftDocument"
+      }
+    },
+    "opinionHasDraftRelatedDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionHasDraftRelatedDocument",
+      "range": {
+        "classId": "DraftRelatedDocument"
+      }
+    },
+    "personForLegalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#personForLegalSupport",
+      "range": {
+        "classId": "Membership"
+      }
+    },
+    "personForOpinion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#personForOpinion",
+      "range": {
+        "classId": "Membership"
+      }
+    },
+    "legislativeTaskHasResultingLegalResource": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legislativeTaskHasResultingLegalResource",
+      "range": {
+        "classId": "LegalResource"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "ConsultationPreparation": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationPreparation",
+      "subClassOf": ["ConsultationTask"]
+    },
+    "foreseenEventEndDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#foreseenEventEndDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "maxCardinality": 1
+    },
+    "foreseenEventStartDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#foreseenEventStartDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "ConsultationStage": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationStage",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "ConsultationStatus": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationStatus",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "ConsultationStatusHistory": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationStatusHistory"
+    },
+    "consultationStatus": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStatus",
+      "range": {
+        "classId": "ConsultationStatus"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "factEndDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#factEndDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "maxCardinality": 1
+    },
+    "factStartDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#factStartDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "isConsultationStatusHistoryOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isConsultationStatusHistoryOf",
+      "range": {
+        "classId": "Consultation"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ConsultationTask": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ConsultationTask",
+      "subClassOf": ["LegislativeTask"]
+    },
+    "consultationHasModification": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationHasModification",
+      "range": {
+        "classId": "ConsultationModificationHistory"
+      }
+    },
+    "consultationStage": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consultationStage",
+      "range": {
+        "classId": "ConsultationStage"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "ContactPoint": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ContactPoint"
+    },
+    "email": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#email",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    "telephone": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#telephone",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    "faxnumber": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#faxnumber",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Draft": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Draft",
+      "subClassOf": ["Event"]
+    },
+    "draftHasTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftHasTask",
+      "range": {
+        "classId": "LegislativeTask"
+      }
+    }
+  },
+  "DraftDocument": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#DraftDocument",
+      "subClassOf": ["Work"]
+    },
+    "preferredUserFormat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#preferredUserFormat",
+      "range": {
+        "classId": "UserFormat"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "draftProcessDocumentType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftProcessDocumentType",
+      "range": {
+        "classId": "DraftProcessDocumentType"
+      },
+      "maxCardinality": 1
+    },
+    "title": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#title",
+      "range": {
+        "datatype": "rdf:langString"
+      },
+      "minCardinality": 1
+    }
+  },
+  "DraftProcessDocumentType": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#DraftProcessDocumentType",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "DraftRelatedDocument": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#DraftRelatedDocument",
+      "subClassOf": ["Work"]
+    },
+    "preferredUserFormat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#preferredUserFormat",
+      "range": {
+        "classId": "UserFormat"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "draftProcessDocumentType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftProcessDocumentType",
+      "range": {
+        "classId": "DraftProcessDocumentType"
+      },
+      "maxCardinality": 1
+    },
+    "title": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#title",
+      "range": {
+        "datatype": "rdf:langString"
+      },
+      "minCardinality": 1
+    }
+  },
+  "Event": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Event"
+    },
+    "eventDescription": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#eventDescription",
+      "range": {
+        "datatype": "rdf:langString"
+      }
+    },
+    "eventEndDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#eventEndDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "maxCardinality": 1
+    },
+    "eventId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#eventId",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    "eventStartDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#eventStartDate",
+      "range": {
+        "datatype": "xsd:date"
+      },
+      "maxCardinality": 1
+    },
+    "eventTitle": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#eventTitle",
+      "range": {
+        "datatype": "rdf:langString"
+      }
+    },
+    "federalCouncilEventId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#federalCouncilEventId",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    //ontology mentions the next 3 as min 1, but as Even is a superclass to almost everything, it seems wrong
+    //design suggests only 1 value per attribute
+    "institutionInChargeOfTheEvent": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheEvent",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1
+    },
+    "institutionInChargeOfTheEventLevel2": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheEventLevel2",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1
+    },
+    "institutionInChargeOfTheEventLevel3": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheEventLevel3",
+      "range": {
+        "classId": "LegalInstitution"
+      }
+    },
+    "observation": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#observation",
+      "range": {
+        "datatype": "xsd:string"
+      }
+    },
+    "parliamentEventId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#parliamentEventId",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Expression": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Expression"
+    },
+    "isEmbodiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isEmbodiedBy",
+      "range": {
+        "classId": "Manifestation"
+      }
+    },
+    "language": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#language",
+      "range": {
+        "classId": "Language"
+      },
+      "maxCardinality": 1
+    },
+    "title": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#title",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    }
+  },
+  "InitialDraft": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#InitialDraft",
+      "subClassOf": ["Draft"]
+    },
+    //temp for migration
+    "internalId": {
+      "uri": "http://cogni.zone/internal/properties/id",
+      "range": {
+        "datatype": "xsd:int"
+      },
+      "maxCardinality": 1
+    },
+    //temp for migration
+    "isMigrated": {
+      "uri": "http://cogni.internal.system/model#isMigrated",
+      "range": {
+        "datatype": "xsd:boolean"
+      },
+      "maxCardinality": 1
+    },
+    //holds the VNR number of the draft from the old DB
+    "historicalLegalId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#historicalLegalId",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Language": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Language",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "LegalInstitution": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#LegalInstitution",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "LegalResource": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#LegalResource",
+      "subClassOf": ["WorkAtOj"]
+    }
+  },
+  "LegalTaxonomy": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#LegalTaxonomy",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "LegislativeTask": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#LegislativeTask",
+      "subClassOf": ["Event"]
+    }
+  },
+  "Manifestation": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Manifestation"
+    },
+    "format": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#format",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "isExemplifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isExemplifiedBy",
+      "range": {
+        "datatype": "rdfs:Resource"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "publicationDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publicationDate",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "maxCardinality": 1
+    },
+    "publisher": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publisher",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1
+    },
+    "uploadBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#uploadBy",
+      "range": {
+        "classId": "Membership"
+      },
+      "maxCardinality": 1
+    },
+    "uploadDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#uploadDate",
+      "range": {
+        "datatype": "xsd:dateTime"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "userFormat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#userFormat",
+      "range": {
+        "classId": "UserFormat"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "title": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#title",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    "isLatest": {
+      "uri": "http://cogni.internal.system/model#isLatest",
+      "range": {
+        "datatype": "xsd:boolean"
+      },
+      "maxCardinality": 1
+    },
+    //temp for migration
+    "filename": {
+      "uri": "http://cogni.zone/internal/properties/fileName",
+      "range": {
+        "datatype": "xsd:string"
+      },
+      "maxCardinality": 1
+    },
+    //temp for migration
+    "rightsHolder": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rightsHolder",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Membership": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Membership"
+    },
+    "membershipHasMember": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#membershipHasMember",
+      "range": {
+        "classId": "CivilServant"
+      },
+      "maxCardinality": 1
+    },
+    "organization": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#organization",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "maxCardinality": 1
+    }
+  },
+  "Person": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Person",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "PositionStatementPublication": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#PositionStatementPublication",
+      "subClassOf": ["ConsultationTask"]
+    },
+    "legalInstitutionForLegalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalInstitutionForLegalSupport",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "minCardinality": 1
+    },
+    "opinionHasDraftRelatedDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionHasDraftRelatedDocument",
+      "range": {
+        "classId": "DraftRelatedDocument"
+      }
+    },
+    "personForLegalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#personForLegalSupport",
+      "range": {
+        "classId": "Membership"
+      }
+    }
+  },
+  "ResultOfAConsultationPublication": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#ResultOfAConsultationPublication",
+      "subClassOf": ["ConsultationTask"]
+    },
+    "legalInstitutionForLegalSupport": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalInstitutionForLegalSupport",
+      "range": {
+        "classId": "LegalInstitution"
+      },
+      "minCardinality": 1
+    },
+    "opinionHasDraftRelatedDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionHasDraftRelatedDocument",
+      "range": {
+        "classId": "DraftRelatedDocument"
+      }
+    }
+  },
+  "UserFormat": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#UserFormat",
+      "subClassOf": ["Concept"]
+    }
+  },
+  "Work": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#Work"
+    },
+    "isRealizedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isRealizedBy",
+      "range": {
+        "classId": "Expression"
+      }
+    }
+  },
+  //added for casemates only
+  "WorkAtOj": {
+    "constraints": {
+      "rdfType": "http://data.legilux.public.lu/resource/ontology/jolux#WorkAtOj",
+      "subClassOf": ["Work"]
+    }
+  }
+}

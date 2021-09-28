@@ -1,0 +1,15 @@
+{
+  "roles": {
+    "ADMIN": {
+      "rules": [
+        "search/filter_public/can-view",
+        "search/filter_private/can-view"
+      ]
+    },
+    "VIEW": {
+      "rules": [
+        "search/filter_public/can-view"
+      ]
+    }
+  }
+}

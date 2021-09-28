@@ -1,0 +1,23 @@
+{
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "ownedBy",
+          "property": "http://demo.com/person/model#owns",
+          "type": "object",
+          "single": true,
+          "inverse": true
+        }
+      ]
+    },
+    {
+      "id": "Person",
+      "type": "http://demo.com/person/model#Person",
+      "attributes": [
+      ]
+    }
+  ]
+}

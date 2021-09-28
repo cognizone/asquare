@@ -1,0 +1,7 @@
+{
+  "uri": "http://demo.com/applicationprofile/1",
+  "extra" : {
+    "dcDescription" : "Some description",
+    "dcTitle" : "Demo application profile"
+  }
+}

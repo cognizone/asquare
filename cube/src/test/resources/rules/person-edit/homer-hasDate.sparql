@@ -1,0 +1,12 @@
+PREFIX person: <http://demo.com/person/model#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+insert {
+  ?p person:hasDate ?date
+}
+where {
+  ?p a person:Person ;
+     person:name "#{[personName]}" .
+
+  bind(xsd:date(NOW()) as ?date)
+}

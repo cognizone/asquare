@@ -1,0 +1,11 @@
+PREFIX person: <http://demo.com/person/model#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+delete {
+  ?p person:hasId ?id
+}
+where {
+  ?p a person:Person ;
+     person:name "#{[personName]}" ;
+     person:hasId ?id .
+}

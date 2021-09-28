@@ -1,0 +1,42 @@
+{
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "name",
+          "property": "http://demo.com/person/model#name",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    },
+    {
+      "id": "Mammal",
+      "type": "http://demo.com/person/model#Mammal",
+      "superClasses": [ "Animal" ],
+      "attributes": [
+        {
+          "id": "hasHair",
+          "property": "http://demo.com/person/model#hasHair",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    },
+    {
+      "id": "Dog",
+      "type": "http://demo.com/person/model#Dog",
+      "superClasses": [ "Mammal" ],
+      "attributes": [
+        {
+          "id": "barks",
+          "property": "http://demo.com/person/model#barks",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

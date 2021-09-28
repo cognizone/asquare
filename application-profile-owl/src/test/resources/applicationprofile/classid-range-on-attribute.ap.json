@@ -1,0 +1,19 @@
+{
+  "uri": "http://demo.com/applicationprofile/1",
+  "Car": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Car"
+    },
+    "owner": {
+      "uri": "http://demo.com/onto/owner",
+      "range": {
+        "classId" : "Person"
+      }
+    }
+  },
+  "Person": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Person"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "Animal": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Animal"
+    },
+    "hasLimbs": {
+      "uri": "http://demo.com/person/model#hasLimbs",
+      "range": {
+        "classId": "Limb"
+      }
+    }
+  },
+  "Mammal": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Mammal",
+      "subClassOf": ["Animal"]
+    },
+    "hasName": {
+      "uri": "http://demo.com/person/model#hasName",
+      "maxCardinality": 1
+    }
+  },
+  "Limb": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Limb"
+    }
+  }
+}

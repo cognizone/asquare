@@ -1,0 +1,1062 @@
+{
+  "name": "jolux",
+  "ReferralToConseilGouvernement": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ReferralToConseilGouvernement",
+    "draftLegislationApprovalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftLegislationApprovalDate"
+    },
+    "memorandumOnAgendaOnDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorandumOnAgendaOnDate"
+    },
+    "referralTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referralTo"
+    },
+    "referralFrom": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referralFrom"
+    }
+  },
+  "UserFormat": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#UserFormat"
+  },
+  "ExplanatoryMemorandumRequest": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ExplanatoryMemorandumRequest",
+    "resumptionOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#resumptionOf"
+    },
+    "explanatoryMemorandumReceptionDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumReceptionDate"
+    },
+    "explanatoryMemorandumRequestTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestTo"
+    },
+    "hasResumption": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasResumption"
+    },
+    "explanatoryMemorandumRequestDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestDate"
+    },
+    "explanatoryMemorandumRequestFrom": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#explanatoryMemorandumRequestFrom"
+    }
+  },
+  "Task": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Task",
+    "taskObservation": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#taskObservation"
+    },
+    "priorityLevel": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#priorityLevel"
+    },
+    "isTaskOfDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isTaskOfDraft"
+    },
+    "taskReference": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#taskReference"
+    },
+    "institutionInChargeOfTheTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheTask"
+    }
+  },
+  "Compilation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Compilation",
+    "upToDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#upToDate"
+    }
+  },
+  "BaseAct": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#BaseAct",
+    "isBasicActOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isBasicActOf"
+    }
+  },
+  "ExchangeOfNote": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ExchangeOfNote",
+    "noteDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#noteDate"
+    },
+    "noteTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#noteTo"
+    },
+    "noteFrom": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#noteFrom"
+    }
+  },
+  "EUReglementation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#EUReglementation"
+  },
+  "LegalResourceAbstract": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalResourceAbstract"
+  },
+  "LegalSubject": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalSubject"
+  },
+  "EntryIntoForce": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#EntryIntoForce",
+    "entryIntoForceFor": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceFor"
+    },
+    "entryIntoForceDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceDate"
+    },
+    "entryIntoForceBasedOn": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceBasedOn"
+    },
+    "entryIntoForceRelatedAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#entryIntoForceRelatedAct"
+    }
+  },
+  "TreatySubjectTheme": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TreatySubjectTheme"
+  },
+  "InstrumentType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#InstrumentType"
+  },
+  "License": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#License"
+  },
+  "OpinionDocument": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#OpinionDocument",
+    "isOutputDocumentOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isOutputDocumentOf"
+    }
+  },
+  "Document": {
+    "uri": "http://xmlns.com/foaf/0.1/Document"
+  },
+  "NationalLegalResource": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#NationalLegalResource",
+    "implements": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#implements"
+    },
+    "subjectLevel2": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#subjectLevel2"
+    },
+    "subjectLevel1": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#subjectLevel1"
+    },
+    "subject": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#subject"
+    },
+    "countersignedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#countersignedBy"
+    },
+    "formerVersionOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#formerVersionOf"
+    },
+    "isPartOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isPartOf"
+    },
+    "juridiction": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#juridiction"
+    },
+    "formerVersion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#formerVersion"
+    },
+    "historicalLegalId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#historicalLegalId"
+    },
+    "draft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draft"
+    },
+    "signaturePlace": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signaturePlace"
+    },
+    "personInCharge": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#personInCharge"
+    }
+  },
+  "Transposition": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Transposition",
+    "transpositionPrevisionalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionPrevisionalDate"
+    },
+    "transpositionDeadline": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionDeadline"
+    },
+    "transposedEUDirective": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transposedEUDirective"
+    },
+    "transpositionCompletion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionCompletion"
+    },
+    "resultingAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#resultingAct"
+    },
+    "transpositionEndDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionEndDate"
+    },
+    "transpositionDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionDraft"
+    },
+    "institutionInChargeOfTheTransposition": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheTransposition"
+    }
+  },
+  "TransmissionOfInstrumentSignature": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TransmissionOfInstrumentSignature"
+  },
+  "OpinionConseilEtat": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#OpinionConseilEtat",
+    "dateExemption2ndVote": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateExemption2ndVote"
+    },
+    "referenceArticleConstitution": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referenceArticleConstitution"
+    },
+    "referenceArticleConstitutionLabel": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referenceArticleConstitutionLabel"
+    },
+    "draftStatusConseilEtat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftStatusConseilEtat"
+    },
+    "plenaryDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#plenaryDate"
+    },
+    "isSupplementaryOpinionOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isSupplementaryOpinionOf"
+    },
+    "dateRefusalExemption2ndVote": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateRefusalExemption2ndVote"
+    },
+    "hasSupplementaryOpinion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasSupplementaryOpinion"
+    }
+  },
+  "Amendment": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Amendment",
+    "dateOutGoingChambreDeputes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateOutGoingChambreDeputes"
+    },
+    "dateIncomingChambreDeputes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateIncomingChambreDeputes"
+    },
+    "amendmentType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#amendmentType"
+    },
+    "dateAmendment": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateAmendment"
+    },
+    "amendmentComment": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#amendmentComment"
+    },
+    "dateOutgoingConseilEtat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateOutgoingConseilEtat"
+    },
+    "dateAdoptionByParliamentaryCommission": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateAdoptionByParliamentaryCommission"
+    },
+    "isAmendmentOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isAmendmentOf"
+    },
+    "dateIncomingConseilEtat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateIncomingConseilEtat"
+    }
+  },
+  "PriorityLevel": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#PriorityLevel"
+  },
+  "DraftType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#DraftType"
+  },
+  "LegalSubjectLegalResource": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectLegalResource"
+  },
+  "Registration": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Registration",
+    "registrationDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#registrationDate"
+    },
+    "registrationId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#registrationId"
+    },
+    "registrationBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#registrationBy"
+    }
+  },
+  "EULegalResource": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#EULegalResource",
+    "euLegalResourceId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#euLegalResourceId"
+    },
+    "transposedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transposedBy"
+    },
+    "implementedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#implementedBy"
+    }
+  },
+  "LuxActAndEULegalResource": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LuxActAndEULegalResource",
+    "basisFor": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#basisFor"
+    }
+  },
+  "Work": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Work",
+    "description": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#description"
+    },
+    "typeDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#typeDocument"
+    },
+    "isMemberOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isMemberOf"
+    },
+    "isRealizedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isRealizedBy"
+    }
+  },
+  "MediaType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#MediaType"
+  },
+  "LegalInstitution": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalInstitution",
+    "isPublisherOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isPublisherOf"
+    },
+    "initiates": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#initiates"
+    },
+    "hasReceivedExplanatoryMemorandumRequestFrom": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasReceivedExplanatoryMemorandumRequestFrom"
+    },
+    "counterSigns": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#counterSigns"
+    },
+    "signsFullPowers": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signsFullPowers"
+    },
+    "hasRequestedExplanatoryMemorandum": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasRequestedExplanatoryMemorandum"
+    },
+    "hasRightsOn": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasRightsOn"
+    },
+    "isResponsableFor": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isResponsableFor"
+    }
+  },
+  "Memorial": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Memorial",
+    "memorialNumber": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorialNumber"
+    },
+    "hasPart": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasPart"
+    },
+    "memorialName": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorialName"
+    },
+    "memorialYear": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorialYear"
+    }
+  },
+  "Agent": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Agent",
+    "signs": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signs"
+    }
+  },
+  "OpinionStatus": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#OpinionStatus"
+  },
+  "Manifestation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Manifestation",
+    "rightsHolder": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rightsHolder"
+    },
+    "previousIsExemplifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#previousIsExemplifiedBy"
+    },
+    "format": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#format"
+    },
+    "annexIsExemplifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#annexIsExemplifiedBy"
+    },
+    "memorialPage": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorialPage"
+    },
+    "embodies": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#embodies"
+    },
+    "memorialSequence": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#memorialSequence"
+    },
+    "license": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#license"
+    },
+    "positionInDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#positionInDocument"
+    },
+    "userFormat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#userFormat"
+    },
+    "signatureIsExamplifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signatureIsExamplifiedBy"
+    },
+    "publishedIn": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publishedIn"
+    },
+    "rights": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rights"
+    },
+    "publishes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publishes"
+    },
+    "isExemplifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isExemplifiedBy"
+    },
+    "publisher": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publisher"
+    },
+    "legalValue": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#legalValue"
+    }
+  },
+  "ActAbstract": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ActAbstract"
+  },
+  "Code": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Code",
+    "initiatedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#initiatedBy"
+    }
+  },
+  "InforcementStatus": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#InforcementStatus"
+  },
+  "TreatySignature": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TreatySignature",
+    "treatySignedForOtherPartiesBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatySignedForOtherPartiesBy"
+    },
+    "treatySignedForLuxembourgBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatySignedForLuxembourgBy"
+    },
+    "treatyLanguage": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyLanguage"
+    },
+    "treatyLuxembourgSignatureDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyLuxembourgSignatureDate"
+    },
+    "treatyLuxembourgSignaturePlace": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyLuxembourgSignaturePlace"
+    }
+  },
+  "CodeAbstract": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#CodeAbstract"
+  },
+  "NotificationType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#NotificationType"
+  },
+  "OpinionRequest": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#OpinionRequest",
+    "referalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referalDate"
+    },
+    "opinionRequestAbout": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionRequestAbout"
+    },
+    "opinionRequestTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionRequestTo"
+    },
+    "referalLetterReference": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referalLetterReference"
+    }
+  },
+  "InitialDraft": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#InitialDraft",
+    "hasAmendment": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasAmendment"
+    }
+  },
+  "Collection": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Collection",
+    "integratesLegalResource": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#integratesLegalResource"
+    }
+  },
+  "Country": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Country"
+  },
+  "TransmissionOfSignedInstrument": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TransmissionOfSignedInstrument",
+    "relatedInstrument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#relatedInstrument"
+    },
+    "signedInstrumentTransmissionTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signedInstrumentTransmissionTo"
+    },
+    "signedInstrumentTransmissionDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signedInstrumentTransmissionDate"
+    }
+  },
+  "Person": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Person",
+    "contactInfo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#contactInfo"
+    },
+    "givenName": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#givenName"
+    },
+    "familyName": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#familyName"
+    }
+  },
+  "InternationalActor": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#InternationalActor"
+  },
+  "SignedTreatyReception": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#SignedTreatyReception",
+    "signedTreatyReceptionDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signedTreatyReceptionDate"
+    },
+    "signedTreatyCopyReceptionDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signedTreatyCopyReceptionDate"
+    }
+  },
+  "MemorialSerial": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#MemorialSerial"
+  },
+  "TaskAtMinistry": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TaskAtMinistry",
+    "arreteGDDepositDateToStateMinistry": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#arreteGDDepositDateToStateMinistry"
+    },
+    "responsiblePerson": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#responsiblePerson"
+    },
+    "serviceInCharge": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#serviceInCharge"
+    },
+    "otherConcernedMinistry": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#otherConcernedMinistry"
+    },
+    "personInChargeOfTheTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#personInChargeOfTheTask"
+    },
+    "draftSignatureRequestTransmissionDateToStateMinistry": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftSignatureRequestTransmissionDateToStateMinistry"
+    },
+    "responsiblePersonLabel": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#responsiblePersonLabel"
+    },
+    "referenceMinistryLetter": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#referenceMinistryLetter"
+    }
+  },
+  "Opinion": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Opinion",
+    "opinionIsAbout": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionIsAbout"
+    },
+    "isOpinionOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isOpinionOf"
+    },
+    "opinionDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionDate"
+    },
+    "rapporteur": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rapporteur"
+    },
+    "dateCommittee": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateCommittee"
+    },
+    "dueDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dueDate"
+    },
+    "rapporteurLabel": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rapporteurLabel"
+    },
+    "conseilEtatFormalOpposition": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#conseilEtatFormalOpposition"
+    },
+    "hasResultingDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasResultingDocument"
+    },
+    "opinionReference": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#opinionReference"
+    },
+    "answerToOpinionRequest": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#answerToOpinionRequest"
+    }
+  },
+  "TransmissionMarechalat": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TransmissionMarechalat",
+    "transmissionDateDeposit": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transmissionDateDeposit"
+    },
+    "signatureDateDeposit": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#signatureDateDeposit"
+    },
+    "transmissionDateRetrieval": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transmissionDateRetrieval"
+    }
+  },
+  "TaskForTreaty": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TaskForTreaty",
+    "isTaskOfTreatyProcess": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isTaskOfTreatyProcess"
+    }
+  },
+  "CollectionAbstract": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#CollectionAbstract"
+  },
+  "TransmissionTaskAtSCL": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TransmissionTaskAtSCL",
+    "outgoingCorrespondanceAddressee": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceAddressee"
+    },
+    "dateCreationDraftAtSCL": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateCreationDraftAtSCL"
+    },
+    "incomingCorrespondanceAnnex": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondanceAnnex"
+    },
+    "outgoingCorrespondanceReference": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceReference"
+    },
+    "incomingCorrespondanceArrivalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondanceArrivalDate"
+    },
+    "incomingCorrespondanceObject": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondanceObject"
+    },
+    "outgoingCorrespondanceAnnex": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceAnnex"
+    },
+    "incomingCorrespondanceIssuer": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondanceIssuer"
+    },
+    "outgoingCorrespondanceDepartureDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceDepartureDate"
+    },
+    "outgoingCorrespondanceObject": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceObject"
+    },
+    "outgoingCorrespondanceDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#outgoingCorrespondanceDate"
+    },
+    "incomingCorrespondanceDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#incomingCorrespondanceDate"
+    },
+    "transmissionType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transmissionType"
+    }
+  },
+  "Notification": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Notification",
+    "notificationDepositary": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationDepositary"
+    },
+    "notificationFrom": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationFrom"
+    },
+    "notificationRelatedAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationRelatedAct"
+    },
+    "notificationScope": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationScope"
+    },
+    "notificationEntryInForceDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationEntryInForceDate"
+    },
+    "notificationType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#notificationType"
+    }
+  },
+  "ContactPoint": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ContactPoint",
+    "telephone": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#telephone"
+    },
+    "email": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#email"
+    }
+  },
+  "ProcessType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ProcessType"
+  },
+  "Consolidation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Consolidation",
+    "isIntegratedInCollection": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isIntegratedInCollection"
+    },
+    "consolidates": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consolidates"
+    },
+    "basicAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#basicAct"
+    }
+  },
+  "Language": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Language"
+  },
+  "TaskAtSCL": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TaskAtSCL",
+    "authorOfPriorityRequest": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#authorOfPriorityRequest"
+    },
+    "isSubTaskOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isSubTaskOf"
+    },
+    "priorityLevelSCL": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#priorityLevelSCL"
+    },
+    "motivationOfPriorityRequest": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#motivationOfPriorityRequest"
+    }
+  },
+  "ComplexWork": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ComplexWork",
+    "hasMember": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasMember"
+    }
+  },
+  "TranspositionCompletionStatus": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TranspositionCompletionStatus"
+  },
+  "TaskAtChambreDeputes": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TaskAtChambreDeputes",
+    "rapporteurChambreDeputes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rapporteurChambreDeputes"
+    },
+    "rapporteurChambreDeputesLabel": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rapporteurChambreDeputesLabel"
+    },
+    "depositDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#depositDate"
+    },
+    "documentIdAtChambreDeputes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#documentIdAtChambreDeputes"
+    },
+    "arreteGDRetrieval": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#arreteGDRetrieval"
+    },
+    "requestSecondVoteExemption": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#requestSecondVoteExemption"
+    },
+    "firstLectureVodeDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#firstLectureVodeDate"
+    },
+    "arreteGDDeposit": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#arreteGDDeposit"
+    },
+    "draftUrlChambreDeputes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftUrlChambreDeputes"
+    },
+    "finalVoteDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#finalVoteDate"
+    },
+    "secondVoteConstitutionalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#secondVoteConstitutionalDate"
+    }
+  },
+  "FullPowersDelivery": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#FullPowersDelivery",
+    "fullPowersDeliveredTo": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#fullPowersDeliveredTo"
+    },
+    "fullPowersDeliveringDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#fullPowersDeliveringDate"
+    }
+  },
+  "ArticleAbstract": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#ArticleAbstract"
+  },
+  "TreatyDomain": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TreatyDomain"
+  },
+  "AdministrativeArea": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#AdministrativeArea"
+  },
+  "StatusVersion": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#StatusVersion"
+  },
+  "StatusDraft": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#StatusDraft"
+  },
+  "OpinionProfessionalOrganisation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#OpinionProfessionalOrganisation"
+  },
+  "EUDirective": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#EUDirective",
+    "EUDirectiveTranspositionProcess": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#EUDirectiveTranspositionProcess"
+    }
+  },
+  "FullPowersSignature": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#FullPowersSignature",
+    "fullPowersSignatureBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#fullPowersSignatureBy"
+    },
+    "fullPowerSignatureDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#fullPowerSignatureDate"
+    }
+  },
+  "TreatyProcess": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TreatyProcess",
+    "treatyProcessHasTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyProcessHasTask"
+    },
+    "treatyInForceStatus": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyInForceStatus"
+    },
+    "treatySignaturePlace": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatySignaturePlace"
+    },
+    "treatyBasedOnTreaty": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyBasedOnTreaty"
+    },
+    "treatyBasisForTreaty": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyBasisForTreaty"
+    },
+    "treatyParty": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyParty"
+    },
+    "treatyType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyType"
+    },
+    "treatySubject": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatySubject"
+    },
+    "treatyDomain": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyDomain"
+    },
+    "treatyPartyCountry": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyPartyCountry"
+    },
+    "treatyInForceStatusForLux": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyInForceStatusForLux"
+    },
+    "treatyPartyOrganisation": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyPartyOrganisation"
+    },
+    "titleTreaty": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#titleTreaty"
+    },
+    "approbationAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#approbationAct"
+    },
+    "bilateral": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#bilateral"
+    },
+    "treatyComment": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyComment"
+    },
+    "needForRatification": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#needForRatification"
+    },
+    "treatyProcessHasTaskDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#treatyProcessHasTaskDraft"
+    }
+  },
+  "LegalSubjectTheme": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectTheme"
+  },
+  "LegalResourceDocumentType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalResourceDocumentType"
+  },
+  "TreatyType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TreatyType"
+  },
+  "Draft": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Draft",
+    "draftHasTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftHasTask"
+    },
+    "draftId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftId"
+    },
+    "titleDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#titleDraft"
+    },
+    "possibleChangesOnLegalResource": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#possibleChangesOnLegalResource"
+    },
+    "expectedEmpoweringAct": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#expectedEmpoweringAct"
+    },
+    "transpositionProcess": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transpositionProcess"
+    },
+    "draftObservation": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftObservation"
+    },
+    "statusDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#statusDraft"
+    },
+    "initialTitleDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#initialTitleDraft"
+    },
+    "draftType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftType"
+    },
+    "resultingLegalResource": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#resultingLegalResource"
+    },
+    "altShortTitleDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#altShortTitleDraft"
+    },
+    "parliamentDraftId": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#parliamentDraftId"
+    },
+    "withdrawalDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#withdrawalDate"
+    },
+    "dateSecondVote": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateSecondVote"
+    },
+    "acceptanceCGDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#acceptanceCGDate"
+    },
+    "hasOpinion": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#hasOpinion"
+    },
+    "withdrawalReason": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#withdrawalReason"
+    },
+    "draftIsTaskOfTreatyProcess": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftIsTaskOfTreatyProcess"
+    },
+    "institutionInChargeOfTheDraft": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#institutionInChargeOfTheDraft"
+    },
+    "parliamentDraftUrl": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#parliamentDraftUrl"
+    },
+    "consolidationDraftURL": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consolidationDraftURL"
+    },
+    "drafHasTask": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#drafHasTask"
+    },
+    "previsionalFirstDateEntryinForce": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#previsionalFirstDateEntryinForce"
+    }
+  },
+  "Act": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Act",
+    "transposes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#transposes"
+    },
+    "changes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#changes"
+    },
+    "modifies": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#modifies"
+    },
+    "consolidatedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#consolidatedBy"
+    },
+    "needForImplementingRegulation": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#needForImplementingRegulation"
+    },
+    "inForceStatus": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#inForceStatus"
+    },
+    "rectifies": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rectifies"
+    },
+    "changedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#changedBy"
+    },
+    "repeals": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#repeals"
+    },
+    "modifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#modifiedBy"
+    },
+    "rectifiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#rectifiedBy"
+    },
+    "processType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#processType"
+    },
+    "conditionalApplicability": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#conditionalApplicability"
+    },
+    "repealedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#repealedBy"
+    },
+    "dateApplicability": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateApplicability"
+    },
+    "conditionalApplicabilityRemark": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#conditionalApplicabilityRemark"
+    },
+    "basedOn": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#basedOn"
+    }
+  },
+  "Expression": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Expression",
+    "isEmbodiedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isEmbodiedBy"
+    },
+    "realizes": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#realizes"
+    },
+    "language": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#language"
+    }
+  },
+  "LegalSubjectOrganisation": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectOrganisation"
+  },
+  "TransmissionType": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#TransmissionType"
+  },
+  "Instrument": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Instrument",
+    "instrumentSignedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#instrumentSignedBy"
+    },
+    "instrumentSignatureDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#instrumentSignatureDate"
+    },
+    "instrumentType": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#instrumentType"
+    }
+  },
+  "Event": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#Event",
+    "isSubEventOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isSubEventOf"
+    }
+  },
+  "LegalSubjectPlace": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalSubjectPlace"
+  },
+  "LegalResource": {
+    "uri": "http://data.legilux.public.lu/resource/ontology/jolux#LegalResource",
+    "isCitedBy": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#isCitedBy"
+    },
+    "dateNoLongerInForce": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateNoLongerInForce"
+    },
+    "dateDocument": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateDocument"
+    },
+    "responsibilityOf": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#responsibilityOf"
+    },
+    "dateEndApplicability": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateEndApplicability"
+    },
+    "cites": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#cites"
+    },
+    "dateEntryInForce": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateEntryInForce"
+    },
+    "publicationDate": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#publicationDate"
+    },
+    "applicabilityArea": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#applicabilityArea"
+    }
+  }
+}

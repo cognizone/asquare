@@ -1,0 +1,27 @@
+{
+  "uri": "http://demo.com/",
+  "imports": [
+    "model/basic/imported.ap.json"
+  ],
+  "Car": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Car"
+    },
+    "licensePlate": {
+      "uri": "http://demo.com/onto/licensePlate",
+      "range": {
+        "datatype": "http://www.w3.org/2000/01/rdf-schema#Literal"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+    "owner": {
+      "uri": "http://demo.com/onto/owner",
+      "minCardinality": 1,
+      "maxCardinality": 1,
+      "range": {
+        "classId": "Organization"
+      }
+    }
+  }
+}

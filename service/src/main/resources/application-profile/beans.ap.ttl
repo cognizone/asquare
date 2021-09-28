@@ -1,0 +1,25 @@
+@prefix a2: <http://zone.cogni/asquare/model/>.
+
+a2:ApplicationView
+  a2:serviceClass "zone.cogni.asquare.access.ApplicationView".
+
+a2:RdfRepository
+  a2:serviceClass "zone.cogni.asquare.access.simplerdf.SimpleRdfAccessService".
+a2:ElasticsearchRepository
+  a2:serviceClass "zone.cogni.asquare.access.simple.SimpleElasticAccessService".
+
+a2:InMemoryDatabase
+  a2:serviceClass "zone.cogni.asquare.triplestore.jenamemory.InMemoryDatabase".
+a2:SparqlEndpointDatabase
+  a2:serviceClass "zone.cogni.asquare.triplestore.sparqlendpoint.SparqlEndpointDatabase".
+
+a2:JenaModel
+  a2:serviceClass "zone.cogni.asquare.triplestore.jenamemory.JenaModel".
+
+a2:ApplicationProfile
+  a2:serviceClass "zone.cogni.asquare.applicationprofile.json.ApplicationProfileSupplier".
+
+a2:ResourceSupplier
+  a2:serviceClass "zone.cogni.asquare.access.ResourceSupplier".
+a2:TemplatedResourceSupplier
+  a2:serviceClass "zone.cogni.asquare.access.TemplatedResourceSupplier".

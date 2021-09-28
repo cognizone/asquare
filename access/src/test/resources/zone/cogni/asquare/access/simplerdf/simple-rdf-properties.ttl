@@ -1,0 +1,56 @@
+@base <http://example.cogni.zone/data/>
+
+@prefix onto: <http://example.cogni.zone/ontology/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+#
+# person
+#
+<jan> a onto:Person;
+      foaf:name "Jan";
+      onto:relatedConcept <male>,
+                          <human>,
+                          "weirdString",
+                          999,
+                          "1"^^xsd:int,
+                          "13"^^xsd:int
+                          .
+
+#
+# animal concept scheme
+#
+<animals> a skos:ConceptScheme;
+    skos:hasTopConcept <human>, <dog>;
+    foaf:name "animals".
+
+<human> a skos:Concept;
+         skos:prefLabel "human";
+         skos:inScheme <animals>
+.
+
+<dog> a skos:Concept;
+         skos:prefLabel "dog";
+         skos:inScheme <dog>
+.
+
+#
+# gender concept scheme
+#
+<gender> a skos:ConceptScheme;
+    skos:hasTopConcept <male>, <female>;
+    foaf:name "sex".
+
+<male> a skos:Concept;
+         skos:prefLabel "male";
+         skos:inScheme <gender>
+.
+
+<female> a skos:Concept;
+           skos:prefLabel "female";
+           skos:inScheme <gender>
+.
+
+

@@ -1,0 +1,50 @@
+{
+  "data": {
+    "uri": "http://demo.com/data#homer",
+    "type": "Person",
+    "references": {
+      "hasChild": [
+        "http://demo.com/data#bart"
+      ],
+      "spouse": "http://demo.com/data#marge"
+    },
+    "attributes": {
+      "hasId": {
+        "http://demo.com/data-type/id-type": "123.456"
+      },
+      "name": {
+        "xsd:string": "Homer Simpson"
+      },
+      "hasDate": {
+        "xsd:date": [
+          "2021-04-29"
+        ]
+      },
+      "website": {
+        "xsd:anyURI": [
+          "http://demo.com/homer/simpson"
+        ]
+      }
+    }
+  },
+  "included": [
+    {
+      "uri": "http://demo.com/data#bart",
+      "type": "Person",
+      "attributes": {
+        "name": {
+          "xsd:string": "Bart Simpson"
+        }
+      }
+    },
+    {
+      "uri": "http://demo.com/data#marge",
+      "type": "Person",
+      "attributes": {
+        "name": {
+          "xsd:string": "Marge Simpson"
+        }
+      }
+    }
+  ]
+}

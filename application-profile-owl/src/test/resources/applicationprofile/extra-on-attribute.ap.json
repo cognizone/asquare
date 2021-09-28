@@ -1,0 +1,15 @@
+{
+  "uri": "http://demo.com/applicationprofile/1",
+  "Car": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Car"
+    },
+    "basisFor": {
+      "uri": "http://demo.com/onto/basisFor",
+      "extra" : {
+        "dcDescription" : "Some description",
+        "dcTitle" : "Demo attribute"
+      }
+    }
+  }
+}

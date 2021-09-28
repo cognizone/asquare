@@ -1,0 +1,43 @@
+{
+  "types": [
+    {
+      "id": "Person",
+      "type": "http://demo.com/person/model#Person",
+      "attributes": [
+        {
+          "id": "name",
+          "property": "http://demo.com/person/model#name",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "spouse",
+          "property": "http://demo.com/person/model#spouse",
+          "type": "object",
+          "single": true
+        },
+        {
+          "id": "hasChild",
+          "property": "http://demo.com/person/model#hasChild",
+          "type": "object"
+        },
+        {
+          "id": "hasDate",
+          "property": "http://demo.com/person/model#hasDate",
+          "type": "datatype"
+        },
+        {
+          "id": "website",
+          "property": "http://demo.com/person/model#website",
+          "type": "datatype"
+        },
+        {
+          "id": "hasId",
+          "property": "http://demo.com/person/model#hasId",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

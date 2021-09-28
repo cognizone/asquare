@@ -1,0 +1,20 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select  ?class ?property ?cardinalityType ?cardinality ?cardinality2 {
+  ?class rdfs:subClassOf ?restriction.
+  ?restriction a owl:Restriction.
+  ?restriction ?cardinalityType ?cardinality.
+  ?restriction owl:onProperty ?property.
+
+  ?class rdfs:subClassOf ?restriction2.
+  ?restriction2 a owl:Restriction.
+  ?restriction2 ?cardinalityType ?cardinality2.
+  ?restriction2 owl:onProperty ?property.
+
+  FILTER (?cardinalityType in (owl:cardinality, owl:maxCardinality, owl:minCardinality))
+
+  FILTER (?restriction != ?restriction2)
+
+}

@@ -1,0 +1,64 @@
+{
+  "Animal": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Animal"
+    },
+    "hasLimbs": {
+      "uri": "http://demo.com/person/model#hasLimbs",
+      "range": {
+        "classId": "Limb"
+      }
+    }
+  },
+  "Mammal": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Mammal",
+      "subClassOf": ["Animal"]
+    },
+    "hasLimbs": {
+      "uri": "http://demo.com/person/model#hasLimbs",
+      "range": {
+        "classId": "Limb"
+      },
+      "maxCardinality": 4
+    }
+  },
+  "Snake": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Snake",
+      "subClassOf": ["Animal"]
+    },
+    "hasLimbs": {
+      "uri": "http://demo.com/person/model#hasLimbs",
+      "range": {
+        "classId": "Limb"
+      },
+      "maxCardinality": 0
+    }
+  },
+  "Horse": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Horse",
+      "subClassOf": ["Mammal"]
+    },
+    // same property, same uri, different range
+    "hasLimbs": {
+      "uri": "http://demo.com/person/model#hasLimbs",
+      "range": {
+        "classId": "Leg"
+      },
+      "maxCardinality": 4
+    }
+  },
+  "Limb": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Limb"
+    }
+  },
+  "Leg": {
+    "constraints": {
+      "rdfType": "http://demo.com/person/model#Leg",
+      "subClassOf" : ["Limb"]
+    }
+  }
+}

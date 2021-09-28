@@ -1,0 +1,8 @@
+{
+  // for consultations
+  id: 'demo',
+  someNumber: 23,
+  /* use uri suffix of type project 4 */
+  multiLine: "select one \
+  two"
+}

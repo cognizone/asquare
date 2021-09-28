@@ -1,0 +1,21 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+  ?property rdfs:domain ?d2.
+}
+where {
+  ?property a ?propertyType.
+  filter (?propertyType in (owl:AnnotationProperty, owl:DatatypeProperty, owl:ObjectProperty))
+
+  ?property rdfs:domain ?d1.
+  ?property rdfs:domain ?d2.
+
+  filter (!isblank(?property))
+  filter (!isblank(?d1))
+  filter (!isblank(?d2))
+  filter (?d1 != ?d2)
+
+  ?d1 rdfs:subClassOf ?d2.
+}

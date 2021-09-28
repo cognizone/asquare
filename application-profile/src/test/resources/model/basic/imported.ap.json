@@ -1,0 +1,18 @@
+{
+  "uri": "http://demo.com/",
+  "Organization": {
+    "constraints": {
+      "rdfType": "http://demo.com/onto/Org"
+    }
+  },
+  "RegisteredOrganization": {
+    "constraints": {
+      "and": {
+        "not": {
+          "classId": "Organization"
+        },
+        "rdfType": "http://demo.com/onto/RegOrg"
+      }
+    }
+  }
+}

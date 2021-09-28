@@ -1,0 +1,124 @@
+{
+  "uri": "http://data.europa.eu/dg-empl/ctms/configuration",
+  "MappingEffortConfigurationDataset": {
+    "constraints": {
+      "subClassOf": "DcatDataset"
+    },
+    "dcatDistribution": {
+      "uri": "dcat:distribution",
+      "range": {
+        "classId": "MappingEffortConfigurationDistribution"
+      },
+      "cardinality": 1
+    },
+    "deployment": {
+      "range": {
+        "classId": "MappingEffortDeploymentDataset"
+      },
+      "maxCardinality": 1
+    },
+    "uses": {
+      "uri": "???",
+      "range": {
+        // explicit ?! how?
+        "resourceReference": "http://data.europa.eu/dg-empl/ctms/conceptScheme/languages"
+      }
+    }
+  },
+  "MappingEffortConfigurationDistribution": {
+    "constraints": {
+      "subClassOf": "DcatDistribution"
+    },
+    "from": {
+      "range": {
+        "classId": "Taxonomy"
+      },
+      "cardinality": 1
+    },
+    "to": {
+      "range": {
+        "classId": "Taxonomy"
+      },
+      "cardinality": 1
+    }
+  },
+  "Taxonomy": {
+    "about": {
+      "range": {
+        "classId": "DcatDataset"
+      },
+      "cardinality": 1
+    },
+    "preferredLanguage": {
+      "range": {
+        "and": {
+          "classId": "SkosConcept",
+          "propertyPath": {
+            "path": "http://www.w3.org/2004/02/skos/core#inScheme",
+            "value": "http://data.europa.eu/dg-empl/ctms/conceptScheme/languages"
+          }
+        }
+      },
+      "cardinality": 1
+    },
+    "supportedLanguage": {
+      "range": {
+        "and": {
+          "classId": "SkosConcept",
+          "propertyPath": {
+            "path": "http://www.w3.org/2004/02/skos/core#inScheme",
+            "value": "http://data.europa.eu/dg-empl/ctms/conceptScheme/languages"
+          }
+        }
+      },
+      "minCardinality": 1
+    }
+  },
+  "MappingEffortDeploymentDataset": {
+    "constraints": {
+      "subClassOf": "DcatDataset"
+    },
+    "dcatDistribution": {
+      "uri": "dcat:distribution",
+      "range": {
+        "classId": "MappingEffortDeploymentDistribution"
+      },
+      "cardinality": 1
+    }
+  },
+  "MappingEffortDeploymentDistribution": {
+    "constraints": {
+      "subClassOf": "DcatDistribution"
+    },
+    "fromSearchIndex": {
+      "range": {
+        "classId": "ElasticSearchIndex"
+      },
+      "cardinality": 1
+    },
+    "toSearchIndex": {
+      "range": {
+        "classId": "ElasticSearchIndex"
+      },
+      "cardinality": 1
+    },
+    "fromTreeResource": {
+      "range": {
+        "classId": "File"
+      },
+      "cardinality": 1
+    },
+    "toTreeResource": {
+      "range": {
+        "classId": "File"
+      },
+      "cardinality": 1
+    },
+    "triplestore": {
+      "range": {
+        "classId": "Triplestore"
+      },
+      "cardinality": 1
+    }
+  }
+}

@@ -1,0 +1,124 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ns1:    <http://data.legilux.public.lu/resource/ontology/jolux#> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    rdf:type ns1:InitialDraft .
+
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns3:    <http://purl.org/dc/terms/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns3:modified          "1988-08-10T08:00:00Z"^^xsd:dateTime ;
+    ns1:parliamentDraftId "3236" ;
+    ns1:parliamentDraftUrl
+                          "http://www.chd.lu/wps/portal/public/Accueil/TravailALaChambre/Recherche/RechercheArchives?lqs_fmid=&lqs_dpid=3236"^^xsd:anyURI .
+
+@prefix ns4:    <http://data.legilux.public.lu/resource/authority/draft-status/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns1:statusDraft ns4:publie ;
+    ns1:titleDraft  "<p>Projet de r\u00E9vision de l'article 97 de la Constitution. (Georges Margue)</p>" .
+
+@prefix ns5:    <http://cogni.zone/internal/properties/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns5:id "92796"^^xsd:int .
+
+@prefix ns6:    <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns1:draftHasTask ns6:taskAtSCL, ns6:taskAtMinistry,
+                     <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/TaskAtCommitteeChambreDepute/1>,
+                     ns6:TaskAtChambreDeputes .
+
+@prefix ns7:    <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/TaskAtChambreDeputes/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns1:draftHasTask ns7:VOT1 ;
+    ns1:draftId      "19880140" .
+
+@prefix ns8:    <http://data.legilux.public.lu/resource/authority/type-projet/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns1:eventType          ns8:PC ;
+    ns1:altShortTitleDraft "R\u00E9vision de la Constitution - art. 97 (Margue)" ;
+    ns1:created            "1988-08-10T08:00:00Z"^^xsd:dateTime ;
+    ns1:hasOpinion         <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/AVCE/1>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/DISP/1>,
+                           <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/1> ;
+    ns1:initialTitleDraft  "Projet de r\u00E9vision de l'article 97 de la Constitution. (Georges Margue)" .
+
+@prefix ns9:    <http://data.legilux.public.lu/eli/etat/leg/loi/1989/06/13/n6/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140>
+    ns1:hasResultingLegalResource ns9:jo .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/1>
+    rdf:type ns1:OpinionConseilEtat .
+
+@prefix ns10:    <http://data.legilux.public.lu/resource/authority/legal-institution/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/1>
+    ns1:institutionInChargeOfTheTask ns10:CE ;
+    ns1:isOpinionOf                  ns10:CE ;
+    ns1:opinionReference             "36.728" .
+
+@prefix ns11:    <http://data.legilux.public.lu/eli/etat/proj/pc/19880140/opinionConseilEtat/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/1>
+    ns1:answerToOpinionRequest ns11:opinionRequest ;
+    ns1:dueDate                "1900-01-01"^^xsd:date ;
+    ns1:rapporteur             <http://data.legilux.public.lu/resource/authority/person/00331> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/AVCE/1>
+    rdf:type        ns1:OpinionConseilEtat ;
+    ns1:opinionDate "1989-02-21"^^xsd:date ;
+    ns1:eventType   ns8:AVCE .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/OpinionConseilEtat/DISP/1>
+    rdf:type                 ns1:OpinionConseilEtat ;
+    ns1:eventType            ns8:DISP ;
+    ns1:dateExemption2ndVote "1989-05-02"^^xsd:date .
+
+ns6:TaskAtChambreDeputes
+    rdf:type                          ns1:TaskAtChambreDeputes ;
+    ns1:institutionInChargeOfTheTask  ns10:CHD ;
+    ns1:rapporteurChambreDeputes      <http://data.legilux.public.lu/resource/authority/person/00056> ;
+    ns1:rapporteurChambreDeputesLabel "Colette Flesch" ;
+    ns1:arreteGDDeposit               "Georges Margue" ;
+    ns1:depositDate                   "1988-07-19"^^xsd:date .
+
+ns7:VOT1
+    rdf:type                       ns1:TaskAtChambreDeputes ;
+    ns1:requestSecondVoteExemption "1989-04-20"^^xsd:date ;
+    ns1:eventType                  ns8:VOT1 ;
+    ns1:finalVoteDate              "1989-04-20"^^xsd:date .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/TaskAtCommitteeChambreDepute/1>
+    rdf:type ns1:TaskAtCommitteeChambreDepute .
+
+@prefix ns12:    <http://data.legilux.public.lu/resource/authority/committee/> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880140/TaskAtCommitteeChambreDepute/1>
+    ns1:committeeInChargeOfTheTask ns12:CHD-CORECO .
+
+ns11:opinionRequest
+    rdf:type                           ns1:OpinionRequest ;
+    ns1:institutionInChargeOfTheTask   ns10:CHD ;
+    ns1:opinionRequestTo               ns10:CE ;
+    ns1:referralDate                   "1988-08-10"^^xsd:date ;
+    ns1:referralLetterReference        "Lettre scl" ;
+    ns1:opinionRequestReceivedResponse "true"^^xsd:boolean .
+
+ns6:taskAtMinistry
+    rdf:type                    ns1:TaskAtMinistry ;
+    ns1:otherConcernedMinistry  "" ;
+    ns1:referenceMinistryLetter "3236" ;
+    ns5:id                      "92791"^^xsd:int ;
+    ns1:dateMinistryLetter      "1988-07-19"^^xsd:date .
+
+ns6:taskAtSCL
+    rdf:type                                ns1:TaskAtSCL ;
+    ns1:outgoingCorrespondanceDepartureDate "1988-08-10"^^xsd:date ;
+    ns5:id                                  "92792"^^xsd:int ;
+    ns1:referenceSCL                        "L2322" .

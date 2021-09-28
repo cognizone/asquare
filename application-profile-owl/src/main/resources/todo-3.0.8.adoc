@@ -1,0 +1,35 @@
+
+* Agent missing in EULegalInstitution
+* check cardinality
+
+  "conditionalApplicability": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#conditionalApplicability",
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean"
+      },
+      "maxCardinality": 1
+    },
+
+* check why is gone on Act
+
+    "dateNoLongerInForce": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#dateNoLongerInForce",
+      "maxCardinality": 1,
+      "range": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#date"
+      }
+    },
+
+* same for transpositionCompletion
+* cardinalities are gone
+
+
+    "draftStatusConseilEtat": {
+      "uri": "http://data.legilux.public.lu/resource/ontology/jolux#draftStatusConseilEtat",
+      "range": {
+        "classId": "OpinionStatus"
+      },
+      "minCardinality": 1,
+      "maxCardinality": 1
+    },
+

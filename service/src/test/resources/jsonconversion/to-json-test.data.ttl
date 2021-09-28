@@ -1,0 +1,39 @@
+@prefix adms:  <http://www.w3.org/ns/adms#> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix iso-thes: <http://purl.org/iso25964/skos-thes#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix at:    <http://publications.europa.eu/ontology/authority/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix esco:  <http://data.europa.eu/esco/model#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rov:   <http://www.w3.org/ns/regorg#> .
+@prefix euvoc: <http://publications.europa.eu/ontology/euvoc#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix qdr:   <http://data.europa.eu/esco/qdr#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://dbpedia.org/resource/Němčice_(Prachatice_District)>
+        a          <http://dbpedia.org/ontology/Settlement> ;
+        <http://dbpedia.org/ontology/abstract>
+                "Němčice (en allemand : Niemtschitz) est une commune du district de Prachatice, dans la région de Bohême-du-Sud, en République tchèque. Sa population s'élevait à 198 habitants en 2016."@fr , "Němčice (Duits: Niemtschitz) is een Tsjechische gemeente in de regio Zuid-Bohemen, en maakt deel uit van het district Prachatice.Němčice telt 187 inwoners."@nl , "Němčice (deutsch Niemtschitz) ist eine Gemeinde in Tschechien. Sie liegt sechs Kilometer südöstlich von Netolice und gehört zum Okres Prachatice."@de , "Němčice é uma comuna checa localizada na região da Boêmia do Sul, distrito de Prachatice."@pt , "Němčice è un comune della Repubblica Ceca facente parte del distretto di Prachatice, nella regione della Boemia meridionale."@it , "Němčice is a village and municipality (obec) in Prachatice District in the South Bohemian Region of the Czech Republic. The municipality covers an area of 4.14 square kilometres (1.60 sq mi), and has a population of 187 (as at 28 August 2006). Němčice lies approximately 21 kilometres (13 mi) east of Prachatice, 17 km (11 mi) north-west of České Budějovice, and 118 km (73 mi) south of Prague."@en ;
+        <http://dbpedia.org/ontology/country>
+                <http://dbpedia.org/resource/Czech_Republic> ;
+        <http://dbpedia.org/ontology/populationTotal>
+                "187"^^xsd:nonNegativeInteger ;
+        <http://www.w3.org/2003/01/geo/wgs84_pos#lat>
+                "49.0331"^^xsd:float ;
+        <http://dbpedia.org/ontology/demographicsAsOf>
+                "2009-04-03"^^xsd:date ;
+        foaf:name  "Němčice"@en ;
+        <http://dbpedia.org/property/yearMeanC>
+                "15"^^xsd:int .
+
+<http://dbpedia.org/resource/Czech_Republic>
+        a            <http://dbpedia.org/ontology/Country> ;
+        rdfs:label   "República Checa"@pt , "República Checa"@es , "République tchèque"@fr , "捷克"@zh , "التشيك"@ar , "チェコ"@ja , "Czech Republic"@en , "Tschechien"@de , "Tsjechië"@nl , "Чехия"@ru , "Czechy"@pl , "Repubblica Ceca"@it ;
+        dct:subject  <http://dbpedia.org/resource/Category:Member_states_of_the_European_Union> , <http://dbpedia.org/resource/Category:Republics> , <http://dbpedia.org/resource/Category:Czech_Republic> , <http://dbpedia.org/resource/Category:Landlocked_countries> , <http://dbpedia.org/resource/Category:States_and_territories_established_in_1993> , <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations> , <http://dbpedia.org/resource/Category:Central_European_countries> , <http://dbpedia.org/resource/Category:Member_states_of_the_Council_of_Europe> , <http://dbpedia.org/resource/Category:Countries_in_Europe> , <http://dbpedia.org/resource/Category:Czech-speaking_countries_and_territories> , <http://dbpedia.org/resource/Category:Member_states_of_NATO> , <http://dbpedia.org/resource/Category:Slavic_countries_and_territories> , <http://dbpedia.org/resource/Category:Liberal_democracies> .

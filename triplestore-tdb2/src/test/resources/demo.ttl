@@ -1,0 +1,38 @@
+
+
+<http://demo.com/data/person/1>
+  a <http://demo.com/onto/Person>;
+  <http://demo.com/onto/name> "Fred";
+  <http://demo.com/onto/name> "Freddy";
+  <http://demo.com/onto/spouse> <http://demo.com/data/person/2>;
+  <http://demo.com/onto/importedGood> <http://demo.com/data/car/1>;
+.
+
+<http://demo.com/data/person/2>
+  a <http://demo.com/onto/Person>;
+  <http://demo.com/onto/name> "Annie";
+  <http://demo.com/onto/spouse> <http://demo.com/data/person/1>;
+.
+
+<http://demo.com/data/car/1>
+  a <http://demo.com/onto/Car>;
+  a <http://demo.com/onto/ImportGood>;
+  <http://demo.com/onto/licensePlate> "ABC123";
+  <http://demo.com/onto/owner> <http://demo.com/data/person/1>;
+  <http://purl.org/dc/terms/type> <http://demo.com/data/concept/car>;
+  <http://demo.com/onto/status> "released"@en;
+  .
+
+<http://demo.com/data/concept/car>
+ a <http://www.w3.org/2004/02/skos/core#Concept>;
+ <http://www.w3.org/2004/02/skos/core#inScheme> <http://demo.com/data/cs/1>;
+ <http://demo.com/onto/prefLabel> "Car"@en;
+ <http://demo.com/onto/prefLabel> "Auto"@nl;
+ <http://demo.com/onto/prefLabel> "Voiture"@fr;
+ <http://demo.com/onto/altLabel> "Vehicle"@en;
+ <http://demo.com/onto/altLabel> "Van"@en;
+ <http://demo.com/onto/altLabel> "Wain"@en;
+ <http://demo.com/onto/altLabel> "Automobile"@en;
+ <http://demo.com/onto/altLabel> "Wagen"@nl;
+ .
+

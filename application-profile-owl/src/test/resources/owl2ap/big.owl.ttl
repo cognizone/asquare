@@ -1,0 +1,54 @@
+@base <http://www.example.org/ontology/> .
+
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.example.org/ontology/> a owl:Ontology.
+
+<EmptyOwlClass> a owl:Class.
+
+<EmptyRdfsClass> a rdfs:Class.
+
+<noDomainProperty> a rdf:Property.
+<noDomainObjectProperty> a owl:ObjectProperty.
+<noDomainDatatypeProperty> a owl:DatatypeProperty.
+<noDomainAnnotationProperty> a owl:AnnotationProperty.
+
+<SubclassOfEmptyRdfsClass> rdfs:subClassOf <EmptyRdfsClass>.
+<SubclassOfEmptyOwlClass> rdfs:subClassOf <EmptyOwlClass>.
+
+
+<BasicOwlClass> a owl:Class.
+
+<basicDomainProperty> a rdf:Property;
+  rdfs:domain <BasicOwlClass>.
+
+<basicDomainObjectProperty> a owl:ObjectProperty;
+  rdfs:domain <BasicOwlClass>.
+
+<basicDomainDatatypeProperty> a owl:DatatypeProperty;
+  rdfs:domain <BasicOwlClass>.
+
+<basicDomainAnnotationProperty> a owl:AnnotationProperty;
+  rdfs:domain <BasicOwlClass>.
+
+
+<RangeClass> a rdfs:Class.
+
+<rangeClassProperty> a rdf:Property;
+  rdfs:domain <RangeClass>;
+  rdfs:range <SubclassOfEmptyOwlClass>.
+
+<rangeDatatypeProperty> a rdf:Property;
+  rdfs:domain <RangeClass>;
+  rdfs:range xsd:string.
+
+# unionOf, intersectionOf, complementOf, resource
+
+# todo fails!!
+#<rangeComplementOfProperty> a rdf:Property;
+#  rdfs:domain <RangeClass>;
+#  rdfs:range [ owl:complementOf <SubclassOfEmptyOwlClass> ].
+

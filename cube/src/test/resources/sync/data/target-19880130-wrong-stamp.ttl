@@ -1,0 +1,9 @@
+@prefix dct:      <http://purl.org/dc/terms/> .
+@prefix jolux:    <http://data.legilux.public.lu/resource/ontology/jolux#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.legilux.public.lu/eli/etat/proj/pc/19880130>
+    a            jolux:InitialDraft ;
+    dct:modified "2000-01-01T00:00:00Z"^^xsd:dateTime .
+
