@@ -413,7 +413,7 @@ project('security') {
     // libs
     implementation('com.google.guava:guava')
     implementation('commons-codec:commons-codec')
-    implementation('commons-collections:commons-collections4')
+    implementation('org.apache.commons:commons-collections4')
     implementation('io.vavr:vavr')
     implementation('javax.inject:javax.inject')
     implementation('org.apache.commons:commons-lang3')
@@ -443,7 +443,7 @@ project('service') {
     implementation('commons-io:commons-io')
     implementation('io.vavr:vavr')
     implementation('joda-time:joda-time')
-    implementation('commons-collections:commons-collections4')
+    implementation('org.apache.commons:commons-collections4')
     implementation('org.apache.commons:commons-lang3')
     implementation('org.apache.jena:jena-arq')
     implementation('org.apache.jena:jena-core')
