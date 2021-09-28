@@ -17,44 +17,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PaginatedQueryTest {
 
   @Autowired
-  PaginatedQuery smartPaginatedQuery;
-  @Autowired
-  PaginatedQuery simplePaginatedQuery;
+  PaginatedQuery paginatedQuery;
 
   @Test
   public void test_construction() {
     // given
     int batchSize = 100;
-    int smartBatchingLimit = 10;
 
     // when
-    PaginatedQuery shortConstructorCall = new PaginatedQuery(batchSize);
-    PaginatedQuery longConstructorCall = new PaginatedQuery(batchSize, true, smartBatchingLimit);
+    PaginatedQuery constructorCall = new PaginatedQuery(batchSize);
 
     // then it compiles!
   }
 
   @Test
-  public void test_smart() {
+  public void test_model() {
     Model model = JenaUtils.read(new ClassPathResource("pagination/homer.ttl"));
     String constructQuery = "construct { ?s ?p ?o } where { ?s ?p ?o }";
 
-    RdfStoreService rdfStore = smartPaginatedQuery.getRdfStore(model);
+    RdfStoreService rdfStore = paginatedQuery.getRdfStore(model);
 
-    Model smart = smartPaginatedQuery.getModel(rdfStore, constructQuery);
+    Model smart = paginatedQuery.getModel(rdfStore, constructQuery);
     assertEquals(model.size(), smart.size());
-
-  }
-
-  @Test
-  public void test_simple() {
-    Model model = JenaUtils.read(new ClassPathResource("pagination/homer.ttl"));
-    String constructQuery = "construct { ?s ?p ?o } where { ?s ?p ?o }";
-
-    RdfStoreService rdfStore = simplePaginatedQuery.getRdfStore(model);
-
-    Model simple = simplePaginatedQuery.getModel(rdfStore, constructQuery);
-    assertEquals(model.size(), simple.size());
 
   }
 
