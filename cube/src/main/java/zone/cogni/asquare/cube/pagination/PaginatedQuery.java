@@ -16,34 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * smartBatching is used for getModel method
- * and handle cases where the expected model can have size greater than the 'batchSize'.
- * In this case, smartBatchingLimit is used as a limit to finish model's construction
- * and could have value << 'batchSize'.
- * eg. batchSize: 10000, smartBatchingLimit: 2000
- */
 public class PaginatedQuery {
 
   private final long batchSize;
-  private final boolean smartBatching;
-  private final long smartBatchingLimit;
 
   public PaginatedQuery(long batchSize) {
-    this(batchSize, false, 1);
-  }
-
-  public PaginatedQuery(long batchSize, boolean smartBatching, long smartBatchingLimit) {
     Preconditions.checkState(batchSize > 0, "invalid batch size " + batchSize);
-    Preconditions.checkState(smartBatchingLimit > 0 && smartBatchingLimit < batchSize,
-                             "invalid smart batching limit " + smartBatchingLimit);
     this.batchSize = batchSize;
-    this.smartBatching = smartBatching;
-    this.smartBatchingLimit = smartBatchingLimit;
   }
 
   @Nonnull
   public Model getGraph(RdfStoreService rdfStore, String graphUri) {
+    Model model = ModelFactory.createDefaultModel();
     String constructGraph = "construct { ?s ?p ?o }" +
                             " where {" +
                             "   graph <" + graphUri + "> {" +
@@ -51,7 +35,16 @@ public class PaginatedQuery {
                             "   }" +
                             " } ";
 
-    return getModel(rdfStore, constructGraph);
+    long batchNumber = 0;
+    while (true) {
+      Model part = getModel(rdfStore, constructGraph, batchSize * batchNumber);
+      model.add(part);
+      batchNumber += 1;
+
+      if (part.size() < batchSize) break;
+    }
+
+    return model;
   }
 
   @Nonnull
@@ -59,22 +52,12 @@ public class PaginatedQuery {
     Model model = ModelFactory.createDefaultModel();
 
     long batchNumber = 0;
-    long triplesAdded = 0;
     while (true) {
-      if (smartBatching) {
-        Model part = getModel(rdfStore, constructQuery, triplesAdded);
-        model.add(part);
-        triplesAdded += part.size();
+      Model part = getModel(rdfStore, constructQuery, batchSize * batchNumber);
+      model.add(part);
+      batchNumber += 1;
 
-        if (part.size() < smartBatchingLimit) break;
-      }
-      else {
-        Model part = getModel(rdfStore, constructQuery, batchSize * batchNumber);
-        model.add(part);
-        batchNumber += 1;
-
-        if (part.size() < batchSize) break;
-      }
+      if (part.isEmpty()) break;
     }
 
     return model;
