@@ -1,7 +1,6 @@
 package zone.cogni.asquare.applicationprofile.owl.owl2ap.owl;
 
 import com.google.common.base.Preconditions;
-import groovy.transform.Synchronized;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -59,9 +58,8 @@ public class Owl2OwlRules implements Function<Model, OwlRules> {
   private Model model;
   private OwlRules owlRules;
 
-  @Synchronized
   @Override
-  public OwlRules apply(Model model) {
+  public synchronized OwlRules apply(Model model) {
     this.model = new ExpandOwlModel().apply(model);
     this.owlRules = new OwlRules(model);
 
