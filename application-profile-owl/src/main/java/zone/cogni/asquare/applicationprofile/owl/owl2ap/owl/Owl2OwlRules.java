@@ -59,7 +59,7 @@ public class Owl2OwlRules implements Function<Model, OwlRules> {
   private OwlRules owlRules;
 
   @Override
-  public OwlRules apply(Model model) {
+  public synchronized OwlRules apply(Model model) {
     this.model = new ExpandOwlModel().apply(model);
     this.owlRules = new OwlRules(model);
 
