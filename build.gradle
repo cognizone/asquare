@@ -81,7 +81,6 @@ subprojects {
       dependency("org.apache.jena:jena-tdb2:$jenaVersion")
       dependency('org.apache.poi:poi:3.16')
       dependency('org.apache.poi:poi-ooxml:3.16')
-      dependency("org.codehaus.groovy:groovy:2.5.13")
       dependency('org.elasticsearch:elasticsearch:5.6.3')
       dependency('org.elasticsearch.client:transport:5.6.3')
 
@@ -243,7 +242,6 @@ project('application-profile-owl') {
     implementation('io.vavr:vavr')
     implementation('org.apache.jena:jena-arq')
     implementation('org.apache.jena:jena-core')
-    implementation('org.codehaus.groovy:groovy')
 
     // spring
     implementation('org.springframework.boot:spring-boot-starter')

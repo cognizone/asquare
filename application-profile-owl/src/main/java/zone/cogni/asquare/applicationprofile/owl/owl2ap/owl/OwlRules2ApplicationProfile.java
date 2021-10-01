@@ -1,7 +1,6 @@
 package zone.cogni.asquare.applicationprofile.owl.owl2ap.owl;
 
 import com.google.common.collect.Sets;
-import groovy.transform.Synchronized;
 import io.vavr.Tuple2;
 import org.apache.jena.ext.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
@@ -55,7 +54,6 @@ public class OwlRules2ApplicationProfile implements Function<OwlRules, Applicati
   private ApplicationProfileDef applicationProfile;
   private Map<String, IntermediateAttribute> intermediateAttributeMap;
 
-  @Synchronized
   @Override
   public ApplicationProfileDef apply(OwlRules owlRules) {
     init(owlRules);
