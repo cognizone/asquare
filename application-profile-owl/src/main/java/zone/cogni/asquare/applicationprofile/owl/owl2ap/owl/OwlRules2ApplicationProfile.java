@@ -55,7 +55,7 @@ public class OwlRules2ApplicationProfile implements Function<OwlRules, Applicati
   private Map<String, IntermediateAttribute> intermediateAttributeMap;
 
   @Override
-  public ApplicationProfileDef apply(OwlRules owlRules) {
+  public synchronized ApplicationProfileDef apply(OwlRules owlRules) {
     init(owlRules);
     process();
 
