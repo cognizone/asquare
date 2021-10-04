@@ -3,10 +3,11 @@ import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 buildscript {
   ext {
-    jenaVersion = "3.10.0"
-    springBootVersion = "2.2.9.RELEASE"
-    guavaVersion = "23.0"
-    junitJupiterVersion = "5.5.2"
+    guavaVersion = '23.0'
+    httpComponentsVersion = '4.5.12'
+    jenaVersion = '3.10.0'
+    springBootVersion = '2.2.9.RELEASE'
+    junitJupiterVersion = '5.5.2'
   }
 }
 
@@ -63,7 +64,6 @@ subprojects {
     }
     dependencies {
       // libs
-      dependency("ch.qos.logback:logback-classic:1.1.5")
       dependency("com.google.guava:guava:$guavaVersion")
       dependency('com.google.code.findbugs:jsr305:3.0.1')
       dependency("commons-codec:commons-codec:1.13")
@@ -73,8 +73,8 @@ subprojects {
       dependency('joda-time:joda-time:2.9.9')
       dependency('org.apache.commons:commons-collections4:4.4')
       dependency('org.apache.commons:commons-lang3:3.7')
-      dependency('org.apache.httpcomponents:fluent-hc:4.5.1')
-      dependency('org.apache.httpcomponents:httpclient:4.5.12')
+      dependency("org.apache.httpcomponents:fluent-hc:$httpComponentsVersion")
+      dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
       dependency("org.apache.jena:jena-arq:$jenaVersion")
       dependency("org.apache.jena:jena-core:$jenaVersion")
       dependency("org.apache.jena:jena-tdb:$jenaVersion")
@@ -93,9 +93,9 @@ subprojects {
       dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
       // netflix zuul 2.2.3 is aligned with spring boot 2.2.9!
       dependency("org.springframework.cloud:spring-cloud-starter-netflix-zuul:2.2.3.RELEASE")
-      dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
 
       // test
+      dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
       dependency('org.assertj:assertj-core:3.16.1')
       dependency("org.elasticsearch.test:framework:7.5.2")
       dependency("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
@@ -220,9 +220,9 @@ project('application-profile') {
     // spring
     implementation('org.springframework.boot:spring-boot-starter-json')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-    implementation('ognl:ognl')
 
     // test
+    testImplementation('ognl:ognl')
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.jupiter:junit-jupiter-engine')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -302,7 +302,6 @@ project('asquareroot') {
 project('cogni-core') {
   dependencies {
     // libs
-    implementation('ch.qos.logback:logback-classic')
     implementation('com.google.guava:guava')
     implementation('commons-io:commons-io')
     implementation('joda-time:joda-time')
@@ -319,7 +318,6 @@ project('cogni-core') {
 project('cogni-libs') {
   dependencies {
     // libs
-    implementation('ch.qos.logback:logback-classic')
     implementation('com.google.guava:guava')
     implementation('com.google.code.findbugs:jsr305')
     implementation('commons-io:commons-io')
