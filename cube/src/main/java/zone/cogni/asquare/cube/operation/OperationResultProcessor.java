@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -54,7 +55,7 @@ public class OperationResultProcessor {
     SpelService spelService,
     Resource operationsResource
   ) {
-    this(configuration, spelService, operationsResource, Collections.emptyMap());
+    this(configuration, spelService, () -> OperationRoot.load(operationsResource), Collections.emptyMap());
   }
 
   public OperationResultProcessor(
@@ -64,6 +65,14 @@ public class OperationResultProcessor {
     Map<String, Object> context
   ) {
     this(configuration, spelService, () -> OperationRoot.load(operationsResource), context);
+  }
+
+  public OperationResultProcessor(
+    OperationConfiguration configuration,
+    SpelService spelService,
+    Supplier<OperationRoot> operationRootSupplier
+  ) {
+    this(configuration, spelService, operationRootSupplier, Collections.emptyMap());
   }
 
   public OperationResultProcessor(
@@ -190,13 +199,70 @@ public class OperationResultProcessor {
                                     String operationGroupId) {
     Monitor monitor = new Monitor();
     RdfStoreService rdfStore = getRdfStore(model);
+
+    try {
+      if (isNormalCase(operationGroupId)) {
+        return processNormalCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      }
+      if (isMergedCase(operationGroupId)) {
+        return processMergedCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      }
+
+      throw new RuntimeException("not sure how to process case: uri " + uri + " and group " + operationGroupId);
+    }
+    finally {
+      log.debug("(validate) {}", monitor);
+    }
+  }
+
+  private boolean isNormalCase(String operationGroupId) {
+    return operationRoot.hasOperationGroupWithId(operationGroupId);
+  }
+
+  private SingleGroupResult processNormalCase(Monitor monitor,
+                                              Set<String> permissions,
+                                              RdfStoreService rdfStore,
+                                              String uri,
+                                              String operationGroupId) {
     OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
 
-    SingleGroupResult rootGroup = new SingleGroupResult(operationGroup, uri, null);
-    processGroup(monitor, permissions, rdfStore, rootGroup);
+    SingleGroupResult result = new SingleGroupResult(operationGroup, uri, null);
+    processGroup(monitor, permissions, rdfStore, result);
 
-    log.debug("(validate) {}", monitor);
-    return rootGroup;
+    return result;
+  }
+
+  private boolean isMergedCase(String operationGroupId) {
+    return getMergedGroup(operationGroupId) != null;
+  }
+
+  private SingleGroupResult processMergedCase(Monitor monitor,
+                                              Set<String> permissions,
+                                              RdfStoreService rdfStore,
+                                              String uri,
+                                              String operationGroupId) {
+    OperationGroup rootGroup = operationRoot.getByPathId("root");
+    SingleGroupResult rootGroupResult = new SingleGroupResult(rootGroup, uri, null);
+
+    OperationGroup operationGroup = getMergedGroup(operationGroupId);
+    processChildGroup(monitor, permissions, rdfStore, rootGroupResult, operationGroup);
+
+    if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
+    return rootGroupResult.getGroupResult(operationGroupId);
+
+//    SingleGroupResult operationGroupResult = new SingleGroupResult(operationGroup, uri, null);
+//    processGroup(monitor, permissions, rdfStore, result);
+//    return operationGroupResult;
+  }
+
+  private OperationGroup getMergedGroup(String operationGroupId) {
+    if (Objects.equals("..", operationGroupId)) return null;
+
+    boolean hasRoot = operationRoot.hasOperationGroupWithId("root");
+    if (!hasRoot) return null;
+
+    OperationGroup rootGroup = operationRoot.getByPathId("root");
+    return rootGroup.getOperationGroup(operationGroupId);
   }
 
   private void processGroup(Monitor monitor,
@@ -612,7 +678,7 @@ public class OperationResultProcessor {
       return operationResults.stream()
                              .filter(result -> result.getOperation().getId().equals(id))
                              .findFirst()
-                             .orElseThrow(() -> new RuntimeException("cannot find operation with id " + id));
+                             .orElseThrow(() -> new RuntimeException("cannot find operation with id '" + id + "'"));
     }
 
     public void addSingleGroup(@Nonnull SingleGroupResult childGroupResult) {
@@ -656,6 +722,7 @@ public class OperationResultProcessor {
       pathIdSummary.get(operationId).addTiming(queryTime);
     }
 
+    @SuppressWarnings("StringConcatenationInLoop")
     public String toString() {
       String result = "\n" + monitorSummary;
       Set<Map.Entry<String, MonitorSummary>> entries = pathIdSummary.entrySet();

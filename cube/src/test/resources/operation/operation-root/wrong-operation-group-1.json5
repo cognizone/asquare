@@ -1,0 +1,10 @@
+{
+  operationGroups: [
+    {
+      "id": "one"
+    },
+    {
+      "id": "two"
+    }
+  ]
+}

@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.cube.operation.OperationResultProcessor.SingleGroupResult;
 
 import java.util.ArrayList;
@@ -17,8 +15,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class OperationResultJsonConversion {
-
-  private static final Logger log = LoggerFactory.getLogger(OperationResultJsonConversion.class);
 
   private final OperationConfiguration configuration;
   private final OperationResultProcessor operationResultProcessor;

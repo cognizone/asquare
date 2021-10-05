@@ -17,24 +17,37 @@ public class OperationResultProcessorTestConfig {
   private SpelService spelService;
 
   @Bean
-  OperationResultProcessor personOperations() {
-    OperationConfiguration configuration = personOperationConfiguration();
-
-    Resource personOperations = new ClassPathResource("operation/person.operations.json5");
-
-    return new OperationResultProcessor(configuration, spelService, personOperations);
+  OperationResultJsonConversion personConversion() {
+    return new OperationResultJsonConversion(operationConfiguration(), personOperations());
   }
 
   @Bean
-  public OperationConfiguration personOperationConfiguration() {
+  OperationResultProcessor personOperations() {
+    OperationConfiguration configuration = operationConfiguration();
+
+    Resource personOperations = new ClassPathResource("operation/person.operations.json5");
+    return new OperationResultProcessor(configuration, spelService, OperationRoot.getSupplier(personOperations));
+  }
+
+  @Bean
+  OperationResultJsonConversion rootConversion() {
+    return new OperationResultJsonConversion(operationConfiguration(), rootOperations());
+  }
+
+  @Bean
+  OperationResultProcessor rootOperations() {
+    OperationConfiguration configuration = operationConfiguration();
+
+    Resource rootOperations = new ClassPathResource("operation/operation-result-processor/root-operations.json5");
+    return new OperationResultProcessor(configuration, spelService, OperationRoot.getSupplier(rootOperations));
+  }
+
+  @Bean
+  public OperationConfiguration operationConfiguration() {
     OperationConfiguration configuration = new OperationConfiguration();
     configuration.setSecurityEnabled(false);
     configuration.setOutput(Lists.newArrayList("description", "selectorQuery", "operation", "requires", "template"));
     return configuration;
   }
 
-  @Bean
-  OperationResultJsonConversion personConversion() {
-    return new OperationResultJsonConversion(personOperationConfiguration(), personOperations());
-  }
 }
