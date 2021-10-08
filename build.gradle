@@ -34,7 +34,7 @@ scmVersion {
     ]
     initialVersion = {
       final TagProperties rules,
-      final ScmPosition position -> "0.5.0"
+      final ScmPosition position -> "0.5.0-fixed"
     }
   }
   nextVersion {
@@ -45,6 +45,7 @@ scmVersion {
 
 subprojects {
   apply plugin: "java"
+  apply plugin: "java-library"
   apply plugin: "idea"
   apply plugin: "io.spring.dependency-management"
   apply plugin: 'maven-publish'
@@ -109,7 +110,7 @@ subprojects {
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
 
-  group = System.properties['project.groupid']
+  group = 'zone.cogni.asquare'
   version = scmVersion.version
 
   compileJava.options.encoding = "UTF-8"
@@ -129,8 +130,16 @@ subprojects {
   publishing {
     publications {
       mavenJava(MavenPublication) {
-        artifact jar
+        from components.java
         artifact sourcesJar
+        versionMapping {
+          usage('java-api') {
+            fromResolutionOf('runtimeClasspath')
+          }
+          usage('java-runtime') {
+            fromResolutionResult()
+          }
+        }
       }
     }
     repositories {
@@ -156,27 +165,27 @@ idea {
 project('access') {
   dependencies {
     // projects
-    implementation project(':application-profile')
-    implementation project(':cogni-core')
-    implementation project(':cogni-libs')
-    implementation project(':cogni-sem')
-    implementation project(':triplestore')
-    implementation project(':triplestore-jena-memory')
+    api project(':application-profile')
+    api project(':cogni-core')
+    api project(':cogni-libs')
+    api project(':cogni-sem')
+    api project(':triplestore')
+    api project(':triplestore-jena-memory')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-codec:commons-codec')
-    implementation('commons-io:commons-io')
-    implementation('io.vavr:vavr')
-    implementation('org.apache.commons:commons-lang3')
-    implementation('org.apache.httpcomponents:httpclient')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.elasticsearch:elasticsearch')
-    implementation('org.elasticsearch.client:transport')
+    api('com.google.guava:guava')
+    api('commons-codec:commons-codec')
+    api('commons-io:commons-io')
+    api('io.vavr:vavr')
+    api('org.apache.commons:commons-lang3')
+    api('org.apache.httpcomponents:httpclient')
+    api('org.apache.jena:jena-arq')
+    api('org.elasticsearch:elasticsearch')
+    api('org.elasticsearch.client:transport')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-aop')
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.boot:spring-boot-starter-aop')
+    api('org.springframework.boot:spring-boot-starter-web')
 
     // test
     testImplementation('org.junit.jupiter:junit-jupiter')
@@ -187,16 +196,16 @@ project('access') {
 project('action-logger') {
   dependencies {
     // projects
-    implementation project(':service')
+    api project(':service')
 
     // libs
-    implementation('org.apache.commons:commons-collections4')
-    implementation('org.apache.commons:commons-lang3')
+    api('org.apache.commons:commons-collections4')
+    api('org.apache.commons:commons-lang3')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-aop')
-    implementation('org.springframework.boot:spring-boot-starter-json')
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.boot:spring-boot-starter-aop')
+    api('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-web')
 
     // test
     testImplementation('javax.inject:javax.inject')
@@ -209,17 +218,17 @@ project('action-logger') {
 project('application-profile') {
   dependencies {
     // projects
-    implementation project(':cogni-core')
+    api project(':cogni-core')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-io:commons-io')
-    implementation('io.vavr:vavr')
-    implementation('org.apache.jena:jena-core')
+    api('com.google.guava:guava')
+    api('commons-io:commons-io')
+    api('io.vavr:vavr')
+    api('org.apache.jena:jena-core')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-json')
-    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+    api('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     // test
     testImplementation('ognl:ognl')
@@ -232,18 +241,18 @@ project('application-profile') {
 project('application-profile-owl') {
   dependencies {
     // projects
-    implementation project(':cogni-core')
-    implementation project(':cogni-sem')
-    implementation project(':application-profile')
+    api project(':cogni-core')
+    api project(':cogni-sem')
+    api project(':application-profile')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('io.vavr:vavr')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-core')
+    api('com.google.guava:guava')
+    api('io.vavr:vavr')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-core')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter')
 
     // test
     testImplementation('org.junit.jupiter:junit-jupiter')
@@ -254,18 +263,18 @@ project('application-profile-owl') {
 project('application-profile-shacl') {
   dependencies {
     // projects
-    implementation project(':access')
-    implementation project(':application-profile')
-    implementation project(':cogni-sem')
+    api project(':access')
+    api project(':application-profile')
+    api project(':cogni-sem')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-io:commons-io')
-    implementation('io.vavr:vavr')
-    implementation('org.apache.jena:jena-core')
+    api('com.google.guava:guava')
+    api('commons-io:commons-io')
+    api('io.vavr:vavr')
+    api('org.apache.jena:jena-core')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter')
   }
 }
 
@@ -278,37 +287,37 @@ project('asquareroot') {
 
   dependencies {
     // projects
-    implementation project(':access')
-    implementation project(':cogni-libs')
-    implementation project(':cogni-sem')
-    implementation project(':security')
-    implementation project(':service')
-    implementation project(':triplestore')
+    api project(':access')
+    api project(':cogni-libs')
+    api project(':cogni-sem')
+    api project(':security')
+    api project(':service')
+    api project(':triplestore')
 
     // libs
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.elasticsearch:elasticsearch')
-    implementation("org.elasticsearch.test:framework")
+    api('org.apache.jena:jena-arq')
+    api('org.elasticsearch:elasticsearch')
+    api("org.elasticsearch.test:framework")
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
-    implementation('org.springframework.boot:spring-boot-starter-security')
-    implementation('org.springframework.boot:spring-boot-starter-test')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.security:spring-security-test')
+    api('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter-security')
+    api('org.springframework.boot:spring-boot-starter-test')
+    api('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.security:spring-security-test')
   }
 }
 
 project('cogni-core') {
   dependencies {
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-io:commons-io')
-    implementation('joda-time:joda-time')
-    implementation('org.apache.commons:commons-lang3')
+    api('com.google.guava:guava')
+    api('commons-io:commons-io')
+    api('joda-time:joda-time')
+    api('org.apache.commons:commons-lang3')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-json')
 
     // test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -318,18 +327,18 @@ project('cogni-core') {
 project('cogni-libs') {
   dependencies {
     // libs
-    implementation('com.google.guava:guava')
-    implementation('com.google.code.findbugs:jsr305')
-    implementation('commons-io:commons-io')
-    implementation('javax.inject:javax.inject')
-    implementation('joda-time:joda-time')
-    implementation('org.apache.commons:commons-lang3')
-    implementation('org.apache.httpcomponents:fluent-hc')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-core')
+    api('com.google.guava:guava')
+    api('com.google.code.findbugs:jsr305')
+    api('commons-io:commons-io')
+    api('javax.inject:javax.inject')
+    api('joda-time:joda-time')
+    api('org.apache.commons:commons-lang3')
+    api('org.apache.httpcomponents:fluent-hc')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-core')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.boot:spring-boot-starter-web')
 
     // test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -339,42 +348,42 @@ project('cogni-libs') {
 project('cogni-sem') {
   dependencies {
     // projects
-    implementation project(':cogni-core')
+    api project(':cogni-core')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('org.apache.jena:jena-core')
-    implementation('org.apache.jena:jena-arq')
+    api('com.google.guava:guava')
+    api('org.apache.jena:jena-core')
+    api('org.apache.jena:jena-arq')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter')
   }
 }
 
 project('cube') {
   dependencies {
     // projects
-    implementation project(':access')
-    implementation project(':application-profile')
-    implementation project(':cogni-core')
-    implementation project(':cogni-sem')
-    implementation project(':service')
-    implementation project(':triplestore')
-    implementation project(':triplestore-jena-memory')
+    api project(':access')
+    api project(':application-profile')
+    api project(':cogni-core')
+    api project(':cogni-sem')
+    api project(':service')
+    api project(':triplestore')
+    api project(':triplestore-jena-memory')
 
     // libs
-    implementation('com.google.code.findbugs:jsr305')
-    implementation('com.google.guava:guava')
-    implementation('io.vavr:vavr')
-    implementation('joda-time:joda-time')
-    implementation('org.apache.commons:commons-collections4')
-    implementation('org.apache.commons:commons-lang3')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-core')
+    api('com.google.code.findbugs:jsr305')
+    api('com.google.guava:guava')
+    api('io.vavr:vavr')
+    api('joda-time:joda-time')
+    api('org.apache.commons:commons-collections4')
+    api('org.apache.commons:commons-lang3')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-core')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-json')
-    implementation('org.springframework.boot:spring-boot-starter-security')
+    api('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-security')
 
     // test
     testImplementation project(':cogni-libs')
@@ -391,65 +400,65 @@ project('elasticproxy') {
 
   dependencies {
     // libs
-    implementation('commons-io:commons-io')
-    implementation('org.apache.httpcomponents:httpclient')
-    implementation('org.elasticsearch.client:elasticsearch-rest-client')
+    api('commons-io:commons-io')
+    api('org.apache.httpcomponents:httpclient')
+    api('org.elasticsearch.client:elasticsearch-rest-client')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    api('org.springframework.boot:spring-boot-starter-thymeleaf')
+    api('org.springframework.boot:spring-boot-starter-web')
   }
 }
 
 project('security') {
   dependencies {
     // projects
-    implementation project(':service')
+    api project(':service')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-codec:commons-codec')
-    implementation('org.apache.commons:commons-collections4')
-    implementation('io.vavr:vavr')
-    implementation('javax.inject:javax.inject')
-    implementation('org.apache.commons:commons-lang3')
+    api('com.google.guava:guava')
+    api('commons-codec:commons-codec')
+    api('org.apache.commons:commons-collections4')
+    api('io.vavr:vavr')
+    api('javax.inject:javax.inject')
+    api('org.apache.commons:commons-lang3')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-json')
-    implementation('org.springframework.boot:spring-boot-starter-security')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-zuul")
-    implementation("org.springframework.security.extensions:spring-security-saml2-core")
+    api('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-security')
+    api('org.springframework.boot:spring-boot-starter-web')
+    api("org.springframework.cloud:spring-cloud-starter-netflix-zuul")
+    api("org.springframework.security.extensions:spring-security-saml2-core")
   }
 }
 
 project('service') {
   dependencies {
     // projects
-    implementation project(':access')
-    implementation project(':application-profile')
-    implementation project(':cogni-core')
-    implementation project(':cogni-libs')
-    implementation project(':cogni-sem')
-    implementation project(':triplestore')
-    implementation project(':triplestore-jena-memory')
+    api project(':access')
+    api project(':application-profile')
+    api project(':cogni-core')
+    api project(':cogni-libs')
+    api project(':cogni-sem')
+    api project(':triplestore')
+    api project(':triplestore-jena-memory')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('commons-io:commons-io')
-    implementation('io.vavr:vavr')
-    implementation('joda-time:joda-time')
-    implementation('org.apache.commons:commons-collections4')
-    implementation('org.apache.commons:commons-lang3')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-core')
-    implementation('org.apache.poi:poi')
-    implementation('org.apache.poi:poi-ooxml')
-    implementation('org.elasticsearch:elasticsearch')
+    api('com.google.guava:guava')
+    api('commons-io:commons-io')
+    api('io.vavr:vavr')
+    api('joda-time:joda-time')
+    api('org.apache.commons:commons-collections4')
+    api('org.apache.commons:commons-lang3')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-core')
+    api('org.apache.poi:poi')
+    api('org.apache.poi:poi-ooxml')
+    api('org.elasticsearch:elasticsearch')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-aop')
-    implementation('org.springframework.boot:spring-boot-starter-json')
+    api('org.springframework.boot:spring-boot-starter-aop')
+    api('org.springframework.boot:spring-boot-starter-json')
 
     // test
     testImplementation('org.junit.jupiter:junit-jupiter')
@@ -460,52 +469,52 @@ project('service') {
 project('transactional') {
   dependencies {
     // spring
-    implementation('org.springframework.boot:spring-boot-starter-aop')
+    api('org.springframework.boot:spring-boot-starter-aop')
   }
 }
 
 project('triplestore') {
   dependencies {
     // projects
-    implementation project(':cogni-sem')
+    api project(':cogni-sem')
 
     // libs
-    implementation('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-arq')
   }
 }
 
 project('triplestore-jena-memory') {
   dependencies {
     // projects
-    implementation project(':cogni-core')
-    implementation project(':cogni-sem')
-    implementation project(':triplestore')
+    api project(':cogni-core')
+    api project(':cogni-sem')
+    api project(':triplestore')
 
     // libs
-    implementation('com.google.guava:guava')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-core')
-    implementation('org.apache.jena:jena-tdb')
+    api('com.google.guava:guava')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-core')
+    api('org.apache.jena:jena-tdb')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter')
   }
 }
 
 project('triplestore-tdb2') {
   dependencies {
     // projects
-    implementation project(':cogni-sem')
-    implementation project(':triplestore')
-    implementation project(':transactional')
+    api project(':cogni-sem')
+    api project(':triplestore')
+    api project(':transactional')
 
     // libs
-    implementation('com.google.code.findbugs:jsr305')
-    implementation('org.apache.jena:jena-arq')
-    implementation('org.apache.jena:jena-tdb2')
+    api('com.google.code.findbugs:jsr305')
+    api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-tdb2')
 
     // spring
-    implementation('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter')
 
     // test
     testImplementation('io.vavr:vavr')
