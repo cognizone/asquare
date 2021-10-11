@@ -7,12 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class PaginatedQueryTestConfig {
 
   @Bean
-  PaginatedQuery smartPaginatedQuery() {
-    return new PaginatedQuery(20, true, 10);
-  }
-
-  @Bean
-  PaginatedQuery simplePaginatedQuery() {
-    return new PaginatedQuery(30);
+  PaginatedQuery paginatedQuery() {
+    return new PaginatedQuery(20);
   }
 }

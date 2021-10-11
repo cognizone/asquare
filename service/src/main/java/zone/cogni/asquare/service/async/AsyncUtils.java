@@ -1,6 +1,5 @@
 package zone.cogni.asquare.service.async;
 
-import javassist.bytecode.annotation.NoSuchClassError;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -13,7 +12,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
@@ -41,7 +44,8 @@ public class AsyncUtils {
 
       workerClass = Arrays.stream(ThreadPoolExecutor.class.getDeclaredClasses()).filter(c -> workerClassName.equals(c.getName()))
                           .findFirst()
-                          .orElseThrow(() -> new NoSuchClassError(workerClassName, new Error("Worker class not found.")));
+                          .orElseThrow(() -> new NoClassDefFoundError("Can not get Worker class definition from ThreadPoolExecutor."));
+
       taskInWorker = workerClass.getDeclaredField("firstTask");
       taskInWorker.setAccessible(true);//NOSONAR making accessible dummy taskInWorker is safe
     }
