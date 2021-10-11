@@ -1,66 +1,71 @@
 package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.rdf.model.AnonId;
-import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
+import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
 public class SortedBlock {
 
-  /**
-   * Visitor to calculate string based on RDF nodes. Blank nodes are ignored.
-   */
-  private static class DigestRdfVisitor implements RDFVisitor {
+  private static final Query rootStatementsQuery = getRootStatementsQuery();
 
-    private static final DigestRdfVisitor instance = new DigestRdfVisitor();
-
-    /**
-     * @return an empty string
-     */
-    @Override
-    public String visitBlank(Resource r, AnonId id) {
-      return "";
-    }
-
-    /**
-     * @return uri surrounded by < and >
-     */
-    @Override
-    public String visitURI(Resource r, String uri) {
-      return "<" + uri + ">";
-    }
-
-    /**
-     * @return literal formatted according to the RDF standards
-     */
-    @Override
-    public String visitLiteral(Literal literal) {
-      if (StringUtils.isNotBlank(literal.getLanguage()))
-        return '"' + literal.getString() + '"' + '@' + literal.getLanguage();
-
-      if (StringUtils.isNotBlank(literal.getDatatypeURI()))
-        return '"' + literal.getString() + '"' + "^^<" + literal.getDatatypeURI() + ">";
-
-      throw new RuntimeException("how can this be possible?");
-    }
+  private static Query getRootStatementsQuery() {
+    String query =
+            "select ?s ?p ?o {" +
+            "  {" +
+            "    ?s ?p ?o." +
+            "    filter (isuri(?s))" +
+            "  }" +
+            "  union" +
+            "  {" +
+            "    ?s ?p ?o." +
+            "    filter (isblank(?s))" +
+            "    filter not exists { ?parentSubject ?parentProperty ?s }" +
+            "  }" +
+            "}";
+    return QueryFactory.create(query);
   }
 
   private Statement statement;
+
   private List<SortedBlock> sortedBlocks;
   private String digest;
 
-  public SortedBlock(List<SortedBlock> sortedBlocks) {
-    this.sortedBlocks = sortedBlocks;
+  public SortedBlock(Model model) {
+    sortedBlocks = getRootBlocks(model);
+    createNestedBlocks(model);
+    calculateDigest();
+  }
+
+  private List<SortedBlock> getRootBlocks(Model model) {
+    RdfStoreService rdfStore = new InternalRdfStoreService(model);
+    List<Map<String, RDFNode>> rootStatements = getRootStatements(rdfStore);
+
+    return rootStatements.stream()
+                         .map(row -> new SortedBlock(row.get("s"),
+                                                     row.get("p"),
+                                                     row.get("o")))
+                         .collect(Collectors.toList());
+  }
+
+  protected static List<Map<String, RDFNode>> getRootStatements(RdfStoreService rdfStore) {
+    return rdfStore.executeSelectQuery(rootStatementsQuery,
+                                       new QuerySolutionMap(),
+                                       JenaResultSetHandlers.listOfMapsResolver);
   }
 
   public SortedBlock(RDFNode subject, RDFNode predicate, RDFNode object) {
@@ -75,6 +80,21 @@ public class SortedBlock {
 
   public SortedBlock(Statement statement) {
     this.statement = statement;
+  }
+
+  public List<SortedBlock> getSortedBlocks() {
+    return sortedBlocks;
+  }
+
+  public void createNestedBlocks(Model model) {
+    if (statement == null) return;
+    if (!statement.getObject().isAnon()) return;
+
+    sortedBlocks = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null)
+                        .toList().stream()
+                        .map(SortedBlock::new)
+                        .peek(block -> createNestedBlocks(model))
+                        .collect(Collectors.toList());
   }
 
   public String getDigest() {
@@ -97,10 +117,10 @@ public class SortedBlock {
     // root block does not have a statement
     if (statement != null) {
       String triple = statement.getSubject().visitWith(DigestRdfVisitor.instance)
-                             + " "
-                             + statement.getPredicate().visitWith(DigestRdfVisitor.instance)
-                             + " "
-                             + statement.getObject().visitWith(DigestRdfVisitor.instance);
+                      + " "
+                      + statement.getPredicate().visitWith(DigestRdfVisitor.instance)
+                      + " "
+                      + statement.getObject().visitWith(DigestRdfVisitor.instance);
       digestString += triple;
     }
 

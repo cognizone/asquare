@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ModelChecksumTest {
+class ModelDigestTest {
 
   @Test
   public void illegal_model() {
@@ -24,7 +24,7 @@ class ModelChecksumTest {
 
     // when
     assertThatThrownBy(() -> {
-      new ModelChecksum().apply(model);
+      new ModelDigest().apply(model);
     }) // then
        .isInstanceOf(RuntimeException.class)
        .hasMessageContaining("blank node")
@@ -37,7 +37,7 @@ class ModelChecksumTest {
     Model model = loadModel("digest/correct-model.ttl");
 
     // when
-    String result = new ModelChecksum().apply(model);
+    String result = new ModelDigest().apply(model);
 
     // then
     assertThat(result).isEqualTo("8818b315f55c25fe70e239dd43ad025ae89cad5dc13bc0def5dff3cebf27f536");
@@ -49,7 +49,7 @@ class ModelChecksumTest {
     Model model = loadModel("digest/root-block.ttl");
 
     // when (note: internal method is tested here)
-    List<Map<String, RDFNode>> rows = ModelChecksum.getRootStatements(new InternalRdfStoreService(model));
+    List<Map<String, RDFNode>> rows = SortedBlock.getRootStatements(new InternalRdfStoreService(model));
 
     // then
     assertThat(rows).size().isEqualTo(3);
@@ -78,7 +78,7 @@ class ModelChecksumTest {
     Model model = loadModel("digest/single-triple-lang.ttl");
 
     // when
-    String result = new ModelChecksum().apply(model);
+    String result = new ModelDigest().apply(model);
 
     // then
     String triple = "<http://demo.com/data/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> \"lang\"@en";
@@ -91,7 +91,7 @@ class ModelChecksumTest {
     Model model = loadModel("digest/single-triple-literal.ttl");
 
     // when
-    String result = new ModelChecksum().apply(model);
+    String result = new ModelDigest().apply(model);
 
     // then
     String triple = "<http://demo.com/data/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> \"12\"^^<http://www.w3.org/2001/XMLSchema#decimal>";
@@ -104,7 +104,7 @@ class ModelChecksumTest {
     Model model = loadModel("digest/single-triple-url.ttl");
 
     // when
-    String result = new ModelChecksum().apply(model);
+    String result = new ModelDigest().apply(model);
 
     // then
     String triple = "<http://demo.com/data/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://demo.com/model/type>";

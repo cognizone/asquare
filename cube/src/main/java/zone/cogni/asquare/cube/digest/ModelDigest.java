@@ -4,15 +4,10 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
-import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -78,10 +73,9 @@ import java.util.stream.Collectors;
  *   the algorithm would not work, so we must fail at the start.
  * </p>
  */
-public class ModelChecksum implements Function<Model, String> {
+public class ModelDigest implements Function<Model, String> {
 
   private static final Query illegalGraphQuery = getIllegalGraphQuery();
-  private static final Query rootStatementsQuery = getRootStatementsQuery();
 
   private static Query getIllegalGraphQuery() {
     String query =
@@ -90,64 +84,19 @@ public class ModelChecksum implements Function<Model, String> {
             "    filter (isblank(?o))" +
             "  }" +
             "  group by ?o" +
-            "  having (count(?s) > 1)"
-            ;
-    return QueryFactory.create(query);
-  }
-
-  private static Query getRootStatementsQuery() {
-    String query =
-            "select ?s ?p ?o {" +
-            "  {" +
-            "    ?s ?p ?o." +
-            "    filter (isuri(?s))" +
-            "  }" +
-            "  union" +
-            "  {" +
-            "    ?s ?p ?o." +
-            "    filter (isblank(?s))" +
-            "    filter not exists { ?parentSubject ?parentProperty ?s }" +
-            "  }" +
-            "}";
+            "  having (count(?s) > 1)";
     return QueryFactory.create(query);
   }
 
   @Override
   public String apply(Model model) {
+    if (isIllegalGraph(model)) throw new RuntimeException("blank node is used more than once");
+
+    return new SortedBlock(model).getDigest();
+  }
+
+  private boolean isIllegalGraph(Model model) {
     RdfStoreService rdfStore = new InternalRdfStoreService(model);
-
-    if (isIllegalGraph(rdfStore)) throw new RuntimeException("blank node is used more than once");
-
-    SortedBlock rootBlock = getRootBlock(rdfStore);
-
-    // TODO load rest
-//    if (blocks.size() != model.size())
-//      throw new RuntimeException("TODO");
-
-    rootBlock.calculateDigest();
-
-    return rootBlock.getDigest();
+    return rdfStore.executeAskQuery(illegalGraphQuery, new QuerySolutionMap());
   }
-
-  private boolean isIllegalGraph(RdfStoreService rdfStore) {
-    return rdfStore.executeAskQuery(getIllegalGraphQuery(), new QuerySolutionMap());
-  }
-
-  private SortedBlock getRootBlock(RdfStoreService rdfStore) {
-    List<Map<String, RDFNode>> rootStatements = getRootStatements(rdfStore);
-
-    List<SortedBlock> blocks = rootStatements.stream()
-                                             .map(row -> new SortedBlock(row.get("s"),
-                                                                         row.get("p"),
-                                                                         row.get("o")))
-                                             .collect(Collectors.toList());
-    return new SortedBlock(blocks);
-  }
-
-  protected static List<Map<String, RDFNode>> getRootStatements(RdfStoreService rdfStore) {
-    return rdfStore.executeSelectQuery(getRootStatementsQuery(),
-                                       new QuerySolutionMap(),
-                                       JenaResultSetHandlers.listOfMapsResolver);
-  }
-
 }
