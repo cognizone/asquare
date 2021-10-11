@@ -105,13 +105,29 @@ public class FusekiSparqlService implements SparqlService {
     }
   }
 
+
   @Override
+  @Deprecated
   public void upload(Model model, String graphUri) {
+    updateGraph(graphUri, model);
+  }
+
+  @Override
+  public void updateGraph(String graphUri, Model model) {
+    upload(model, graphUri, false);
+  }
+
+  @Override
+  public void replaceGraph(String graphUri, Model model) {
+    upload(model, graphUri, true);
+  }
+
+  private void upload(Model model, String graphUri, boolean replace) {
     String insertUrl = config.getGraphStoreUrl() + "?graph=" + graphUri;
     StringWriter writer = new StringWriter();
     try {
       model.write(writer, "ttl");
-      Response response = Request.Post(insertUrl)
+      Response response = (replace ? Request.Put(insertUrl) : Request.Post(insertUrl))  //Put replaces the graph, Post adds data
               .setHeader("Content-Type", config.getTurtleMimeType() + ";charset=utf-8")
               .setHeader(authHeader)
               .bodyByteArray(writer.toString().getBytes(), ContentType.create(config.getTurtleMimeType(), StandardCharsets.UTF_8))
