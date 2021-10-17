@@ -15,7 +15,7 @@ import zone.cogni.asquare.cube.model2model.ModelToModel;
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.PropertyConversion;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
@@ -97,7 +97,7 @@ public class SynchronizeGraphs {
   private final RdfStoreService target;
   private final Supplier<String> generateStamp;
 
-  private final SpelService spelService;
+  private final TemplateService templateService;
   private final PaginatedQuery paginatedQuery;
   private final MonitoredPool monitoredPool;
 
@@ -105,14 +105,14 @@ public class SynchronizeGraphs {
                            RdfStoreService source,
                            RdfStoreService target,
                            Supplier<String> generateStamp,
-                           SpelService spelService,
+                           TemplateService templateService,
                            PaginatedQuery paginatedQuery,
                            MonitoredPool monitoredPool) {
     this.configurationFolder = calculateConfigurationFolder(configurationFolder);
     this.source = source;
     this.target = target;
     this.generateStamp = generateStamp;
-    this.spelService = spelService;
+    this.templateService = templateService;
     this.paginatedQuery = paginatedQuery;
     this.monitoredPool = monitoredPool;
   }
@@ -182,7 +182,7 @@ public class SynchronizeGraphs {
   }
 
   private Model getCalculatedTargetModel(Model sourceModel) {
-    return new ModelToModel(spelService, getSyncResources())
+    return new ModelToModel(templateService, getSyncResources())
       .convert(sourceModel, "sync");
   }
 
@@ -285,7 +285,7 @@ public class SynchronizeGraphs {
   }
 
   private String getQuery(String query, Object root) {
-    return spelService.processTemplate(getQueryResource(query), root);
+    return templateService.processTemplate(getQueryResource(query), root);
   }
 
   private ClassPathResource getQueryResource(String query) {

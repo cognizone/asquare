@@ -12,27 +12,10 @@ import zone.cogni.core.spring.ResourceHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpelService {
+public class SpelService implements TemplateService {
 
   private final SpelExpressionParser spelExpressionParser = new SpelExpressionParser();
   private final Map<String, Expression> expressionCache = new HashMap<>();
-
-  public NamedTemplate processTemplate(NamedTemplate namedTemplate, Object root) {
-    String result = processTemplate(namedTemplate.getTemplate(), root);
-    return getNewNamedTemplate(namedTemplate, root, result);
-  }
-
-  private NamedTemplate getNewNamedTemplate(NamedTemplate namedTemplate, Object root, String result) {
-    NamedTemplate copy = namedTemplate.copy();
-    copy.setRoot(root);
-    copy.setResult(result);
-    return copy;
-  }
-
-  public String processTemplate(Resource templateResource, Object root) {
-    String template = ResourceHelper.toString(templateResource);
-    return processTemplate(template, root);
-  }
 
   public String processTemplate(String template, Object root) {
     Expression expression = getExpression(template);

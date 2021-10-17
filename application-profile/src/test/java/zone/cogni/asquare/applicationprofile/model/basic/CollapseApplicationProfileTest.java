@@ -39,26 +39,6 @@ class CollapseApplicationProfileTest {
     // then
     assertEquals(3, applicationProfile.getTypes().size());
     assertEquals(3, collapse.getTypes().size());
-
-
-//    JsonNode jsonNode = applicationProfileConfig.getSerializer().apply(collapse);
-    JsonNode jsonNode = new ApplicationProfileSimpleJson().apply(collapse);
-
-    print(jsonNode);
   }
-
-  private void print(JsonNode jsonNode) {
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-
-      File file = new FileSystemResource("collapse-single-ap-output.ap.json").getFile();
-      writer.writeValue(file, jsonNode);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
 
 }

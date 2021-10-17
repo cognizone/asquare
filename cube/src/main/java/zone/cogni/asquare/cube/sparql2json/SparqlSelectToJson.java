@@ -12,7 +12,7 @@ import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.springframework.core.io.Resource;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
@@ -25,15 +25,15 @@ public class SparqlSelectToJson {
 
   private final List<Query> queries;
 
-  public SparqlSelectToJson(Resource[] queryResources, SpelService spelService, Map<String, String> context) {
-    this.queries = asQueries(queryResources, spelService, context);
+  public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
+    this.queries = asQueries(queryResources, templateService, context);
   }
 
-  private List<Query> asQueries(Resource[] queryResources, SpelService spelService, Map<String, String> context) {
+  private List<Query> asQueries(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
     return Arrays.stream(queryResources)
-                 .map(resource -> spelService.processTemplate(resource, context))
-                 .map(QueryFactory::create)
-                 .collect(Collectors.toList());
+            .map(resource -> templateService.processTemplate(resource, context))
+            .map(QueryFactory::create)
+            .collect(Collectors.toList());
   }
 
   public ObjectNode convert(Model model, Map<String, RDFNode> bindings) {

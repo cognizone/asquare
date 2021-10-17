@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import zone.cogni.asquare.cube.spel.NamedTemplate;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
@@ -28,12 +28,12 @@ public class SparqlRules {
 
   private static final Logger log = LoggerFactory.getLogger(SparqlRules.class);
 
-  private final SpelService spelService;
+  private final TemplateService templateService;
   private final String ruleFolder;
   private final Map<String, List<NamedTemplate>> queryMap = new HashMap<>();
 
-  public SparqlRules(SpelService spelService, String ruleFolder) {
-    this.spelService = spelService;
+  public SparqlRules(TemplateService templateService, String ruleFolder) {
+    this.templateService = templateService;
     this.ruleFolder = ruleFolder;
   }
 
@@ -85,7 +85,7 @@ public class SparqlRules {
         Model modelCopy = log.isTraceEnabled() ? getModelCopy(rdfStore) : null;
 
         log.debug("        {}", namedTemplate.getName());
-        NamedTemplate queryTemplate = spelService.processTemplate(namedTemplate, context);
+        NamedTemplate queryTemplate = templateService.processTemplate(namedTemplate, context);
         rdfStore.executeUpdateQuery(queryTemplate.getResult());
 
         if (log.isTraceEnabled()) logModelDifferences(modelCopy, rdfStore.getModel());

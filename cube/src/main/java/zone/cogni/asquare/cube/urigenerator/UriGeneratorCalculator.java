@@ -11,7 +11,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.cube.urigenerator.json.UriGenerator;
 import zone.cogni.asquare.cube.urigenerator.json.UriGeneratorRoot;
 import zone.cogni.asquare.triplestore.RdfStoreService;
@@ -36,17 +36,17 @@ public class UriGeneratorCalculator {
   private static final Logger log = LoggerFactory.getLogger(UriGeneratorCalculator.class);
 
   private final String newUriPrefix;
-  private final SpelService spelService;
+  private final TemplateService templateService;
   private final UriGeneratorRoot uriGeneratorRoot;
   private final Map<String, Query> preparedStatements = new HashMap<>();
 
   public UriGeneratorCalculator(
     String newUriPrefix,
-    SpelService spelService,
+    TemplateService templateService,
     Resource uriGeneratorRootResource
   ) {
     this.newUriPrefix = newUriPrefix;
-    this.spelService = spelService;
+    this.templateService = templateService;
     this.uriGeneratorRoot = UriGeneratorRoot.load(uriGeneratorRootResource);
     initPreparedStatements();
   }
@@ -176,7 +176,7 @@ public class UriGeneratorCalculator {
     String variableSelector = result.getGenerator().getFullVariableSelector();
     if (StringUtils.isNotBlank(variableSelector)) {
       String variableTemplateQuery = uriGeneratorRoot.getPrefixQuery() + variableSelector;
-      String variableQuery = spelService.processTemplate(variableTemplateQuery, variables);
+      String variableQuery = templateService.processTemplate(variableTemplateQuery, variables);
       if (log.isTraceEnabled()) log.trace("query: {}", variableQuery);
 
       Supplier<String> contextSupplier = () -> result.getGenerator().getId();
@@ -190,7 +190,7 @@ public class UriGeneratorCalculator {
     if (log.isTraceEnabled()) log.debug("variables: {}", variables);
 
     String uriTemplate = result.getGenerator().getUriTemplate();
-    String newUri = spelService.processTemplate(uriTemplate, variables);
+    String newUri = templateService.processTemplate(uriTemplate, variables);
 
     if (existsInModel(rdfStore, newUri))
       throw new RuntimeException("uri overlap found for " + newUri);
