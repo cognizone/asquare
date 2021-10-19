@@ -82,6 +82,30 @@ public class IndexMethod {
   }
 
   /**
+   * Returns a <code>Callable</code> which can index
+   * according to the <code>configuration</code>.
+   *
+   * @param graphUri uri of graph which contains data to be indexed
+   * @param uri uri of root instance to be indexed
+   * @return <code>Callable</code> which can asynchronously index
+   */
+  public Callable<String> indexOneCallable(String graphUri, String uri, Configuration configuration) {
+    return () -> indexOne(graphUri, uri, configuration);
+  }
+
+  /**
+   * Returns a <code>Callable</code> which can index
+   * according to the <code>configuration</code>.
+   *
+   * @param modelSupplier supplier of the Model which contains data to be indexed
+   * @param uri uri of root instance to be indexed
+   * @return <code>Callable</code> which can asynchronously index
+   */
+  public Callable<String> indexOneCallable(Supplier<Model> modelSupplier, String uri, Configuration configuration) {
+    return () -> indexOne(modelSupplier, uri, configuration);
+  }
+
+  /**
    * Returns a <code>Callable</code> which can asynchronously index.
    *
    * @param graphUri uri of graph which contains data to be indexed
