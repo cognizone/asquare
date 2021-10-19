@@ -12,20 +12,13 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.cube.util.TimingUtil;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -43,37 +36,37 @@ public class OperationResultProcessor {
   private static final boolean FAST_QUERIES = true;
 
   private final OperationConfiguration configuration;
-  private final SpelService spelService;
+  private final TemplateService templateService;
 
   private final OperationRoot operationRoot;
 
   private final Map<String, Object> context = new HashMap<>();
 
   public OperationResultProcessor(
-    OperationConfiguration configuration,
-    SpelService spelService,
-    Resource operationsResource
+          OperationConfiguration configuration,
+          TemplateService templateService,
+          Resource operationsResource
   ) {
-    this(configuration, spelService, operationsResource, Collections.emptyMap());
+    this(configuration, templateService, operationsResource, Collections.emptyMap());
   }
 
   public OperationResultProcessor(
-    OperationConfiguration configuration,
-    SpelService spelService,
-    Resource operationsResource,
-    Map<String, Object> context
+          OperationConfiguration configuration,
+          TemplateService templateService,
+          Resource operationsResource,
+          Map<String, Object> context
   ) {
-    this(configuration, spelService, () -> OperationRoot.load(operationsResource), context);
+    this(configuration, templateService, () -> OperationRoot.load(operationsResource), context);
   }
 
   public OperationResultProcessor(
-    OperationConfiguration configuration,
-    SpelService spelService,
-    Supplier<OperationRoot> operationRootSupplier,
-    Map<String, Object> context
+          OperationConfiguration configuration,
+          TemplateService templateService,
+          Supplier<OperationRoot> operationRootSupplier,
+          Map<String, Object> context
   ) {
     this.configuration = configuration;
-    this.spelService = spelService;
+    this.templateService = templateService;
 
     OperationRoot operationRoot = operationRootSupplier.get();
     validate(operationRoot);
@@ -478,7 +471,7 @@ public class OperationResultProcessor {
   private boolean askSlow(RdfStoreService rdfStore, OperationResult operationResult, Operation operation) {
     String template = operationRoot.getPrefixQuery() + operation.getFullTemplate();
     context.put("uri", operationResult.getUri());
-    String sparql = spelService.processTemplate(template, context);
+    String sparql = templateService.processTemplate(template, context);
 
     return rdfStore.executeAskQuery(sparql);
   }
@@ -510,7 +503,7 @@ public class OperationResultProcessor {
   private List<String> selectSlow(RdfStoreService rdfStore, OperationGroup operationGroup, String uri) {
     String template = operationRoot.getPrefixQuery() + operationGroup.getSelectorQuery();
     context.put("uri", uri);
-    String sparql = spelService.processTemplate(template, context);
+    String sparql = templateService.processTemplate(template, context);
     try {
       return rdfStore.executeSelectQuery(sparql, OperationResultProcessor::convertToList);
     }

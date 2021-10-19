@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.NamedTemplate;
-import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
@@ -31,11 +31,11 @@ public class ModelToModel {
 
   private static final Logger log = LoggerFactory.getLogger(ModelToModel.class);
 
-  private final SpelService spelService;
+  private final TemplateService templateService;
   private final Resource[] queryResources;
 
-  public ModelToModel(SpelService spelService, Resource[] queryResources) {
-    this.spelService = spelService;
+  public ModelToModel(TemplateService templateService, Resource[] queryResources) {
+    this.templateService = templateService;
     this.queryResources = queryResources;
   }
 
@@ -48,7 +48,7 @@ public class ModelToModel {
 
     Model result = ModelFactory.createDefaultModel();
     getQueries(group).forEach(namedTemplate -> {
-      String sparql = spelService.processTemplate(namedTemplate.getTemplate(), context);
+      String sparql = templateService.processTemplate(namedTemplate.getTemplate(), context);
       Model queryModel = rdfStore.executeConstructQuery(sparql);
 
       if (log.isDebugEnabled())
