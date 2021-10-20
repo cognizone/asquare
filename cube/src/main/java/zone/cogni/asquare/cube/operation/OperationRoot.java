@@ -1,5 +1,7 @@
 package zone.cogni.asquare.cube.operation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -10,17 +12,99 @@ import zone.cogni.asquare.cube.json5.Json5Light;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OperationRoot {
 
   private static final Logger log = LoggerFactory.getLogger(OperationRoot.class);
+
+  public static Supplier<OperationRoot> getSupplier(List<InputStreamSource> resources) {
+    return () -> load(resources);
+  }
+
+  public static Supplier<OperationRoot> getSupplier(InputStreamSource resource) {
+    return () -> load(resource);
+  }
+
+  public static OperationRoot load(List<InputStreamSource> resources) {
+    List<OperationRoot> operationRoots = getOperationRoots(resources);
+
+    OperationRoot result = new OperationRoot();
+    result.setPrefixes(mergePrefixes(operationRoots));
+    result.setOperationGroups(wrapInRootGroup(mergeOperationGroups(operationRoots)));
+    return result;
+  }
+
+  private static List<OperationRoot> getOperationRoots(List<InputStreamSource> resources) {
+    return resources.stream()
+                    .map(OperationRoot::load)
+                    .collect(Collectors.toList());
+  }
+
+  @SuppressWarnings("CodeBlock2Expr")
+  private static Map<String, String> mergePrefixes(List<OperationRoot> operationRoots) {
+    Map<String, String> result = new HashMap<>();
+
+    Set<String> problems = new HashSet<>();
+    operationRoots.forEach(operationRoot -> {
+      operationRoot.getPrefixes().forEach((k, v) -> {
+        String existingValue = result.get(k);
+        boolean hasProblemValue = existingValue != null && !Objects.equals(existingValue, v);
+        if (hasProblemValue) problems.add(k);
+
+        result.put(k, v);
+      });
+    });
+
+    if (!problems.isEmpty())
+      throw new RuntimeException("Some prefixes in files have conflicting namespaces: " + problems);
+
+    return result;
+  }
+
+  private static List<OperationGroup> wrapInRootGroup(List<OperationGroup> operationGroups) {
+    OperationGroup root = new OperationGroup();
+    root.setId("root");
+    root.setOperationGroups(operationGroups);
+
+    ArrayList<OperationGroup> result = new ArrayList<>();
+    result.add(root);
+
+    return result;
+  }
+
+  private static List<OperationGroup> mergeOperationGroups(List<OperationRoot> operationRoots) {
+    Map<String, OperationGroup> operationGroupMap = new HashMap<>();
+
+    Set<String> problems = new HashSet<>();
+    operationRoots.stream()
+                  .map(OperationRoot::getOperationGroups)
+                  .flatMap(Collection::stream)
+                  .forEach(operationGroup -> {
+                    String id = operationGroup.getId();
+                    if (operationGroupMap.containsKey(id)) problems.add(id);
+
+                    operationGroupMap.put(id, operationGroup);
+                  });
+
+    if (!problems.isEmpty())
+      throw new RuntimeException("Some operation groups are defined more than once: " + problems);
+
+    return new ArrayList<>(operationGroupMap.values());
+  }
+
 
   public static OperationRoot load(InputStreamSource resource) {
     try {
@@ -44,7 +128,7 @@ public class OperationRoot {
   private final Map<String, Operation> operationMap = new TreeMap<>();
 
   public Map<String, String> getPrefixes() {
-    return prefixes;
+    return prefixes == null ? Collections.emptyMap() : prefixes;
   }
 
   public void setPrefixes(Map<String, String> prefixes) {
@@ -52,7 +136,7 @@ public class OperationRoot {
   }
 
   public List<OperationGroup> getOperationGroups() {
-    return operationGroups;
+    return operationGroups == null ? Collections.emptyList() : operationGroups;
   }
 
   public void setOperationGroups(List<OperationGroup> operationGroups) {
@@ -82,7 +166,7 @@ public class OperationRoot {
   }
 
   private void makeOptionalStructure() {
-    operationGroups.forEach(this::makeOptionalStructure);
+    getOperationGroups().forEach(this::makeOptionalStructure);
   }
 
   private void makeOptionalStructure(OperationGroup operationGroup) {
@@ -113,7 +197,7 @@ public class OperationRoot {
 
 
   private void makeRequiresStructure() {
-    operationGroups.forEach(this::makeRequiresStructure);
+    getOperationGroups().forEach(this::makeRequiresStructure);
   }
 
   private void makeRequiresStructure(OperationGroup operationGroup) {
@@ -142,26 +226,20 @@ public class OperationRoot {
   }
 
   private Operation findOperation(Operation operation, List<String> path) {
-    try {
+    OperationGroup current = operation.getParent();
+    for (int i = 0; i < path.size() - 1; i++) {
+      String id = path.get(i);
 
-      OperationGroup current = operation.getParent();
-      for (int i = 0; i < path.size() - 1; i++) {
-        String id = path.get(i);
-
-        if (id.equals("..")) current = current.getParent();
-        if (id.endsWith("*")) current.getOperationGroup(id.substring(0, id.length() - 1));
-        else current.getOperationGroup(id);
-      }
-
-      return current.getOperation(path.get(path.size() - 1));
+      if (id.equals("..")) current = current.getParent();
+      if (id.endsWith("*")) current.getOperationGroup(id.substring(0, id.length() - 1));
+      else current.getOperationGroup(id);
     }
-    catch (RuntimeException e) {
-      throw e;
-    }
+
+    return current.getOperation(path.get(path.size() - 1));
   }
 
   private void makeParentStructure() {
-    operationGroups.forEach(this::makeParentStructure);
+    getOperationGroups().forEach(this::makeParentStructure);
   }
 
   private void makeParentStructure(OperationGroup operationGroup) {
@@ -184,7 +262,7 @@ public class OperationRoot {
   }
 
   private void validateIds(List<String> errorMessages) {
-    validateIdsForGroups(errorMessages, null, operationGroups);
+    validateIdsForGroups(errorMessages, null, getOperationGroups());
   }
 
   private void validateIdsForGroups(List<String> errorMessages,
@@ -240,7 +318,7 @@ public class OperationRoot {
   }
 
   private void validateOptional(List<String> errorMessages) {
-    operationGroups.forEach(operationGroup -> validateOptional(errorMessages, operationGroup));
+    getOperationGroups().forEach(operationGroup -> validateOptional(errorMessages, operationGroup));
   }
 
   private void validateOptional(List<String> errorMessages, OperationGroup operationGroup) {
@@ -268,9 +346,8 @@ public class OperationRoot {
   private void validateOptionalPath(List<String> errorMessages,
                                     Operation operation,
                                     List<String> path) {
-    String errorMessageIntro = "invalid optional at " + getPath(operation.getParent()) +
-                               " and operation " + operation.getId() +
-                               " and requires " + String.join("/", path) + ": ";
+    String errorMessageIntro = "invalid optional for operation '" + operation.getPathId() + "'" +
+                               " and requires '" + String.join("/", path) + "': ";
 
     validatePath(errorMessages, operation, path, errorMessageIntro);
   }
@@ -286,7 +363,7 @@ public class OperationRoot {
                                                         : operationGroupId;
       currentGroup = currentGroup.getOperationGroup(operationGroupId);
       if (currentGroup == null) {
-        errorMessages.add(errorMessageIntro + "cannot find group " + operationGroupId);
+        errorMessages.add(errorMessageIntro + "cannot find group '" + operationGroupId + "'");
         return;
       }
     }
@@ -294,12 +371,12 @@ public class OperationRoot {
     String operationId = path.get(path.size() - 1);
     Operation referencedOperation = currentGroup.getOperation(operationId);
     if (referencedOperation == null) {
-      errorMessages.add(errorMessageIntro + "cannot find operation " + operationId);
+      errorMessages.add(errorMessageIntro + "cannot find operation '" + operationId + "'");
     }
   }
 
   private void validateRequires(List<String> errorMessages) {
-    operationGroups.forEach(operationGroup -> validateRequires(errorMessages, operationGroup));
+    getOperationGroups().forEach(operationGroup -> validateRequires(errorMessages, operationGroup));
   }
 
   private void validateRequires(List<String> errorMessages, OperationGroup operationGroup) {
@@ -328,15 +405,14 @@ public class OperationRoot {
   private void validateRequiresPath(List<String> errorMessages,
                                     Operation operation,
                                     List<String> path) {
-    String errorMessageIntro = "invalid requires at " + getPath(operation.getParent()) +
-                               " and operation " + operation.getId() +
-                               " and requires " + String.join("/", path) + ": ";
+    String errorMessageIntro = "invalid requires for operation '" + operation.getPathId() + "'" +
+                               " and requires '" + String.join("/", path) + "': ";
 
     validatePath(errorMessages, operation, path, errorMessageIntro);
   }
 
   private void validateOperations(List<String> errorMessages) {
-    operationGroups.forEach(operationGroup -> validateOperations(errorMessages, operationGroup));
+    getOperationGroups().forEach(operationGroup -> validateOperations(errorMessages, operationGroup));
   }
 
   private void validateOperations(List<String> errorMessages, OperationGroup operationGroup) {
@@ -410,13 +486,18 @@ public class OperationRoot {
 
   }
 
+  @JsonIgnore
   public String getPrefixQuery() {
-    return prefixes.entrySet()
-                   .stream()
-                   .map(e -> "PREFIX "
-                             + StringUtils.rightPad(e.getKey() + ":", 8) + " <" + e.getValue() + ">\n")
-                   .collect(Collectors.joining())
+    return getPrefixes().entrySet()
+                        .stream()
+                        .map(e -> "PREFIX "
+                                  + StringUtils.rightPad(e.getKey() + ":", 8) + " <" + e.getValue() + ">\n")
+                        .collect(Collectors.joining())
            + "\n";
+  }
+
+  public boolean hasOperationGroupWithId(String id) {
+    return operationGroupMap.containsKey(id);
   }
 
   public OperationGroup getByPathId(String pathId) {
@@ -437,6 +518,7 @@ public class OperationRoot {
   }
 
   // TODO make immutable?
+  @JsonIgnore
   public Set<String> getOperationIds() {
     return operationMap.keySet();
   }

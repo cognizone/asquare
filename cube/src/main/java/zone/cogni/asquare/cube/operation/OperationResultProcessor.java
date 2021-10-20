@@ -12,13 +12,22 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.cube.util.TimingUtil;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -44,15 +53,15 @@ public class OperationResultProcessor {
 
   public OperationResultProcessor(
           OperationConfiguration configuration,
-          TemplateService templateService,
+          SpelService templateService,
           Resource operationsResource
   ) {
-    this(configuration, templateService, operationsResource, Collections.emptyMap());
+    this(configuration, templateService, () -> OperationRoot.load(operationsResource), Collections.emptyMap());
   }
 
   public OperationResultProcessor(
           OperationConfiguration configuration,
-          TemplateService templateService,
+          SpelService templateService,
           Resource operationsResource,
           Map<String, Object> context
   ) {
@@ -61,7 +70,15 @@ public class OperationResultProcessor {
 
   public OperationResultProcessor(
           OperationConfiguration configuration,
-          TemplateService templateService,
+          SpelService templateService,
+          Supplier<OperationRoot> operationRootSupplier
+  ) {
+    this(configuration, templateService, operationRootSupplier, Collections.emptyMap());
+  }
+
+  public OperationResultProcessor(
+          OperationConfiguration configuration,
+          SpelService templateService,
           Supplier<OperationRoot> operationRootSupplier,
           Map<String, Object> context
   ) {
@@ -183,13 +200,70 @@ public class OperationResultProcessor {
                                     String operationGroupId) {
     Monitor monitor = new Monitor();
     RdfStoreService rdfStore = getRdfStore(model);
+
+    try {
+      if (isNormalCase(operationGroupId)) {
+        return processNormalCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      }
+      if (isMergedCase(operationGroupId)) {
+        return processMergedCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      }
+
+      throw new RuntimeException("not sure how to process case: uri " + uri + " and group " + operationGroupId);
+    }
+    finally {
+      log.debug("(validate) {}", monitor);
+    }
+  }
+
+  private boolean isNormalCase(String operationGroupId) {
+    return operationRoot.hasOperationGroupWithId(operationGroupId);
+  }
+
+  private SingleGroupResult processNormalCase(Monitor monitor,
+                                              Set<String> permissions,
+                                              RdfStoreService rdfStore,
+                                              String uri,
+                                              String operationGroupId) {
     OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
 
-    SingleGroupResult rootGroup = new SingleGroupResult(operationGroup, uri, null);
-    processGroup(monitor, permissions, rdfStore, rootGroup);
+    SingleGroupResult result = new SingleGroupResult(operationGroup, uri, null);
+    processGroup(monitor, permissions, rdfStore, result);
 
-    log.debug("(validate) {}", monitor);
-    return rootGroup;
+    return result;
+  }
+
+  private boolean isMergedCase(String operationGroupId) {
+    return getMergedGroup(operationGroupId) != null;
+  }
+
+  private SingleGroupResult processMergedCase(Monitor monitor,
+                                              Set<String> permissions,
+                                              RdfStoreService rdfStore,
+                                              String uri,
+                                              String operationGroupId) {
+    OperationGroup rootGroup = operationRoot.getByPathId("root");
+    SingleGroupResult rootGroupResult = new SingleGroupResult(rootGroup, uri, null);
+
+    OperationGroup operationGroup = getMergedGroup(operationGroupId);
+    processChildGroup(monitor, permissions, rdfStore, rootGroupResult, operationGroup);
+
+    if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
+    return rootGroupResult.getGroupResult(operationGroupId);
+
+//    SingleGroupResult operationGroupResult = new SingleGroupResult(operationGroup, uri, null);
+//    processGroup(monitor, permissions, rdfStore, result);
+//    return operationGroupResult;
+  }
+
+  private OperationGroup getMergedGroup(String operationGroupId) {
+    if (Objects.equals("..", operationGroupId)) return null;
+
+    boolean hasRoot = operationRoot.hasOperationGroupWithId("root");
+    if (!hasRoot) return null;
+
+    OperationGroup rootGroup = operationRoot.getByPathId("root");
+    return rootGroup.getOperationGroup(operationGroupId);
   }
 
   private void processGroup(Monitor monitor,
@@ -605,7 +679,7 @@ public class OperationResultProcessor {
       return operationResults.stream()
                              .filter(result -> result.getOperation().getId().equals(id))
                              .findFirst()
-                             .orElseThrow(() -> new RuntimeException("cannot find operation with id " + id));
+                             .orElseThrow(() -> new RuntimeException("cannot find operation with id '" + id + "'"));
     }
 
     public void addSingleGroup(@Nonnull SingleGroupResult childGroupResult) {
@@ -696,7 +770,7 @@ public class OperationResultProcessor {
 
       String fullString = String.valueOf(percentageTimes100);
       String result = fullString.substring(0, fullString.length() - 2) + "." + fullString
-        .substring(fullString.length() - 2);
+              .substring(fullString.length() - 2);
       return StringUtils.leftPad(result, 8);
     }
   }

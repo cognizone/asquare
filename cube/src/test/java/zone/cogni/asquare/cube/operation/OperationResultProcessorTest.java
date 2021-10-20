@@ -1,13 +1,13 @@
 package zone.cogni.asquare.cube.operation;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.util.List;
@@ -21,10 +21,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OperationResultProcessorTest {
 
   @Autowired
+  OperationResultJsonConversion personConversion;
+
+  @Autowired
   OperationResultProcessor personOperations;
 
   @Autowired
-  OperationResultJsonConversion personConversion;
+  OperationResultJsonConversion rootConversion;
+
+  @Autowired
+  OperationResultProcessor rootOperations;
 
   private static final String homer = "http://demo.com/data#homer";
 
@@ -410,7 +416,7 @@ public class OperationResultProcessorTest {
   @Test
   public void output_json() {
     // given
-    Model model = JenaUtils.read(new ClassPathResource("operation/homer.ttl"));
+    Model model = getHomerModel();
 
     // when
     Set<String> allPermissions = personOperations.getOperationRoot().getOperationIds();
@@ -421,6 +427,32 @@ public class OperationResultProcessorTest {
 
     // then
     System.out.println(standaloneJson); // pretty string ?
+  }
+
+  @Test
+  public void root_operations() {
+    // given
+    Model model = getHomerModel();
+
+    // when
+    Set<String> allPermissions = rootOperations.getOperationRoot().getOperationIds();
+    ObjectNode standaloneJson = rootConversion.createStandaloneJson(allPermissions,
+                                                                    model,
+                                                                    homer,
+                                                                    "three");
+
+    // then
+    assertThat(standaloneJson).isInstanceOf(ObjectNode.class);
+    assertThat(standaloneJson.get("id").asText()).isEqualTo("three");
+    assertThat(standaloneJson.get("operations")).isInstanceOf(ArrayNode.class);
+
+    JsonNode operation = standaloneJson.get("operations").get(0);
+    assertThat(operation.get("id").asText()).isEqualTo("reference");
+    assertThat(operation.get("enabled").asBoolean()).isTrue();
+  }
+
+  private Model getHomerModel() {
+    return JenaUtils.read(new ClassPathResource("operation/homer.ttl"));
   }
 
   private OperationResultProcessor.SingleGroupResult find(List<OperationResultProcessor.SingleGroupResult> children,
@@ -434,7 +466,7 @@ public class OperationResultProcessorTest {
 
   private OperationResultProcessor.SingleGroupResult initializeHomer() {
     // given
-    Model model = JenaUtils.read(new ClassPathResource("operation/homer.ttl"));
+    Model model = getHomerModel();
 
     // when
     Set<String> allPermissions = personOperations.getOperationRoot().getOperationIds();

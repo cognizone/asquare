@@ -1,0 +1,24 @@
+{
+  prefixes: {
+    person: "http://demo.com/person/model#",
+    xsd: "http://www.w3.org/2001/XMLSchema#"
+  },
+  operationGroups: [
+    {
+      id: "one",
+      operations: [
+        {
+          id: "is-true",
+          template: "true"
+        },
+        {
+          id: "has-name",
+          template: "ask { <#{[uri]}> person:name ?name }"
+        }
+      ]
+    },
+    {
+      id: "two"
+    }
+  ]
+}

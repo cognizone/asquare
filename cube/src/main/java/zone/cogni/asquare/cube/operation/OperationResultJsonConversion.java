@@ -18,8 +18,6 @@ import java.util.function.Supplier;
 
 public class OperationResultJsonConversion {
 
-  private static final Logger log = LoggerFactory.getLogger(OperationResultJsonConversion.class);
-
   private final OperationConfiguration configuration;
   private final OperationResultProcessor operationResultProcessor;
 

@@ -1,6 +1,7 @@
 package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Operation {
 
   private static final Logger log = LoggerFactory.getLogger(Operation.class);
@@ -207,6 +210,7 @@ public class Operation {
     return optional != null && !optional.isEmpty();
   }
 
+  @JsonIgnore
   public String getCompactFullTemplate() {
     String result = getFullTemplate().replace('\n', ' ');
     int oldSize = result.length();
@@ -220,6 +224,7 @@ public class Operation {
     return result;
   }
 
+  @JsonIgnore
   public String getFullTemplate() {
     if (template == null || template.isEmpty()) return "";
 
@@ -233,7 +238,7 @@ public class Operation {
     catch (Exception e) {
       isContextQuery = false;
       log.warn("Cannot create context query from template:\n" +
-                   "{}", getFullTemplate(), e);
+               "{}", getFullTemplate(), e);
     }
 
     return contextQuery;
