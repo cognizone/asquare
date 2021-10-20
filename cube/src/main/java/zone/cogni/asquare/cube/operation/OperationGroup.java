@@ -1,6 +1,7 @@
 package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OperationGroup {
 
   private String id;
@@ -118,6 +120,7 @@ public class OperationGroup {
     return String.join("/", path) + "/" + id;
   }
 
+  @JsonIgnore
   public String getCompactSelectorQuery() {
     if (!hasSelectorQuery()) return "";
 
@@ -194,7 +197,7 @@ public class OperationGroup {
   public String toString() {
     return "OperationGroup{" +
            "pathId=" + pathId +
-           ", selectorQuery='" + selectorQuery + '\'' +
-           '}';
+           (selectorQuery == null ? "" : ", selectorQuery='" + selectorQuery + "'") +
+           "}";
   }
 }

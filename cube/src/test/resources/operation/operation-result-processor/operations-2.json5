@@ -1,0 +1,23 @@
+{
+  prefixes: {
+    org: "http://demo.com/org/model#",
+    xsd: "http://www.w3.org/2001/XMLSchema#"
+  },
+  operationGroups: [
+    {
+      id: "three",
+      operations: [
+        {
+          id: "reference",
+          requires: [
+            [ "..", "one", "is-true" ],
+            [ "..", "one", "has-name" ]
+          ]
+        }
+      ]
+    },
+    {
+      id: "four"
+    }
+  ]
+}
