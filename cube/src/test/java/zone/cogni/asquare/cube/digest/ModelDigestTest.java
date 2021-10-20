@@ -2,15 +2,12 @@ package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
-import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -49,27 +46,28 @@ class ModelDigestTest {
     Model model = loadModel("digest/root-block.ttl");
 
     // when (note: internal method is tested here)
-    List<Map<String, RDFNode>> rows = SortedBlock.getRootStatements(new InternalRdfStoreService(model));
+    SortedBlock rootBlock = new SortedBlock(model);
+
 
     // then
-    assertThat(rows).size().isEqualTo(3);
-    assertThat(rows).extracting("s").size().isEqualTo(3);
+    assertThat(rootBlock.getNestedBlocks()).size().isEqualTo(3);
 
-    assertThat(rows).anySatisfy(row -> {
-      assertThat(row.get("s").asResource().getURI()).isEqualTo("http://demo.com/data/1");
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement().getSubject().getURI()).isEqualTo("http://demo.com/data/1");
     });
 
-    assertThat(rows).anySatisfy(row -> {
-      assertThat(row.get("s").asResource().getURI()).isEqualTo("http://demo.com/data/3");
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement().getSubject().getURI()).isEqualTo("http://demo.com/data/3");
     });
 
-    assertThat(rows).anySatisfy(row -> {
-      assertThat(row.get("s").isAnon()).isTrue();
-      assertThat(row.get("o").asResource().getURI()).isEqualTo("http://demo.com/model/blank-type");
-    });
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement()).isNull();
+      assertThat(block.getNestedBlocks().size()).isEqualTo(1);
 
-    assertThat(rows).extracting("o")
-                    .doesNotContain(ResourceFactory.createResource("<http://demo.com/model/other-blank-type>"));
+      SortedBlock blankNodeBlock = block.getNestedBlocks().get(0);
+      assertThat(blankNodeBlock.getStatement().getSubject().isAnon()).isTrue();
+      assertThat(blankNodeBlock.getStatement().getObject().asResource().getURI()).isEqualTo("http://demo.com/model/blank-type");
+    });
   }
 
   @Test
@@ -111,7 +109,70 @@ class ModelDigestTest {
     assertThat(result).isEqualTo(DigestUtils.sha256Hex(DigestUtils.sha256Hex(triple)));
   }
 
-  private Model loadModel(String path) {
+  @Test
+  public void nested_blocks() {
+    // given
+    Model model = loadModel("digest/nested-blocks.ttl");
+
+    // when
+    SortedBlock rootBlock = new SortedBlock(model);
+
+    // then
+    assertThat(rootBlock.getNestedBlocks().size()).isEqualTo(3);
+
+    // triple with uri as object
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement().getSubject().getURI()).isEqualTo("http://demo.com/data/1");
+      assertThat(block.getStatement().getObject().asResource().getURI()).isEqualTo("http://demo.com/data/5");
+      assertThat(block.getNestedBlocks()).isEmpty();
+    });
+
+    // triple with blank node as object and no nesting
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement().getSubject().getURI()).isEqualTo("http://demo.com/data/1");
+      assertThat(block.getStatement().getObject().isAnon()).isTrue();
+
+      assertThat(block.getNestedBlocks().size()).isEqualTo(1);
+
+      SortedBlock blankNodeBlock = block.getNestedBlocks().get(0);
+      assertThat(blankNodeBlock.getStatement().getObject().asResource().getURI())
+              .isEqualTo("http://demo.com/model/blank-type");
+    });
+
+    // triple with blank node as object and nesting!
+    assertThat(rootBlock.getNestedBlocks()).anySatisfy(block -> {
+      assertThat(block.getStatement().getSubject().getURI()).isEqualTo("http://demo.com/data/2");
+      assertThat(block.getStatement().getObject().isAnon()).isTrue();
+
+      List<SortedBlock> nestedBlocks = block.getNestedBlocks();
+      assertThat(nestedBlocks.size()).isEqualTo(2);
+
+      assertThat(nestedBlocks).anySatisfy(otherBlankTypeBlock -> {
+        assertThat(otherBlankTypeBlock.getStatement().getObject().asResource().getURI())
+                .isEqualTo("http://demo.com/model/other-blank-type");
+      });
+
+      assertThat(nestedBlocks).anySatisfy(blankNodeBlock -> {
+        assertThat(blankNodeBlock.getStatement().getObject().isAnon()).isTrue();
+        assertThat(blankNodeBlock.getNestedBlocks().size()).isEqualTo(2);
+      });
+    });
+  }
+
+  @Test
+  public void blank_nested_blocks() {
+    // given
+    Model model = loadModel("digest/blank-nested-blocks.ttl");
+
+    // when
+    SortedBlock rootBlock = new SortedBlock(model);
+
+    // then
+    assertThat(rootBlock.getNestedBlocks().size()).isEqualTo(3);
+
+  }
+
+    private Model loadModel(String path) {
     return JenaUtils.read(new ClassPathResource(path));
   }
 

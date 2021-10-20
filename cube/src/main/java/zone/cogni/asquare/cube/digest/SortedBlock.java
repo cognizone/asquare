@@ -1,115 +1,107 @@
 package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolutionMap;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
-import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
-import zone.cogni.sem.jena.template.JenaResultSetHandlers;
+import org.apache.jena.rdf.model.StmtIterator;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
 public class SortedBlock {
 
-  private static final Query rootStatementsQuery = getRootStatementsQuery();
-
-  private static Query getRootStatementsQuery() {
-    String query =
-            "select ?s ?p ?o {" +
-            "  {" +
-            "    ?s ?p ?o." +
-            "    filter (isuri(?s))" +
-            "  }" +
-            "  union" +
-            "  {" +
-            "    ?s ?p ?o." +
-            "    filter (isblank(?s))" +
-            "    filter not exists { ?parentSubject ?parentProperty ?s }" +
-            "  }" +
-            "}";
-    return QueryFactory.create(query);
-  }
-
   private Statement statement;
 
-  private List<SortedBlock> sortedBlocks;
+  private List<SortedBlock> nestedBlocks;
   private String digest;
 
   public SortedBlock(Model model) {
-    sortedBlocks = getRootBlocks(model);
-    createNestedBlocks(model);
+    nestedBlocks = calculateRootBlocks(model);
+
+//    nestedBlocks = getRootBlocks(model);
+//    createNestedBlocks(model);
     calculateDigest();
   }
 
-  private List<SortedBlock> getRootBlocks(Model model) {
-    RdfStoreService rdfStore = new InternalRdfStoreService(model);
-    List<Map<String, RDFNode>> rootStatements = getRootStatements(rdfStore);
-
-    return rootStatements.stream()
-                         .map(row -> new SortedBlock(row.get("s"),
-                                                     row.get("p"),
-                                                     row.get("o")))
-                         .collect(Collectors.toList());
+  public SortedBlock(List<SortedBlock> nestedBlocks) {
+    this.nestedBlocks = nestedBlocks;
   }
 
-  protected static List<Map<String, RDFNode>> getRootStatements(RdfStoreService rdfStore) {
-    return rdfStore.executeSelectQuery(rootStatementsQuery,
-                                       new QuerySolutionMap(),
-                                       JenaResultSetHandlers.listOfMapsResolver);
+  private List<SortedBlock> calculateRootBlocks(Model model) {
+    return ListUtils.union(getUriRootBlocks(model),
+                           getBlankRootBlocks(model));
+//    return model.listSubjects()
+//                .toList().stream()
+//                .filter(subject -> isRoot(model, subject))
+//                .flatMap(subject -> model.listStatements(subject, null, (RDFNode) null).toList().stream())
+//                .map(currentStatement -> new SortedBlock(model, currentStatement))
+//                .collect(Collectors.toList());
   }
 
-  public SortedBlock(RDFNode subject, RDFNode predicate, RDFNode object) {
-    this(
-            ResourceFactory.createStatement(
-                    (Resource) subject,
-                    ResourceFactory.createProperty(predicate.asResource().getURI()),
-                    object
-            )
-    );
+  private List<SortedBlock> getUriRootBlocks(Model model) {
+    return model.listStatements(null, null, (RDFNode) null)
+                .toList().stream()
+                .filter(statement -> statement.getSubject().isURIResource())
+                .map(statement -> new SortedBlock(model, statement))
+                .collect(Collectors.toList());
   }
 
-  public SortedBlock(Statement statement) {
+  private List<SortedBlock> getBlankRootBlocks(Model model) {
+    return model.listSubjects()
+                .toList().stream()
+                .filter(RDFNode::isAnon)
+                .filter(subject -> !model.listStatements(null, null, subject).hasNext())
+                .map(subject -> convertStatementsToBlocks(model,
+                                                          model.listStatements(subject, null, (RDFNode) null)))
+                .map(SortedBlock::new)
+                .collect(Collectors.toList());
+  }
+
+//  private boolean isRoot(Model model, Resource subject) {
+//    if (subject.isURIResource()) return true;
+//
+//     must not have usages!
+//    return !model.listStatements(null, null, subject).hasNext();
+//  }
+
+  public SortedBlock(Model model, Statement statement) {
     this.statement = statement;
+    nestedBlocks = calculationNestedBlocks(model);
+    calculateDigest();
   }
 
-  public List<SortedBlock> getSortedBlocks() {
-    return sortedBlocks;
+  private List<SortedBlock> calculationNestedBlocks(Model model) {
+    if (statement == null) return Collections.emptyList();
+    if (!statement.getObject().isAnon()) return Collections.emptyList();
+
+    StmtIterator stmtIterator = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null);
+    return convertStatementsToBlocks(model, stmtIterator);
+
   }
 
-  public void createNestedBlocks(Model model) {
-    if (statement == null) return;
-    if (!statement.getObject().isAnon()) return;
-
-    sortedBlocks = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null)
-                        .toList().stream()
-                        .map(SortedBlock::new)
-                        .peek(block -> createNestedBlocks(model))
-                        .collect(Collectors.toList());
-  }
-
-  public String getDigest() {
-    return digest;
+  private List<SortedBlock> convertStatementsToBlocks(Model model, StmtIterator iterator) {
+    return iterator
+            .toList().stream()
+            .map(statement -> new SortedBlock(model, statement))
+            .collect(Collectors.toList());
   }
 
   public void calculateDigest() {
     String digestString = "";
 
     // nested blocks
-    if (sortedBlocks != null && !sortedBlocks.isEmpty()) {
-      sortedBlocks.forEach(SortedBlock::calculateDigest);
-      sortedBlocks.sort(Comparator.comparing(SortedBlock::getDigest));
+    if (nestedBlocks != null && !nestedBlocks.isEmpty()) {
+      nestedBlocks.forEach(SortedBlock::calculateDigest);
+      nestedBlocks.sort(Comparator.comparing(SortedBlock::getDigest));
 
-      digestString = sortedBlocks.stream()
+      digestString = nestedBlocks.stream()
                                  .map(SortedBlock::getDigest)
                                  .collect(Collectors.joining());
     }
@@ -125,5 +117,18 @@ public class SortedBlock {
     }
 
     this.digest = DigestUtils.sha256Hex(digestString);
+  }
+
+  public String getDigest() {
+    return digest;
+  }
+
+  public Statement getStatement() {
+    return statement;
+  }
+
+  public List<SortedBlock> getNestedBlocks() {
+    return nestedBlocks == null ? Collections.emptyList()
+                                : Collections.unmodifiableList(nestedBlocks);
   }
 }
