@@ -1,11 +1,9 @@
 package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
@@ -17,16 +15,12 @@ import java.util.stream.Collectors;
 
 public class SortedBlock {
 
+  private final List<SortedBlock> nestedBlocks;
   private Statement statement;
-
-  private List<SortedBlock> nestedBlocks;
   private String digest;
 
   public SortedBlock(Model model) {
     nestedBlocks = calculateRootBlocks(model);
-
-//    nestedBlocks = getRootBlocks(model);
-//    createNestedBlocks(model);
     calculateDigest();
   }
 
@@ -37,12 +31,6 @@ public class SortedBlock {
   private List<SortedBlock> calculateRootBlocks(Model model) {
     return ListUtils.union(getUriRootBlocks(model),
                            getBlankRootBlocks(model));
-//    return model.listSubjects()
-//                .toList().stream()
-//                .filter(subject -> isRoot(model, subject))
-//                .flatMap(subject -> model.listStatements(subject, null, (RDFNode) null).toList().stream())
-//                .map(currentStatement -> new SortedBlock(model, currentStatement))
-//                .collect(Collectors.toList());
   }
 
   private List<SortedBlock> getUriRootBlocks(Model model) {
@@ -63,13 +51,6 @@ public class SortedBlock {
                 .map(SortedBlock::new)
                 .collect(Collectors.toList());
   }
-
-//  private boolean isRoot(Model model, Resource subject) {
-//    if (subject.isURIResource()) return true;
-//
-//     must not have usages!
-//    return !model.listStatements(null, null, subject).hasNext();
-//  }
 
   public SortedBlock(Model model, Statement statement) {
     this.statement = statement;

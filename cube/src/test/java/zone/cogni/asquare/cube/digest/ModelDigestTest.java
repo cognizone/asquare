@@ -2,11 +2,11 @@ package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import zone.cogni.sem.jena.JenaUtils;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +48,6 @@ class ModelDigestTest {
     // when (note: internal method is tested here)
     SortedBlock rootBlock = new SortedBlock(model);
 
-
     // then
     assertThat(rootBlock.getNestedBlocks()).size().isEqualTo(3);
 
@@ -66,7 +65,8 @@ class ModelDigestTest {
 
       SortedBlock blankNodeBlock = block.getNestedBlocks().get(0);
       assertThat(blankNodeBlock.getStatement().getSubject().isAnon()).isTrue();
-      assertThat(blankNodeBlock.getStatement().getObject().asResource().getURI()).isEqualTo("http://demo.com/model/blank-type");
+      assertThat(blankNodeBlock.getStatement().getObject().asResource()
+                               .getURI()).isEqualTo("http://demo.com/model/blank-type");
     });
   }
 
@@ -169,10 +169,26 @@ class ModelDigestTest {
 
     // then
     assertThat(rootBlock.getNestedBlocks().size()).isEqualTo(3);
-
   }
 
-    private Model loadModel(String path) {
+  @Test
+  public void skos_in_two_flavours() {
+    // given
+    Model rdfXml = loadModel("digest/skos.rdf");
+    Model turtle = loadModel("digest/skos.ttl");
+
+    // when
+    SortedBlock rdfXmlBlock = new SortedBlock(rdfXml);
+    String rdfXmlDigest = rdfXmlBlock.getDigest();
+
+    SortedBlock turtleBlock = new SortedBlock(turtle);
+    String turtleDigest = turtleBlock.getDigest();
+
+    assertThat(rdfXmlDigest).as("rdfXmlDigest")
+                            .isEqualTo(turtleDigest).as("turtleDigest");
+  }
+
+  private Model loadModel(String path) {
     return JenaUtils.read(new ClassPathResource(path));
   }
 
