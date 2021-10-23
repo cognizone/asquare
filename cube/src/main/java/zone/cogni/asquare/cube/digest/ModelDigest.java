@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 /**
  * <p>
- * Checksum tries to generate a predictable digest for a model.
+ * Tries to generate a predictable digest for a model.
  * </p>
  * <p>
  * For this to be possible we must be able to sort all triples.
@@ -24,7 +24,7 @@ import java.util.function.Function;
  * That string can then be run through a digest algorithm to link the triple to a digest.
  * </p>
  * <p>
- * Blank nodes, however, pose an extra complexity.
+ * Blank nodes, however, add an extra layer of complexity.
  * Since blank nodes are "somewhat random" in their naming, we cannot rely on blank nodes.
  * We must use their referenced data, as input for the digest of the blank node.
  * </p>
@@ -53,20 +53,27 @@ import java.util.function.Function;
  * </p>
  * <p>
  * As starting points of the sets of related triples we have
- *   <ul>
- *     <li>triples where "subject" is a URI resource,
- *     <p>
- *     in this case, if the "object" is also a URI resource, the set only contains one triple
- *     </p>
- *     <p>
+ *   <ol>
+ *     <li>Triples where "subject" is a URI resource,
+ *     <ol>
+ *     <li>
+ *      in this case, if the "object" is also a URI resource, the set only contains one triple
+ *     </li>
+ *     <li>
  *       in the case the "object" is a blank node, the recursion of triples starts, continuing until
  *       we have all blank nodes
- *     </p>
  *     </li>
- *     <li>triples where "subject" is a blank node, but the blank node is never used as an "object"
- *       <p>in case a blank node is used as an object, it would already be included in a set of the first case</p>
+ *     </ol>
  *     </li>
- *   </ul>
+ *     <li>
+ *       <p>
+ *       Triples where "subject" is a blank node, but the blank node is never used as an "object".
+ *       In this case all triples on the same (blank node) "subject" will be collected in to one set
+ *       and will follow the blank node algorithm as described about.
+ *       </p>
+ *       <p>Note: in case a blank node is used as an object, it would already be included in a set of the first case</p>
+ *     </li>
+ *   </ol>
  * </p>
  * <p>
  *   Finally, it should be noted that if a blank node is an "object" but it can be reached via 2 different paths
