@@ -178,12 +178,10 @@ class ModelDigestTest {
     Model turtle = loadModel("digest/skos.ttl");
 
     // when
-    SortedBlock rdfXmlBlock = new SortedBlock(rdfXml);
-    String rdfXmlDigest = rdfXmlBlock.getDigest();
+    String rdfXmlDigest = new SortedBlock(rdfXml).getDigest();
+    String turtleDigest = new SortedBlock(turtle).getDigest();
 
-    SortedBlock turtleBlock = new SortedBlock(turtle);
-    String turtleDigest = turtleBlock.getDigest();
-
+    // then
     assertThat(rdfXmlDigest).as("rdfXmlDigest")
                             .isEqualTo(turtleDigest).as("turtleDigest");
   }
