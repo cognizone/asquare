@@ -159,9 +159,9 @@ class ModelDigestTest {
   }
 
   @Test
-  public void blank_nested_blocks() {
+  public void blank_root_blocks() {
     // given
-    Model model = loadModel("digest/blank-nested-blocks.ttl");
+    Model model = loadModel("digest/blank-root-blocks.ttl");
 
     // when
     SortedBlock rootBlock = new SortedBlock(model);

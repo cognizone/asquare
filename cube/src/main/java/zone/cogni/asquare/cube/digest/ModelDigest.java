@@ -82,28 +82,9 @@ import java.util.function.Function;
  */
 public class ModelDigest implements Function<Model, String> {
 
-  private static final Query illegalGraphQuery = getIllegalGraphQuery();
-
-  private static Query getIllegalGraphQuery() {
-    String query =
-            "  ask {" +
-            "    ?s ?p ?o." +
-            "    filter (isblank(?o))" +
-            "  }" +
-            "  group by ?o" +
-            "  having (count(?s) > 1)";
-    return QueryFactory.create(query);
-  }
-
   @Override
   public String apply(Model model) {
-    if (isIllegalGraph(model)) throw new RuntimeException("blank node is used more than once");
-
     return new SortedBlock(model).getDigest();
   }
 
-  private boolean isIllegalGraph(Model model) {
-    RdfStoreService rdfStore = new InternalRdfStoreService(model);
-    return rdfStore.executeAskQuery(illegalGraphQuery, new QuerySolutionMap());
-  }
 }

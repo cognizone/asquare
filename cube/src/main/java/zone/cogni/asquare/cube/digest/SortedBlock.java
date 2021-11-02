@@ -2,11 +2,17 @@ package zone.cogni.asquare.cube.digest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,13 +21,33 @@ import java.util.stream.Collectors;
 
 public class SortedBlock {
 
+  private static final Query illegalGraphQuery = getIllegalGraphQuery();
+
+  private static Query getIllegalGraphQuery() {
+    String query =
+            "  ask {" +
+            "    ?s ?p ?o." +
+            "    filter (isblank(?o))" +
+            "  }" +
+            "  group by ?o" +
+            "  having (count(?s) > 1)";
+    return QueryFactory.create(query);
+  }
+
   private final List<SortedBlock> nestedBlocks;
   private Statement statement;
   private String digest;
 
   public SortedBlock(Model model) {
+    if (isIllegalGraph(model)) throw new RuntimeException("blank node is used more than once");
+
     nestedBlocks = calculateRootBlocks(model);
     calculateDigest();
+  }
+
+  private boolean isIllegalGraph(Model model) {
+    RdfStoreService rdfStore = new InternalRdfStoreService(model);
+    return rdfStore.executeAskQuery(illegalGraphQuery, new QuerySolutionMap());
   }
 
   public SortedBlock(List<SortedBlock> nestedBlocks) {
@@ -46,8 +72,7 @@ public class SortedBlock {
                 .toList().stream()
                 .filter(RDFNode::isAnon)
                 .filter(subject -> !model.listStatements(null, null, subject).hasNext())
-                .map(subject -> convertStatementsToBlocks(model,
-                                                          model.listStatements(subject, null, (RDFNode) null)))
+                .map(subject -> createBlocksForSubject(model, subject))
                 .map(SortedBlock::new)
                 .collect(Collectors.toList());
   }
@@ -62,16 +87,14 @@ public class SortedBlock {
     if (statement == null) return Collections.emptyList();
     if (!statement.getObject().isAnon()) return Collections.emptyList();
 
-    StmtIterator stmtIterator = model.listStatements(statement.getObject().asResource(), null, (RDFNode) null);
-    return convertStatementsToBlocks(model, stmtIterator);
-
+    return createBlocksForSubject(model, statement.getObject().asResource());
   }
 
-  private List<SortedBlock> convertStatementsToBlocks(Model model, StmtIterator iterator) {
-    return iterator
-            .toList().stream()
-            .map(statement -> new SortedBlock(model, statement))
-            .collect(Collectors.toList());
+  private List<SortedBlock> createBlocksForSubject(Model model, Resource subject) {
+    return model.listStatements(subject, null, (RDFNode) null)
+                .toList().stream()
+                .map(statement -> new SortedBlock(model, statement))
+                .collect(Collectors.toList());
   }
 
   public void calculateDigest() {
@@ -89,15 +112,18 @@ public class SortedBlock {
 
     // root block does not have a statement
     if (statement != null) {
-      String triple = statement.getSubject().visitWith(DigestRdfVisitor.instance)
-                      + " "
-                      + statement.getPredicate().visitWith(DigestRdfVisitor.instance)
-                      + " "
-                      + statement.getObject().visitWith(DigestRdfVisitor.instance);
-      digestString += triple;
+      digestString += getTriple();
     }
 
     this.digest = DigestUtils.sha256Hex(digestString);
+  }
+
+  private String getTriple() {
+    return statement.getSubject().visitWith(DigestRdfVisitor.instance)
+           + " "
+           + statement.getPredicate().visitWith(DigestRdfVisitor.instance)
+           + " "
+           + statement.getObject().visitWith(DigestRdfVisitor.instance);
   }
 
   public String getDigest() {
@@ -108,6 +134,7 @@ public class SortedBlock {
     return statement;
   }
 
+  @Nonnull
   public List<SortedBlock> getNestedBlocks() {
     return nestedBlocks == null ? Collections.emptyList()
                                 : Collections.unmodifiableList(nestedBlocks);
