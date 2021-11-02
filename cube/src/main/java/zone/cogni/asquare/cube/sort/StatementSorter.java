@@ -80,7 +80,8 @@ public class StatementSorter implements Function<Model, List<Statement>> {
   private Comparator<? super Statement> getStatementComparator() {
     return (one, two) -> {
 
-      if (one == two) return 0;
+      if (one == two)
+        return 0;
 
       // subject
       if (one.getSubject().isURIResource() && two.getSubject().isAnon())
