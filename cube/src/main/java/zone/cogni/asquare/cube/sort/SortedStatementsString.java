@@ -2,31 +2,31 @@ package zone.cogni.asquare.cube.sort;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Function;
 
 public class SortedStatementsString implements Function<List<Statement>, StringBuilder> {
 
+  private static final int DEFAULT_INDENT = 24;
+
   private final int indent;
-  private final boolean compact = true;
   private final Map<String, String> namespaces = new TreeMap<>();
 
   public SortedStatementsString() {
-    this(18, ImmutableMap.of());
+    this(DEFAULT_INDENT, ImmutableMap.of());
   }
 
   public SortedStatementsString(Map<String, String> namespaces) {
-    this(18, namespaces);
+    this(DEFAULT_INDENT, namespaces);
   }
 
   public SortedStatementsString(int indent, Map<String, String> namespaces) {
@@ -39,7 +39,7 @@ public class SortedStatementsString implements Function<List<Statement>, StringB
     StringBuilder result = new StringBuilder();
 
     addNamespaces(result);
-    addStatements(result, statements);
+    statementMapToString(result, getStatementMap(statements));
 
     return result;
   }
@@ -53,71 +53,92 @@ public class SortedStatementsString implements Function<List<Statement>, StringB
     result.append("\n");
   }
 
-  private void addStatements(StringBuilder result, List<Statement> statements) {
-    Resource subject = null;
-    Property predicate = null;
+  private Map<String, Map<String, List<String>>> getStatementMap(List<Statement> statements) {
+    Map<String, Map<String, List<String>>> result = new LinkedHashMap<>();
 
-    for (Statement statement : statements) {
-      boolean sameSubject = Objects.equals(statement.getSubject(), subject);
-      boolean samePredicate = Objects.equals(statement.getPredicate(), predicate);
-      if (sameSubject && samePredicate) {
-        result.append(", ")
-              .append("\n").append(StringUtils.repeat(' ', 2 * indent))
-              .append(getStringValue(statement.getObject()));
-      }
-      else if (sameSubject) {
-        if (compact) {
-          result.append(";\n")
-                .append(StringUtils.repeat(' ', indent))
-                .append(StringUtils.rightPad(getStringValue(statement.getPredicate()), indent - 1))
-                .append(" ").append(getStringValue(statement.getObject()));
-        }
-        else {
-          result.append(";\n")
-                .append(StringUtils.repeat(' ', indent))
-                .append(getStringValue(statement.getPredicate()))
-                .append("\n").append(StringUtils.repeat(' ', 2 * indent))
-                .append(getStringValue(statement.getObject()));
-        }
-      }
-      else {
-        // end of previous subject
-        if (subject != null) result.append("\n.\n\n");
+    statements.forEach(statement -> {
+      String subject = getStringValue(statement.getSubject());
+      result.putIfAbsent(subject, new LinkedHashMap<>());
 
-        // start of new subject
-        if (compact) {
-          result.append(getStringValue(statement.getSubject()))
-                .append("\n").append(StringUtils.repeat(' ', indent))
-                .append(StringUtils.rightPad(getStringValue(statement.getPredicate()), indent - 1))
-                .append(" ").append(getStringValue(statement.getObject()));
-        }
-        else {
-          result.append(getStringValue(statement.getSubject()))
-                .append("\n").append(StringUtils.repeat(' ', indent))
-                .append(getStringValue(statement.getPredicate()))
-                .append("\n").append(StringUtils.repeat(' ', 2 * indent))
-                .append(getStringValue(statement.getObject()));
-        }
-      }
+      Map<String, List<String>> predicateMap = result.get(subject);
+      String predicate = getStringValue(statement.getPredicate());
 
-      subject = statement.getSubject();
-      predicate = statement.getPredicate();
+      predicateMap.putIfAbsent(predicate, new ArrayList<>());
+      List<String> objects = predicateMap.get(predicate);
+
+      objects.add(getStringValue(statement.getObject()));
+    });
+
+    return result;
+  }
+
+  private void statementMapToString(StringBuilder result, Map<String, Map<String, List<String>>> statementMap) {
+    statementMap.forEach((subject, predicateMap) -> {
+      result.append(subject).append("\n");
+
+      predicateMapToString(result, predicateMap);
+
+      result.append(".\n\n");
+    });
+  }
+
+  private void predicateMapToString(StringBuilder result, Map<String, List<String>> predicateMap) {
+    predicateMap.forEach((predicate, objects) -> {
+      result.append(StringUtils.repeat(' ', indent))
+            .append(StringUtils.rightPad(predicate, indent - 1));
+
+      objectListToString(result, objects);
+    });
+  }
+
+  private void objectListToString(StringBuilder result, List<String> objects) {
+    for (int i = 0; i < objects.size(); i++) {
+      if (i != 0) result.append(StringUtils.repeat(' ', 2 * indent - 1));
+
+      result.append(" ").append(objects.get(i));
+
+      String endChar = i != objects.size() - 1 ? "," : ";";
+      result.append(endChar).append("\n");
     }
-    result.append("\n.");
   }
 
   @Nonnull
   private String getStringValue(RDFNode rdfNode) {
     String result = (String) rdfNode.visitWith(StringRdfVisitor.instance);
-    if (!rdfNode.isURIResource()) return result;
 
-    String shortUri = getShortUri(result);
+    String shortUri = getShortString(result);
     return shortUri != null ? shortUri : result;
   }
 
   @Nullable
-  private String getShortUri(String result) {
-    String shortResult = result.substring(1, result.length() - 1);
+  private String getShortString(String result) {
+    // shorten uri if possible
+    boolean isUri = result.charAt(0) == '<' && result.charAt(result.length() - 1) == '>';
+    if (isUri) {
+      return getShortUri(result);
+    }
+
+    // shorten typed literal if possible
+    boolean isTypedLiteral = result.charAt(0) == '"'
+                             && result.contains("\"^^<")
+                             && result.charAt(result.length() - 1) == '>';
+    if (isTypedLiteral) {
+      String typeUri = StringUtils.substringAfterLast(result, "^^");
+      String valueString = StringUtils.substringBeforeLast(result, "^^");
+
+      // special case for xsd:string -> can be shorter even
+      if (typeUri.equals("<http://www.w3.org/2001/XMLSchema#string>"))
+        return valueString;
+
+      String shortTypeUri = getShortUri(typeUri);
+      return valueString + "^^" + (shortTypeUri == null ? typeUri : shortTypeUri);
+    }
+
+    return null;
+  }
+
+  private String getShortUri(String fullUri) {
+    String shortResult = fullUri.substring(1, fullUri.length() - 1);
     for (Map.Entry<String, String> entry : namespaces.entrySet()) {
       if (!shortResult.startsWith(entry.getValue())) continue;
 
