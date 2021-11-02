@@ -5,6 +5,7 @@ import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Visitor to calculate string based on RDF nodes.
@@ -36,12 +37,37 @@ public class StringRdfVisitor implements RDFVisitor {
   @Override
   public String visitLiteral(Literal literal) {
     if (StringUtils.isNotBlank(literal.getLanguage()))
-      return '"' + literal.getString() + '"' + '@' + literal.getLanguage();
+      return getQuotedLiteralString(literal.getString()) + '@' + literal.getLanguage();
 
-    if (StringUtils.isNotBlank(literal.getDatatypeURI()))
-      return '"' + literal.getString() + '"' + "^^<" + literal.getDatatypeURI() + ">";
+    if (StringUtils.isNotBlank(literal.getDatatypeURI())) {
+      boolean isString = literal.getDatatypeURI().equals(XSD.xstring.getURI());
+      if (isString) return getQuotedLiteralString(literal.getString());
 
-    throw new RuntimeException("how can this be possible?");
+      return getQuotedLiteralString(literal.getString()) + "^^<" + literal.getDatatypeURI() + ">";
+    }
+
+    throw new RuntimeException("how can this be possible? literal " + literal);
+  }
+
+  private String getQuotedLiteralString(String literalString) {
+    boolean isMultiline = literalString.contains("\n");
+    boolean containsDoubleQuote = literalString.contains("\"");
+    if (!isMultiline && !containsDoubleQuote)
+      return '"' + literalString + '"';
+
+    boolean containsSingleQuote = literalString.contains("'");
+    if (!isMultiline && !containsSingleQuote)
+      return "'" + literalString + "'";
+
+    boolean containsTripleSingleQuote = literalString.contains("'''");
+    if (!containsTripleSingleQuote)
+      return "'''" + literalString + "'''";
+
+    boolean containsTripleDoubleQuote = literalString.contains("\"\"\"");
+    if (!containsTripleDoubleQuote)
+      return "\"\"\"" + literalString + "\"\"\"";
+
+    throw new RuntimeException("weird literal found: " + literalString);
   }
 
 }

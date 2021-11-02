@@ -126,10 +126,6 @@ public class SortedStatementsString implements Function<List<Statement>, StringB
       String typeUri = StringUtils.substringAfterLast(result, "^^");
       String valueString = StringUtils.substringBeforeLast(result, "^^");
 
-      // special case for xsd:string -> can be shorter even
-      if (typeUri.equals("<http://www.w3.org/2001/XMLSchema#string>"))
-        return valueString;
-
       String shortTypeUri = getShortUri(typeUri);
       return valueString + "^^" + (shortTypeUri == null ? typeUri : shortTypeUri);
     }
