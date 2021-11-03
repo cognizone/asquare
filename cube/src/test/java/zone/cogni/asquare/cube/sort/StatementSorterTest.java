@@ -1,4 +1,4 @@
-package zone.cogni.asquare.cube.digest;
+package zone.cogni.asquare.cube.sort;
 
 
 import com.google.common.collect.ImmutableMap;
@@ -6,8 +6,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
-import zone.cogni.asquare.cube.sort.SortedStatementsString;
-import zone.cogni.asquare.cube.sort.StatementSorter;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.util.List;
@@ -50,11 +48,6 @@ class StatementSorterTest {
     assertRowHasSubjectId(statements, 7, "a9cdeda412f7adcbab10e8fdc60d2117bb4d8b0764f2340c7ff2a9ac3924a775");
   }
 
-  private void assertRowHasSubjectId(List<Statement> statements, int row, String id) {
-    assertThat(statements.get(row).getSubject().isAnon()).isTrue();
-    assertThat(statements.get(row).getSubject().getId().getLabelString()).isEqualTo(id);
-  }
-
   @Test
   public void skos() {
     // given
@@ -75,6 +68,11 @@ class StatementSorterTest {
     assertRowHasSubjectId(statements, 251, "8ecc67a2719e5c6479298355099d29b1a2efd70c9e84da5502b140369e03f137");
   }
 
+  private void assertRowHasSubjectId(List<Statement> statements, int row, String id) {
+    assertThat(statements.get(row).getSubject().isAnon()).isTrue();
+    assertThat(statements.get(row).getSubject().getId().getLabelString()).isEqualTo(id);
+  }
+
   private void print(List<Statement> statements) {
     ImmutableMap<String, String> namespaces = ImmutableMap.<String, String>builder()
                                                           .put("dct", "http://purl.org/dc/terms/")
@@ -85,7 +83,7 @@ class StatementSorterTest {
                                                           .put("xsd", "http://www.w3.org/2001/XMLSchema#")
                                                           .build();
 
-    String rdf = new SortedStatementsString(namespaces).apply(statements).toString();
+    String rdf = new SortedStatementsString(namespaces).apply(statements);
 
     System.out.println("--------------------------------------------------------------------------------");
     System.out.println(rdf);

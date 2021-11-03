@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-public class SortedStatementsString implements Function<List<Statement>, StringBuilder> {
+public class SortedStatementsString implements Function<List<Statement>, String> {
 
   private static final int DEFAULT_INDENT = 24;
 
@@ -35,13 +35,13 @@ public class SortedStatementsString implements Function<List<Statement>, StringB
   }
 
   @Override
-  public StringBuilder apply(List<Statement> statements) {
+  public String apply(List<Statement> statements) {
     StringBuilder result = new StringBuilder();
 
     addNamespaces(result);
     statementMapToString(result, getStatementMap(statements));
 
-    return result;
+    return result.toString();
   }
 
   private void addNamespaces(StringBuilder result) {
