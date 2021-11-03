@@ -1,0 +1,7 @@
+
+_:blank_1 a <http://demo.com/model/blank-type>.
+
+<http://demo.com/data/1> a <http://demo.com/model/type>.
+
+<http://demo.com/data/3> <http://demo.com/model/property> _:blank_2.
+_:blank_2 a <http://demo.com/model/other-blank-type>.
