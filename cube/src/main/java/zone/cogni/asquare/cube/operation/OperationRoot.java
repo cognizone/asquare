@@ -42,6 +42,7 @@ public class OperationRoot {
     List<OperationRoot> operationRoots = getOperationRoots(resources);
 
     OperationRoot result = new OperationRoot();
+    result.setSingleFile(false);
     result.setPrefixes(mergePrefixes(operationRoots));
     result.setOperationGroups(wrapInRootGroup(mergeOperationGroups(operationRoots)));
     return result;
@@ -112,6 +113,7 @@ public class OperationRoot {
 
       ObjectMapper objectMapper = Json5Light.getJson5Mapper();
       OperationRoot result = objectMapper.readValue(resource.getInputStream(), OperationRoot.class);
+      result.setSingleFile(true);
 
       log.info("load json done");
       return result;
@@ -121,11 +123,22 @@ public class OperationRoot {
     }
   }
 
+  private boolean singleFile;
   private Map<String, String> prefixes;
   private List<OperationGroup> operationGroups;
 
   private final Map<String, OperationGroup> operationGroupMap = new TreeMap<>();
   private final Map<String, Operation> operationMap = new TreeMap<>();
+
+  private Set<String> operationIds;
+
+  public boolean isSingleFile() {
+    return singleFile;
+  }
+
+  public void setSingleFile(boolean singleFile) {
+    this.singleFile = singleFile;
+  }
 
   public Map<String, String> getPrefixes() {
     return prefixes == null ? Collections.emptyMap() : prefixes;
@@ -520,7 +533,14 @@ public class OperationRoot {
   // TODO make immutable?
   @JsonIgnore
   public Set<String> getOperationIds() {
-    return operationMap.keySet();
+    if (operationIds == null) {
+      operationIds = isSingleFile() ? Collections.unmodifiableSet(operationMap.keySet())
+                                    : operationMap.keySet().stream()
+                                                  .map(id -> StringUtils.removeStart(id, "root/"))
+                                                  .collect(Collectors.toSet());
+    }
+
+    return operationIds;
   }
 
   public Set<Operation> getOperationsForPathIds(Set<String> pathIds) {

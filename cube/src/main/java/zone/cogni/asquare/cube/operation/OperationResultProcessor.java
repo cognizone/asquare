@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.SpelService;
-import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.cube.util.TimingUtil;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
@@ -45,45 +44,45 @@ public class OperationResultProcessor {
   private static final boolean FAST_QUERIES = true;
 
   private final OperationConfiguration configuration;
-  private final TemplateService templateService;
+  private final SpelService spelService;
 
   private final OperationRoot operationRoot;
 
   private final Map<String, Object> context = new HashMap<>();
 
   public OperationResultProcessor(
-          OperationConfiguration configuration,
-          SpelService templateService,
-          Resource operationsResource
+    OperationConfiguration configuration,
+    SpelService spelService,
+    Resource operationsResource
   ) {
-    this(configuration, templateService, () -> OperationRoot.load(operationsResource), Collections.emptyMap());
+    this(configuration, spelService, () -> OperationRoot.load(operationsResource), Collections.emptyMap());
   }
 
   public OperationResultProcessor(
-          OperationConfiguration configuration,
-          SpelService templateService,
-          Resource operationsResource,
-          Map<String, Object> context
+    OperationConfiguration configuration,
+    SpelService spelService,
+    Resource operationsResource,
+    Map<String, Object> context
   ) {
-    this(configuration, templateService, () -> OperationRoot.load(operationsResource), context);
+    this(configuration, spelService, () -> OperationRoot.load(operationsResource), context);
   }
 
   public OperationResultProcessor(
-          OperationConfiguration configuration,
-          SpelService templateService,
-          Supplier<OperationRoot> operationRootSupplier
+    OperationConfiguration configuration,
+    SpelService spelService,
+    Supplier<OperationRoot> operationRootSupplier
   ) {
-    this(configuration, templateService, operationRootSupplier, Collections.emptyMap());
+    this(configuration, spelService, operationRootSupplier, Collections.emptyMap());
   }
 
   public OperationResultProcessor(
-          OperationConfiguration configuration,
-          SpelService templateService,
-          Supplier<OperationRoot> operationRootSupplier,
-          Map<String, Object> context
+    OperationConfiguration configuration,
+    SpelService spelService,
+    Supplier<OperationRoot> operationRootSupplier,
+    Map<String, Object> context
   ) {
     this.configuration = configuration;
-    this.templateService = templateService;
+    this.spelService = spelService;
 
     OperationRoot operationRoot = operationRootSupplier.get();
     validate(operationRoot);
@@ -161,7 +160,7 @@ public class OperationResultProcessor {
     while (currentPath.contains("/")) {
       String currentGroupId = StringUtils.substringBefore(currentPath, "/");
       result = result.getGroupResult(currentGroupId);
-      currentPath = substringAfterSlashOrInput(currentGroupId);
+      currentPath = substringAfterSlashOrInput(currentPath);
     }
 
     return result;
@@ -175,85 +174,60 @@ public class OperationResultProcessor {
                                           Supplier<Model> modelSupplier,
                                           List<String> uris,
                                           String operationGroupId) {
-    Monitor monitor = new Monitor();
+    Context context = Context.create(permissionsSupplier, modelSupplier);
 
-    Set<String> permissions = permissionsSupplier.get();
-    Model model = modelSupplier.get();
-    RdfStoreService rdfStore = getRdfStore(model);
     OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
 
     List<SingleGroupResult> result = uris.stream()
                                          .map(uri -> {
                                            SingleGroupResult rootGroup = new SingleGroupResult(operationGroup, uri, null);
-                                           processGroup(monitor, permissions, rdfStore, rootGroup);
+                                           processGroup(context, rootGroup);
                                            return rootGroup;
                                          })
                                          .collect(Collectors.toList());
 
-    log.debug("(validate) {}", monitor);
+    log.debug("(validate) {}", context.monitor);
     return result;
   }
+
 
   public SingleGroupResult validate(Set<String> permissions,
                                     Model model,
                                     String uri,
                                     String operationGroupId) {
-    Monitor monitor = new Monitor();
-    RdfStoreService rdfStore = getRdfStore(model);
+    Context context = Context.create(() -> permissions, () -> model);
 
     try {
-      if (isNormalCase(operationGroupId)) {
-        return processNormalCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      if (operationRoot.isSingleFile()) {
+        return processSingleFileCase(context, uri, operationGroupId);
       }
-      if (isMergedCase(operationGroupId)) {
-        return processMergedCase(monitor, permissions, rdfStore, uri, operationGroupId);
+      else {
+        return processMergedFilesCase(context, uri, operationGroupId);
       }
-
-      throw new RuntimeException("not sure how to process case: uri " + uri + " and group " + operationGroupId);
     }
     finally {
-      log.debug("(validate) {}", monitor);
+      log.debug("(validate) {}", context.monitor);
     }
   }
 
-  private boolean isNormalCase(String operationGroupId) {
-    return operationRoot.hasOperationGroupWithId(operationGroupId);
-  }
-
-  private SingleGroupResult processNormalCase(Monitor monitor,
-                                              Set<String> permissions,
-                                              RdfStoreService rdfStore,
-                                              String uri,
-                                              String operationGroupId) {
+  private SingleGroupResult processSingleFileCase(Context context, String uri, String operationGroupId) {
     OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
 
     SingleGroupResult result = new SingleGroupResult(operationGroup, uri, null);
-    processGroup(monitor, permissions, rdfStore, result);
+    processGroup(context, result);
 
     return result;
   }
 
-  private boolean isMergedCase(String operationGroupId) {
-    return getMergedGroup(operationGroupId) != null;
-  }
-
-  private SingleGroupResult processMergedCase(Monitor monitor,
-                                              Set<String> permissions,
-                                              RdfStoreService rdfStore,
-                                              String uri,
-                                              String operationGroupId) {
+  private SingleGroupResult processMergedFilesCase(Context context, String uri, String operationGroupId) {
     OperationGroup rootGroup = operationRoot.getByPathId("root");
     SingleGroupResult rootGroupResult = new SingleGroupResult(rootGroup, uri, null);
 
     OperationGroup operationGroup = getMergedGroup(operationGroupId);
-    processChildGroup(monitor, permissions, rdfStore, rootGroupResult, operationGroup);
+    processChildGroup(context, rootGroupResult, operationGroup);
 
     if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
     return rootGroupResult.getGroupResult(operationGroupId);
-
-//    SingleGroupResult operationGroupResult = new SingleGroupResult(operationGroup, uri, null);
-//    processGroup(monitor, permissions, rdfStore, result);
-//    return operationGroupResult;
   }
 
   private OperationGroup getMergedGroup(String operationGroupId) {
@@ -266,37 +240,29 @@ public class OperationResultProcessor {
     return rootGroup.getOperationGroup(operationGroupId);
   }
 
-  private void processGroup(Monitor monitor,
-                            Set<String> permissions,
-                            RdfStoreService rdfStore,
-                            SingleGroupResult rootGroup) {
-    processChildGroups(monitor, permissions, rdfStore, rootGroup);
-    processOperations(monitor, permissions, rdfStore, rootGroup);
+  private void processGroup(Context context, SingleGroupResult rootGroup) {
+    processChildGroups(context, rootGroup);
+    processOperations(context, rootGroup);
   }
 
-  private void processChildGroups(Monitor monitor,
-                                  Set<String> permissions,
-                                  RdfStoreService rdfStore,
-                                  SingleGroupResult rootGroup) {
+  private void processChildGroups(Context context, SingleGroupResult rootGroup) {
     if (!rootGroup.operationGroup.hasOperationGroups()) return;
 
     List<OperationGroup> childGroups = rootGroup.operationGroup.getOperationGroups();
-    childGroups.forEach(childGroup -> processChildGroup(monitor, permissions, rdfStore, rootGroup, childGroup));
+    childGroups.forEach(childGroup -> processChildGroup(context, rootGroup, childGroup));
   }
 
-  private void processChildGroup(Monitor monitor,
-                                 Set<String> permissions,
-                                 RdfStoreService rdfStore,
+  private void processChildGroup(Context context,
                                  SingleGroupResult rootGroup,
                                  OperationGroup childGroup) {
     String contextUri = rootGroup.getContextUri();
     // TODO not sure if this is the correct way: lookup always
-    List<String> operationGroupUris = getOperationGroupUris(monitor, rdfStore, childGroup, contextUri);
+    List<String> operationGroupUris = getOperationGroupUris(context, childGroup, contextUri);
 
     if (childGroup.isMultiselect()) {
       // TODO not sure if this is the correct way see other comments
       operationGroupUris.forEach(childContextUri -> {
-        createAndProcessGroup(monitor, permissions, rdfStore, rootGroup, childGroup, childContextUri);
+        createAndProcessGroup(context, rootGroup, childGroup, childContextUri);
       });
     }
     else {
@@ -306,89 +272,68 @@ public class OperationResultProcessor {
       }
 
       String childContextUri = operationGroupUris.isEmpty() ? null : operationGroupUris.get(0);
-      createAndProcessGroup(monitor, permissions, rdfStore, rootGroup, childGroup, childContextUri);
+      createAndProcessGroup(context, rootGroup, childGroup, childContextUri);
     }
   }
 
-  private void createAndProcessGroup(Monitor monitor, Set<String> permissions, RdfStoreService rdfStore, SingleGroupResult rootGroup, OperationGroup childGroup, String childContextUri) {
+  private void createAndProcessGroup(Context context, SingleGroupResult rootGroup, OperationGroup childGroup, String childContextUri) {
     SingleGroupResult singleGroupResult = new SingleGroupResult(childGroup, childContextUri, rootGroup);
     rootGroup.addSingleGroup(singleGroupResult);
 
-    processGroup(monitor, permissions, rdfStore, singleGroupResult);
+    processGroup(context, singleGroupResult);
   }
 
-  private void processOperations(Monitor monitor,
-                                 Set<String> permissions,
-                                 RdfStoreService rdfStore,
-                                 SingleGroupResult groupResult) {
+  private void processOperations(Context context, SingleGroupResult groupResult) {
     if (!groupResult.operationGroup.hasOperations()) return;
 
     List<Operation> operations = groupResult.operationGroup.getOperations();
     operations.forEach(operation -> {
-      getOrCreateOperationResult(monitor, permissions, rdfStore, groupResult, operation.getId());
+      getOrCreateOperationResult(context, groupResult, operation.getId());
     });
   }
 
-  private boolean calculateEnabled(Monitor monitor,
-                                   Set<String> permissions,
-                                   RdfStoreService rdfStore,
-                                   SingleGroupResult groupResult,
-                                   OperationResult operationResult) {
+  private boolean calculateEnabled(Context context, SingleGroupResult groupResult, OperationResult operationResult) {
     Operation operation = operationResult.getOperation();
     if (operation.hasTemplate()) {
-      return isTemplateEnabled(monitor, rdfStore, operationResult);
+      return isTemplateEnabled(context, operationResult);
     }
 
     if (operation.isNegate())
       throw new RuntimeException("negate on operation " + operation.getPathId() + " not supported yet.");
 
     if (operation.hasRequires()) {
-      return isRequiresEnabled(monitor, permissions, rdfStore, groupResult, operation);
+      return isRequiresEnabled(context, groupResult, operation);
     }
 
     if (operation.hasOptional()) {
-      return isOptionalEnabled(monitor, permissions, rdfStore, groupResult, operation);
+      return isOptionalEnabled(context, groupResult, operation);
     }
 
     throw new RuntimeException("operation must be either 'template', 'requires' or 'optional':" +
                                " problem with " + operation.getPathId());
   }
 
-  private boolean isRequiresEnabled(Monitor monitor,
-                                    Set<String> permissions,
-                                    RdfStoreService rdfStore,
-                                    SingleGroupResult groupResult,
-                                    Operation operation) {
+  private boolean isRequiresEnabled(Context context, SingleGroupResult groupResult, Operation operation) {
     return operation.getRequires()
                     .stream()
-                    .allMatch(currentOperation -> isEnabled(monitor, permissions, rdfStore, groupResult, currentOperation));
+                    .allMatch(currentOperation -> isEnabled(context, groupResult, currentOperation));
   }
 
-  private boolean isOptionalEnabled(Monitor monitor,
-                                    Set<String> permissions,
-                                    RdfStoreService rdfStore,
-                                    SingleGroupResult groupResult,
-                                    Operation operation) {
+  private boolean isOptionalEnabled(Context context, SingleGroupResult groupResult, Operation operation) {
     return operation.getOptional()
                     .stream()
-                    .anyMatch(currentOperation -> isEnabled(monitor, permissions, rdfStore, groupResult, currentOperation));
+                    .anyMatch(currentOperation -> isEnabled(context, groupResult, currentOperation));
   }
 
-  private boolean isEnabled(Monitor monitor,
-                            Set<String> permissions,
-                            RdfStoreService rdfStore,
-                            SingleGroupResult groupResult,
-                            List<String> path) {
+  private boolean isEnabled(Context context, SingleGroupResult groupResult, List<String> path) {
 
     // TODO lookup others if referenced!
-    List<SingleGroupResult> currentGroups = getSingleGroupResults(monitor, permissions, rdfStore, groupResult, path);
+    List<SingleGroupResult> currentGroups = getSingleGroupResults(context, groupResult, path);
 
     boolean result = true;
     String operationId = path.get(path.size() - 1);
     for (SingleGroupResult currentGroup : currentGroups) {
-      OperationResult operationResult = getOrCreateOperationResult(monitor, permissions, rdfStore,
-                                                                   currentGroup,
-                                                                   operationId);
+      OperationResult operationResult = getOrCreateOperationResult(context, currentGroup, operationId);
 
       if (!operationResult.isEnabled())
         result = false;
@@ -396,24 +341,15 @@ public class OperationResultProcessor {
     return result;
   }
 
-  private List<SingleGroupResult> getSingleGroupResults(Monitor monitor,
-                                                        Set<String> permissions,
-                                                        RdfStoreService rdfStore,
-                                                        SingleGroupResult groupResult,
-                                                        List<String> requiresList) {
+  private List<SingleGroupResult> getSingleGroupResults(Context context, SingleGroupResult groupResult, List<String> requiresList) {
     List<SingleGroupResult> result = new ArrayList<>();
     result.add(groupResult);
     List<String> path = requiresList.subList(0, requiresList.size() - 1);
 
-    return getSingleGroupResults(monitor, permissions, rdfStore,
-                                 result, path);
+    return getSingleGroupResults(context, result, path);
   }
 
-  private List<SingleGroupResult> getSingleGroupResults(Monitor monitor,
-                                                        Set<String> permissions,
-                                                        RdfStoreService rdfStore,
-                                                        List<SingleGroupResult> rootResults,
-                                                        List<String> path) {
+  private List<SingleGroupResult> getSingleGroupResults(Context context, List<SingleGroupResult> rootResults, List<String> path) {
     if (path.isEmpty()) return rootResults;
 
     String id = path.get(0);
@@ -437,14 +373,14 @@ public class OperationResultProcessor {
                             // which we should avoid btw!
                             String contextUri = groupResult.getContextUri();
                             OperationGroup childGroup = groupResult.getOperationGroup().getOperationGroup(actualId);
-                            List<String> operationGroupUris = getOperationGroupUris(monitor, rdfStore, childGroup, contextUri);
+                            List<String> operationGroupUris = getOperationGroupUris(context, childGroup, contextUri);
 
                             List<SingleGroupResult> emptyList = new ArrayList<>();
                             if (operationGroupUris.isEmpty()) emptyList.stream();
 
                             // create using operationGroupUris and return results
                             operationGroupUris.forEach(childContextUri -> {
-                              createAndProcessGroup(monitor, permissions, rdfStore, groupResult, childGroup, childContextUri);
+                              createAndProcessGroup(context, groupResult, childGroup, childContextUri);
                             });
                             return groupResult.getGroupResults(actualId).stream();
                           })
@@ -452,55 +388,41 @@ public class OperationResultProcessor {
     }
     else {
       result = rootResults.stream()
-                          .flatMap(groupResult -> getOrCreateOperationGroupResult(monitor, permissions, rdfStore,
-                                                                                  groupResult, id).stream())
+                          .flatMap(groupResult -> getOrCreateOperationGroupResult(context, groupResult, id).stream())
                           .collect(Collectors.toList());
     }
 
-    return getSingleGroupResults(monitor, permissions, rdfStore,
-                                 result, path.subList(1, path.size()));
+    return getSingleGroupResults(context, result, path.subList(1, path.size()));
   }
 
-  private List<SingleGroupResult> getOrCreateOperationGroupResult(Monitor monitor,
-                                                                  Set<String> permissions,
-                                                                  RdfStoreService rdfStore,
-                                                                  SingleGroupResult group,
-                                                                  String groupId) {
+  private List<SingleGroupResult> getOrCreateOperationGroupResult(Context context, SingleGroupResult group, String groupId) {
     if (!group.hasGroupResult(groupId)) {
       // TODO single result always null context; but what if we have multiple results? how do we know "empty" list
       OperationGroup operationGroup = group.getOperationGroup().getOperationGroup(groupId);
-      processChildGroup(monitor, permissions, rdfStore, group, operationGroup);
+      processChildGroup(context, group, operationGroup);
     }
 
     return group.getGroupResults(groupId);
   }
 
-  private OperationResult getOrCreateOperationResult(Monitor monitor,
-                                                     Set<String> permissions,
-                                                     RdfStoreService rdfStore,
-                                                     SingleGroupResult group,
-                                                     String operationId) {
+  private OperationResult getOrCreateOperationResult(Context context, SingleGroupResult group, String operationId) {
     if (!group.hasOperationResult(operationId)) {
       Operation operation = group.getOperationGroup().getOperation(operationId);
-      processOperation(monitor, permissions, rdfStore, group, operation);
+      processOperation(context, group, operation);
     }
 
     return group.getOperationResult(operationId);
   }
 
-  private void processOperation(Monitor monitor,
-                                Set<String> permissions,
-                                RdfStoreService rdfStore,
-                                SingleGroupResult groupResult,
-                                Operation operation) {
+  private void processOperation(Context context, SingleGroupResult groupResult, Operation operation) {
     OperationResult operationResult = new OperationResult(operation, groupResult.getContextUri());
 
     boolean isOperationWithUri = operationResult.getUri() != null;
-    boolean isOperationEmptyModel = isEmpty(rdfStore);
-    boolean isOperationAllowed = !configuration.isSecurityEnabled() || permissions.contains(operation.getPathId());
+    boolean isOperationEmptyModel = isEmpty(context.rdfStore);
+    boolean isOperationAllowed = isOperationAllowed(context.permissions, operation);
     boolean enabled = (isOperationWithUri || isOperationEmptyModel)
                       && isOperationAllowed
-                      && calculateEnabled(monitor, permissions, rdfStore, groupResult, operationResult);
+                      && calculateEnabled(context, groupResult, operationResult);
     operationResult.setEnabled(enabled);
     groupResult.addOperation(operationResult);
   }
@@ -509,7 +431,17 @@ public class OperationResultProcessor {
     return ((InternalRdfStoreService) rdfStore).getModel().isEmpty();
   }
 
-  private boolean isTemplateEnabled(Monitor monitor, RdfStoreService rdfStore, OperationResult operationResult) {
+  private boolean isOperationAllowed(Set<String> permissions, Operation operation) {
+    boolean securityDisabled = !configuration.isSecurityEnabled();
+    return securityDisabled || permissions.contains(getPermission(operation));
+  }
+
+  private String getPermission(Operation operation) {
+    return operationRoot.isSingleFile() ? operation.getPathId()
+                                        : StringUtils.removeStart(operation.getPathId(), "root/");
+  }
+
+  private boolean isTemplateEnabled(Context context, OperationResult operationResult) {
     Operation operation = operationResult.getOperation();
 
     Operation.TemplateType templateType = operation.getTemplateType();
@@ -521,12 +453,12 @@ public class OperationResultProcessor {
     if (templateType == Operation.TemplateType.ask_query) {
       long start = System.nanoTime();
       try {
-        boolean result = FAST_QUERIES ? askFast(rdfStore, operationResult, operation)
-                                      : askSlow(rdfStore, operationResult, operation);
+        boolean result = FAST_QUERIES ? askFast(context.rdfStore, operationResult, operation)
+                                      : askSlow(context.rdfStore, operationResult, operation);
         return operation.isNegate() != result;
       }
       finally {
-        monitor.addTiming(operation.getPathId(), System.nanoTime() - start);
+        context.monitor.addTiming(operation.getPathId(), System.nanoTime() - start);
       }
     }
 
@@ -545,25 +477,22 @@ public class OperationResultProcessor {
   private boolean askSlow(RdfStoreService rdfStore, OperationResult operationResult, Operation operation) {
     String template = operationRoot.getPrefixQuery() + operation.getFullTemplate();
     context.put("uri", operationResult.getUri());
-    String sparql = templateService.processTemplate(template, context);
+    String sparql = spelService.processTemplate(template, context);
 
     return rdfStore.executeAskQuery(sparql);
   }
 
 
-  private List<String> getOperationGroupUris(Monitor monitor,
-                                             RdfStoreService rdfStore,
-                                             OperationGroup operationGroup,
-                                             String uri) {
+  private List<String> getOperationGroupUris(Context context, OperationGroup operationGroup, String uri) {
     if (!operationGroup.hasSelectorQuery()) return Collections.singletonList(uri);
 
     long start = System.nanoTime();
     try {
-      return FAST_QUERIES ? selectFast(rdfStore, operationGroup, uri)
-                          : selectSlow(rdfStore, operationGroup, uri);
+      return FAST_QUERIES ? selectFast(context.rdfStore, operationGroup, uri)
+                          : selectSlow(context.rdfStore, operationGroup, uri);
     }
     finally {
-      monitor.addTiming(operationGroup.getPathId(), System.nanoTime() - start);
+      context.monitor.addTiming(operationGroup.getPathId(), System.nanoTime() - start);
     }
   }
 
@@ -577,7 +506,7 @@ public class OperationResultProcessor {
   private List<String> selectSlow(RdfStoreService rdfStore, OperationGroup operationGroup, String uri) {
     String template = operationRoot.getPrefixQuery() + operationGroup.getSelectorQuery();
     context.put("uri", uri);
-    String sparql = templateService.processTemplate(template, context);
+    String sparql = spelService.processTemplate(template, context);
     try {
       return rdfStore.executeSelectQuery(sparql, OperationResultProcessor::convertToList);
     }
@@ -594,10 +523,6 @@ public class OperationResultProcessor {
     });
 
     return result;
-  }
-
-  private RdfStoreService getRdfStore(Model model) {
-    return new InternalRdfStoreService(model);
   }
 
   public static class SingleGroupResult {
@@ -770,8 +695,31 @@ public class OperationResultProcessor {
 
       String fullString = String.valueOf(percentageTimes100);
       String result = fullString.substring(0, fullString.length() - 2) + "." + fullString
-              .substring(fullString.length() - 2);
+        .substring(fullString.length() - 2);
       return StringUtils.leftPad(result, 8);
+    }
+  }
+
+  private static class Context {
+
+    private static Context create(Supplier<Set<String>> permissionsSupplier, Supplier<Model> modelSupplier) {
+      return new Context(new Monitor(),
+                         permissionsSupplier.get(),
+                         getRdfStore(modelSupplier.get()));
+    }
+
+    private static RdfStoreService getRdfStore(Model model) {
+      return new InternalRdfStoreService(model);
+    }
+
+    private final Monitor monitor;
+    private final Set<String> permissions;
+    private final RdfStoreService rdfStore;
+
+    private Context(Monitor monitor, Set<String> permissions, RdfStoreService rdfStore) {
+      this.monitor = monitor;
+      this.permissions = permissions;
+      this.rdfStore = rdfStore;
     }
   }
 }

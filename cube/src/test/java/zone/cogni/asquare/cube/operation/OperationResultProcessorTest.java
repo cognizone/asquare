@@ -1,7 +1,5 @@
 package zone.cogni.asquare.cube.operation;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
@@ -25,12 +23,6 @@ public class OperationResultProcessorTest {
 
   @Autowired
   OperationResultProcessor personOperations;
-
-  @Autowired
-  OperationResultJsonConversion rootConversion;
-
-  @Autowired
-  OperationResultProcessor rootOperations;
 
   private static final String homer = "http://demo.com/data#homer";
 
@@ -427,28 +419,6 @@ public class OperationResultProcessorTest {
 
     // then
     System.out.println(standaloneJson); // pretty string ?
-  }
-
-  @Test
-  public void root_operations() {
-    // given
-    Model model = getHomerModel();
-
-    // when
-    Set<String> allPermissions = rootOperations.getOperationRoot().getOperationIds();
-    ObjectNode standaloneJson = rootConversion.createStandaloneJson(allPermissions,
-                                                                    model,
-                                                                    homer,
-                                                                    "three");
-
-    // then
-    assertThat(standaloneJson).isInstanceOf(ObjectNode.class);
-    assertThat(standaloneJson.get("id").asText()).isEqualTo("three");
-    assertThat(standaloneJson.get("operations")).isInstanceOf(ArrayNode.class);
-
-    JsonNode operation = standaloneJson.get("operations").get(0);
-    assertThat(operation.get("id").asText()).isEqualTo("reference");
-    assertThat(operation.get("enabled").asBoolean()).isTrue();
   }
 
   private Model getHomerModel() {

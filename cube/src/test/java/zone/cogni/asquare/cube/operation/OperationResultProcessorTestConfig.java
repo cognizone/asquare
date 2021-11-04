@@ -30,19 +30,6 @@ public class OperationResultProcessorTestConfig {
   }
 
   @Bean
-  OperationResultJsonConversion rootConversion() {
-    return new OperationResultJsonConversion(operationConfiguration(), rootOperations());
-  }
-
-  @Bean
-  OperationResultProcessor rootOperations() {
-    OperationConfiguration configuration = operationConfiguration();
-
-    Resource rootOperations = new ClassPathResource("operation/operation-result-processor/root-operations.json5");
-    return new OperationResultProcessor(configuration, spelService, OperationRoot.getSupplier(rootOperations));
-  }
-
-  @Bean
   public OperationConfiguration operationConfiguration() {
     OperationConfiguration configuration = new OperationConfiguration();
     configuration.setSecurityEnabled(false);
