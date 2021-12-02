@@ -3,16 +3,12 @@ package zone.cogni.asquare.cube.index;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.vavr.control.Try;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.convertor.ModelToJsonConversion;
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
@@ -23,10 +19,7 @@ import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Arrays;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,10 +55,7 @@ public class ElasticsearchIndexingService {
 
   private static final Logger log = LoggerFactory.getLogger(ElasticsearchIndexingService.class);
 
-  private static final String indent = "        ";
-
-  private final ApplicationContext resourcePatternResolver;
-  private final String configurationClasspath;
+  private final IndexMetadataService indexMetadataService;
 
   private final SpelService spelService;
   private final PaginatedQuery paginatedQuery;
@@ -75,23 +65,20 @@ public class ElasticsearchIndexingService {
   private final Elasticsearch7Store elasticStore;
   private final ModelToJsonConversion modelToJsonConversion;
 
-  private List<IndexMetadata> indexesMetadata;
-
   /**
    * Common parameters used in queries, like sparql endpoint urls etc...
    */
   private final Map<String, String> queryTemplateParameters;
 
-  public ElasticsearchIndexingService(String configurationClasspath,
-                                      Map<String, String> queryTemplateParameters,
-                                      SpelService spelService,
-                                      MonitoredPool indexMonitoredPool,
-                                      Elasticsearch7Store elasticStore,
+  public ElasticsearchIndexingService(SpelService spelService,
                                       PaginatedQuery paginatedQuery,
+                                      MonitoredPool indexMonitoredPool,
                                       RdfStoreService rdfStore,
+                                      Elasticsearch7Store elasticStore,
                                       ModelToJsonConversion modelToJsonConversion,
-                                      ApplicationContext resourcePatternResolver) {
-    this.configurationClasspath = calculateConfigurationClasspath(configurationClasspath);
+                                      IndexMetadataService indexMetadataService,
+                                      Map<String, String> queryTemplateParameters) {
+    this.indexMetadataService = indexMetadataService;
     this.queryTemplateParameters = queryTemplateParameters;
     this.spelService = spelService;
     this.indexMonitoredPool = indexMonitoredPool;
@@ -99,148 +86,6 @@ public class ElasticsearchIndexingService {
     this.paginatedQuery = paginatedQuery;
     this.rdfStore = rdfStore;
     this.modelToJsonConversion = modelToJsonConversion;
-    this.resourcePatternResolver = resourcePatternResolver;
-  }
-
-  /**
-   * Predictable version of classpath used to find all configuration data.
-   *
-   * @param configurationClasspath classpath
-   * @return configurationClasspath starting with <code>classpath:</code> and not ending with <code>/</code>
-   */
-  @Nonnull
-  private String calculateConfigurationClasspath(@Nonnull String configurationClasspath) {
-    if (!configurationClasspath.startsWith("classpath:"))
-      throw new RuntimeException("please make sure classpath is explicit by starting with classpath:");
-
-    return configurationClasspath.endsWith("/") ? configurationClasspath.substring(0, configurationClasspath.length() - 1)
-                                                : configurationClasspath;
-  }
-
-  private List<IndexMetadata> calculateIndexesMetadata() {
-    Resource[] resources = getResources("/**/*");
-    return getLocalPaths(resources).stream()
-                                   .map(this::stripSlashAtFront)
-                                   .filter(path -> path.contains("/")) // <- make sure it's a folder
-                                   .map(path -> StringUtils.substringBefore(path, "/")) // <- take folder name
-                                   .distinct()
-                                   .sorted()
-                                   .map(this::calculateIndexMetadata)
-                                   .collect(Collectors.toList());
-  }
-
-  private IndexMetadata calculateIndexMetadata(String indexName) {
-    IndexMetadata indexMetadata = new IndexMetadata();
-    indexMetadata.setName(indexName);
-    indexMetadata.setSettingsResource(calculateElasticSettingsResource(indexName));
-    indexMetadata.setCollections(calculateCollectionsMetadata(indexMetadata));
-    return indexMetadata;
-  }
-
-  private Resource calculateElasticSettingsResource(String indexName) {
-    return getResource("/" + indexName + "/elastic-settings.json");
-  }
-
-  private List<CollectionMetadata> calculateCollectionsMetadata(IndexMetadata indexMetadata) {
-    Resource[] resources = getResources("/" + indexMetadata.getName() + "/**/*");
-    List<String> localPaths = getLocalPaths(resources);
-    return localPaths.stream()
-                     .map(this::stripSlashAtFront)
-                     .map(path -> StringUtils.substringAfter(path, indexMetadata.getName() + "/")) // <- strip index
-                     .filter(path -> path.contains("/")) // <- make sure it's a folder
-                     .map(path -> StringUtils.substringBefore(path, "/")) // <- take folder name
-                     .distinct()
-                     .sorted()
-                     .map(collectionName -> calculateCollectionMetadata(indexMetadata, collectionName))
-                     .collect(Collectors.toList());
-  }
-
-  private CollectionMetadata calculateCollectionMetadata(IndexMetadata indexMetadata, String collection) {
-    String index = indexMetadata.getName();
-
-    CollectionMetadata result = new CollectionMetadata();
-    result.setName(collection);
-    result.setSelectQueryResources(getCollectionSelectQueries(index, collection));
-    result.setConstructQueryResources(getCollectionConstructQueries(index, collection));
-    result.setFacetQueryResources(getFacetQueries(index, collection));
-    return result;
-  }
-
-  private List<Resource> getCollectionSelectQueries(String index, String collection) {
-    return Arrays.asList(getResources("/" + index + "/" + collection + "/select-*.*"));
-  }
-
-  private List<Resource> getCollectionConstructQueries(String index, String collection) {
-    return Arrays.asList(getResources("/" + index + "/" + collection + "/construct-*.*"));
-  }
-
-  @PostConstruct
-  public void validate() {
-    this.indexesMetadata = calculateIndexesMetadata();
-
-    log.info("'{}' index service", configurationClasspath);
-
-    List<String> indexNames = getIndexNames();
-    log.info("{} index count: {}", indent, indexNames.size());
-
-    if (indexNames.isEmpty()) {
-      log.error("{} no valid indexes configured", indent);
-    }
-
-    if (!indexNames.isEmpty())
-      log.info("{} valid indexes:   {}", indent, String.join(", ", indexNames));
-    if (!getInvalidIndexNames().isEmpty())
-      log.info("{} invalid indexes: {}", indent, String.join(", ", getInvalidIndexNames()));
-
-    indexesMetadata.forEach(this::validateIndex);
-  }
-
-  private void validateIndex(IndexMetadata indexMetadata) {
-    // valid or not
-    if (indexMetadata.isValid())
-      log.info("  '{}' index is valid", indexMetadata.getName());
-    else
-      log.error("  '{}' index NOT is valid", indexMetadata.getName());
-
-    // settings
-    if (!indexMetadata.isValidSettingsResource())
-      log.error("{}   elastic-settings.json is missing", indent);
-
-    // collections
-    List<String> collectionNames = getValidCollectionNames(indexMetadata);
-    log.info("{}   collection count: {}", indent, collectionNames.size());
-
-    if (collectionNames.isEmpty()) {
-      log.error("{}   no valid collections configured", indent);
-    }
-
-    if (!collectionNames.isEmpty())
-      log.info("{}   valid collections:   {}", indent, String.join(", ", collectionNames));
-    if (!getInvalidCollectionNames(indexMetadata).isEmpty())
-      log.info("{}   invalid collections: {}", indent, String.join(", ", getInvalidCollectionNames(indexMetadata)));
-
-    // deeper check into collections
-    indexMetadata.getCollections().forEach(this::validateCollection);
-  }
-
-  private void validateCollection(CollectionMetadata collectionMetadata) {
-    // valid or not
-    if (collectionMetadata.isValid())
-      log.info("    '{}' collection is valid", collectionMetadata.getName());
-    else
-      log.error("    '{}' collection NOT is valid", collectionMetadata.getName());
-
-    // select
-    if (collectionMetadata.getSelectQueryResources().isEmpty())
-      log.error("{}     select-* queries are missing", indent);
-
-    // construct
-    if (collectionMetadata.getConstructQueryResources().isEmpty())
-      log.error("{}     construct-* queries are missing", indent);
-
-    // facet
-    if (collectionMetadata.getFacetQueryResources().isEmpty())
-      log.warn("{}     facets/* queries are missing", indent);
   }
 
   /**
@@ -255,19 +100,8 @@ public class ElasticsearchIndexingService {
    */
   @Nonnull
   public List<String> getIndexNames() {
-    return indexesMetadata.stream()
-                          .filter(IndexMetadata::isValid)
-                          .map(IndexMetadata::getName)
-                          .collect(Collectors.toList());
+    return indexMetadataService.getValidIndexNames();
   }
-
-  private List<String> getInvalidIndexNames() {
-    return indexesMetadata.stream()
-                          .filter(indexMetadata -> !indexMetadata.isValid())
-                          .map(IndexMetadata::getName)
-                          .collect(Collectors.toList());
-  }
-
 
   /**
    * Fill all indexes.
@@ -297,7 +131,7 @@ public class ElasticsearchIndexingService {
    * @param index to be filled
    * @param clear clears index before filling it again
    */
-  private void indexByName(@Nonnull String index, boolean clear) {
+  public void indexByName(@Nonnull String index, boolean clear) {
     IndexMetadata indexMetadata = getIndexMetadata(index);
 
     clearIndex(indexMetadata, clear);
@@ -308,19 +142,6 @@ public class ElasticsearchIndexingService {
     return getValidCollectionNames(getIndexMetadata(index));
   }
 
-  private IndexMetadata getIndexMetadata(String index) {
-    return indexesMetadata.stream()
-                          .filter(indexMetadata -> indexMetadata.getName().equals(index))
-                          .findFirst()
-                          .orElseThrow(() -> new RuntimeException("cannot find index with name '" + index + "'"));
-  }
-
-  private IndexMetadata getValidIndexMetadata(String index) {
-    IndexMetadata indexMetadata = getIndexMetadata(index);
-    return indexMetadata.isValid() ? indexMetadata
-                                   : null;
-  }
-
   private List<String> getValidCollectionNames(IndexMetadata indexMetadata) {
     return indexMetadata.getValidCollections()
                         .stream()
@@ -328,12 +149,12 @@ public class ElasticsearchIndexingService {
                         .collect(Collectors.toList());
   }
 
-  public List<String> getInvalidCollectionNames(IndexMetadata indexMetadata) {
-    return indexMetadata.getCollections()
-                        .stream()
-                        .filter(collectionMetadata -> !collectionMetadata.isValid())
-                        .map(CollectionMetadata::getName)
-                        .collect(Collectors.toList());
+  private IndexMetadata getIndexMetadata(String index) {
+    return indexMetadataService.getIndexesMetadata()
+                               .stream()
+                               .filter(indexMetadata -> indexMetadata.getName().equals(index))
+                               .findFirst()
+                               .orElseThrow(() -> new RuntimeException("cannot find index with name '" + index + "'"));
   }
 
   /**
@@ -387,11 +208,6 @@ public class ElasticsearchIndexingService {
                            .get();
   }
 
-
-  private String stripSlashAtFront(String path) {
-    return path.startsWith("/") ? StringUtils.substringAfter(path, "/") : path;
-  }
-
   public void indexByCollection(String index, List<String> collections) {
     IndexMetadata indexMetadata = getIndexMetadata(index);
     indexByCollection(indexMetadata, collections);
@@ -422,7 +238,7 @@ public class ElasticsearchIndexingService {
    * @return stream of <code>Callable</code>s for a single collection in an index
    */
   private Stream<Callable<String>> getCallables(IndexMetadata indexMetadata, CollectionMetadata collectionMetadata) {
-    log.info("(getCallables) for index '" + indexMetadata.getName() + "' and collection '" + collectionMetadata.getName() + "'");
+    log.info("(getCallables) for index '{}' and collection '{}'", indexMetadata.getName(), collectionMetadata.getName());
     List<Resource> collectionConstructQueries = collectionMetadata.getConstructQueryResources();
     return getCollectionUris(collectionMetadata)
             .stream()
@@ -436,7 +252,7 @@ public class ElasticsearchIndexingService {
    *
    * @param indexMetadata      of index
    * @param collectionMetadata of collection
-   * @param uri                being indexing
+   * @param uri                of instance being indexed
    * @return <code>IndexMethod</code> instance
    */
   private IndexMethod getCollectionIndexMethod(IndexMetadata indexMetadata,
@@ -445,7 +261,7 @@ public class ElasticsearchIndexingService {
     Resource[] queryResources = collectionMetadata.getFacetQueryResources().toArray(new Resource[0]);
     SparqlSelectToJson sparqlSelectToJson = new SparqlSelectToJson(queryResources,
                                                                    spelService,
-                                                                   getCreateModelMap(uri));
+                                                                   getTemplateParameterMap(uri));
     return new IndexMethod(paginatedQuery,
                            rdfStore,
                            modelToJsonConversion,
@@ -464,10 +280,6 @@ public class ElasticsearchIndexingService {
                              .collect(Collectors.toList());
   }
 
-  private List<Resource> getFacetQueries(@Nonnull String index, @Nonnull String collection) {
-    return Arrays.asList(getResources("/" + index + "/" + collection + "/facets/*sparql*"));
-  }
-
   /**
    * @param uri to be converted into an index callable
    * @return Callable instance based on uri
@@ -479,7 +291,7 @@ public class ElasticsearchIndexingService {
 
   private Supplier<Model> getModelSupplier(List<Resource> collectionConstructQueries, String uri) {
     return () -> {
-      Map<String, String> createModelMap = getCreateModelMap(uri);
+      Map<String, String> createModelMap = getTemplateParameterMap(uri);
 
       return collectionConstructQueries
               .stream()
@@ -489,7 +301,7 @@ public class ElasticsearchIndexingService {
     };
   }
 
-  private Map<String, String> getCreateModelMap(String uri) {
+  private Map<String, String> getTemplateParameterMap(String uri) {
     Map<String, String> result = new HashMap<>(queryTemplateParameters);
     result.put("uri", uri);
     return result;
@@ -547,58 +359,10 @@ public class ElasticsearchIndexingService {
     }
   }
 
-  private Resource getResource(String path) {
-    return resourcePatternResolver.getResource(configurationClasspath + path);
+  @Nullable
+  private IndexMetadata getValidIndexMetadata(String index) {
+    IndexMetadata indexMetadata = getIndexMetadata(index);
+    return indexMetadata.isValid() ? indexMetadata : null;
   }
 
-  private Resource[] getResources(String path) {
-    String locationPattern = configurationClasspath + path;
-    try {
-      return resourcePatternResolver.getResources(locationPattern);
-    }
-    catch (FileNotFoundException e) {
-      return new Resource[0];
-    }
-    catch (IOException e) {
-      throw new RuntimeException("unable to resolve resources for '" + locationPattern + "'");
-    }
-  }
-
-  /**
-   * @param resources for which local paths will be returned
-   * @return paths after <code>configurationClasspath</code> as <code>String</code>
-   */
-  private List<String> getLocalPaths(@Nonnull Resource[] resources) {
-    String prefix = StringUtils.substringAfter(configurationClasspath, "classpath:");
-    return Arrays.stream(resources)
-                 .map(r -> getLocalPath(prefix, r))
-                 .collect(Collectors.toList());
-  }
-
-  /**
-   * @param prefix   path which is part of configuration and can be ignored
-   * @param resource for which local path will be returned
-   * @return path after <code>configurationClasspath</code> as <code>String</code>
-   */
-  @Nonnull
-  private String getLocalPath(@Nonnull String prefix, @Nonnull Resource resource) {
-    try {
-      if (resource instanceof ClassPathResource) {
-        String path = ((ClassPathResource) resource).getPath();
-        return StringUtils.substringAfterLast(path, prefix);
-      }
-      else if (resource instanceof FileSystemResource) {
-        String path = resource.getFile().getPath();
-        return StringUtils.substringAfterLast(path, prefix);
-      }
-      else {
-        throw new RuntimeException("local path not (yet) supported for resource of type " + resource.getClass()
-                                                                                                    .getName());
-      }
-    }
-    catch (IOException e) {
-      throw new RuntimeException("problem getting path for resource of type " + resource.getClass().getName()
-                                 + " and name " + resource.getFilename(), e);
-    }
-  }
 }
