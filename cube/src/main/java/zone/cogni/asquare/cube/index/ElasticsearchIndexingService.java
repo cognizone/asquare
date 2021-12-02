@@ -214,7 +214,7 @@ public class ElasticsearchIndexingService {
   }
 
   private void indexByCollection(IndexMetadata indexMetadata, List<String> collections) {
-    log.info("(indexByCollection) index '" + indexMetadata.getName() + "' and collections: " + String.join(", ", collections));
+    log.info("(indexByCollection) index '{}' and collections: {}", indexMetadata.getName(), String.join(", ", collections));
     List<Callable<String>> callables = getCallables(indexMetadata, collections).collect(Collectors.toList());
 
     log.info("(indexByCollection) {} uris found", callables.size());
