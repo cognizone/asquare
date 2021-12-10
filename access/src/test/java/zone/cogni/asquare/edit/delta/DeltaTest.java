@@ -52,6 +52,6 @@ public class DeltaTest {
     rdfStore.executeUpdateQuery(sparql);
 
     // then
-    assertThat(rdfStore.getModel().size()).isEqualTo(12898);
+    assertThat(rdfStore.getModel().size()).isEqualTo(20000);
   }
 }
