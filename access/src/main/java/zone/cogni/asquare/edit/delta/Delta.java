@@ -43,7 +43,7 @@ public abstract class Delta {
 
   public String getSparql() {
     return Stream.concat(getDeleteSparql(), getInsertSparql())
-                 .collect(Collectors.joining(";\n"));
+                 .collect(Collectors.joining());
   }
 
   private Stream<String> getDeleteSparql() {
@@ -54,7 +54,7 @@ public abstract class Delta {
                 .stream()
                 .map(statements -> "DELETE DATA { \n" +
                                    convertStatementsToSparql(statements) + "\n" +
-                                   "} \n");
+                                   "}; \n");
   }
 
   private Stream<String> getInsertSparql() {
@@ -65,7 +65,7 @@ public abstract class Delta {
                 .stream()
                 .map(statements -> "INSERT DATA { \n" +
                                    convertStatementsToSparql(statements) + "\n" +
-                                   "} \n");
+                                   "}; \n");
   }
 
 }
