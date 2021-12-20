@@ -13,6 +13,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 import java.io.File;
@@ -26,19 +27,13 @@ import java.util.function.Function;
 import static zone.cogni.libs.sparqlservice.impl.HttpHelper.checkAndDiscardResponse;
 import static zone.cogni.libs.sparqlservice.impl.HttpHelper.createAuthenticationHttpContext;
 
-public class FusekiSparqlService implements SparqlService {
-
-  private final FusekiConfig config;
+public class StardogSparqlService implements SparqlService {
+  private final String endpointUrl;
   private final Header authHeader;
   private final HttpClientContext authenticationHttpContext;
 
-  @Deprecated
-  public FusekiSparqlService(Config config) {
-    this(FusekiConfig.from(config));
-  }
-
-  public FusekiSparqlService(FusekiConfig config) {
-    this.config = config;
+  public StardogSparqlService(Config config) {
+    endpointUrl = config.getUrl();
     if (StringUtils.isNoneBlank(config.getUser(), config.getPassword())) {
       String authEncoded = Base64.getEncoder().encodeToString((config.getUser() + ":" + config.getPassword()).getBytes(StandardCharsets.UTF_8));
       authHeader = new BasicHeader("Authorization", "Basic " + authEncoded);
@@ -50,28 +45,29 @@ public class FusekiSparqlService implements SparqlService {
     }
   }
 
-
   @Override
   public void uploadTtlFile(File file) {
     try {
-      String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + StringUtils.removeEnd(file.getName(), ".ttl");
-
-      Response response = Request.Post(sparqlUrl)
-              .setHeader("Content-Type", config.getTurtleMimeType() + ";charset=utf-8")
+      Response response = Request.Post(endpointUrl)
+              .setHeader("Content-Type", "text/turtle;charset=utf-8")
               .setHeader(authHeader)
-              .bodyFile(file, ContentType.create(config.getTurtleMimeType(), StandardCharsets.UTF_8))
+              .bodyFile(file, ContentType.create("text/turtle", StandardCharsets.UTF_8))
               .execute();
       checkAndDiscardResponse(response);
     }
     catch (IOException e) {
       throw new RuntimeException(e);
     }
+
   }
+
 
   @Override
   public Model queryForModel(String query) {
     //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), query, null, null, authenticationHttpContext)) {
+    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", query, null, null, authenticationHttpContext)) {
+      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execConstruct();
     }
   }
@@ -80,7 +76,7 @@ public class FusekiSparqlService implements SparqlService {
   public void executeUpdateQuery(String updateQuery) {
     try {
       Response response = Request
-              .Post(config.getUpdateUrl())
+              .Post(endpointUrl + "/update")
               .setHeader(authHeader)
               .body(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("update", updateQuery)), StandardCharsets.UTF_8))
               .execute();
@@ -89,11 +85,21 @@ public class FusekiSparqlService implements SparqlService {
     catch (IOException e) {
       throw new RuntimeException(e);
     }
+
   }
 
+  @Override
+  public boolean executeAskQuery(String askQuery) {
+    //pass default graph, method without default graph doesn't use the HttpContext !!!
+    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", askQuery, null, null, authenticationHttpContext)) {
+      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
+      return queryExecution.execAsk();
+    }
+
+  }
 
   @Override
-  @Deprecated
   public void upload(Model model, String graphUri) {
     updateGraph(graphUri, model);
   }
@@ -109,14 +115,14 @@ public class FusekiSparqlService implements SparqlService {
   }
 
   private void upload(Model model, String graphUri, boolean replace) {
-    String insertUrl = config.getGraphStoreUrl() + "?graph=" + graphUri;
+    String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
     StringWriter writer = new StringWriter();
     try {
       model.write(writer, "ttl");
-      Response response = (replace ? Request.Put(insertUrl) : Request.Post(insertUrl))  //Put replaces the graph, Post adds data
-              .setHeader("Content-Type", config.getTurtleMimeType() + ";charset=utf-8")
+      Response response = (replace ? Request.Put(graphStoreUrl) : Request.Post(graphStoreUrl))  //Put replaces the graph, Post adds data
+              .setHeader("Content-Type", "text/turtle;charset=utf-8")
               .setHeader(authHeader)
-              .bodyByteArray(writer.toString().getBytes(), ContentType.create(config.getTurtleMimeType(), StandardCharsets.UTF_8))
+              .bodyByteArray(writer.toString().getBytes(), ContentType.create("text/turtle", StandardCharsets.UTF_8))
               .execute();
       checkAndDiscardResponse(response);
     }
@@ -125,24 +131,28 @@ public class FusekiSparqlService implements SparqlService {
     }
   }
 
+
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
     //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), query, null, null, authenticationHttpContext)) {
+    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", query, null, null, authenticationHttpContext)) {
+      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return resultHandler.apply(queryExecution.execSelect());
     }
   }
 
   @Override
-  public boolean executeAskQuery(String askQuery) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), askQuery, null, null, authenticationHttpContext)) {
-      return queryExecution.execAsk();
-    }
-  }
-
-  @Override
   public void dropGraph(String graphUri) {
-    executeUpdateQuery("drop graph <" + graphUri + ">");
+    String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
+    try {
+      Response response = Request.Delete(graphStoreUrl)
+              .setHeader(authHeader)
+              .execute();
+      checkAndDiscardResponse(response);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
