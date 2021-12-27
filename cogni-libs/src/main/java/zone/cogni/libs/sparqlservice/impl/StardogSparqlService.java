@@ -95,7 +95,6 @@ public class StardogSparqlService implements SparqlService {
       ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execAsk();
     }
-
   }
 
   @Override
