@@ -122,4 +122,36 @@ public class ElasticsearchMetadata {
     }
   }
 
+  public static class Configuration {
+
+    private int connectTimeout = 3000;
+    private int readTimeout = 10000;
+
+    public int getConnectTimeout() {
+      return connectTimeout;
+    }
+
+    /**
+    * Determines the timeout in milliseconds until a connection is established.
+    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+    * default = 3000
+    **/
+    public void setConnectTimeout(int connectTimeout) {
+      this.connectTimeout = connectTimeout;
+    }
+
+    public int getReadTimeout() {
+      return readTimeout;
+    }
+
+    /**
+    * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or, put differently, a maximum period inactivity between two consecutive data packets).
+    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+    * default = 1000
+    **/
+    public void setReadTimeout(int readTimeout) {
+      this.readTimeout = readTimeout;
+    }
+  }
+
 }

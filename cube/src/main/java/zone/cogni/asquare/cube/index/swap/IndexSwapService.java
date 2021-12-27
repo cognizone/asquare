@@ -24,20 +24,22 @@ public class IndexSwapService {
   private final ElasticStore elasticStore;
   private final ElasticsearchMetadataService elasticsearchMetadataService;
 
-  private final RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory(3000, 10000));
-
-  @SuppressWarnings("SameParameterValue")
-  private ClientHttpRequestFactory clientHttpRequestFactory(int connectTimeout, int readTimeout) {
-    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-    factory.setConnectTimeout(connectTimeout);
-    factory.setReadTimeout(readTimeout);
-    return factory;
-  }
+  private final RestTemplate restTemplate;
 
   public IndexSwapService(ElasticStore elasticStore,
-                          ElasticsearchMetadataService elasticsearchMetadataService) {
+                          ElasticsearchMetadataService elasticsearchMetadataService,
+                          ElasticsearchMetadata.Configuration configuration) {
     this.elasticStore = elasticStore;
     this.elasticsearchMetadataService = elasticsearchMetadataService;
+    this.restTemplate = calculateRestTemplate(configuration);
+  }
+
+  private RestTemplate calculateRestTemplate(ElasticsearchMetadata.Configuration configuration) {
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    factory.setConnectTimeout(configuration.getConnectTimeout());
+    factory.setReadTimeout(configuration.getReadTimeout());
+
+    return new RestTemplate(factory);
   }
 
   public ElasticsearchMetadata.Index getIndexForAlias(@Nonnull String alias) {
