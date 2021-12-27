@@ -19,19 +19,19 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
-public class IndexMetadataService {
+public class IndexFolderService {
 
-  private static final Logger log = LoggerFactory.getLogger(IndexMetadataService.class);
+  private static final Logger log = LoggerFactory.getLogger(IndexFolderService.class);
 
   private static final String indent = "        ";
 
   private final ApplicationContext resourcePatternResolver;
   private final String configurationClasspath;
 
-  private List<IndexMetadata> indexesMetadata;
+  private List<IndexFolder> indexFolders;
   private boolean initializationFailure;
 
-  public IndexMetadataService(ApplicationContext resourcePatternResolver, String configurationClasspath) {
+  public IndexFolderService(ApplicationContext resourcePatternResolver, String configurationClasspath) {
     this.resourcePatternResolver = resourcePatternResolver;
     this.configurationClasspath = calculateConfigurationClasspath(configurationClasspath);
   }
@@ -53,15 +53,15 @@ public class IndexMetadataService {
 
   @PostConstruct
   public void init() {
-    indexesMetadata = calculateIndexesMetadata();
+    indexFolders = calculateIndexFolders();
     validate();
 
     if (initializationFailure)
       throw new RuntimeException("initialization failed: see logs for problems");
   }
 
-  public List<IndexMetadata> getIndexesMetadata() {
-    return indexesMetadata;
+  public List<IndexFolder> getIndexFolders() {
+    return indexFolders;
   }
 
   /**
@@ -69,13 +69,13 @@ public class IndexMetadataService {
    */
   @Nonnull
   public List<String> getValidIndexNames() {
-    return indexesMetadata.stream()
-                          .filter(IndexMetadata::isValid)
-                          .map(IndexMetadata::getName)
-                          .collect(Collectors.toList());
+    return indexFolders.stream()
+                       .filter(IndexFolder::isValid)
+                       .map(IndexFolder::getName)
+                       .collect(Collectors.toList());
   }
 
-  private List<IndexMetadata> calculateIndexesMetadata() {
+  private List<IndexFolder> calculateIndexFolders() {
     Resource[] resources = getResources("/**/*");
     return getLocalPaths(resources).stream()
                                    .map(this::stripSlashAtFront)
@@ -83,7 +83,7 @@ public class IndexMetadataService {
                                    .map(path -> StringUtils.substringBefore(path, "/")) // <- take folder name
                                    .distinct()
                                    .sorted()
-                                   .map(this::calculateIndexMetadata)
+                                   .map(this::calculateIndexFolder)
                                    .collect(Collectors.toList());
   }
 
@@ -128,29 +128,29 @@ public class IndexMetadataService {
     }
   }
 
-  private IndexMetadata calculateIndexMetadata(String indexName) {
-    IndexMetadata indexMetadata = new IndexMetadata();
-    indexMetadata.setName(indexName);
-    indexMetadata.setSettingsResource(calculateElasticSettingsResource(indexName));
-    indexMetadata.setCollections(calculateCollectionsMetadata(indexMetadata));
-    return indexMetadata;
+  private IndexFolder calculateIndexFolder(String indexName) {
+    IndexFolder indexFolder = new IndexFolder();
+    indexFolder.setName(indexName);
+    indexFolder.setSettingsResource(calculateElasticSettingsResource(indexName));
+    indexFolder.setCollectionFolders(calculateCollectionFolders(indexFolder));
+    return indexFolder;
   }
 
   private Resource calculateElasticSettingsResource(String indexName) {
     return getResource("/" + indexName + "/elastic-settings.json");
   }
 
-  private List<CollectionMetadata> calculateCollectionsMetadata(IndexMetadata indexMetadata) {
-    Resource[] resources = getResources("/" + indexMetadata.getName() + "/**/*");
+  private List<CollectionFolder> calculateCollectionFolders(IndexFolder indexFolder) {
+    Resource[] resources = getResources("/" + indexFolder.getName() + "/**/*");
     List<String> localPaths = getLocalPaths(resources);
     return localPaths.stream()
                      .map(this::stripSlashAtFront)
-                     .map(path -> StringUtils.substringAfter(path, indexMetadata.getName() + "/")) // <- strip index
+                     .map(path -> StringUtils.substringAfter(path, indexFolder.getName() + "/")) // <- strip index
                      .filter(path -> path.contains("/")) // <- make sure it's a folder
                      .map(path -> StringUtils.substringBefore(path, "/")) // <- take folder name
                      .distinct()
                      .sorted()
-                     .map(collectionName -> calculateCollectionMetadata(indexMetadata, collectionName))
+                     .map(collectionName -> calculateCollectionFolder(indexFolder, collectionName))
                      .collect(Collectors.toList());
   }
 
@@ -158,10 +158,10 @@ public class IndexMetadataService {
     return path.startsWith("/") ? StringUtils.substringAfter(path, "/") : path;
   }
 
-  private CollectionMetadata calculateCollectionMetadata(IndexMetadata indexMetadata, String collection) {
-    String index = indexMetadata.getName();
+  private CollectionFolder calculateCollectionFolder(IndexFolder indexFolder, String collection) {
+    String index = indexFolder.getName();
 
-    CollectionMetadata result = new CollectionMetadata();
+    CollectionFolder result = new CollectionFolder();
     result.setName(collection);
     result.setSelectQueryResources(getCollectionSelectQueries(index, collection));
     result.setConstructQueryResources(getCollectionConstructQueries(index, collection));
@@ -213,33 +213,33 @@ public class IndexMetadataService {
     if (isNotEmpty(getInvalidIndexNames()))
       log.info("{} invalid indexes: {}", indent, String.join(", ", getInvalidIndexNames()));
 
-    indexesMetadata.forEach(this::validateIndex);
+    indexFolders.forEach(this::validateIndexFolder);
   }
 
   @Nonnull
   private List<String> getInvalidIndexNames() {
-    return indexesMetadata.stream()
-                          .filter(indexMetadata -> !indexMetadata.isValid())
-                          .map(IndexMetadata::getName)
-                          .collect(Collectors.toList());
+    return indexFolders.stream()
+                       .filter(indexFolder -> !indexFolder.isValid())
+                       .map(IndexFolder::getName)
+                       .collect(Collectors.toList());
   }
 
-  private void validateIndex(IndexMetadata indexMetadata) {
+  private void validateIndexFolder(IndexFolder indexFolder) {
     // valid or not
-    if (indexMetadata.isValid()) log.info("  '{}' index is valid", indexMetadata.getName());
+    if (indexFolder.isValid()) log.info("  '{}' index is valid", indexFolder.getName());
     else {
-      log.error("  '{}' index NOT is valid", indexMetadata.getName());
+      log.error("  '{}' index NOT is valid", indexFolder.getName());
       initializationFailure = true;
     }
 
     // settings
-    if (!indexMetadata.isValidSettingsResource()) {
+    if (!indexFolder.isValidSettingsResource()) {
       log.error("{}   elastic-settings.json is missing", indent);
       initializationFailure = true;
     }
 
     // collections
-    List<String> collectionNames = getValidCollectionNames(indexMetadata);
+    List<String> collectionNames = getValidCollectionNames(indexFolder);
     log.info("{}   collection count: {}", indent, collectionNames.size());
 
     if (collectionNames.isEmpty()) {
@@ -249,46 +249,46 @@ public class IndexMetadataService {
 
     if (isNotEmpty(collectionNames))
       log.info("{}   valid collections:   {}", indent, String.join(", ", collectionNames));
-    if (isNotEmpty(getInvalidCollectionNames(indexMetadata)))
-      log.info("{}   invalid collections: {}", indent, String.join(", ", getInvalidCollectionNames(indexMetadata)));
+    if (isNotEmpty(getInvalidCollectionNames(indexFolder)))
+      log.info("{}   invalid collections: {}", indent, String.join(", ", getInvalidCollectionNames(indexFolder)));
 
     // deeper check into collections
-    indexMetadata.getCollections().forEach(this::validateCollection);
+    indexFolder.getCollectionFolders().forEach(this::validateCollectionFolder);
   }
 
-  private List<String> getValidCollectionNames(IndexMetadata indexMetadata) {
-    return indexMetadata.getValidCollections()
-                        .stream()
-                        .map(CollectionMetadata::getName)
-                        .collect(Collectors.toList());
+  private List<String> getValidCollectionNames(IndexFolder indexFolder) {
+    return indexFolder.getValidCollectionFolders()
+                      .stream()
+                      .map(CollectionFolder::getName)
+                      .collect(Collectors.toList());
   }
 
-  public List<String> getInvalidCollectionNames(IndexMetadata indexMetadata) {
-    return indexMetadata.getCollections()
-                        .stream()
-                        .filter(collectionMetadata -> !collectionMetadata.isValid())
-                        .map(CollectionMetadata::getName)
-                        .collect(Collectors.toList());
+  public List<String> getInvalidCollectionNames(IndexFolder indexFolder) {
+    return indexFolder.getCollectionFolders()
+                      .stream()
+                      .filter(collectionFolder -> !collectionFolder.isValid())
+                      .map(CollectionFolder::getName)
+                      .collect(Collectors.toList());
   }
 
-  private void validateCollection(CollectionMetadata collectionMetadata) {
+  private void validateCollectionFolder(CollectionFolder collectionFolder) {
     // valid or not
-    if (collectionMetadata.isValid()) log.info("    '{}' collection is valid", collectionMetadata.getName());
+    if (collectionFolder.isValid()) log.info("    '{}' collection is valid", collectionFolder.getName());
     else {
-      log.error("    '{}' collection NOT is valid", collectionMetadata.getName());
+      log.error("    '{}' collection NOT is valid", collectionFolder.getName());
       initializationFailure = true;
     }
 
     // select
-    if (collectionMetadata.getSelectQueryResources().isEmpty())
+    if (collectionFolder.getSelectQueryResources().isEmpty())
       log.error("{}     select-* queries are missing", indent);
 
     // construct
-    if (collectionMetadata.getConstructQueryResources().isEmpty())
+    if (collectionFolder.getConstructQueryResources().isEmpty())
       log.error("{}     construct-* queries are missing", indent);
 
     // facet
-    if (collectionMetadata.getFacetQueryResources().isEmpty()) log.warn("{}     facets/* queries are missing", indent);
+    if (collectionFolder.getFacetQueryResources().isEmpty()) log.warn("{}     facets/* queries are missing", indent);
   }
 
 }

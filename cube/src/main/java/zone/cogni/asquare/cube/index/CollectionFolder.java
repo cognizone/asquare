@@ -4,7 +4,7 @@ import org.springframework.core.io.Resource;
 
 import java.util.List;
 
-class CollectionMetadata {
+class CollectionFolder {
 
   private String name;
   private List<Resource> selectQueryResources;

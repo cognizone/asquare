@@ -54,6 +54,11 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
     restTemplate.setErrorHandler(new ElasticErrorHandler());
   }
 
+  @Override
+  public String getUrl() {
+    return url;
+  }
+
   public ObjectNode getDefaultSettings() {
     return GenericElastic7Configuration.getSimpleSettings();
   }

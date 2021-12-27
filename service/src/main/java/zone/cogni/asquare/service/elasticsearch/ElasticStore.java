@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface ElasticStore {
 
+  String getUrl();
+
   ObjectNode getDefaultSettings();
 
   // Common 6 & 7

@@ -47,7 +47,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   private static final Logger log = LoggerFactory.getLogger(EmbeddedElasticsearch7Store.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
   private Node node;
-  private Client сlient;
+  private Client client;
   private Settings.Builder elasticSettings;
 
   public EmbeddedElasticsearch7Store(File dataFolder) {
@@ -73,7 +73,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
 
     node = new MockNode(elasticSettings.build(), classpathPlugins, false);
     node.start();
-    сlient = node.client();
+    client = node.client();
   }
 
   public void restart() throws NodeValidationException {
@@ -81,7 +81,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   }
 
   public Client getClient() {
-    return сlient;
+    return client;
   }
 
   public void close() throws InterruptedException, IOException {
@@ -93,6 +93,13 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
     return node.isClosed();
   }
 
+
+  @Override
+  public String getUrl() {
+    // not sure if this is correct
+    return "http://127.0.0.1:9200/";
+  }
+
   @Override
   public ObjectNode getDefaultSettings() {
     return GenericElastic7Configuration.getSimpleSettings();
@@ -102,7 +109,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   public void createIndex(String indexName, ObjectNode settings) {
     IndexRequest request = new IndexRequest(indexName);
     request.source(settings, XContentType.JSON);
-    ActionFuture<IndexResponse> futureResponse = сlient.index(request);
+    ActionFuture<IndexResponse> futureResponse = client.index(request);
     IndexResponse response = futureResponse.actionGet();
 
     log.info("createIndex response {}", response);
@@ -111,7 +118,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   @Override
   public void deleteIndex(String indexName) {
     DeleteIndexRequest request = new DeleteIndexRequest(indexName);
-    ActionFuture<AcknowledgedResponse> futureResponse = сlient.admin().indices().delete(request);
+    ActionFuture<AcknowledgedResponse> futureResponse = client.admin().indices().delete(request);
     AcknowledgedResponse response = futureResponse.actionGet();
 
     log.info("deleteIndex response {}", response);
@@ -119,7 +126,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
 
   private void indexDocument(IndexRequest request) {
 
-    ActionFuture<IndexResponse> futureResponse = сlient.index(request);
+    ActionFuture<IndexResponse> futureResponse = client.index(request);
     IndexResponse response = futureResponse.actionGet();
 
     log.info("indexDocument response {}", response);
@@ -166,7 +173,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   public ObjectNode getDocumentById(String indexName, String id) {
     GetRequest request = new GetRequest(indexName, id);
 
-    ActionFuture<GetResponse> futureResponse = сlient.get(request);
+    ActionFuture<GetResponse> futureResponse = client.get(request);
     GetResponse getResponse = futureResponse.actionGet();
 
     return objectMapper.valueToTree(getResponse);
@@ -185,7 +192,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
       request.add(new MultiGetRequest.Item(indexName, id));
 
     }
-    ActionFuture<MultiGetResponse> responseFuture = сlient.multiGet(request);
+    ActionFuture<MultiGetResponse> responseFuture = client.multiGet(request);
     MultiGetResponse response = responseFuture.actionGet();
     List<Object> sources = Arrays.stream(response.getResponses())
                                  .map(item -> item.getResponse())
