@@ -6,6 +6,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicAuthCache;
@@ -14,7 +15,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class HttpHelper {
+class HttpHelper {
 
   public static HttpClientContext createAuthenticationHttpContext(String user, String password) {
     CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -24,6 +25,16 @@ public class HttpHelper {
     context.setCredentialsProvider(credentialsProvider);
     context.setAuthCache(new BasicAuthCache()); //so after first call it will know it has to send the authentication
     return context;
+  }
+
+  public static void executeAndConsume(Request request) {
+    try {
+      Response response = request.execute();
+      checkAndDiscardResponse(response);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static void checkAndDiscardResponse(Response response) throws IOException {

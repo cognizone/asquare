@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
@@ -14,18 +13,18 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import zone.cogni.libs.jena.utils.JenaUtils;
+import zone.cogni.libs.jena.utils.TripleSerializationFormat;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.function.Function;
 
-import static zone.cogni.libs.sparqlservice.impl.HttpHelper.checkAndDiscardResponse;
 import static zone.cogni.libs.sparqlservice.impl.HttpHelper.createAuthenticationHttpContext;
+import static zone.cogni.libs.sparqlservice.impl.HttpHelper.executeAndConsume;
 
 public class StardogSparqlService implements SparqlService {
   private final String endpointUrl;
@@ -47,17 +46,11 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public void uploadTtlFile(File file) {
-    try {
-      Response response = Request.Post(endpointUrl)
-              .setHeader("Content-Type", "text/turtle;charset=utf-8")
-              .setHeader(authHeader)
-              .bodyFile(file, ContentType.create("text/turtle", StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    Request request = Request.Post(endpointUrl)
+            .setHeader("Content-Type", "text/turtle;charset=utf-8")
+            .setHeader(authHeader)
+            .bodyFile(file, ContentType.create("text/turtle", StandardCharsets.UTF_8));
+    executeAndConsume(request);
   }
 
 
@@ -73,18 +66,11 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-    try {
-      Response response = Request
-              .Post(endpointUrl + "/update")
-              .setHeader(authHeader)
-              .body(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("update", updateQuery)), StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
+    Request request = Request
+            .Post(endpointUrl + "/update")
+            .setHeader(authHeader)
+            .body(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("update", updateQuery)), StandardCharsets.UTF_8));
+    executeAndConsume(request);
   }
 
   @Override
@@ -114,21 +100,13 @@ public class StardogSparqlService implements SparqlService {
 
   private void upload(Model model, String graphUri, boolean replace) {
     String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
-    StringWriter writer = new StringWriter();
-    try {
-      model.write(writer, "ttl");
-      Response response = (replace ? Request.Put(graphStoreUrl) : Request.Post(graphStoreUrl))  //Put replaces the graph, Post adds data
-              .setHeader("Content-Type", "text/turtle;charset=utf-8")
-              .setHeader(authHeader)
-              .bodyByteArray(writer.toString().getBytes(), ContentType.create("text/turtle", StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    byte[] body = JenaUtils.toByteArray(model, TripleSerializationFormat.turtle);
+    Request request = (replace ? Request.Put(graphStoreUrl) : Request.Post(graphStoreUrl))  //Put replaces the graph, Post adds data
+            .setHeader("Content-Type", "text/turtle;charset=utf-8")
+            .setHeader(authHeader)
+            .bodyByteArray(body, ContentType.create("text/turtle", StandardCharsets.UTF_8));
+    executeAndConsume(request);
   }
-
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
@@ -143,14 +121,8 @@ public class StardogSparqlService implements SparqlService {
   @Override
   public void dropGraph(String graphUri) {
     String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
-    try {
-      Response response = Request.Delete(graphStoreUrl)
-              .setHeader(authHeader)
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    Request request = Request.Delete(graphStoreUrl)
+            .setHeader(authHeader);
+    executeAndConsume(request);
   }
 }
