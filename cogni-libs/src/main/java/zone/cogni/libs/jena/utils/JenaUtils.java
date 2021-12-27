@@ -298,6 +298,10 @@ public class JenaUtils {
     return new ByteArrayInputStream(toByteArray(model, language));
   }
 
+  public static byte[] toByteArray(Model model, TripleSerializationFormat tripleSerializationFormat) {
+    return toByteArray(model, tripleSerializationFormat.getJenaLanguage());
+  }
+
   public static byte[] toByteArray(Model model, String language) {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       model.write(outputStream, language);
