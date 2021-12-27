@@ -3,7 +3,6 @@ package zone.cogni.asquare.service.elasticsearch.info;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
@@ -12,14 +11,18 @@ public class ElasticsearchMetadataService {
 
   private static final Logger log = LoggerFactory.getLogger(ElasticsearchMetadataService.class);
 
-  private final RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory(3000, 3000));
+  private final RestTemplate restTemplate;
 
-  @SuppressWarnings("SameParameterValue")
-  private ClientHttpRequestFactory clientHttpRequestFactory(int connectTimeout, int readTimeout) {
+  public ElasticsearchMetadataService(ElasticsearchMetadata.Configuration configuration) {
+    this.restTemplate = calculateRestTemplate(configuration);
+  }
+
+  private RestTemplate calculateRestTemplate(ElasticsearchMetadata.Configuration configuration) {
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-    factory.setConnectTimeout(connectTimeout);
-    factory.setReadTimeout(readTimeout);
-    return factory;
+    factory.setConnectTimeout(configuration.getConnectTimeout());
+    factory.setReadTimeout(configuration.getReadTimeout());
+
+    return new RestTemplate(factory);
   }
 
   public ElasticsearchMetadata getElasticsearchMetadata(ElasticStore elasticStore) {
