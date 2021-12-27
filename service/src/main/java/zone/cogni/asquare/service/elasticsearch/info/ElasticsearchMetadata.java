@@ -124,8 +124,8 @@ public class ElasticsearchMetadata {
 
   public static class Configuration {
 
-    private int connectTimeout;
-    private int readTimeout;
+    private int connectTimeout = 3000;
+    private int readTimeout = 10000;
 
     public int getConnectTimeout() {
       return connectTimeout;
