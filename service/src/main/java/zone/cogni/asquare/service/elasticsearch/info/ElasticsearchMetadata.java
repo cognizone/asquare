@@ -144,6 +144,11 @@ public class ElasticsearchMetadata {
       return readTimeout;
     }
 
+    /**
+    * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or, put differently, a maximum period inactivity between two consecutive data packets).
+    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+    * default = 1000
+    **/
     public void setReadTimeout(int readTimeout) {
       this.readTimeout = readTimeout;
     }
