@@ -8,6 +8,7 @@ import zone.cogni.libs.sparqlservice.impl.FusekiSparqlService;
 import zone.cogni.libs.sparqlservice.impl.GraphDBConfig;
 import zone.cogni.libs.sparqlservice.impl.GraphDBSparqlService;
 import zone.cogni.libs.sparqlservice.impl.JenaModelSparqlService;
+import zone.cogni.libs.sparqlservice.impl.StardogSparqlService;
 import zone.cogni.libs.sparqlservice.impl.VirtuosoSparqlService;
 
 import javax.inject.Inject;
@@ -28,19 +29,21 @@ public class SparqlServiceProvider {
 
     switch (type) {
       case "virtuoso":
-        return new VirtuosoSparqlService(createVirtuosoConfig(base));
+        return new VirtuosoSparqlService(createDefaultConfig(base));
       case "fuseki":
         return new FusekiSparqlService(createFusekiConfig(base));
       case "inMemory":
         return new JenaModelSparqlService();
       case "graphdb":
         return new GraphDBSparqlService(createGraphDBConfig(base));
+      case "stardog":
+        return new StardogSparqlService(createDefaultConfig(base));
       default:
         throw new CognizoneException("SparqlService type '{}' unknown.", type);
     }
   }
 
-  private Config createVirtuosoConfig(String base) {
+  private Config createDefaultConfig(String base) {
     Config config = new Config();
     fillDefaultConfig(config, base);
     return config;

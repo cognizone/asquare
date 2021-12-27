@@ -1,20 +1,12 @@
 package zone.cogni.libs.sparqlservice.impl;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.query.QueryExecution;
@@ -30,6 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.function.Function;
+
+import static zone.cogni.libs.sparqlservice.impl.HttpHelper.checkAndDiscardResponse;
+import static zone.cogni.libs.sparqlservice.impl.HttpHelper.createAuthenticationHttpContext;
 
 public class FusekiSparqlService implements SparqlService {
 
@@ -47,7 +42,7 @@ public class FusekiSparqlService implements SparqlService {
     if (StringUtils.isNoneBlank(config.getUser(), config.getPassword())) {
       String authEncoded = Base64.getEncoder().encodeToString((config.getUser() + ":" + config.getPassword()).getBytes(StandardCharsets.UTF_8));
       authHeader = new BasicHeader("Authorization", "Basic " + authEncoded);
-      authenticationHttpContext = createAuthenticationHttpContext();
+      authenticationHttpContext = createAuthenticationHttpContext(config.getUser(), config.getPassword());
     }
     else {
       authHeader = null; //we're allowed to send null value to the "setHeader" method (whop whop)
@@ -55,15 +50,6 @@ public class FusekiSparqlService implements SparqlService {
     }
   }
 
-  private HttpClientContext createAuthenticationHttpContext() {
-    CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-    credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(config.getUser(), config.getPassword()));
-
-    HttpClientContext context = HttpClientContext.create();
-    context.setCredentialsProvider(credentialsProvider);
-    context.setAuthCache(new BasicAuthCache()); //so after first call it will know it has to send the authentication
-    return context;
-  }
 
   @Override
   public void uploadTtlFile(File file) {
@@ -136,27 +122,6 @@ public class FusekiSparqlService implements SparqlService {
     }
     catch (IOException e) {
       throw new RuntimeException(e);
-    }
-  }
-
-  private void checkAndDiscardResponse(Response response) throws IOException {
-    try {
-      HttpResponse httpResponse = response.returnResponse();
-      StatusLine statusLine = httpResponse.getStatusLine();
-      if (statusLine.getStatusCode() / 100 == 2) return;
-      throw new RuntimeException("Upload didn't answer 2xx code " + statusLine + ": " + getBody(httpResponse));
-    }
-    finally {
-      response.discardContent();
-    }
-  }
-
-  private String getBody(HttpResponse httpResponse) {
-    try {
-      return IOUtils.toString(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8);
-    }
-    catch (IOException e) {
-      return "Failed to get error body: " + e.getMessage();
     }
   }
 
