@@ -131,6 +131,11 @@ public class ElasticsearchMetadata {
       return connectTimeout;
     }
 
+    /**
+    * Determines the timeout in milliseconds until a connection is established.
+    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+    * default = 3000
+    **/
     public void setConnectTimeout(int connectTimeout) {
       this.connectTimeout = connectTimeout;
     }
