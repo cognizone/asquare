@@ -58,7 +58,6 @@ public class StardogSparqlService implements SparqlService {
     catch (IOException e) {
       throw new RuntimeException(e);
     }
-
   }
 
 
