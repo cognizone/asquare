@@ -13,9 +13,12 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.RDFLangString;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -26,8 +29,8 @@ import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configuration.JsonRootType;
 import zone.cogni.asquare.cube.convertor.json.ApplicationProfileToConversionProfile;
 import zone.cogni.asquare.cube.convertor.json.ConversionProfile;
+import zone.cogni.libs.jena.utils.JenaUtils;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configuration.JsonType;
 import static zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configuration.ModelType;
@@ -162,206 +167,159 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
   @Override
   public ObjectNode apply(Model model, String root) {
-
-    Map<Resource, Set<String>> subjectTypeMap = getSubjectTypeMap(model);
-    Set<Resource> alreadyProcessedResources = new HashSet<>();
-
+    Context context = new Context(this, model);
     Resource subject = ResourceFactory.createResource(root);
 
-    ObjectNode jsonRoot = JsonNodeFactory.instance.objectNode();
-    ObjectNode data = jsonRoot.putObject("data");
+    ObjectNode data = context.jsonRoot.putObject("data");
+    processInstance(context, subject, data);
 
-    processInstance(model, alreadyProcessedResources, subjectTypeMap, subject, jsonRoot, data);
-
-    Set<Resource> missedSubjects = subjectTypeMap.keySet();
-    missedSubjects.removeAll(alreadyProcessedResources);
-
-    if (missedSubjects.size() > 1) {
-      log.info("missed {} subjects out of {}. missed subjects: {}",
-               missedSubjects.size(),
-               subjectTypeMap.size(),
-               missedSubjects);
+    if (configuration.logIssues) {
+      reportMissedSubjects(context);
+      reportUnprocessedTriples(context);
     }
 
-    return jsonRoot;
+    return context.jsonRoot;
   }
 
-  private Map<Resource, Set<String>> getSubjectTypeMap(Model model) {
-    Map<Resource, Set<String>> subjectTypeMap = new HashMap<>();
+  private void reportMissedSubjects(Context context) {
+    Set<Resource> missedSubjects = context.subjectTypeMap.keySet();
+    missedSubjects.removeAll(context.alreadyProcessedResources);
 
-    model.listStatements(null, RDF.type, (RDFNode) null)
-         .forEachRemaining(statement -> {
-           Resource subject = statement.getSubject();
-           if (!subjectTypeMap.containsKey(subject)) {
-             subjectTypeMap.put(subject, new HashSet<>());
-           }
-
-           String type = statement.getObject().asResource().getURI();
-           subjectTypeMap.get(subject).add(type);
-         });
-
-    return subjectTypeMap;
+    if (missedSubjects.size() > 1) {
+      log.warn("missed {} subjects out of {}. missed subjects: {}",
+               missedSubjects.size(),
+               context.subjectTypeMap.size(),
+               missedSubjects);
+    }
   }
 
-  private boolean processInstance(Model model,
-                                  Set<Resource> alreadyProcessed,
-                                  Map<Resource, Set<String>> subjectTypeMap,
+  private void reportUnprocessedTriples(Context context) {
+    if (!log.isWarnEnabled()) return;
+
+    Model remainingModel = ModelFactory.createDefaultModel();
+    remainingModel.add(context.model);
+    remainingModel.remove(context.alreadyProcessedModel);
+
+    if (remainingModel.size() > 1) {
+      log.warn("missed {} triples \n{}",
+               remainingModel.size(),
+               JenaUtils.toString(remainingModel, "ttl"));
+    }
+  }
+
+  /**
+   * Processes a single subject with all its properties and values.
+   *
+   * @param context      of processing
+   * @param subject      currently being added in JSON
+   * @param instanceRoot current root where JSON is going to be manipulated
+   */
+  private void processInstance(Context context,
                                   Resource subject,
-                                  ObjectNode root,
                                   ObjectNode instanceRoot) {
-    // only process once
-    if (alreadyProcessed.contains(subject)) return false;
-    alreadyProcessed.add(subject);
+    // only process once, at most
+    if (context.alreadyProcessedResources.contains(subject)) return;
 
-    ConversionProfile.Type type = getType(model, subject);
-
+    // process instance fields
+    ConversionProfile.Type type = context.subjectTypeMap.get(subject);
     setInstanceUri(subject, instanceRoot);
     setInstanceType(instanceRoot, type);
     setInstanceRootType(instanceRoot, type);
 
-    getPropertyObjectMap(model, subject)
-      .forEach((property, values) -> {
-        setInstanceProperty(subjectTypeMap, instanceRoot, type, property, values);
+    // bookkeeping -> must be before processing attributes !
+    context.alreadyProcessedResources.add(subject);
+    getTypeStatements(subject, type)
+            .forEach(context.alreadyProcessedModel::add);
 
-        values.forEach(rdfNode -> {
-          if (!rdfNode.isResource()) return;
-          if (!subjectTypeMap.containsKey(rdfNode.asResource())) return;
+    // process attributes
+    type.getAttributes().forEach(attribute -> {
+      processAttribute(context, subject, type, instanceRoot, attribute);
+    });
+  }
 
-          // do not process values if they are missing or rdfs:Resource
-          ConversionProfile.Attribute attribute = type.getByAttributeUri(property);
-          if (attribute == null || attribute.isAttribute()) return;
+  private Stream<Statement> getTypeStatements(Resource subject, ConversionProfile.Type type) {
+    return type.getRdfTypes()
+               .stream()
+               .map(ResourceFactory::createResource)
+               .map(typeResource -> ResourceFactory.createStatement(subject, RDF.type, typeResource));
+  }
 
-          ObjectNode linkedInstance = JsonNodeFactory.instance.objectNode();
-          boolean processed = processInstance(model, alreadyProcessed, subjectTypeMap, rdfNode
-            .asResource(), root, linkedInstance);
-          if (processed) {
-            addToArrayNode(root, "included", linkedInstance);
-          }
-        });
+  /**
+   * Process a single attribute of a subject with all its values.
+   *
+   * @param context      of processing
+   * @param subject      currently being added in JSON
+   * @param type         of subject
+   * @param instanceRoot current root where JSON is going to be manipulated
+   * @param attribute    currently being added in JSON
+   */
+  private void processAttribute(Context context,
+                                Resource subject,
+                                ConversionProfile.Type type,
+                                ObjectNode instanceRoot,
+                                ConversionProfile.Attribute attribute) {
+    // if no values then return
+    List<RDFNode> values = getValues(context, subject, attribute);
+    if (values.isEmpty()) return;
+
+    // log issue if we find inverses and inverse support is disabled!
+    if (attribute.isInverse() && !configuration.inverseAttributesSupported) {
+      String valuesAsString = values.stream().map(RDFNode::toString).collect(Collectors.joining(", "));
+      log.error("inverse properties disabled and uri '{}' has inverse attribute '{}' with values: {}",
+                subject.getURI(), attribute.getAttributeId(), valuesAsString);
+      return;
+    }
+
+    // add attributes values to JSON
+    setJsonAttribute(instanceRoot, type, attribute, values);
+
+    // add includes to JSON (here or in setJsonAttribute?)
+    if (attribute.isReference()) {
+      values.forEach(value -> {
+        createAndIncludeInstance(context, type, attribute, value);
       });
-
-    return true;
+    }
   }
 
-  private ConversionProfile.Type getType(Model model, Resource subject) {
-    if (configuration.isModelType(ModelType.ROOT)) {
-      Set<String> rdfTypes = getRdfTypes(model, subject);
-      if (rdfTypes.size() != 1) throw new RuntimeException("expecting exactly one type, found " + rdfTypes);
+  /**
+   * Returns list of <code>RDFNode</code> which are values of <code>subject</code> and <code>attribute</code>.
+   * Takes into account whether attribute is <code>inverse</code> or not.
+   *
+   * @param context   of processing
+   * @param subject   currently being added in JSON
+   * @param attribute currently being added in JSON
+   * @return list of <code>RDFNode</code> which are values of <code>subject</code> and <code>attribute</code>
+   */
+  private List<RDFNode> getValues(Context context,
+                                  Resource subject,
+                                  ConversionProfile.Attribute attribute) {
+    StmtIterator iterator = context.model.listStatements(attribute.isInverse() ? null : subject,
+                                                         attribute.getProperty(),
+                                                         attribute.isInverse() ? subject : null);
 
-      String rdfType = rdfTypes.stream().findFirst().get();
-      return conversionProfile.getTypeFromRdfType(rdfType);
+    List<RDFNode> result = new ArrayList<>();
+    while (iterator.hasNext()) {
+      Statement statement = iterator.nextStatement();
+
+      context.alreadyProcessedModel.add(statement);
+      result.add(attribute.isInverse() ? statement.getSubject() : statement.getObject());
     }
 
-    if (configuration.isModelType(ModelType.PROFILE)) {
-      Set<String> rdfTypes = getRdfTypes(model, subject);
-      return conversionProfile.getBestMatchingTypeFromRdfTypes(rdfTypes);
-    }
-
-    if (configuration.isModelType(ModelType.ALL)) {
-      Set<String> rdfTypes = getRdfTypes(model, subject);
-      return conversionProfile.getTypeFromRdfTypes(rdfTypes);
-    }
-
-    throw new RuntimeException("should never get here");
+    return result;
   }
 
-  @Nonnull
-  private Set<String> getRdfTypes(Model model, Resource subject) {
-    Set<String> rdfTypes = new HashSet<>();
-
-    model.listObjectsOfProperty(subject, RDF.type)
-         .forEachRemaining(rdfNode -> rdfTypes.add(rdfNode.asResource().getURI()));
-
-    return rdfTypes;
-  }
-
-  private void setInstanceUri(Resource subject, ObjectNode instanceRoot) {
-    instanceRoot.put("uri", subject.getURI());
-  }
-
-  private void setInstanceType(ObjectNode instanceRoot, ConversionProfile.Type type) {
-    if (configuration.isJsonType(JsonType.DISABLED))
-      return;
-
-    if (configuration.isJsonType(JsonType.ROOT)) {
-      instanceRoot.put("type", type.getRootClassId());
-      return;
-    }
-
-    if (configuration.isJsonType(JsonType.ALL)) {
-      Collection<String> classIds = type.getClassIds();
-      if (classIds.size() == 1) {
-        String typeValue = classIds.stream().findFirst().get();
-        instanceRoot.put("type", typeValue);
-      }
-      else {
-        ArrayNode typeArray = getOrCreateArrayNode(instanceRoot, "type");
-        classIds.forEach(classId -> {
-          typeArray.add(typeArray.textNode(classId));
-        });
-      }
-      return;
-    }
-
-    throw new RuntimeException("should never get here");
-  }
-
-  private void setInstanceRootType(ObjectNode instanceRoot, ConversionProfile.Type type) {
-    if (configuration.isJsonRootType(JsonRootType.DISABLED))
-      return;
-
-    if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
-      instanceRoot.put("rootType", type.getRootClassId());
-      return;
-    }
-
-    throw new RuntimeException("should never get here");
-  }
-
-  private Map<String, List<RDFNode>> getPropertyObjectMap(Model model, Resource resource) {
-    Map<String, List<RDFNode>> propertyObjectMap = new HashMap<>();
-
-    model.listStatements(resource, null, (RDFNode) null)
-         .forEachRemaining(statement -> {
-           String property = statement.getPredicate().getURI();
-           if (!propertyObjectMap.containsKey(property)) {
-             propertyObjectMap.put(property, new ArrayList<>());
-           }
-
-           RDFNode object = statement.getObject();
-           propertyObjectMap.get(property).add(object);
-         });
-
-    if (configuration.isInverseAttributesSupported()) {
-      model.listStatements(null, null, resource)
-           .forEachRemaining(statement -> {
-             String property = statement.getPredicate().getURI();
-             if (!propertyObjectMap.containsKey(property)) {
-               propertyObjectMap.put(property, new ArrayList<>());
-             }
-
-             RDFNode subject = statement.getSubject();
-             propertyObjectMap.get(property).add(subject);
-           });
-    }
-
-    return propertyObjectMap;
-  }
-
-  private void setInstanceProperty(Map<Resource, Set<String>> subjectTypeMap,
-                                   ObjectNode instanceRoot,
-                                   ConversionProfile.Type type,
-                                   String property,
-                                   List<RDFNode> values) {
-    ConversionProfile.Attribute attribute = type.getByAttributeUri(property);
-
-    // special case: attribute not found in application profile!!
-    if (attribute == null) {
-      addUnknownProperty(subjectTypeMap, instanceRoot, type, property, values);
-      return;
-    }
-
-    // normal case
+  /**
+   * Adds values to <code>instanceRoot</code> JSON.
+   *
+   * @param instanceRoot current root where JSON is going to be manipulated
+   * @param type         of subject
+   * @param attribute    currently being added in JSON
+   * @param values       to add to <code>instanceRoot</code>
+   */
+  private void setJsonAttribute(ObjectNode instanceRoot,
+                                ConversionProfile.Type type,
+                                ConversionProfile.Attribute attribute,
+                                List<RDFNode> values) {
     if (attribute.isReference()) {
       addReferences(instanceRoot, attribute, values);
       return;
@@ -375,56 +333,16 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
                                " type " + type.getRootClassId() + " and property " + attribute.getAttributeId());
   }
 
-  private void addUnknownProperty(Map<Resource, Set<String>> subjectTypeMap,
-                                  ObjectNode instanceRoot,
-                                  ConversionProfile.Type type,
-                                  String property,
-                                  List<RDFNode> values) {
-    // ignore RDF.type
-    if (property.equals(RDF.type.getURI())) return;
-    if (configuration.isIgnoredProperty(property)) return;
-
-    if (configuration.logIssues) {
-      log.warn("cannot find attribute with property {} for type {}", property, type.getRootClassId());
-      return;
-    }
-
-    // TODO there can be some refinement here but there will always be issues
-    if (isUnknownReference(subjectTypeMap, values)) {
-      processUnknownReference(instanceRoot, property, values);
-    }
-    else if (isUnknownAttribute(subjectTypeMap, values)) {
-      throw new RuntimeException("processUnknownAttribute not yet supported yet: " + property + " on type " + type.getRootClassId() + " for object " + instanceRoot.get("uri"));
-    }
-    else {
-      throw new RuntimeException("found a mix of attributes and references" +
-                                 " for property '" + property + "'" +
-                                 " and values " + values);
-    }
-  }
-
-  private boolean isUnknownReference(Map<Resource, Set<String>> subjectTypeMap, List<RDFNode> values) {
-    return values.stream()
-                 .allMatch(value -> value.isURIResource() && subjectTypeMap.containsKey(value.asResource()));
-  }
-
-
-  private void processUnknownReference(ObjectNode instanceRoot, String property, List<RDFNode> values) {
-    ObjectNode referencesNode = getOrCreateObjectNode(instanceRoot, "references");
-
-    ArrayNode arrayNode = referencesNode.arrayNode();
-    referencesNode.set(property, arrayNode);
-
-    values.forEach(v -> arrayNode.add(referencesNode.textNode(v.asResource().getURI())));
-  }
-
-  private boolean isUnknownAttribute(Map<Resource, Set<String>> subjectTypeMap, List<RDFNode> values) {
-    return values.stream()
-                 .allMatch(value -> value.isLiteral() || !subjectTypeMap.containsKey(value.asResource()));
-  }
-
-
-  private void addReferences(ObjectNode instanceRoot, ConversionProfile.Attribute attribute, List<RDFNode> values) {
+  /**
+   * Adds references to <code>instanceRoot</code> JSON.
+   *
+   * @param instanceRoot current root where JSON is going to be manipulated
+   * @param attribute    currently being added in JSON
+   * @param values       to add to <code>instanceRoot</code>
+   */
+  private void addReferences(ObjectNode instanceRoot,
+                             ConversionProfile.Attribute attribute,
+                             List<RDFNode> values) {
     ObjectNode referencesNode = getOrCreateObjectNode(instanceRoot, "references");
 
     if (attribute.isList()) {
@@ -446,12 +364,21 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
   }
 
-  private void addAttributes(ObjectNode instanceRoot, ConversionProfile.Attribute attribute, List<RDFNode> values) {
+  /**
+   * Adds attributes to <code>instanceRoot</code> JSON.
+   *
+   * @param instanceRoot current root where JSON is going to be manipulated
+   * @param attribute    currently being added in JSON
+   * @param values       to add to <code>instanceRoot</code>
+   */
+  private void addAttributes(ObjectNode instanceRoot,
+                             ConversionProfile.Attribute attribute,
+                             List<RDFNode> values) {
     if (values.isEmpty()) return;
 
     ObjectNode attributesNode = getOrCreateObjectNode(instanceRoot, "attributes");
 
-    // single and but with multiple languages
+    // single but with multiple languages
     if (attribute.isSingle() && values.size() > 1) {
       ObjectNode attributeNode = getOrCreateObjectNode(attributesNode, attribute.getAttributeId());
 
@@ -459,7 +386,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       // assume language nodes!
       values.forEach(languageRdfNode -> {
         Preconditions.checkState(languageRdfNode.isLiteral(), "Node is not a literal: " + attribute.getAttributeId());
-        Preconditions.checkState(languageRdfNode.asLiteral().getDatatype().equals(RDFLangString.rdfLangString), "Node is not a lang literal: " + attribute.getAttributeId());
+        Preconditions.checkState(languageRdfNode.asLiteral().getDatatype()
+                                                .equals(RDFLangString.rdfLangString), "Node is not a lang literal: " + attribute.getAttributeId());
 
         // check for duplicates !
         String language = languageRdfNode.asLiteral().getLanguage();
@@ -478,7 +406,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     if (attribute.isSingle()) {
       if (values.size() != 1) {
         throw new RuntimeException("attribute " + attribute.getAttributeId() + " has " + values
-          .size() + " values: " + values);
+                .size() + " values: " + values);
       }
 
       RDFNode rdfNode = values.get(0);
@@ -613,6 +541,79 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     });
   }
 
+  /**
+   * Adds <code>values</code> which are typed to <code>included</code> section of JSON.
+   * Recursively
+   *
+   * @param context of processing
+   * @param value   to add to <code>included</code> JSON part
+   */
+  private void createAndIncludeInstance(Context context,
+                                        ConversionProfile.Type type,
+                                        ConversionProfile.Attribute attribute,
+                                        RDFNode value) {
+    if (!value.isResource()) {
+      log.error("Type '{}' and attribute '{}' must contain a resource, found '{}'",
+                type.getRootClassId(), attribute.getAttributeId(), value);
+    }
+
+    if (!context.subjectTypeMap.containsKey(value.asResource())) {
+      log.error("Type '{}' and attribute '{}' must contain a typed resource, found a plain resource '{}'",
+                type.getRootClassId(), attribute.getAttributeId(), value);
+    }
+
+    // already processed
+    if (context.alreadyProcessedResources.contains(value.asResource())) return;
+
+    // process and add as included
+    ObjectNode linkedInstance = JsonNodeFactory.instance.objectNode();
+    processInstance(context, value.asResource(), linkedInstance);
+    addToArrayNode(context.jsonRoot, "included", linkedInstance);
+  }
+
+  private void setInstanceUri(Resource subject, ObjectNode instanceRoot) {
+    instanceRoot.put("uri", subject.getURI());
+  }
+
+  private void setInstanceType(ObjectNode instanceRoot, ConversionProfile.Type type) {
+    if (configuration.isJsonType(JsonType.DISABLED))
+      return;
+
+    if (configuration.isJsonType(JsonType.ROOT)) {
+      instanceRoot.put("type", type.getRootClassId());
+      return;
+    }
+
+    if (configuration.isJsonType(JsonType.ALL)) {
+      Collection<String> classIds = type.getClassIds();
+      if (classIds.size() == 1) {
+        String typeValue = classIds.stream().findFirst().get();
+        instanceRoot.put("type", typeValue);
+      }
+      else {
+        ArrayNode typeArray = getOrCreateArrayNode(instanceRoot, "type");
+        classIds.forEach(classId -> {
+          typeArray.add(typeArray.textNode(classId));
+        });
+      }
+      return;
+    }
+
+    throw new RuntimeException("should never get here");
+  }
+
+  private void setInstanceRootType(ObjectNode instanceRoot, ConversionProfile.Type type) {
+    if (configuration.isJsonRootType(JsonRootType.DISABLED))
+      return;
+
+    if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
+      instanceRoot.put("rootType", type.getRootClassId());
+      return;
+    }
+
+    throw new RuntimeException("should never get here");
+  }
+
   private ObjectNode getOrCreateObjectNode(ObjectNode instanceRoot, String name) {
     if (!instanceRoot.has(name)) {
       instanceRoot.set(name, JsonNodeFactory.instance.objectNode());
@@ -676,5 +677,72 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
   private NumericNode getNumberNode(double value) {
     return JsonNodeFactory.instance.numberNode(value);
+  }
+
+  private static class Context {
+
+    private final ModelToJsonConversion parent;
+    private final Model model;
+    private final ObjectNode jsonRoot;
+    private final Set<Resource> alreadyProcessedResources;
+    private final Model alreadyProcessedModel;
+    private final Map<Resource, ConversionProfile.Type> subjectTypeMap;
+
+    public Context(ModelToJsonConversion parent, Model model) {
+      this.parent = parent;
+      this.model = model;
+
+      subjectTypeMap = calculateSubjectTypeMap(model);
+      alreadyProcessedResources = new HashSet<>();
+      alreadyProcessedModel = ModelFactory.createDefaultModel();
+      jsonRoot = JsonNodeFactory.instance.objectNode();
+    }
+
+    private Map<Resource, ConversionProfile.Type> calculateSubjectTypeMap(Model model) {
+      Map<Resource, Set<String>> rdfTypesMap = calculateSubjectRdfTypesMap(model);
+
+      Map<Resource, ConversionProfile.Type> result = new HashMap<>();
+      rdfTypesMap.forEach((resource, rdfTypes) -> {
+        result.put(resource, calculateType(rdfTypes));
+      });
+      return result;
+    }
+
+    private Map<Resource, Set<String>> calculateSubjectRdfTypesMap(Model model) {
+      Map<Resource, Set<String>> subjectTypeMap = new HashMap<>();
+
+      model.listStatements(null, RDF.type, (RDFNode) null)
+           .forEachRemaining(statement -> {
+             Resource subject = statement.getSubject();
+             if (!subjectTypeMap.containsKey(subject)) {
+               subjectTypeMap.put(subject, new HashSet<>());
+             }
+
+             String type = statement.getObject().asResource().getURI();
+             subjectTypeMap.get(subject).add(type);
+           });
+
+      return subjectTypeMap;
+    }
+
+    private ConversionProfile.Type calculateType(Set<String> rdfTypes) {
+      if (parent.configuration.isModelType(ModelType.ROOT)) {
+        if (rdfTypes.size() != 1) throw new RuntimeException("expecting exactly one type, found " + rdfTypes);
+
+        String rdfType = rdfTypes.stream().findFirst().get();
+        return parent.conversionProfile.getTypeFromRdfType(rdfType);
+      }
+
+      if (parent.configuration.isModelType(ModelType.PROFILE)) {
+        return parent.conversionProfile.getBestMatchingTypeFromRdfTypes(rdfTypes);
+      }
+
+      if (parent.configuration.isModelType(ModelType.ALL)) {
+        return parent.conversionProfile.getTypeFromRdfTypes(rdfTypes);
+      }
+
+      throw new RuntimeException("should never get here");
+    }
+
   }
 }
