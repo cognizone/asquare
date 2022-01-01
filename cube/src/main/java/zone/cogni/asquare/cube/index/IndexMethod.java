@@ -66,6 +66,7 @@ public class IndexMethod {
   private final Elasticsearch7Store elasticStore;
   private final String indexName;
   private final SparqlSelectToJson sparqlSelectToJson;
+  private SparqlSelectToJson fullStoreFacets;
 
   public IndexMethod(PaginatedQuery paginatedQuery,
                      RdfStoreService rdfStoreService,
@@ -79,6 +80,13 @@ public class IndexMethod {
     this.indexName = indexName;
     this.elasticStore = elasticStore;
     this.sparqlSelectToJson = sparqlSelectToJson;
+  }
+
+  /**
+   * Set the SparqlSelectToJson to calculate facets using the sparql store as source (vs the index model for the default SparqlSelectToJson for facet calculation).
+   */
+  public void setFullStoreFacets(SparqlSelectToJson fullStoreFacets) {
+    this.fullStoreFacets = fullStoreFacets;
   }
 
   /**
@@ -183,6 +191,7 @@ public class IndexMethod {
     Map<String, RDFNode> bindings = ImmutableMap.of("uri", ResourceFactory.createResource(uri));
 
     ObjectNode facetNode = sparqlSelectToJson.convert(draftModel, bindings);
+    if(null != fullStoreFacets) fullStoreFacets.convert(facetNode, rdfStoreService, bindings);
     if (!facetNode.isEmpty()) {
       objectNode.set("facets", facetNode);
       log.info("(addFacets) took {} ms", TimingUtil.millisSinceStart(start, 1));

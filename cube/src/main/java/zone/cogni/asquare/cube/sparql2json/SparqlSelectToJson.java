@@ -43,7 +43,10 @@ public class SparqlSelectToJson {
 
   public ObjectNode convert(ObjectNode facetNode, Model model, Map<String, RDFNode> bindings) {
     RdfStoreService rdfStore = new InternalRdfStoreService(model);
+    return convert(facetNode, rdfStore, bindings);
+  }
 
+  public ObjectNode convert(ObjectNode facetNode, RdfStoreService rdfStore, Map<String, RDFNode> bindings) {
     QuerySolutionMap querySolutionMap = new QuerySolutionMap();
     bindings.forEach(querySolutionMap::add);
 
