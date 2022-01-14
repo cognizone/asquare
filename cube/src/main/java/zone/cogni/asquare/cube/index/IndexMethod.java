@@ -153,12 +153,13 @@ public class IndexMethod {
    * @return "ok" on success
    */
   public String indexOne(Supplier<Model> modelSupplier, String uri, Configuration configuration) {
+    long start = System.nanoTime();
     if (log.isDebugEnabled()) log.debug("indexing uri {} start", uri);
 
     ObjectNode document = convert(modelSupplier.get(), uri);
     saveDocument(uri, document, configuration.getParams());
 
-    log.info("indexing uri {} done", uri);
+    log.info("indexing uri {} done ({} ms)", uri, TimingUtil.millisSinceStart(start, 1));
     return "ok";
   }
 
