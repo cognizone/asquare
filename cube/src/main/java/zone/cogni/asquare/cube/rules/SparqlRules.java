@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class SparqlRules {
 
   private static final Logger log = LoggerFactory.getLogger(SparqlRules.class);
+  private static boolean DEBUGGER_FAILED = false;
 
   private final TemplateService templateService;
   private final String ruleFolder;
@@ -86,12 +87,28 @@ public class SparqlRules {
 
         log.debug("        {}", namedTemplate.getName());
         NamedTemplate queryTemplate = templateService.processTemplate(namedTemplate, context);
-        rdfStore.executeUpdateQuery(queryTemplate.getResult());
+        String updateQuery = queryTemplate.getResult();
+        if (log.isDebugEnabled()) logSelectInfo(rdfStore, updateQuery);
+
+        rdfStore.executeUpdateQuery(updateQuery);
 
         if (log.isTraceEnabled()) logModelDifferences(modelCopy, rdfStore.getModel());
       });
 
     return rdfStore;
+  }
+
+  private void logSelectInfo(InternalRdfStoreService rdfStore, String updateQuery) {
+    try {
+      new SparqlRulesDebugger(rdfStore, updateQuery).run();
+    }
+    catch (RuntimeException e) {
+      // log only once
+      if (DEBUGGER_FAILED) return;
+
+      log.info("debugger failed", e);
+      DEBUGGER_FAILED = true;
+    }
   }
 
   private Model getModelCopy(InternalRdfStoreService rdfStore) {
