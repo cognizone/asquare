@@ -112,6 +112,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return <code>Callable</code> which can asynchronously index
    */
+  @Deprecated
   public Callable<String> indexOneCallable(String graphUri, String uri, Configuration configuration) {
     return () -> indexOne(graphUri, uri, configuration);
   }
@@ -135,6 +136,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return <code>Callable</code> which can asynchronously index
    */
+  @Deprecated
   public Callable<String> indexOneCallable(String graphUri, String uri) {
     return () -> indexOne(graphUri, uri, Configuration.AsyncElasticsearch);
   }
@@ -158,6 +160,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return "ok" on success
    */
+  @Deprecated
   public String indexOne(String graphUri, String uri, Configuration configuration) {
     return indexOne(() -> getGraph(graphUri), uri, configuration);
   }
