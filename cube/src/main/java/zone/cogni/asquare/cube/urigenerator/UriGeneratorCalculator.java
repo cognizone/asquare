@@ -181,7 +181,9 @@ public class UriGeneratorCalculator {
 
       Supplier<String> contextSupplier = () -> result.getGenerator().getId();
       Optional<Map<String, String>> variableMap = getQueryMap(contextSupplier, rdfStore, variableQuery);
-      if (variableMap.isPresent() && variableMap.get().isEmpty()) return Optional.empty();
+
+      // if one of template variables is still a new URI we should skip calculation for now
+      if (!variableMap.isPresent()) return Optional.empty();
 
       Map<String, String> map = variableMap.get();
       if (log.isTraceEnabled()) log.trace("query result: {}", map);
@@ -224,6 +226,7 @@ public class UriGeneratorCalculator {
     List<Map<String, RDFNode>> rows = queryForListOfMaps(rdfStore, variableQuery);
     if (rows.size() != 1)
       throw new RuntimeException("[" + context.get() + "] expected 1 row, found " + rows);
+
     Map<String, RDFNode> nodeMap = rows.get(0);
     boolean isBadMatch = nodeMap.values()
                                 .stream()
