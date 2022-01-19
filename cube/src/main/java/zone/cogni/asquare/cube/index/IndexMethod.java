@@ -67,6 +67,29 @@ public class IndexMethod {
   private final String indexName;
   private final SparqlSelectToJson sparqlSelectToJson;
 
+  public IndexMethod(ModelToJsonConversion modelToJsonConversion,
+                     String indexName,
+                     Elasticsearch7Store elasticStore) {
+    this(null, null, modelToJsonConversion, indexName, elasticStore, null);
+  }
+
+  public IndexMethod(ModelToJsonConversion modelToJsonConversion,
+                     String indexName,
+                     Elasticsearch7Store elasticStore,
+                     SparqlSelectToJson sparqlSelectToJson) {
+    this(null, null, modelToJsonConversion, indexName, elasticStore, sparqlSelectToJson);
+  }
+
+  @Deprecated
+  public IndexMethod(PaginatedQuery paginatedQuery,
+                     RdfStoreService rdfStoreService,
+                     ModelToJsonConversion modelToJsonConversion,
+                     String indexName,
+                     Elasticsearch7Store elasticStore) {
+    this(paginatedQuery, rdfStoreService, modelToJsonConversion, indexName, elasticStore, null);
+  }
+
+  @Deprecated
   public IndexMethod(PaginatedQuery paginatedQuery,
                      RdfStoreService rdfStoreService,
                      ModelToJsonConversion modelToJsonConversion,
@@ -89,6 +112,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return <code>Callable</code> which can asynchronously index
    */
+  @Deprecated
   public Callable<String> indexOneCallable(String graphUri, String uri, Configuration configuration) {
     return () -> indexOne(graphUri, uri, configuration);
   }
@@ -112,6 +136,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return <code>Callable</code> which can asynchronously index
    */
+  @Deprecated
   public Callable<String> indexOneCallable(String graphUri, String uri) {
     return () -> indexOne(graphUri, uri, Configuration.AsyncElasticsearch);
   }
@@ -135,6 +160,7 @@ public class IndexMethod {
    * @param uri uri of root instance to be indexed
    * @return "ok" on success
    */
+  @Deprecated
   public String indexOne(String graphUri, String uri, Configuration configuration) {
     return indexOne(() -> getGraph(graphUri), uri, configuration);
   }
@@ -166,11 +192,12 @@ public class IndexMethod {
   public ObjectNode convert(Model model, String uri) {
     ObjectNode objectNode = modelToJsonConversion.apply(model, uri);
 
-    addFacets(model, objectNode, uri);
+    if (sparqlSelectToJson != null) addFacets(model, objectNode, uri);
     return objectNode;
   }
 
   private Model getGraph(String graphUri) {
+    if (paginatedQuery == null || rdfStoreService == null) throw new RuntimeException("Not supported");
     return paginatedQuery.getGraph(rdfStoreService, graphUri);
   }
 
