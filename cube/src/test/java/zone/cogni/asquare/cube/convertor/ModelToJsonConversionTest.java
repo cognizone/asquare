@@ -14,6 +14,7 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -243,16 +244,50 @@ public class ModelToJsonConversionTest {
     System.out.println("json = \n" + json);
   }
 
+  @Test
+  public void multiple_references_homer() {
+    // given
+    Model homerModel = JenaUtils.read(new ClassPathResource("convertor/person-data-homer-multiple-references.ttl"));
+    ModelToJsonConversion conversion = getPersonConversion(getAllTypesConfiguration());
+
+    // when
+    ObjectNode json = conversion.apply(homerModel, "http://demo.com/data#homer");
+
+    // then
+    JsonNode included = navigate(json, "included");
+    assertTrue(included.isArray());
+    assertThat(included.size()).isEqualTo(2);
+
+    JsonNode marge = lookup( included, "http://demo.com/data#marge");
+    JsonNode homerRef = navigate((ObjectNode) marge, "references", "spouse");
+    assertTrue(homerRef.isTextual());
+    assertThat(homerRef.textValue()).isEqualTo("http://demo.com/data#homer");
+
+    System.out.println("json = \n" + json);
+  }
+
   private JsonNode navigate(ObjectNode json, String... path) {
     JsonNode result = json;
-    for (int i = 0; i < path.length; i++) {
-      result = result.get(path[i]);
+    for (String element : path) {
+      result = result.get(element);
     }
     return result;
   }
 
+  private JsonNode lookup(JsonNode current, String uri) {
+    ArrayNode arrayNode = (ArrayNode) current;
+    Iterator<JsonNode> elements = arrayNode.elements();
+    while (elements.hasNext()) {
+      JsonNode node = elements.next();
+      if (node.get("uri").isTextual() && node.get("uri").textValue().equals(uri))
+        return node;
+    }
+    return null;
+  }
+
   private Collection<String> getElements(JsonNode typeNode) {
-    if (typeNode.isTextual()) Stream.of(typeNode.textValue()).collect(Collectors.toSet());
+    if (typeNode.isTextual())
+      return Stream.of(typeNode.textValue()).collect(Collectors.toSet());
 
     if (typeNode.isArray()) {
       ArrayNode arrayNode = (ArrayNode) typeNode;
