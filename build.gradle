@@ -84,6 +84,8 @@ subprojects {
       dependency('org.apache.poi:poi-ooxml:3.16')
       dependency('org.elasticsearch:elasticsearch:5.6.3')
       dependency('org.elasticsearch.client:transport:5.6.3')
+      dependency('org.apache.commons:commons-pool2:2.11.1')
+      dependency('cglib:cglib:3.3.0')
 
       // spring
       dependency("org.springframework.boot:spring-boot-starter:$springBootVersion")
@@ -495,9 +497,23 @@ project('triplestore-jena-memory') {
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
     api('org.apache.jena:jena-tdb')
+    api('org.apache.commons:commons-pool2')
+    api('cglib:cglib')
 
     // spring
     api('org.springframework.boot:spring-boot-starter')
+
+    // TESTING
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly "org.junit.jupiter:junit-jupiter-api"
+    testCompileOnly "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  }
+
+  test {
+    minHeapSize = "64m"
+    maxHeapSize = "64m"
+    jvmArgs "-XX:MaxMetaspaceSize=128m"
   }
 }
 
