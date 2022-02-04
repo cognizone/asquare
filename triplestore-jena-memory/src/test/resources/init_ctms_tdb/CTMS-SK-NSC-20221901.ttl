@@ -1,0 +1,3359 @@
+<http://data.europa.eu/esco/ctms/mapping/3b5f555b-21e9-4a5e-b8ea-41d7e7ce7750>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/bc93e930-3279-4cf0-8a0b-1faeac1c8c51> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "5085.966"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.1.0085> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-25T11:46:38.809Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-25T11:47:04.082Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/c0f51665-5a3c-45ab-b9b0-443079cd7023/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/c0f51665-5a3c-45ab-b9b0-443079cd7023> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/76b257c8-4de6-4518-a2f5-599802500aa1>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/9da7bfb1-9e1a-46de-8374-dac1a7cfa86c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.J.2.1.0512> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-17T12:33:33.034Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-17T12:39:09.064Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.7.H.2.3.0011/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.7.H.2.3.0011> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.1.4.0074/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.1.4.0074> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/5f0ce174-576a-4e8b-aca7-6002dbc7e569>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/d58a48d1-5b7f-4028-ae11-b051d13ee1a8> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.A.4.2.0007> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-13T11:44:28.682Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-13T11:44:39.031Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/23572b97-5c40-4dc2-afa3-0becbe979839>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4f6e68b2-85c8-446e-a96d-b306ec7e0091> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1555.8154"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.1.0017> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-29T08:56:14.382Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-29T08:56:19.282Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/529a4185-d315-44d9-90b2-ecb22f67ed8f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/7adb8473-bcc6-4ff8-9850-76d945d40092> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3157.421"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.C.2.1.0006> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-20T14:05:16.785Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-20T14:05:29.426Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/c7ab7df7-3704-4f96-9507-970191d1416f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/b49b136b-0dc3-41c4-9a39-ac1200a9fded> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.E.3.4.1070> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-02T08:29:03.154Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-02T08:30:19.739Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/ba1e6717-2971-41a2-be3c-ecb9364d8035>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/e8488824-3865-4d2a-97e9-fe4647d6add3> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.1.3.0028> ;
+    <http://purl.org/dc/terms/created>
+        "2021-07-28T08:42:05.591Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-07-28T08:43:05.679Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/8b46636e-e201-4086-a8d5-049b65eaf40e/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/8b46636e-e201-4086-a8d5-049b65eaf40e> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/b2fcb5ba-922e-410e-8536-0aa14ca475d2>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f4d1fce0-6d7f-4a5e-b317-2040b64758f2> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2292.0466"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/J.4.1.0107> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-22T10:06:31.486Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-22T10:07:00.859Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/49a04803-28ba-4583-9628-1941451f0c1c>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/fa68995c-305b-4962-96e7-70782fc385f8> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.1.0022> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-29T09:38:10.889Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-29T09:39:53.422Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/694648f9-c9f5-4f61-ad0e-ff7b76d808cf>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/71a6ac5f-f220-4bdc-95b7-b1b2e640fec5> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.2.1.0223> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-21T15:30:12.051Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-21T17:47:20.869Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/6db1bd36-fc47-4103-8401-81d4d99360b3/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/6db1bd36-fc47-4103-8401-81d4d99360b3> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0430/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0430> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/141a91bc-44d1-4364-809c-16ba384ec8ed>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/7e0097da-c469-409f-a4ff-226e33c36d46> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1307.5105"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.E.3.1.0003> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-23T09:19:49.335Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-23T09:21:00.805Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/70c37c00-c9e8-4850-a88c-2f90da7757ce/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/70c37c00-c9e8-4850-a88c-2f90da7757ce> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/d0e187bd-bb99-4555-9de5-9e5a2e9ca77e>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/800d76d7-3ff9-440b-b5e8-b8737e105f36> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3692.1082"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.E.3.2.0902> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-09T09:33:47.075Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-09T09:35:14.609Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/2295591d-86d2-4220-9f9d-19ff02ce15ab>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f32eb5de-3fc7-4bba-853a-c6f2f043c33e> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.K.3.2.0002> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-27T12:44:40.512Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-27T12:46:17.275Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.I.2.3.0083/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.I.2.3.0083> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.B.2.5.1003/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.B.2.5.1003> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/af8defbb-2f09-4361-a646-fd1b65083bb0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4f1559a5-c0e6-4950-a66c-c57e12380602> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4870.8374"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.4.G.1.2.0001> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-25T08:45:42.78Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-25T12:29:26.08Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/2ff14c6d-7c93-4ee2-aaba-d7dfb884e1fe>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/b5a7c34c-96f4-4136-9c6c-96a4d0f1df37> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.3.0004> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-13T11:32:32.377Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-13T11:33:10.525Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/49a806f0-62a4-4af0-a92e-0654528678a0/source/state/comment/b358f9e9-8878-4a4d-a833-d63d753e34c9>
+    a       <http://purl.org/dc/dcmitype/Text> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-23T07:57:15.312Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/creator>
+        "n006yrlv" ;
+    <http://purl.org/dc/terms/description>
+        "jedine co som nasla je skill A.6.K.1.1.0005 - analyzovanie a hodnotenie postupov spracovania príslušných materiálov z technologického, funkčného a estetického hľadiska" ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-23T07:57:15.312Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/a721b6da-b8bd-450c-a55e-f71c4293a9e0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/26a79a26-7e70-4727-bf1b-eb79febe388a> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.B.2.4.0003> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-10T21:26:34.292Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-10T21:32:17.883Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.3.E.1.1.0021/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.3.E.1.1.0021> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/bd650bff-463c-4c46-bfe4-9af66718925d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/cbc00aa3-a700-4adf-8a1f-c30a22979490> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.K.3.2.0001> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-10T09:09:59.542Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-10T09:22:29.33Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/767e6c07-68b3-491a-afac-7e9c6fe128bc>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0e531bd6-7997-43c0-b042-7cec951e6ada> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.G.1.1.0320> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-17T13:45:13.031Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-17T13:45:30.214Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/I.2.2.0044/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.2.2.0044> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.6.E.2.1.0013/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.E.2.1.0013> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.5.0589/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.5.0589> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/F.2.1.0031/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.1.0031> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/9ebaffac-6154-4777-a57b-6573d9167a3e>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/88db9d39-0188-4ef1-a504-35a61f992b4a> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.4.4.0012> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-25T12:02:27.84Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-25T12:03:50.327Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/78a38d1e-8308-4059-8916-d0aa995e3325>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/944c8843-dcea-4883-af9a-f265d21a75a3> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1676.2803"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.1.1.0061> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-06T11:35:46.366Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-06T11:38:06.396Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.J.2.3.0003/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.J.2.3.0003> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/a9d133db-823d-46f9-a8ce-e9418afe24ea>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/34396520-b785-42dc-afe0-f74d7aa9f793> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3508.2896"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.2.0025> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-18T11:20:19.991Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-18T11:20:27.57Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/94db6573-c2d7-41bf-b250-b4dd98d07204>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/54bbf5e8-596f-4698-a451-06b3f1339722> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.H.1.1.0012> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-09T12:49:13.149Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-09T12:49:55.287Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/ea876ec3-4382-478c-b8b3-600c6b23ae85/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/ea876ec3-4382-478c-b8b3-600c6b23ae85> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.H.1.1.0014/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.H.1.1.0014> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/84324095-c722-44c4-a662-7155312f153f/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/84324095-c722-44c4-a662-7155312f153f> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/8bdc520c-6293-4e99-bf6f-a44d5da3ebcb/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/8bdc520c-6293-4e99-bf6f-a44d5da3ebcb> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/1940a13f-a9af-46eb-858f-486348364db9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/1f5923bd-e204-4a4a-b16f-3aac20101151> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.E.3.1.0993> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-17T22:26:48.975Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-17T22:27:53.523Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/0e595038-f3ac-4e55-9c5d-a4cb4770b57b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/43ea3e97-111d-4c23-8b9a-42170ef94c9a> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.5.0045> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-18T19:27:36.517Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-18T19:27:36.517Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/b63de98a-f508-4ce1-b5b1-93b7f28f4dfe>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.4.1.0018> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-21T12:01:39.706Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-21T12:01:39.706Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/3c355ef4-5a4a-49b0-99c7-3a86be5b4bc4>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/502c438b-6a0c-4b5f-9623-9d8ba9c999b5> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2351.9568"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.5.0033> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-13T10:34:16.485Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-13T10:35:40.145Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/90561bbf-1ea0-4446-956b-0e741961206f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/edb029e7-43a8-45a9-b37c-00ff730a1092> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3176.1218"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.2.1.0144> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-14T11:55:03.356Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-20T13:44:09.462Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/eb477ca0-2690-4726-ab20-7fe06d5eb3f3/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/eb477ca0-2690-4726-ab20-7fe06d5eb3f3> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/A1.8/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/A1.8> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/f89fd121-f0c9-4b39-8cae-56e515474af5>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/8e9d6856-9ac9-4264-aa48-0ae6e1e36f75> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1821.5905"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0047> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-22T09:11:04.675Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-29T10:25:16.672Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.1.K/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.K> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/S1.5.6/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/S1.5.6> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/E.1.1.0105/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.1.1.0105> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/fb538eae-9b87-4871-a689-f67b2aff9c0c>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/efb523d0-c998-440d-8639-cd14ba841c4c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.1.0300> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-23T09:19:29.235Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-23T09:19:31.872Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/Z.5.E.1.1.0006/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.5.E.1.1.0006> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/42bdcd3c-df2a-4668-83c6-6e22b10d12d3>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/a5b58e14-a6f0-49bc-99e2-4879f3d13a55> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "5880.4604"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.K.1.3.1006> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-13T12:23:27.076Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-13T12:23:45.464Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/62fe3ef5-1648-4d09-9a91-f2c310169479>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f91ad7eb-f4dd-400f-b69e-6a4e23024741> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2538.163"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.4.0027> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-26T12:18:02.772Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-26T12:23:40.279Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/0efbe2dc-2770-47ec-b8f4-d1bdff6ac0a4/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/0efbe2dc-2770-47ec-b8f4-d1bdff6ac0a4> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/9bb41cd3-eb0e-4fb3-a345-c9c6ed5d43dd/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/9bb41cd3-eb0e-4fb3-a345-c9c6ed5d43dd> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.7.1.0268/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.1.0268> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/6aa85010-1390-4802-bc66-0800d786c9db>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/b1dfada9-183f-4f54-a0d4-a365adfc8412> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3670.8374"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/J.2.2.0007> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-02T12:41:01.074Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-02T12:41:01.074Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.D.1.1.0012/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.D.1.1.0012> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.5.I.1.1.0051/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.5.I.1.1.0051> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.G.1.1.0420/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.G.1.1.0420> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.1.F.1.1.0022/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.F.1.1.0022> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/8dd0c12e-75c3-482d-a8e5-77ca31be03ef>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/cffe8b7d-20b2-4a7b-82f9-b290cb44b903> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.1.D.2.1.0992> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-21T09:27:17.68Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-21T09:27:36.863Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/Z.1.D.1.1.0005/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.1.D.1.1.0005> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/690b5e77-f6d1-4652-bf8a-040aab2696b9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/92f983d4-f7fc-412a-be4f-4b76ceb18505> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4910.5728"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.A.4.2.0010> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-02T20:37:57.738Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-02T20:38:47.292Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/b5abf880-371b-435c-8a38-1fbbadf1d2f4>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/90a504b8-29ba-4c54-8e78-158719e0af72> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.7.G.1.2.0013> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-27T10:50:07.256Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-27T10:50:53.652Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/8299babb-970b-48d1-8839-7235276894cf/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/8299babb-970b-48d1-8839-7235276894cf> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0219/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0219> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/9f5e899e-a53f-4b7a-a137-aade7fb18b86/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/9f5e899e-a53f-4b7a-a137-aade7fb18b86> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/6d58a1a3-6d9b-453b-9078-7cbae5a481a1>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/450054eb-ccdb-42a7-baf0-371aba515fe7> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.1.2.0038> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-07T08:55:31.727Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-07T08:55:31.727Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/bef10363-ecf2-4a24-a34b-fce99e6d3f71/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/bef10363-ecf2-4a24-a34b-fce99e6d3f71> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/706479c4-51bd-4cdc-b0ef-3eb08f38a563>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/62af17c1-cc70-44ce-a563-bf406443bf57> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.K.2.1.0045> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-21T10:09:36.652Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-21T10:11:50.704Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/596857e2-05ce-4cfb-b901-89a8bae64582>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4fd7909c-9600-476d-b1f0-615f9cc1260e> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.1.0135> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-11T12:23:17.215Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-12T11:10:22.394Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/f191c306-f0eb-4cb8-82fb-3331adbbc6f1/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/f191c306-f0eb-4cb8-82fb-3331adbbc6f1> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.3.B.2.5.0025/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.B.2.5.0025> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/1a297c91-233b-4980-84fb-b7fe84edf057>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        true ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.2.2.0107> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-05T10:01:40.17Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-05T10:01:40.17Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/9f462f41-5f9f-43fd-972e-c9746a171a3c>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/61ba0c31-a54e-49e9-9e9e-c2035d3f3e11> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "5732.8716"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0093> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-30T07:40:48.282Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-30T07:40:51.114Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/fa1090c2-cbeb-44b5-a0d0-f68771bc4e49>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/6e8f6e7d-0194-4adf-a2d1-5ec95dfe6035> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.K.2.1.0027> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-09T07:01:30.174Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-09T07:01:52.242Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/7a63f944-6948-4ae4-9c1f-d08e492535c9/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/7a63f944-6948-4ae4-9c1f-d08e492535c9> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/235defe0-9e5d-4f9b-a08f-08633c4e0281>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/198b614d-a9af-46f5-b3fd-2672b401dd8e> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "8646.622"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/J.3.1.0105> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-25T08:30:51.599Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-25T08:30:51.599Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/F.1.1.0013/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.1.1.0013> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.4.0115/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.4.0115> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/261fa103-e0eb-424c-8a4d-d336f50abbf8/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/261fa103-e0eb-424c-8a4d-d336f50abbf8> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.4.H.4.6.0014/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.4.H.4.6.0014> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.8.K.3.2.0002/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.8.K.3.2.0002> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0172/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.7.I.1.1.0172> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/33cf1f1d-3fb1-44c1-b39a-ab20899fa114>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/d253e412-f350-422d-93ef-4008b5e04e4c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1996.269"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.9.A.5.1.0013> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-11T10:23:20.257Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-11T10:23:42.538Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/8f1a38ad-2249-4829-bedc-f33349b5a1e4>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4d68a7b2-daa3-4412-bcaa-c837a1e0957d> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.B.2.4.0041> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-01T20:05:16.945Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-01T20:07:48.708Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/9966b221-9928-4529-b4b2-6b0d0932deae>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        true ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2967e6cf-1998-49d1-ba13-d8ec6ac787b8> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-13T08:42:18.745Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-13T11:56:11.824Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.E.2.1.0922/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.E.2.1.0922> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/H.1.1.0041/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.1.1.0041> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/3529bf8e-6f59-4c5e-9cee-9a9789ecf606>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/6785b54f-c1d0-4e5c-ad8c-4aa9668b15c7> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1340.0562"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.5.H.4.5.0001> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-24T20:50:43.135Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-24T20:50:54.255Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/e5df7ad9-7a0d-4646-a094-9e4fbd3c178d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/9b55d4b6-d015-4605-985e-5313a1e3face> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3172.3228"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.4.0113> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-04T11:20:53.388Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-04T11:23:58.642Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/e22b1918-1f03-4d6c-89bd-d0d55074ef3d/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/e22b1918-1f03-4d6c-89bd-d0d55074ef3d> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/94ebc6cb-9cd0-4f17-941e-29927cf5d616/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/94ebc6cb-9cd0-4f17-941e-29927cf5d616> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" .
+
+<http://data.europa.eu/esco/ctms/mapping/d6a3b21d-2be8-491b-b9dc-cca515977d1f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/8088750d-8388-4170-a76f-48354c469c44> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.2.1.0044> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-03T15:50:10.435Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-03T15:50:27.481Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/36dc0b74-84ee-4be2-a91c-0a91b4576a21/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/36dc0b74-84ee-4be2-a91c-0a91b4576a21> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/a420a3ed-32a1-4ab8-b590-cba5a89bc8f8/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/a420a3ed-32a1-4ab8-b590-cba5a89bc8f8> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/6168faeb-f5ba-497a-9b2d-62a42ddbd21b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/5f5a572c-bcd5-44ae-9ecf-b94915d80faf> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.5.0011> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-19T14:49:32.713Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-19T14:50:11.405Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/b4553649-4a6e-4339-bd2e-4a095c8e0977>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/a117f32c-662b-4dd9-b739-1230dd04cb60> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.2.0135> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-14T12:52:44.168Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-14T12:52:46.42Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/K.2.1.0109/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/K.2.1.0109> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.8.E.1.1.0088/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.8.E.1.1.0088> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/16072ed1-e122-4cb5-9e84-1841a690b807>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/ce84a0b1-5217-4653-8683-7fff7df37946> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.5.F.3.1.0016> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-17T19:34:56.069Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-17T19:36:05.03Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.8.D.2.2.0064/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.8.D.2.2.0064> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.7.G.1.3.0002/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.G.1.3.0002> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/b3b3d070-656b-41bc-bfc8-3a0206e18267>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/32bfacd9-51b7-4757-952e-7f2be2671632> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.I.1.1.0045> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-13T21:09:15.982Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-13T21:11:13.015Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/dc3269ab-eb26-42ba-8552-21d4dd9ec744>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/c9e1cb88-bd7c-463d-83b2-2bd197a3114c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.I.1.1.0963> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-04T20:53:40.263Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-04T21:44:59.921Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/34df0cc7-e642-4c79-81e3-ac8ce3c66601>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2bde42ae-e776-41c1-9ded-b07b30bfe985> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.2.1.0038> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-03T15:47:55.54Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-03T15:49:18.007Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/a2d204c8-0f49-4e22-b494-845b90a315a9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/dbadb531-2fb9-4361-b80b-9be8c3c54229> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2142.8386"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.4.J.4.1.0015> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-04T19:08:39.528Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-04T19:17:41.482Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.6.B.2.4.0005/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.B.2.4.0005> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/5fbdd6e8-512c-44c1-a67b-6dbb215bbd92>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/7d4e4636-f136-46f6-ae23-2a7639d6b861> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.2.0039> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-29T13:31:32.603Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-29T13:32:14.84Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/3ef93599-7f58-42ea-b74e-8679a14f174b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0befe984-aa6e-4b54-85db-d00bb51f8ed5> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.2.1.0223> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-21T15:30:27.147Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-21T17:52:23.651Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/9dc83586-7d2e-4926-a5de-fc519cf62a0d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/d22ed03b-5385-4c53-b399-17bfec2b61f5> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.5.I.2.2.0004> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-21T16:33:38.425Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-21T16:41:31.24Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.2.2.0499/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.2.2.0499> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/G.2.1/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.2.1> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.6.E.2.1.0525/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.E.2.1.0525> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/8ba0af79-3d71-4dbf-8a9b-a8f48dffdf24/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/8ba0af79-3d71-4dbf-8a9b-a8f48dffdf24> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/57db1270-d343-4f6b-98d4-fd206d896a7c>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/ceb0d9a0-96c6-4334-bcf4-c529e314d1ac> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4231.365"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.4.2.0045> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-06T08:41:03.977Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-06T08:43:52.258Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/095feae6-3b9f-46e1-9ce3-c5d32fe5eb15>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/530cb489-d900-46ab-9350-4d50ccd49eea> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.2.1.0227> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-18T12:20:45.969Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-18T12:20:48.863Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.3.F.1.3.0001/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.F.1.3.0001> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0228/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0228> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/8f592d1d-0c27-413f-be4d-4b1c72724dbf>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/bb46675c-6c2c-4a5c-bdf7-9ea3f5dcf332> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.1.0002> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-27T11:26:49.572Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-27T11:26:50.688Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/06437645-acda-4ead-891b-ae9dd3eb47e9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/50db2b5e-edda-496d-8a6e-aff91dc243d9> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.E.2.1.1026> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-05T20:04:46.062Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-05T20:04:58.383Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.4.E.3.5.0001/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.4.E.3.5.0001> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/f6db116f-5983-4726-9866-c4bcf3435dd9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0612b3e9-5515-4233-af5e-07191b03c4ba> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1275.5334"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.7.G.1.1.0005> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-26T18:49:20.161Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-26T18:53:18.623Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/d99f905e-5de7-494f-ba8c-be0c0d0d656a>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/3362724b-fe06-4c5d-89a4-76fe62b9268e> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3626.1445"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.1.1.0039> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-27T09:57:22.194Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-27T09:58:16.556Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/48b6ad52-ee42-41da-b69d-0302496b1808/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/48b6ad52-ee42-41da-b69d-0302496b1808> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/021b4ad8-693d-4339-8321-550ffa62aab0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0d9a7816-d3e4-4a6c-8fdc-4b4bbe278a85> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.1.A.4.1.0024> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-12T18:54:02.58Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-13T12:20:21.802Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/02820870-3b92-480b-8475-8a521563ea3c/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/02820870-3b92-480b-8475-8a521563ea3c> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.F.3.1.0637/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.F.3.1.0637> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/490b7aaf-f44d-4ea2-a2cb-d3e2c2f1938d/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/490b7aaf-f44d-4ea2-a2cb-d3e2c2f1938d> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/3a815f03-1c27-455d-ae93-b9c067e58f5b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/5915e97d-ecca-4713-941e-ad7c8c00720b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.1.I.1.2.0007> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-29T22:26:16.093Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-29T22:26:56.526Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/58a5855f-9615-4ae1-9e0f-922f136a66e8>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/db814222-a314-46c5-ac6f-dbbd3e61e964> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "739.26404"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.E.3.5.0001> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-10T13:35:50.456Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-10T13:38:39.443Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/a0991e1f-4e02-4340-87b7-e0881e4ff865/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/a0991e1f-4e02-4340-87b7-e0881e4ff865> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/480bdd4d-9bf3-46d6-ba83-2f398b2f8802>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/ce82b32c-53ad-4543-9315-7350a2ec059c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.I.1.1.0963> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-26T19:48:18.756Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-26T19:58:29.442Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/712fe414-b841-4926-91d6-09510f162152>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/fd6aa2f5-b061-4ba2-a047-23d35d77f9cf> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.2.E.3.2.0100> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-30T11:47:39.69Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-30T11:47:42.945Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/f794636b-eb0d-44b7-affc-e469ecf0355b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/db8a9ba7-96ad-4c53-b552-d4f1570dfefb> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4104.94"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0153> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-08T12:02:05.756Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-08T12:06:21.879Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.E.3.2.0002/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.E.3.2.0002> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/8980f342-1fcd-4349-beeb-5cbd84472666>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0c1e80f9-f909-4a72-ad6b-e490abd95f11> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.1.B.2.5.0022> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-09T19:07:40.499Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-09T19:08:25.54Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.7.A.2.1.0015/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.A.2.1.0015> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.D.2.2.0082/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.D.2.2.0082> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.4.C.2.2.0232/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.4.C.2.2.0232> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.1.E.2.1.0007/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.1.E.2.1.0007> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/7ee51257-8947-4b69-9bdf-322baf0a6398/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/7ee51257-8947-4b69-9bdf-322baf0a6398> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/E.3.3.0106/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.3.0106> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/35ecc6a1-5fc4-45d8-baf1-205a863d3e1c/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/35ecc6a1-5fc4-45d8-baf1-205a863d3e1c> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/4abbca72-47fe-40ae-9d28-84dccf7b702b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/d54d7c00-87c4-4f78-af8d-e84577372974> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.K.C.4> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-11T10:23:59.033Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-11T10:24:03.607Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/64e16281-c19d-4853-91eb-f45945745da5>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/b1c7c4c6-f3cb-4fb2-958c-236385b2782a> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "6692.3354"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.5.0121> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-08T08:41:57.923Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-08T08:42:51.283Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/c4782b3e-a5da-40af-a6a5-79855c0357fb/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/c4782b3e-a5da-40af-a6a5-79855c0357fb> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/d16d792d-7cdb-4637-bc87-bf28058488e9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/e3840f20-1928-4d07-944c-d2dd2ae5cbba> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.K.2.1.0018> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-06T09:17:05.468Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-06T09:19:57.104Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/b5b37573-2fb6-4679-a320-223064d6736f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/71a6ac5f-f220-4bdc-95b7-b1b2e640fec5> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.2.1.0234> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-21T15:34:25.764Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-21T17:47:20.15Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/2908ea04-d281-42c9-93f2-7a780f16d0b5>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/6acf652c-33b2-4e28-8f79-1e553f255229> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0792> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-13T14:10:42.964Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-13T14:14:21.249Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/067c6b10-9143-47a1-a0bc-9f2e8a3c4001>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/e7d6c4f1-baa6-438e-ac0d-1107ddb204e9> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.4.K.3.1.0003> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-27T08:49:13.936Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-27T08:49:26.324Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.7.G.1.2.0029/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.7.G.1.2.0029> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/82b553c6-9a71-41a1-bd6a-d47a0721b8c0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/54b2c5ea-4475-4bf5-a433-b0dc5442e691> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "5584.965"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0688> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-24T08:30:48.129Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-13T07:06:51.675Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/ab5b743a-c50a-4db4-9de3-7736ec4d9830>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/8029637c-00eb-4764-ae88-387611176c4b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.2.A.4.1.0331> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-17T12:02:49.852Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-17T12:02:58.729Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/487c348a-2e6b-426c-bf50-9672afa4b1d5>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4322b221-7d85-425f-8d56-89ebcc1759cd> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.3.G.1.3.0005> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-03T14:12:45.625Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-03T14:12:47.119Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.A.1.4.0004/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.A.1.4.0004> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/Z.2.I.2.2.0003/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.2.I.2.2.0003> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/c7f34af9-3260-4cb7-b9f6-60027c86b1b8>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/e3fbd312-a4b2-4bfb-a589-be28f134f1c1> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.A.4.2.0009> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-13T12:09:24.472Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-13T12:46:13.294Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.K.3.2.0002/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.K.3.2.0002> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0951/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0951> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/ec4c02ba-b250-4639-aa53-2c1dcdef78b1>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/b1b118c4-3291-484e-b64d-6d51fd5da8b3> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1891.3567"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.3.1.0036> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-16T08:17:00.697Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-16T08:17:06.39Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/24794614-7cba-4a51-a0a6-c096409b0e8f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f4a6e9f7-5cff-46c0-894c-59c20bb78694> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1693.6915"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.4.2.0071> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-16T11:15:04.853Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-23T08:19:35.853Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.A.5.2.0004/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.A.5.2.0004> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.6.H.4.1.0011/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.6.H.4.1.0011> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/822d80b8-0ecf-466d-a9aa-05e10ad22bda>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/df2433cc-b53e-42ad-b40a-952c83b8e60b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.H.4.1.0008> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-24T20:13:08.506Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-24T20:13:11.436Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/aa301afa-b2a1-48cb-9ae7-c54d40c50f81>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/812b8819-9b7a-4df9-9c9f-1b60888d0861> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "approved" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4823.831"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.1.1.0022> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-25T08:23:09.371Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-21T09:36:32.073Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/F.2.K.2.1.0065/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.K.2.1.0065> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/5f08fb30-a657-44d4-988e-13f84801936b/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/5f08fb30-a657-44d4-988e-13f84801936b> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/b46ab088-9993-4ce3-be09-a4388148cdf0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/6f8f86f8-0ef9-4dd6-8e29-7d790e65706b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.B.2.4.1057> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-28T14:21:05.889Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-28T14:27:22.775Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.2.2.0825/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.2.2.0825> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/c9e29ab6-3957-492e-8234-11cf252b9006/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/c9e29ab6-3957-492e-8234-11cf252b9006> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/H.4.5.0003/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.4.5.0003> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/B.2.K.2.1.1041/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.K.2.1.1041> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.2.1.0070/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.2.1.0070> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.D.2.2.0064/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.D.2.2.0064> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.1.G.1.3.0002/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.1.G.1.3.0002> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/b1be4222-6790-462e-b6c4-c778dbf41c2d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/429c6dba-ddf1-43b4-93de-091cbe1b2ef4> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1328.4424"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.3.0005> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-27T06:40:27.731Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-27T06:40:31.654Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.3.A.7.2.0014/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.A.7.2.0014> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/J.4.1.0047/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/J.4.1.0047> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/5022b5cf-2620-4577-993c-de131dd16ad2>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2d6904db-9e16-42a5-bc12-c5acb8bfab18> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.2.0044> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-02T10:23:27.851Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-02T10:28:56.994Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.6.C.2.1.0007/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.C.2.1.0007> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/61b5711d-ab16-42e7-bf51-901e011746dd>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/894f3286-ae58-4a13-a8ed-9aa7c5c77c18> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.2.1.0316> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-11T12:08:43.664Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-11T12:08:46.095Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/1fd57242-267e-46df-bd8c-849fdd593a50/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/1fd57242-267e-46df-bd8c-849fdd593a50> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.2.1.0025/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.2.1.0025> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/7ef6176c-0bb4-4fb7-a8f2-37323c9a643f>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/d429b19a-132f-44d3-971b-bb0ccd94f979> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0602> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-11T08:33:11.592Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-11T08:33:18.666Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/e855e93f-654b-495b-aaa9-aaa7998938a1/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/e855e93f-654b-495b-aaa9-aaa7998938a1> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/0502f886-2bbf-458a-86ed-63cb87fe29a2>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/1d0293a1-638f-4e0f-a4c1-4cb59e6e1a22> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.I.1.1.0015> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-20T09:33:16.897Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-20T09:33:41.957Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.B.2.1.0006/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.B.2.1.0006> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/c88d637d-6eee-4fc1-b013-09e91d177f7a>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/31b67516-af16-4b97-8430-a8a8e0f84190> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "4928.2314"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.2.2.0625> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-12T14:27:55.014Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-12T14:28:18.035Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/d390de48-aed5-46e1-a785-87629628efd0>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/db7d4f63-5288-4876-be2a-48cbf1fc01fc> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3206.4597"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.B.2.5.0053> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-09T19:10:11.644Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-09T19:12:40.763Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.2.H.2.2.0993/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.2.H.2.2.0993> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/e0a364ec-e0fd-4dc9-94d2-a599b32fa38e>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2a8834b9-33a6-4abf-b0a4-219925a331bd> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "1768.8263"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.1.E.2.1.0002> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-15T08:17:35.108Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-15T08:18:14.601Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.7.1.0336/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.1.0336> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.6.F.1.1.0008/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.6.F.1.1.0008> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/eee09ca2-2391-4873-8a0f-932ee99dc3b9>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/db16dabf-651e-46f5-9c72-87f93fd09a21> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2831.2852"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.2.D.2.2.0069> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-25T12:15:59.992Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-25T12:16:53.908Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/1e84d5ba-05d9-4528-84d0-5a7c1f14a397>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/0e8d16c9-e2db-4862-ac06-1567f01ef806> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/J.2.1.0073> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-08T08:36:22.192Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-08T08:36:35.856Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/e6c6408e-5712-471d-80ff-52233aa65b24>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/57b7804d-048b-4293-b8ac-a105d0468883> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.5.2.0026> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-28T06:42:48.418Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-28T06:42:54.698Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/1e48c5d9-b4e2-4069-8ab0-0a2e84e050f5/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/1e48c5d9-b4e2-4069-8ab0-0a2e84e050f5> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/1ccb9704-c7d5-4aaa-aff6-b99a98435e0b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/fe39d4db-4cb5-4299-bb9f-896c8fd6ab13> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "6118.3057"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.6.H.1.2.0006> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-14T08:56:47.112Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-14T08:56:49.627Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/e494156c-9d8d-4776-8d4a-4725aa00a36a>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        true ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.2.1.0023> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-24T11:57:43.452Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-25T08:37:14.587Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/84e33d5f-a4a3-4eff-9e2b-7aa50ac6950b>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/469e19ed-a0bd-445a-ae2d-4ba9430e296b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.3.2.0007> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-19T11:16:34.841Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-19T11:17:34.08Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://www.w3.org/2004/02/skos/core#editorialNote>
+        <http://data.europa.eu/esco/ctms/mapping/84e33d5f-a4a3-4eff-9e2b-7aa50ac6950b/editorialNote/f097fca8-08c3-4a2f-b34e-443a4d208a12> .
+
+<http://data.europa.eu/esco/skill/e02faa7a-9277-4340-aeda-e35bf138320e/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/e02faa7a-9277-4340-aeda-e35bf138320e> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/63359272-1303-41d5-a437-f4522f5abcc2/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/63359272-1303-41d5-a437-f4522f5abcc2> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.3.H.4.3.0007/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.H.4.3.0007> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/55491a97-307b-4ca6-8985-826b6cce4c06>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/4df04290-0084-499a-b52c-a43ff074e198> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/G.3.3.0068> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-23T15:19:32.285Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-23T15:19:53.448Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/73f1a1b6-ccb6-4fcf-8f0d-2e2ff1c0cd2e>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/3f9eafe9-965d-4397-b095-176809c84eeb> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.0840> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-19T07:33:58.895Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-19T07:34:25.844Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.4.E.1.1.0321/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.4.E.1.1.0321> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/cbd65737-24bf-4d8a-98a0-66fa3a54fbce>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f19f0cda-73f4-417e-8ec9-c0cacf5e7149> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2660.7605"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.1.B.2.5.0097> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-05T19:39:49.217Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-05T19:41:19.172Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/Z.1.A.4.1.0001/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.1.A.4.1.0001> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/74b51e5c-f84c-4d5b-8864-1dca910a7933>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/6d7e3b0c-3995-4953-816d-cf3c5e9ffe34> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "3885.1357"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/F.2.2.0014> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-26T10:56:19.705Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-26T10:56:24.11Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/58e4646d-35c2-4c9d-a48d-aab9613308b7>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/9b6a88df-d64d-4c06-ad01-dc23dc92632d> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "2458.79"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.K.2.1.0004> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-28T11:35:43.352Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-28T11:36:39.846Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/3290c0ca-c5a2-4ae1-b941-4f09f47aa80c>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/ed008ded-ce2a-449c-89cc-c559cf66ed1f> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.2.J.4.1.0999> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-13T09:06:45.02Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-13T09:06:54.866Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/681a1f8a-4244-4e82-af36-0148b89c2863/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/681a1f8a-4244-4e82-af36-0148b89c2863> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/skill/f77cb8fa-5a5a-4909-a9a7-4d610c969c1d/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/f77cb8fa-5a5a-4909-a9a7-4d610c969c1d> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.1.E.3.3.0032/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.1.E.3.3.0032> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/60e7502f-3de1-4159-847e-19a9b2e7ed48>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2afb2b59-c9a3-4cf3-b1dd-1a2fad51e583> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.2.2.0044> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-27T08:02:41.766Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-27T08:12:18.892Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.7.B.2.2.0001/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.7.B.2.2.0001> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.4.I.1.2.0010/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.4.I.1.2.0010> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/2b3974fd-c883-4ce4-ac9f-dda94ce52810>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/c2f06797-190e-4a74-b8c2-a988c3cc8186> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.1.0048> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-08T11:19:32.622Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-08T11:21:36.214Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/eccf1659-e252-4971-8176-474fea83d6db/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/eccf1659-e252-4971-8176-474fea83d6db> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/Z.2.J.2.2.0913/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/Z.2.J.2.2.0913> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/53386714-0e24-4df5-a460-b884e2d6c4c4/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/53386714-0e24-4df5-a460-b884e2d6c4c4> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/D.4.F.2.2.0003/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.4.F.2.2.0003> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/f2b245ec-33bf-463c-8f48-056856ed6320>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/2704b00a-5d70-40ad-997d-212b323fb32d> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.1.2.0940> ;
+    <http://purl.org/dc/terms/created>
+        "2022-01-11T10:21:40.156Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2022-01-11T10:21:41.474Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/A.2.D.1.1.1085/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.2.D.1.1.1085> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/ctms/mapping/d8cee474-0ab6-4fd1-90e7-f68081e262b3>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/fafe0b9d-dbd9-46bd-b770-26299539ce66> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/suggestionScore>
+        "5936.3125"^^<http://www.w3.org/2001/XMLSchema#float> ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/E.3.3.0119> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-19T09:54:22.927Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-19T09:54:54.568Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/ab2fb8c2-9b37-429e-a3a8-3ecf2262ce26>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/e35cfb6e-ea8e-4aef-aab9-3cbc7d79647b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.6.A.1.2.0940> ;
+    <http://purl.org/dc/terms/created>
+        "2021-11-25T13:11:02.357Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-11-25T13:11:03.487Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/c70dd652-fb78-4b98-a082-fadf3b838389>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#closeMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/f18822b9-bc6b-4343-aa5a-f756cd4bf9dc> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "deleted" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.I.1.1.0188> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-08T11:40:38.281Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-08T11:44:12.423Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/a0393966-f95b-48d4-8945-f9cbe705b88d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#narrowMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/5b394ba8-5d40-40d9-b771-5df6ea9ac436> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.3.B.2.5.0710> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-08T12:25:17.901Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-08T12:26:58.464Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/skill/89d25455-184b-4c20-9cbc-9f5f89df500f/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/89d25455-184b-4c20-9cbc-9f5f89df500f> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/350aa8b4-803f-48e5-8525-9e363e4f7431>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/eff776a5-b65c-4a90-b144-5c459d6fa794> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/H.1.2.0001> ;
+    <http://purl.org/dc/terms/created>
+        "2021-09-23T12:09:18.643Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-09-23T12:09:21.431Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/d883bd73-8a34-47e8-89f2-1134a09ba8cc>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        true ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/bc9f3c50-ff9f-42b5-a2e9-c388779c707b> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://purl.org/dc/terms/created>
+        "2021-07-28T07:37:52.905Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-07-28T07:37:52.905Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/f5d934b2-c19b-41cd-abfd-d91b9a68d055>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#exactMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/c9e1cb88-bd7c-463d-83b2-2bd197a3114c> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/B.7.A.3.1.0535> ;
+    <http://purl.org/dc/terms/created>
+        "2021-12-03T19:11:01.487Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-12-03T19:11:01.487Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/ctms/mapping/e84b67da-0aa5-4ace-863f-fd40aa27ac7d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/733db58b-f62e-4548-8078-b0f4e5182383> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/A.1.4.0095> ;
+    <http://purl.org/dc/terms/created>
+        "2021-08-30T08:22:20.531Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-08-30T08:22:23.995Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/C.3.F.1.1.0183/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/C.3.F.1.1.0183> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "in progress" .
+
+<http://data.europa.eu/esco/skill/0ea0b260-617b-4d04-bf00-988dd0b122e5/source/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/skill/0ea0b260-617b-4d04-bf00-988dd0b122e5> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.1087/target/state>
+    a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptReference>
+        <http://data.europa.eu/esco/concept/slovakian-skills/I.1.1.1087> ;
+    <http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+        <http://data.europa.eu/esco/concept-scheme/slovakian-skills> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "review" .
+
+<http://data.europa.eu/esco/ctms/mapping/d8cc6d9a-f843-45aa-93c3-0d8a825aa15d>
+    a       <http://data.europa.eu/esco/ctms/mapping/Mapping> ;
+    <http://data.europa.eu/esco/ctms/mapping/isNoMapping>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/isSuggestion>
+        false ;
+    <http://data.europa.eu/esco/ctms/mapping/mappingRelation>
+        <http://www.w3.org/2004/02/skos/core#broadMatch> ;
+    <http://data.europa.eu/esco/ctms/mapping/source>
+        <http://data.europa.eu/esco/skill/638ec3a8-97dd-4407-a3ed-4eba33477faf> ;
+    <http://data.europa.eu/esco/ctms/mapping/status>
+        "active" ;
+    <http://data.europa.eu/esco/ctms/mapping/target>
+        <http://data.europa.eu/esco/concept/slovakian-skills/D.1.K.1.3.0150> ;
+    <http://purl.org/dc/terms/created>
+        "2021-10-01T12:24:18.82Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+    <http://purl.org/dc/terms/modified>
+        "2021-10-01T12:24:34.328Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://data.europa.eu/esco/isced-f/0419/source/state>
+a       <http://data.europa.eu/esco/ctms/mapping/ConceptMappingState> ;
+<http://data.europa.eu/esco/ctms/mapping/conceptReference>
+<http://data.europa.eu/esco/isced-f/0419> ;
+<http://data.europa.eu/esco/ctms/mapping/conceptSchemeReference>
+<http://data.europa.eu/esco/concept-scheme/skills> ;
