@@ -44,4 +44,25 @@ public final class JenaResultSetHandlers {
       }
     };
   }
+
+  public static class MemorySafe {
+    public static final JenaResultSetHandler<List<String>> listOfStrings = new MemoryAwareListResultSetHandler<String>() {
+      @Override
+      protected String handleRow(QuerySolution querySolution) {
+        RDFNode rdfNode = querySolution.get(querySolution.varNames().next());
+        return null == rdfNode ? null : JenaUtils.stringize(rdfNode);
+      }
+    };
+
+    public static final JenaResultSetHandler<List<RDFNode>> listOfRdfNodes = new MemoryAwareListResultSetHandler<RDFNode>() {
+      @Override
+      protected RDFNode handleRow(QuerySolution querySolution) {
+        return querySolution.get(querySolution.varNames().next());
+      }
+    };
+  }
+
+  private JenaResultSetHandlers() {
+    throw new AssertionError("Should not be initialized!");
+  }
 }
