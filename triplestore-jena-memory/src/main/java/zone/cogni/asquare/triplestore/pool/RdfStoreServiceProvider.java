@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 /**
  * This should be one instance per thread and stores all TDBs connections that a given thread used.
- * One connection per TDB btu one thread can use more TDBs.
+ * One connection per TDB but one thread can use more TDBs.
  * <p>
  * <b>Important</b>:  Should be initialized as @RequestScope bean on the given application!
  * </p>
