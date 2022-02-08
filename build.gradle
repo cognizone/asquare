@@ -493,8 +493,6 @@ project('triplestore-jena-memory') {
 
     // libs
     api('org.apache.jena:jena-tdb')
-    api('org.apache.commons:commons-pool2')
-    api('cglib:cglib')
 
     // TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -529,5 +527,39 @@ project('triplestore-tdb2') {
     testImplementation('io.vavr:vavr')
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+  }
+}
+
+project('triplestore-pool-api') {
+  dependencies {
+    // projects
+    compileOnly project(':triplestore')
+
+    // libs
+    compileOnly('org.apache.commons:commons-pool2')
+  }
+}
+
+project('triplestore-tdb-pool') {
+  dependencies {
+    // projects
+    api project(':triplestore-pool-api')
+    api project(':triplestore-jena-memory')
+
+    // libs
+    api('org.apache.commons:commons-pool2')
+    api('cglib:cglib')
+
+    // TESTING
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly "org.junit.jupiter:junit-jupiter-api"
+    testCompileOnly "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  }
+
+  test {
+    minHeapSize = "64m"
+    maxHeapSize = "64m"
+    jvmArgs "-XX:MaxMetaspaceSize=128m"
   }
 }

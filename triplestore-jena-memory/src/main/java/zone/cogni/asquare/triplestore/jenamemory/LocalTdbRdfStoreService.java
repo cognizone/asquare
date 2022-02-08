@@ -26,17 +26,17 @@ import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import zone.cogni.asquare.triplestore.pool.PoolableRdfStoreService;
-import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
+import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.sem.jena.template.JenaBooleanHandler;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdbPoolKey> {
+public class LocalTdbRdfStoreService implements RdfStoreService {
 
   private static final Logger log = LoggerFactory.getLogger(LocalTdbRdfStoreService.class);
 
@@ -66,11 +66,7 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
   private final long overallTimeout;
   private final TimeUnit overallTimeUnit;
 
-  private volatile boolean ready;
-
-  public static LocalTdbRdfStoreService createFrom(final LocalTdbPoolKey key) {
-    return new LocalTdbRdfStoreService(key.getDirPath().toFile());
-  }
+  protected final AtomicBoolean ready = new AtomicBoolean(false);
 
   public LocalTdbRdfStoreService(
     final File tdbLocationFolder, final File initFolder,
@@ -89,7 +85,7 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
 
     this.dataset = TDBFactory.createDataset(tdbLocationFolder.getAbsolutePath());
     initialize(initFolder);
-    this.ready = true;
+    this.ready.set(true);
     log.info(".. .. Done creating TDB store - {}", tdbLocation);
   }
 
@@ -198,10 +194,9 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
 
   @Override
   public void close() {
-    if (!ready) {
+    if (!ready.compareAndSet(true, false)) {
       return;
     }
-    ready = false;
     log.info(".. .. closing TDB - {}", tdbLocation);
     Txn.exec(dataset, TxnType.READ_COMMITTED_PROMOTE, dataset::close);
     dataset.end();
@@ -301,63 +296,21 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
    * and that means all local TDB base {@code Dataset} instances will loose their connections to the TDB.
    */
   public void forceRelease() {
+    log.warn("Trying to release forcefully the {} TDB all views ....", tdbLocation);
     close();
+    final Location location = Location.create(tdbLocation);
     try{
-      StoreConnection.expel(Location.create(tdbLocation), true);
+      StoreConnection.expel(location, true);
     }
     catch (final FileException | RuntimeIOException e) {
-      ChannelManager.release(tdbLocation.concat("/journal.jrnl")); // default transaction file name for TDB1
+      final String journalPath = StoreConnection.getExisting(location).getTransactionManager().getJournal().getFilename();
+      log.warn(
+        "... couldn't expel the {} StoreConnection, trying to release the transaction journal: {}",
+        tdbLocation, journalPath, e
+      );
+      ChannelManager.release(journalPath);
     }
-  }
-
-  /**
-   * Reinitialize an instance to be returned by the pool.
-   * <p>
-   * The default implementation is a no-op.
-   * </p>
-   */
-  @Override
-  public void activateObject() throws Exception {
-    if(dataset.isInTransaction()) {
-      dataset.end();
-    }
-    dataset.begin(TxnType.READ_COMMITTED_PROMOTE);
-    ready = true;
-  }
-
-  /**
-   * Uninitialize an instance to be returned to the idle object pool.
-   * <p>
-   * The default implementation is a no-op.
-   * </p>
-   */
-  @Override
-  public void passivateObject() {
-    try{
-      if(dataset.isInTransaction()) {
-        dataset.commit();
-      }
-    }
-    finally {
-      if(dataset.isInTransaction()) {
-        dataset.end();
-      }
-    }
-  }
-
-  /**
-   * Ensures that the instance is safe to be returned by the pool.
-   * <p>
-   * The default implementation always returns {@code true}.
-   * </p>
-   *
-   * @param key
-   *
-   * @return always {@code true} in the default implementation
-   */
-  @Override
-  public boolean validateObject(final LocalTdbPoolKey key) {
-    return ready && PoolableRdfStoreService.super.validateObject(key) && executeAskQuery("ask {}");
+    log.warn("{} TDB all connections are force released", tdbLocation);
   }
 
   private <R> R callQueryExecution(
@@ -392,7 +345,7 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
   }
 
   private void validateReadiness() {
-    if(!ready) {
+    if(!ready.get()) {
       throw new InvalidRdfStoreServiceStateException();
     }
   }
@@ -457,7 +410,7 @@ public class LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdb
       throw exception;
     }
     catch(final TDBTransactionException | RuntimeIOException exception) {
-      ready = false;
+      ready.set(false);
       log.error("Query failed: {}", queryExecution.getQuery());
       throw exception;
     }
