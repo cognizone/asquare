@@ -65,7 +65,7 @@ class LocalTdbRdfStoreServiceTest {
   @TempDir
   Path tmpFolder;
 
-  @Value("classpath:init_ctms_tdb")
+  @Value("classpath:init_sample_tdb")
   Resource defaultTdbContent;
 
   private Path ctmsTdbPath;
@@ -73,7 +73,7 @@ class LocalTdbRdfStoreServiceTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    ctmsTdbPath = tmpFolder.resolve("ctms_sk_nsc_20221901");
+    ctmsTdbPath = tmpFolder.resolve("sample_data_20221901");
     Files.createDirectory(ctmsTdbPath);
 
     store = new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), defaultTdbContent.getFile());
