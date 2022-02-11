@@ -107,9 +107,11 @@ public class PollableLocalTdbRdfStoreService
    */
   @Override
   public void destroyObject() throws Exception {
-    boolean connectionIsValid = StoreConnection.getExisting(Location.create(getTdbLocation())).isValid();
+    final StoreConnection connection = StoreConnection.getExisting(Location.create(getTdbLocation()));
+    boolean connectionIsValid = true;
     try {
       PoolableRdfStoreService.super.destroyObject();
+      connectionIsValid = connection == null || connection.isValid();
     } catch (final TDBTransactionException | FileException | RuntimeIOException e) {
       log.error("Problem during destroying the {} TDB object: {}.", getTdbLocation(), this, e);
       connectionIsValid = false;
