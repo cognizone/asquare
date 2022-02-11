@@ -68,22 +68,22 @@ class LocalTdbRdfStoreServiceTest {
   @Value("classpath:init_sample_tdb")
   Resource defaultTdbContent;
 
-  private Path ctmsTdbPath;
+  private Path tdbPath;
   private LocalTdbRdfStoreService store;
 
   @BeforeEach
   void setUp() throws IOException {
-    ctmsTdbPath = tmpFolder.resolve("sample_data_20221901");
-    Files.createDirectory(ctmsTdbPath);
+    tdbPath = tmpFolder.resolve("sample_data_20221901");
+    Files.createDirectory(tdbPath);
 
-    store = new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), defaultTdbContent.getFile());
+    store = new LocalTdbRdfStoreService(tdbPath.toFile(), defaultTdbContent.getFile());
     validateTurtleSerialization();
   }
 
   @AfterEach
   void tearDown() throws IOException {
     store.close();
-    try (final Stream<Path> walk = Files.walk(ctmsTdbPath)) {
+    try (final Stream<Path> walk = Files.walk(tdbPath)) {
       walk
         .sorted(Comparator.reverseOrder())
         .forEach(path -> {
@@ -106,7 +106,7 @@ class LocalTdbRdfStoreServiceTest {
 
     final ExecutorService executor = Executors.newFixedThreadPool(nbrOfTries);
     for (int i = 0; i < nbrOfTries; i++) {
-      futureStores.add(executor.submit(() -> new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null)));
+      futureStores.add(executor.submit(() -> new LocalTdbRdfStoreService(tdbPath.toFile(), null)));
     }
 
     shutDown(executor);
@@ -135,7 +135,7 @@ class LocalTdbRdfStoreServiceTest {
     final int nbrOfTries = 100;
 
     final List<LocalTdbRdfStoreService> stores = IntStream.range(0, nbrOfTries)
-      .mapToObj(i -> new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null))
+      .mapToObj(i -> new LocalTdbRdfStoreService(tdbPath.toFile(), null))
       .collect(Collectors.toList());
 
     final Set<Integer> expectedValues = new HashSet<>(2 * nbrOfTries);
@@ -237,7 +237,7 @@ class LocalTdbRdfStoreServiceTest {
     final int nbrOfTries = 100;
 
     final List<LocalTdbRdfStoreService> stores = IntStream.range(0, nbrOfTries)
-      .mapToObj(i -> new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null))
+      .mapToObj(i -> new LocalTdbRdfStoreService(tdbPath.toFile(), null))
       .collect(Collectors.toList());
 
     final ExecutorService executor = Executors.newFixedThreadPool((2 * nbrOfTries) + 1);
@@ -259,7 +259,7 @@ class LocalTdbRdfStoreServiceTest {
 
     shutDown(executor);
 
-    validateTurtleSerialization(new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null));
+    validateTurtleSerialization(new LocalTdbRdfStoreService(tdbPath.toFile(), null));
     assertEquals(startingSize + (2 * nbrOfTries), stores.get(0).size());
 
     store.close();
@@ -289,7 +289,7 @@ class LocalTdbRdfStoreServiceTest {
     executor.shutdownNow();
 
     store.forceRelease();
-    validateTurtleSerialization(new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null));
+    validateTurtleSerialization(new LocalTdbRdfStoreService(tdbPath.toFile(), null));
   }
 
   @Test
@@ -312,15 +312,15 @@ class LocalTdbRdfStoreServiceTest {
     executor.shutdownNow();
 
     store.forceRelease();
-    validateTurtleSerialization(new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null));
+    validateTurtleSerialization(new LocalTdbRdfStoreService(tdbPath.toFile(), null));
   }
 
   @Test
   void interruptLongRunningWritesOnDifferentTDBs() throws InterruptedException {
     final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    final LocalTdbRdfStoreService store1 = new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null);
-    final LocalTdbRdfStoreService store2 = new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null);
+    final LocalTdbRdfStoreService store1 = new LocalTdbRdfStoreService(tdbPath.toFile(), null);
+    final LocalTdbRdfStoreService store2 = new LocalTdbRdfStoreService(tdbPath.toFile(), null);
 
     final BiConsumer<LocalTdbRdfStoreService, Integer> longWriteOperation = (s, param) -> {
       int i = param;
@@ -340,7 +340,7 @@ class LocalTdbRdfStoreServiceTest {
     executor.shutdownNow();
 
     store.forceRelease();
-    validateTurtleSerialization(new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null));
+    validateTurtleSerialization(new LocalTdbRdfStoreService(tdbPath.toFile(), null));
   }
 
   @Test
@@ -377,7 +377,7 @@ class LocalTdbRdfStoreServiceTest {
     final int nbrOfTries = 100;
 
     final List<LocalTdbRdfStoreService> stores = IntStream.range(0, nbrOfTries)
-      .mapToObj(i -> new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null))
+      .mapToObj(i -> new LocalTdbRdfStoreService(tdbPath.toFile(), null))
       .collect(Collectors.toList());
 
     final ExecutorService executor = Executors.newFixedThreadPool(2 * nbrOfTries);
@@ -403,7 +403,7 @@ class LocalTdbRdfStoreServiceTest {
     executor.shutdownNow();
 
     store.forceRelease();
-    validateTurtleSerialization(new LocalTdbRdfStoreService(ctmsTdbPath.toFile(), null));
+    validateTurtleSerialization(new LocalTdbRdfStoreService(tdbPath.toFile(), null));
   }
 
   @Test
@@ -427,7 +427,7 @@ class LocalTdbRdfStoreServiceTest {
   @Test
   void testTimeoutQuery() {
     final LocalTdbRdfStoreService timeoutStore = new LocalTdbRdfStoreService(
-      ctmsTdbPath.toFile(), 1L, TimeUnit.NANOSECONDS, 1L, TimeUnit.NANOSECONDS
+      tdbPath.toFile(), 1L, TimeUnit.NANOSECONDS, 1L, TimeUnit.NANOSECONDS
     );
     Assertions.assertThrows(RuntimeException.class, timeoutStore::constructAllTriples);
   }
