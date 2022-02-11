@@ -17,4 +17,6 @@ include 'transactional'
 include 'triplestore'
 include 'triplestore-jena-memory'
 include 'triplestore-tdb2'
+include 'triplestore-pool-api'
+include 'triplestore-tdb-pool'
 

@@ -7,8 +7,8 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.triplestore.jenamemory.LocalTdbRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.factory.LocalTdbRdfStoreServiceFactory;
+import zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 
 import java.io.Closeable;
@@ -18,8 +18,8 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
 
   private static final Logger log = LoggerFactory.getLogger(LocalTdbRdfStoreServicePool.class);
 
-  private final GenericKeyedObjectPool<LocalTdbPoolKey, LocalTdbRdfStoreService> genericPool;
-  private final KeyedObjectPool<LocalTdbPoolKey, LocalTdbRdfStoreService> pool;
+  private final GenericKeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> genericPool;
+  private final KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> pool;
   private final AbandonedConfig abandonedConfig;
 
   private static class SingletonHolder {
@@ -104,7 +104,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   private LocalTdbRdfStoreServicePool() {
 
     // TODO: move it out to be flexible configuration
-    final GenericKeyedObjectPoolConfig<LocalTdbRdfStoreService> poolCnf = new GenericKeyedObjectPoolConfig<>();
+    final GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> poolCnf = new GenericKeyedObjectPoolConfig<>();
     poolCnf.setFairness(true);
     poolCnf.setMaxTotalPerKey(15);
     poolCnf.setBlockWhenExhausted(true);
@@ -140,7 +140,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    *
    * @return the org.apache.commons.pool.KeyedObjectPool class
    */
-  public KeyedObjectPool<LocalTdbPoolKey, LocalTdbRdfStoreService> getPool() {
+  public KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> getPool() {
     return pool;
   }
 }
