@@ -42,12 +42,12 @@ public class ConceptUriBasedPoolKey implements RdfStoreServicePoolKey<String> {
     if (this == o) return true;
     if (!(o instanceof ConceptUriBasedPoolKey)) return false;
     final ConceptUriBasedPoolKey that = (ConceptUriBasedPoolKey) o;
-    return dirPath.equals(that.dirPath);
+    return key().equals(that.key());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dirPath);
+    return Objects.hash(key());
   }
 
   @Override
