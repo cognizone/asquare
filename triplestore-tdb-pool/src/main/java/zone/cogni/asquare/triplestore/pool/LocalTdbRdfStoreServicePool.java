@@ -8,7 +8,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.pool.factory.LocalTdbRdfStoreServiceFactory;
-import zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreService;
+import zone.cogni.asquare.triplestore.pool.jenamemory.PoolableLocalTdbRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 
 import java.io.Closeable;
@@ -25,7 +25,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    * It is only here to reuse it in case the caller only wants to change a few options but not all.
    *
    */
-  public static final GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> DEFAULT_CONFIGURATION = new GenericKeyedObjectPoolConfig<>();
+  public static final GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> DEFAULT_CONFIGURATION = new GenericKeyedObjectPoolConfig<>();
   static {
     DEFAULT_CONFIGURATION.setFairness(true);
     DEFAULT_CONFIGURATION.setMaxTotalPerKey(15);
@@ -56,7 +56,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   }
 
   // Set the default configuration
-  private static GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> configuration;
+  private static GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> configuration;
   private static AbandonedConfig abandonedConfiguration;
   private static Float erodingFactor;
   private static Boolean erodingPerKey;
@@ -64,8 +64,8 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   // Keep both pool instances for later configuration possibilities
   // genericPool is the configurable base pool implementation
   // pool is the final pool instance where we have wrappers around the base genericPool implementation
-  private final GenericKeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> genericPool;
-  private final KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> pool;
+  private final GenericKeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> genericPool;
+  private final KeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> pool;
 
   private static class SingletonHolder {
     static {
@@ -118,7 +118,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    * @throws IllegalAccessException when the caller tries to set the configuration more than one time.
    */
   public static synchronized void configure (
-    final GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> poolCnf,
+    final GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> poolCnf,
     final AbandonedConfig abandonedConfig,
     final Float factor,
     final Boolean perKey
@@ -210,7 +210,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
 
     pool = PoolUtils.erodingPool(
       //TODO:  make ProxiedKeyedObjectPool work and replace genericPool with:
-      //       new ProxiedKeyedObjectPool<>(genericPool, new CglibProxySource<>(PollableLocalTdbRdfStoreService.class)),
+      //       new ProxiedKeyedObjectPool<>(genericPool, new CglibProxySource<>(PoolableLocalTdbRdfStoreService.class)),
       //       the underlying problem here is that LocalTdbRdfStoreService configures the TDB from inside the constructor
       //       and CglibProxySource uses Cglib which means it creates the new instance with no-parameter constructor
       //       then copies the data later from the original object that is about to be proxied
@@ -225,7 +225,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    *
    * @return the org.apache.commons.pool.KeyedObjectPool class
    */
-  public KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> getPool() {
+  public KeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getPool() {
     return pool;
   }
 }

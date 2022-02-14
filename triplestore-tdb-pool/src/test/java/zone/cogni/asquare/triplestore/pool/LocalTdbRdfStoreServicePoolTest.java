@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.annotation.RequestScope;
 import zone.cogni.asquare.triplestore.jenamemory.LocalTdbRdfStoreService;
-import zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreService;
+import zone.cogni.asquare.triplestore.pool.jenamemory.PoolableLocalTdbRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 
 import java.io.IOException;
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 class LocalTdbRdfStoreServicePoolTest {
 
-  private static KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> pool;
+  private static KeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> pool;
 
   @TempDir
   static Path tmpFolder;
@@ -92,7 +92,7 @@ class LocalTdbRdfStoreServicePoolTest {
     assertTrue(
       PoolUtil.safeCall(pool, new LocalTdbPoolKey(
         databasesPath, "http://example.com/test"),
-        (Function<PollableLocalTdbRdfStoreService, Boolean>) store -> {
+        (Function<PoolableLocalTdbRdfStoreService, Boolean>) store -> {
           assertEquals(0, store.size());
           store.executeUpdateQuery(
             "INSERT DATA { <http://test.com/subject> <http://test.com/predicate>  \"test\" . }"
@@ -113,8 +113,8 @@ class LocalTdbRdfStoreServicePoolTest {
     final CountDownLatch waitForStart = new CountDownLatch(1);
     final Future<LocalTdbRdfStoreService> store1 = executor.submit(() -> {
       // make sure we use two different new instances of the key but still we get the same store
-      final Optional<PollableLocalTdbRdfStoreService> s1 = getProvider().getStore(new LocalTdbPoolKey(databasesPath, "http://example.com/test"));
-      final Optional<PollableLocalTdbRdfStoreService> s2 = getProvider().getStore(key);
+      final Optional<PoolableLocalTdbRdfStoreService> s1 = getProvider().getStore(new LocalTdbPoolKey(databasesPath, "http://example.com/test"));
+      final Optional<PoolableLocalTdbRdfStoreService> s2 = getProvider().getStore(key);
       assertSame(s1.get(), s2.get());
       waitForStart.countDown();
       return s2.get();
@@ -159,7 +159,7 @@ class LocalTdbRdfStoreServicePoolTest {
     }
     assertEquals(1, StringUtils.countMatches(output.getAll().substring(length, output.length()),
       "[commons-pool-evictor] INFO zone.cogni.asquare.triplestore.pool.factory.BaseRdfStoreServiceFactory - " +
-        "Destroy object of http://example.com/test: zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreService@"
+        "Destroy object of http://example.com/test: zone.cogni.asquare.triplestore.pool.jenamemory.PoolableLocalTdbRdfStoreService@"
     ));
   }
 
@@ -191,8 +191,8 @@ class LocalTdbRdfStoreServicePoolTest {
     assertEquals(1, StringUtils.countMatches(output.getAll(), "Timeout waiting for idle object"));
   }
 
-  private RdfStoreServiceProvider<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> getProvider() {
-    return (RdfStoreServiceProvider<LocalTdbPoolKey, PollableLocalTdbRdfStoreService>)
+  private RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getProvider() {
+    return (RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService>)
       applicationContext.getBean("rdfStoreServiceProvider");
   }
 
@@ -208,7 +208,7 @@ class LocalTdbRdfStoreServicePoolTest {
 
     @Bean
     @RequestScope
-    RdfStoreServiceProvider<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> rdfStoreServiceProvider() {
+    RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> rdfStoreServiceProvider() {
       return new RdfStoreServiceProvider<>(LocalTdbRdfStoreServicePool.getInstance().getPool());
     }
   }

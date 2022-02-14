@@ -15,11 +15,11 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.system.Txn;
 import org.apache.jena.tdb.StoreConnection;
+import org.apache.jena.tdb.TDBException;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.jena.tdb.base.file.ChannelManager;
 import org.apache.jena.tdb.base.file.FileException;
 import org.apache.jena.tdb.base.file.Location;
-import org.apache.jena.tdb.transaction.TDBTransactionException;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -400,7 +400,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
     return queryExecution;
   }
 
-  private <T> T safeQuery(final Supplier<T> supplier, final QueryExecution queryExecution) {
+  protected <T> T safeQuery(final Supplier<T> supplier, final QueryExecution queryExecution) {
     try {
       return supplier.get();
     }
@@ -409,7 +409,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       queryExecution.abort();
       throw exception;
     }
-    catch(final TDBTransactionException | RuntimeIOException exception) {
+    catch(final TDBException | RuntimeIOException exception) {
       ready.set(false);
       log.error("Query failed: {}", queryExecution.getQuery());
       throw exception;

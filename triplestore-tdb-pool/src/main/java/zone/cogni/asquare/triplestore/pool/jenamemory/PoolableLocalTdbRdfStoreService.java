@@ -4,9 +4,8 @@ package zone.cogni.asquare.triplestore.pool.jenamemory;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.query.TxnType;
 import org.apache.jena.tdb.StoreConnection;
-import org.apache.jena.tdb.base.file.FileException;
+import org.apache.jena.tdb.TDBException;
 import org.apache.jena.tdb.base.file.Location;
-import org.apache.jena.tdb.transaction.TDBTransactionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.jenamemory.LocalTdbRdfStoreService;
@@ -16,36 +15,36 @@ import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-public class PollableLocalTdbRdfStoreService
+public class PoolableLocalTdbRdfStoreService
   extends LocalTdbRdfStoreService implements PoolableRdfStoreService<LocalTdbPoolKey> {
 
-  private static final Logger log = LoggerFactory.getLogger(PollableLocalTdbRdfStoreService.class);
+  private static final Logger log = LoggerFactory.getLogger(PoolableLocalTdbRdfStoreService.class);
 
-  public static PollableLocalTdbRdfStoreService createFrom(final LocalTdbPoolKey key) {
-    return new PollableLocalTdbRdfStoreService(key.getDirPath().toFile());
+  public static PoolableLocalTdbRdfStoreService createFrom(final LocalTdbPoolKey key) {
+    return new PoolableLocalTdbRdfStoreService(key.getDirPath().toFile());
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit, long overallTimeout, TimeUnit overallTimeUnit) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit, long overallTimeout, TimeUnit overallTimeUnit) {
     super(tdbLocationFolder, initFolder, firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder) {
     super(tdbLocationFolder);
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit) {
     super(tdbLocationFolder, firstResultTimeout, firstResultTimeUnit);
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit, long overallTimeout, TimeUnit overallTimeUnit) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit, long overallTimeout, TimeUnit overallTimeUnit) {
     super(tdbLocationFolder, firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder) {
     super(tdbLocationFolder, initFolder);
   }
 
-  public PollableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit) {
+  public PoolableLocalTdbRdfStoreService(File tdbLocationFolder, File initFolder, long firstResultTimeout, TimeUnit firstResultTimeUnit) {
     super(tdbLocationFolder, initFolder, firstResultTimeout, firstResultTimeUnit);
   }
 
@@ -112,7 +111,7 @@ public class PollableLocalTdbRdfStoreService
     try {
       PoolableRdfStoreService.super.destroyObject();
       connectionIsValid = connection == null || connection.isValid();
-    } catch (final TDBTransactionException | FileException | RuntimeIOException e) {
+    } catch (final TDBException | RuntimeIOException e) {
       log.error("Problem during destroying the {} TDB object: {}.", getTdbLocation(), this, e);
       connectionIsValid = false;
       throw e;

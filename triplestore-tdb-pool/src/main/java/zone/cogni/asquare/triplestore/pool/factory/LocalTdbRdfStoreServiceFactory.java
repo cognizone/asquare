@@ -1,6 +1,6 @@
 package zone.cogni.asquare.triplestore.pool.factory;
 
-import zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreService;
+import zone.cogni.asquare.triplestore.pool.jenamemory.PoolableLocalTdbRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 
 /**
@@ -16,7 +16,7 @@ import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
  *
  * @since 0.5.3
  */
-public class LocalTdbRdfStoreServiceFactory extends BaseRdfStoreServiceFactory<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> {
+public class LocalTdbRdfStoreServiceFactory extends BaseRdfStoreServiceFactory<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> {
 
   /**
    * Create an instance that can be served by the pool.
@@ -29,7 +29,7 @@ public class LocalTdbRdfStoreServiceFactory extends BaseRdfStoreServiceFactory<L
    *                   this will be propagated to the code requesting an object.
    */
   @Override
-  public PollableLocalTdbRdfStoreService create(final LocalTdbPoolKey key) throws Exception {
-    return PollableLocalTdbRdfStoreService.createFrom(key);
+  public PoolableLocalTdbRdfStoreService create(final LocalTdbPoolKey key) throws Exception {
+    return PoolableLocalTdbRdfStoreService.createFrom(key);
   }
 }
