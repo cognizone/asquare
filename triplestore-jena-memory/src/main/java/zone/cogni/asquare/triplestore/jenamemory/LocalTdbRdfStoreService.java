@@ -382,9 +382,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   public QueryExecution createQueryExecution(final String query) {
-    final QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset);
-    queryExecution.setTimeout(firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
-    return queryExecution;
+    return timeoutQueryExecution(QueryExecutionFactory.create(query, dataset));
   }
 
   public QueryExecution createQueryExecution(final Query query) {
@@ -396,6 +394,10 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       ? QueryExecutionFactory.create(query, dataset)
       : QueryExecutionFactory.create(query, dataset, bindings);
 
+    return timeoutQueryExecution(queryExecution);
+  }
+
+  private QueryExecution timeoutQueryExecution(final QueryExecution queryExecution) {
     queryExecution.setTimeout(firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
     return queryExecution;
   }
