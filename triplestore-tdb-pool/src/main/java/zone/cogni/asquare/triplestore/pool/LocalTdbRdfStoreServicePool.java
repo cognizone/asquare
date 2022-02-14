@@ -12,7 +12,6 @@ import zone.cogni.asquare.triplestore.pool.jenamemory.PollableLocalTdbRdfStoreSe
 import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
 
 import java.io.Closeable;
-import java.math.BigDecimal;
 import java.time.Duration;
 
 public final class LocalTdbRdfStoreServicePool implements Closeable {
@@ -57,10 +56,10 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   }
 
   // Set the default configuration
-  private static GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> configuration = DEFAULT_CONFIGURATION;
-  private static AbandonedConfig abandonedConfiguration = DEFAULT_ABANDONED_CONFIGURATION;
-  private static float erodingFactor = 1f;
-  private static boolean erodingPerKey = true;
+  private static GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> configuration;
+  private static AbandonedConfig abandonedConfiguration;
+  private static Float erodingFactor;
+  private static Boolean erodingPerKey;
 
   // Keep both pool instances for later configuration possibilities
   // genericPool is the configurable base pool implementation
@@ -69,6 +68,20 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   private final KeyedObjectPool<LocalTdbPoolKey, PollableLocalTdbRdfStoreService> pool;
 
   private static class SingletonHolder {
+    static {
+      if(configuration == null) {
+        configuration = DEFAULT_CONFIGURATION;
+      }
+      if(abandonedConfiguration == null) {
+        abandonedConfiguration = DEFAULT_ABANDONED_CONFIGURATION;
+      }
+      if(erodingFactor == null) {
+        erodingFactor = 1.0f;
+      }
+      if(erodingPerKey == null) {
+        erodingPerKey = true;
+      }
+    }
     public static final LocalTdbRdfStoreServicePool INSTANCE = new LocalTdbRdfStoreServicePool();
   }
 
@@ -107,18 +120,12 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   public static synchronized void configure (
     final GenericKeyedObjectPoolConfig<PollableLocalTdbRdfStoreService> poolCnf,
     final AbandonedConfig abandonedConfig,
-    final float factor,
-    final boolean perKey
+    final Float factor,
+    final Boolean perKey
   ) throws IllegalAccessException {
-    // using BigDecimals in order to minimize precision problem during comparison
-    final BigDecimal originalFactor = new BigDecimal("1");
-    final BigDecimal currentFactor = BigDecimal.valueOf(erodingFactor);
-
-    // check equivalence by reference to make sure we know this configuration was already changed
-    // we don't allow multiple configuration calls, it can be configured only once
+    // we don't allow multiple configuration calls, pool can be configured only once
     if(
-      DEFAULT_CONFIGURATION != configuration || DEFAULT_ABANDONED_CONFIGURATION != abandonedConfiguration ||
-      !originalFactor.equals(currentFactor) || !erodingPerKey
+      configuration != null || abandonedConfiguration != null || erodingFactor != null || erodingPerKey != null
     ) {
       throw new IllegalAccessException("Pool configuration can be set only once and then it cannot be modified later.");
     }
