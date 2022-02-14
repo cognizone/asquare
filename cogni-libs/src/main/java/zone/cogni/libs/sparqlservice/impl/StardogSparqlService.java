@@ -120,9 +120,6 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public void dropGraph(String graphUri) {
-    String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
-    Request request = Request.Delete(graphStoreUrl)
-            .setHeader(authHeader);
-    executeAndConsume(request);
+    executeUpdateQuery("drop silent graph <" + graphUri + ">");
   }
 }
