@@ -139,19 +139,16 @@ class LocalTdbRdfStoreServicePoolTest {
     LocalTdbRdfStoreServicePool.setTimeBetweenEvictionRuns(Duration.ofMillis(1000));
     LocalTdbRdfStoreServicePool.setRemoveAbandonedTimeout(Duration.ofMillis(1000));
     final ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    executor.submit(() ->
-      getProvider().call(
-        new LocalTdbPoolKey(databasesPath, "http://example.com/test"),
-        store -> {
-          store.get().executeUpdateQuery(
-            "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> 1 . }"
-          );
-          store.get().constructAllTriples();
-          store.get().close();
-          return null;
-        }
-      )
-    );
+    executor.submit(() -> {
+      final Optional<PoolableLocalTdbRdfStoreService> store = getProvider().getStore(
+        new LocalTdbPoolKey(databasesPath, "http://example.com/test")
+      );
+      store.get().executeUpdateQuery(
+        "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> 1 . }"
+      );
+      store.get().constructAllTriples();
+      store.get().close();
+    });
 
     // wait for the logs to arrive, sleep to give chance for 'commons-pool-evictor' thread
     for (int i = 0; i < 3; i++) {

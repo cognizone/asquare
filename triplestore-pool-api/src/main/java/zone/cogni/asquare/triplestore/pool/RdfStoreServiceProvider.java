@@ -43,11 +43,25 @@ public class RdfStoreServiceProvider<K extends RdfStoreServicePoolKey<?>, V exte
   }
 
   public <R> R call(final K key, final Function<Optional<V>, R> function) throws Exception {
+    boolean isInvalidated = false;
     try {
       return function.apply(getStore(key));
-    } catch (final Exception e) {
-      invalidate(key);
+    }
+    catch (final Exception e) {
+      try {
+        invalidate(key);
+      }
+      finally {
+        // do not return the object to the pool twice
+        isInvalidated = true;
+      }
       throw e;
+    }
+    finally {
+      // make sure the object is returned to the pool
+      if (!isInvalidated) {
+        returnObject(key);
+      }
     }
   }
 
@@ -70,6 +84,18 @@ public class RdfStoreServiceProvider<K extends RdfStoreServicePoolKey<?>, V exte
       }
       catch (final Exception e) {
         log.error("Cannot invalidate object ({}) for pool: {}", store, pool, e);
+      }
+    });
+    cache.remove(key);
+  }
+
+  public void returnObject(final K key) {
+    Optional.ofNullable(cache.get(key)).ifPresent(store -> {
+      try {
+        pool.returnObject(key, store);
+      }
+      catch (final Exception e) {
+        log.error("Cannot return object ({}) for pool: {}", store, pool, e);
       }
     });
     cache.remove(key);
