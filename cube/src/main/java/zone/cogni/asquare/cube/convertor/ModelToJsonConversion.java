@@ -521,6 +521,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         addToJsonAsSingle(attributeNode, "xsd:int", getNumberNode(literal.getInt()));
         return;
       }
+      if (XSDDatatype.XSDinteger.equals(datatype)) {
+        addToJsonAsSingle(attributeNode, "xsd:integer", getNumberNode(literal.getInt()));
+        return;
+      }
       if (XSDDatatype.XSDlong.equals(datatype)) {
         addToJsonAsSingle(attributeNode, "xsd:long", getNumberNode(literal.getLong()));
         return;
