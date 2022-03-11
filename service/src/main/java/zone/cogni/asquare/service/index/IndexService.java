@@ -24,12 +24,7 @@ import zone.cogni.sem.jena.model.ResultSetDto;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -213,7 +208,7 @@ public class IndexService {
         log.info("GC preparing to process index {} with query {}", indexName, query);
         ObjectNode ack = indexConfigProvider.getElasticStore().deleteByQueryWithAck(indexName, deleteQuery, Params.waitFor());
         if (ack != null) {
-          log.info("GC processed index {} with acknowledgement {}", indexName, ack.toString());
+          log.info("GC processed index {} with acknowledgement {}", indexName, ack);
         }
       }
     }
@@ -335,14 +330,92 @@ public class IndexService {
     if (interruptedGraphs.size() > 0) {
       interruptedGraphs.forEach(graphUri -> log.warn("Graph {} failed timeout", graphUri));
       List<ResourceIndex> tmpResources = resources
-        .stream()
-        .filter(resource -> !interruptedGraphs.stream().anyMatch(iterruptedGraph -> resource.getGraph().equals(iterruptedGraph))).collect(Collectors.toList());
+              .stream()
+              .filter(resource -> !interruptedGraphs.stream().anyMatch(iterruptedGraph -> resource.getGraph().equals(iterruptedGraph))).collect(Collectors.toList());
       resources.clear();
       resources.addAll(tmpResources);
     }
     // timeout resources are not repeated
     // interruptedGraphs.stream().map(resourcesByGraph::get).forEach(failedResources::addAll);
     log.info("Indexing iteration is done. Duration: {}, failed resources: {}", IndexUtils.prettyDurationMs(System.currentTimeMillis() - startIteration), failedResources.size() + interruptedGraphs.size());
+  }
+
+  /**
+   * This method is an alternative to reindexSync/reindexAsync
+   * but leaves the control of the sync/async selection,
+   * as well as the executor, to the code that uses it.
+   *
+   * @param rdfStoreService the service used for the desired triple store
+   * @param sparqlQuery     the SPARQL query that selects the resources to be indexed
+   * @return Map<String, Long> with information about the indexing results
+   */
+  public Map<String, Long> reindexSimple(RdfStoreService rdfStoreService, String sparqlQuery) {
+    log.info("Launching reindexing for query {}", sparqlQuery);
+    List<ResourceIndex> resources = Collections.synchronizedList(findAllIndexResources(sparqlQuery, rdfStoreService));
+    log.info("Query finished with {} results", resources.size());
+    return reindexSimpleExecution(resources, rdfStoreService);
+  }
+
+  private Map<String, Long> reindexSimpleExecution(List<ResourceIndex> resources, RdfStoreService rdfStoreService) {
+
+    StopWatch watch = new StopWatch();
+    watch.start();
+
+    List<ResourceIndex> failedResources = Collections.synchronizedList(new ArrayList<>());
+
+    long total = resources.size();
+    long indexed = 0;
+
+    long timestamp = ZonedDateTime.now().toInstant().toEpochMilli();
+
+    for (int i = 0; !resources.isEmpty() && i < INDEX_TYPE_ATTEMPTS; i++) {
+      log.info("Indexing {} resources attempt {} with timestamp {}", resources.size(), i, timestamp);
+
+      reindexSimpleIteration(resources, failedResources, rdfStoreService, timestamp);
+
+      indexed += resources.size() - failedResources.size();
+
+      resources = failedResources;
+      failedResources = Collections.synchronizedList(new ArrayList<>());
+    }
+
+    long failed = resources.size();
+    if (failed > 0) {
+      for (ResourceIndex failedResource : resources) {
+        log.error("Resource {} of type {} from graph {} failed all reindex attempts.",
+                failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
+      }
+    }
+
+    watch.stop();
+
+    if (log.isInfoEnabled()) {
+      log.info("Reindex summary. Total: {}. Indexed: {}. Failed: {}. Time spent: {}", total, indexed, failed, watch.shortSummary());
+    }
+    return ImmutableMap.of("total", total, "indexed", indexed, "failed", failed, "duration", watch.getTotalTimeMillis());
+  }
+
+  private void reindexSimpleIteration(List<ResourceIndex> resources, List<ResourceIndex> failedResources, RdfStoreService rdfStoreService, long timestamp) {
+
+    long startIteration = System.currentTimeMillis();
+
+    Map<String, List<ResourceIndex>> resourcesByGraph = resources.stream().collect(Collectors.toMap(ResourceIndex::getGraph,
+            Arrays::asList,
+            ListUtils::union));
+
+    log.info("Starting iteration. Found {} resources in {} graphs", resources.size(), resourcesByGraph.size());
+
+    for (String graph : resourcesByGraph.keySet()) {
+      try {
+        log.info("Starting graph indexing {}", graph);
+
+        graphIndexService.indexGraphSync(graph, resourcesByGraph.get(graph), failedResources, Params.noRefresh().withTimestamp(timestamp), rdfStoreService, null);
+      } catch (Exception ex) {
+        log.info("Graph {} indexing is failed. Adding to list of failed resources.", graph, ex);
+        failedResources.addAll(resourcesByGraph.get(graph));
+      }
+    }
+    log.info("Indexing iteration is done. Duration: {}, failed resources: {}", IndexUtils.prettyDurationMs(System.currentTimeMillis() - startIteration), failedResources.size());
   }
 
 }
