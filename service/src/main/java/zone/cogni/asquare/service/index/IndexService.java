@@ -336,7 +336,7 @@ public class IndexService {
       interruptedGraphs.forEach(graphUri -> log.warn("Graph {} failed timeout", graphUri));
       List<ResourceIndex> tmpResources = resources
               .stream()
-              .filter(resource -> !interruptedGraphs.stream().anyMatch(iterruptedGraph -> resource.getGraph().equals(iterruptedGraph))).collect(Collectors.toList());
+              .filter(resource -> !interruptedGraphs.stream().anyMatch(interruptedGraph -> resource.getGraph().equals(interruptedGraph))).collect(Collectors.toList());
       resources.clear();
       resources.addAll(tmpResources);
     }
