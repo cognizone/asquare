@@ -502,8 +502,8 @@ project('triplestore-jena-memory') {
   }
 
   test {
-    minHeapSize = "64m"
-    maxHeapSize = "64m"
+    minHeapSize = "256m"
+    maxHeapSize = "256m"
     jvmArgs "-XX:MaxMetaspaceSize=128m"
   }
 }
