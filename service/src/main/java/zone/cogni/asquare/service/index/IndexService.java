@@ -27,7 +27,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -218,7 +217,7 @@ public class IndexService {
       }
     }
     catch (IOException e) {
-      log.error("Can not collect garbage: ", e.getMessage());
+      log.error("Can not collect garbage: ", e);
     }
 
   }
@@ -250,7 +249,7 @@ public class IndexService {
       log.info("Reindex timestamp created {}", timestamp);
     }
     catch (Exception ex) {
-      log.error("Can not write indexing timestamp {}", ex);
+      log.error("Can not write indexing timestamp", ex);
     }
   }
 
@@ -276,19 +275,15 @@ public class IndexService {
 
       indexed += resources.size() - failedResources.size();
 
-      List<ResourceIndex> tempList = resources;
-      tempList.clear();
       resources = failedResources;
-      failedResources = tempList;
+      failedResources = Collections.synchronizedList(new ArrayList<>());
     }
 
     long failed = resources.size();
     if (failed > 0) {
-      Iterator<ResourceIndex> failedResourcesIterator = failedResources.iterator();
-      while (failedResourcesIterator.hasNext()) {
-        ResourceIndex failedResource = failedResourcesIterator.next();
+      for (ResourceIndex failedResource : resources) {
         log.error("Resource {} of type {} from graph {} failed all reindex attemts.",
-                  failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
+                failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
       }
     }
 
@@ -329,14 +324,14 @@ public class IndexService {
         failedResources.addAll(resourcesByGraph.get(graph));
       }
     }
-    String runningTasksStr = indexingGraphTaskExecutor.getExecutionKeysAsStrings().stream().collect(Collectors.joining(", "));
+    String runningTasksStr = String.join(", ", indexingGraphTaskExecutor.getExecutionKeysAsStrings());
     log.info("Waiting to stop iteration. Indexing is still busy with {}", runningTasksStr);
     List<String> interruptedGraphs = indexingGraphTaskExecutor.awaitBusyWithNotMoreAndNoLongerThan(0, iterationTimeoutMs);//wait until all graph indexing tasks are done
     if (interruptedGraphs.size() > 0) {
       interruptedGraphs.forEach(graphUri -> log.warn("Graph {} failed timeout", graphUri));
       List<ResourceIndex> tmpResources = resources
               .stream()
-              .filter(resource -> !interruptedGraphs.stream().anyMatch(interruptedGraph -> resource.getGraph().equals(interruptedGraph))).collect(Collectors.toList());
+              .filter(resource -> interruptedGraphs.stream().noneMatch(interruptedGraph -> resource.getGraph().equals(interruptedGraph))).collect(Collectors.toList());
       resources.clear();
       resources.addAll(tmpResources);
     }
