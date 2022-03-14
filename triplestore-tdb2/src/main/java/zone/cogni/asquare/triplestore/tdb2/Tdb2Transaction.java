@@ -16,6 +16,10 @@ public class Tdb2Transaction implements ASquareTransaction {
 
   private static final Logger log = LoggerFactory.getLogger(Tdb2Transaction.class);
   private final Dataset dataset;
+
+  //TODO: double check this logic because there is no clear entry and quit point for transactions defined
+  // hence there is no place where we can safely clear this thread local
+  // however without clearing it out thread-reuse in case of thread pool can cause false transaction states
   private ThreadLocal<ASquareTransactionType> currentTransactionInThread = new ThreadLocal<>();
 
   public Tdb2Transaction(Dataset dataset) {

@@ -1,317 +1,420 @@
 package zone.cogni.asquare.triplestore.jenamemory;
 
 
-import com.google.common.base.Preconditions;
+import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryCancelledException;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.query.TxnType;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.shared.Lock;
-import org.apache.jena.sparql.core.DatasetGraph;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.system.Txn;
 import org.apache.jena.tdb.StoreConnection;
+import org.apache.jena.tdb.TDBException;
 import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb.base.file.ChannelManager;
+import org.apache.jena.tdb.base.file.FileException;
 import org.apache.jena.tdb.base.file.Location;
-import org.apache.jena.tdb.setup.StoreParams;
-import org.apache.jena.update.UpdateAction;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.StringUtils;
 import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaBooleanHandler;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
-import zone.cogni.sem.jena.template.JenaTemplate;
 
-import javax.annotation.Nonnull;
-import java.io.Closeable;
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-
-public class LocalTdbRdfStoreService implements RdfStoreService, Closeable {
+public class LocalTdbRdfStoreService implements RdfStoreService {
 
   private static final Logger log = LoggerFactory.getLogger(LocalTdbRdfStoreService.class);
 
-  private final File tdbLocationFolder;
-  private final DatasetGraph datasetGraph;
-  private final Model model;
-  //  private final String storeName;
-  //  private String preLoadLocations;
-  //  private ResourcePatternResolver resourcePatternResolver;
-  private boolean closed;
+  public static final long DEFAULT_FIRST_RESULT_TIMEOUT = 10;
+  public static final TimeUnit DEFAULT_FIRST_RESULT_TIME_UNIT = TimeUnit.MINUTES;
+  public static final long DEFAULT_OVERALL_RESULT_TIMEOUT = 30;
+  public static final TimeUnit DEFAULT_OVERALL_RESULT_TIME_UNIT = TimeUnit.MINUTES;
 
-  public LocalTdbRdfStoreService(File tdbLocationFolder, File initFolder) {
-    log.info(".. .. creating TDB store - {}", tdbLocationFolder.getPath());
+  private final String tdbLocation;
+  private final Dataset dataset;
 
-    this.tdbLocationFolder = tdbLocationFolder;
-    datasetGraph = calculateDatasetGraph();
-    model = ModelFactory.createModelForGraph(datasetGraph.getDefaultGraph());
+  /**
+   * Set timeouts on the query execution; the first result timeout refers to time to first result.
+   * Processing will be aborted if a timeout expires.
+   * <b>Not all query execution systems support timeouts.</b>
+   * A timeout of less than zero means no timeout.
+   */
+  private final long firstResultTimeout;
+  private final TimeUnit firstResultTimeUnit;
 
+  /**
+   * Set timeouts on the query execution; the overall timeout refers to overall query execution after the first result.
+   * Processing will be aborted if a timeout expires.
+   * <b>Not all query execution systems support timeouts.</b>
+   * A timeout of less than zero means no timeout.
+   */
+  private final long overallTimeout;
+  private final TimeUnit overallTimeUnit;
+
+  protected final AtomicBoolean ready = new AtomicBoolean(false);
+
+  public LocalTdbRdfStoreService(
+    final File tdbLocationFolder, final File initFolder,
+    final long firstResultTimeout, final TimeUnit firstResultTimeUnit,
+    final long overallTimeout, final TimeUnit overallTimeUnit
+  ) {
+    this.tdbLocation = tdbLocationFolder.getPath();
+    this.firstResultTimeout = firstResultTimeout;
+    this.firstResultTimeUnit = firstResultTimeUnit;
+    this.overallTimeout = overallTimeout;
+    this.overallTimeUnit = overallTimeUnit;
+    log.info(
+      ".. .. Opening TDB store - {} with default query timeouts, first result: {}{}, after first result: {}{}",
+      this.tdbLocation, this.firstResultTimeout, this.firstResultTimeUnit, this.overallTimeout, this.overallTimeUnit
+    );
+
+    this.dataset = TDBFactory.createDataset(tdbLocationFolder.getAbsolutePath());
     initialize(initFolder);
-    log.info(".. .. done creating TDB store");
+    this.ready.set(true);
+    log.info(".. .. Done creating TDB store - {}", tdbLocation);
   }
 
-  private void initialize(File initFolder) {
-    if (!model.isEmpty()) return;
-    if (initFolder == null) return;
+  public LocalTdbRdfStoreService(final File tdbLocationFolder) {
+    this(
+      tdbLocationFolder, null, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
+      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+    );
+  }
 
-    if (!initFolder.exists() || !initFolder.isDirectory()) return;
+  public LocalTdbRdfStoreService(
+    final File tdbLocationFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit
+  ) {
+    this(
+      tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit,
+      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+    );
+  }
 
-    File[] files = initFolder.listFiles();
-    if (files == null) return;
+  public LocalTdbRdfStoreService(
+    final File tdbLocationFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit,
+    final long overallTimeout, final TimeUnit overallTimeUnit
+  ) {
+    this(
+      tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit
+    );
+  }
 
-    for (File file : files) {
-      log.info(".. .. .. reading {}", file.getName());
-      model.add(JenaUtils.read(new FileSystemResource(file)));
+  public LocalTdbRdfStoreService(final File tdbLocationFolder, final File initFolder) {
+    this(
+      tdbLocationFolder, initFolder, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
+      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+    );
+  }
+
+  public LocalTdbRdfStoreService(
+    final File tdbLocationFolder, final File initFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit
+  ) {
+    this(
+      tdbLocationFolder, initFolder, firstResultTimeout, firstResultTimeUnit,
+      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+    );
+  }
+
+  private void initialize(final File initFolder) {
+    if(initFolder == null || !validateInit(initFolder)) {
+      return; // normal case, no init is needed
+    }
+
+    for (final File file : Objects.requireNonNull(initFolder.listFiles())) {
+      log.info(".. .. .. reading {} into {}s", file.getName(), tdbLocation);
+      Txn.executeWrite(dataset, () -> RDFDataMgr.read(dataset, file.getAbsolutePath()));
+      log.info(".. .. .. TDB is finished to be initialized with {} - TDB: {}", file.getName(), tdbLocation);
     }
   }
 
-//  public LocalTdbRdfStoreService(String storeName) {
-//    this.storeName = storeName;
-//  }
-
-//  public void setPreLoadLocations(String preLoadLocations, ResourcePatternResolver resourcePatternResolver) {
-//    this.preLoadLocations = preLoadLocations;
-//    this.resourcePatternResolver = resourcePatternResolver;
-//  }
-
-//  @PostConstruct
-//  public void init() throws Exception {
-//    File tdbLocationRootFolder = new File(FileUtils.getTempDirectory(), "qdr_tdb");
-//    tdbLocationRootFolder.mkdirs();
-//    tdbLocationFolder = new File(tdbLocationRootFolder, UUID.randomUUID().toString());
-//
-//    log.info("Init TDB store for {} in {}", storeName, tdbLocationFolder);
-//
-//    datasetGraph = calculateDatasetGraph();
-//    model = ModelFactory.createModelForGraph(datasetGraph.getDefaultGraph());
-//
-//    FileUtils.writeStringToFile(new File(tdbLocationFolder, "qdr_tdb_name.txt"), storeName, StandardCharsets.UTF_8);
-
-
-//    try {
-//      FileUtils.forceDeleteOnExit(tdbLocationFolder);
-//    }
-//    catch (IOException ignore) {
-//    }
-//    log.info("Init TDB store for {} done", storeName);
-
-
-//    if (resourcePatternResolver == null || StringUtils.isBlank(preLoadLocations)) return;
-//
-//    String updatedPreLoadLocations = extFolderHelperService.updatePreLoadLocations(preLoadLocations);
-//    log.info("Loading preLoadLocations -> {}", updatedPreLoadLocations);
-//    Arrays.stream(StringUtils.split(updatedPreLoadLocations, ',')).forEach(location -> {
-//      log.info("Loading RDF file {}.", location);
-//      Arrays.stream(ResourceHelper.getResources(resourcePatternResolver, location)).forEach(resource -> {
-//        try (InputStream inputStream = resource.getInputStream()) {
-//          model.read(inputStream, null, JenaUtils.getLangByResourceName(location));
-//        }
-//        catch (IOException e) {
-//          throw new RuntimeException(e);
-//        }
-//      });
-//    });
-//    log.info("Loading preLoadLocations done");
-//  }
-
-  private synchronized DatasetGraph calculateDatasetGraph() {
-    Location tdbLocation = Location.create(tdbLocationFolder.getAbsolutePath());
-    setupConnection(tdbLocation);
-    return TDBFactory.createDatasetGraph(tdbLocation);
+  public Dataset getDataset() {
+    return dataset;
   }
 
-  private void setupConnection(@Nonnull Location tdbLocation) {
-    StoreConnection connection = StoreConnection.getExisting(tdbLocation);
-    if (connection != null) return;
-
-    try {
-      TDBFactory.setup(tdbLocation, StoreParams.getSmallStoreParams());
-    }
-    catch (RuntimeException e) {
-      if (!Objects.equals(e.getMessage(), "Location is already active")) {
-        throw e;
-      }
-
-      log.warn("TDBFactory.setup reported a problem: {}", e.getMessage());
-
-      boolean storeInitialized = StoreConnection.getExisting(tdbLocation) != null;
-      if (!storeInitialized) log.error("Problem with initializing store.");
-
-      Preconditions.checkState(storeInitialized, "Store is not initialized!");
-    }
+  public String getTdbLocation() {
+    return tdbLocation;
   }
 
-  //  @Override
+  public long getFirstResultTimeout() {
+    return firstResultTimeout;
+  }
+
+  public TimeUnit getFirstResultTimeUnit() {
+    return firstResultTimeUnit;
+  }
+
+  public long getOverallTimeout() {
+    return overallTimeout;
+  }
+
+  public TimeUnit getOverallTimeUnit() {
+    return overallTimeUnit;
+  }
+
+  public long size() {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> dataset.getDefaultModel().size());
+  }
+
+  public boolean isEmpty() {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> dataset.getDefaultModel().isEmpty());
+  }
+
+  @Override
+  public boolean graphExists(final String graphUri) {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> dataset.asDatasetGraph().containsGraph(NodeFactory.createURI(graphUri)));
+  }
+
+  /**
+   * @deprecated use {@link #executeConstructQuery(String)} instead with query: ("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o. }")
+   */
+  @Deprecated
   public Model getModel() {
-    return model;
+    log.error("!!!IMPORTANT!!! Model of {} TDB is leaked! It means a possible memory leak or race condition.", tdbLocation);
+    validateReadiness();
+    return dataset.getDefaultModel();
   }
 
   @Override
   public void close() {
-    if (closed) return;
-    log.info(".. .. closing TDB - {}", tdbLocationFolder.getPath());
-    try {
-      if (datasetGraph.isInTransaction()) {
-        datasetGraph.abort();
-      }
+    if (!ready.compareAndSet(true, false)) {
+      return;
     }
-    catch (Exception ignore) {
-    }
-
-    try {
-      TDBFactory.release(datasetGraph);
-    }
-    catch (Exception e) {
-      log.error(".. .. close TDB - TDBFactory.release for {} failed", tdbLocationFolder.getPath(), e);
-    }
-//    boolean deleted = FileUtils.deleteQuietly(tdbLocationFolder);
-//    if (deleted) {
-//      log.info("Close TDB done - {}", storeName);
-    closed = true;
-//    }
-//    else {
-    log.warn(".. .. closed TDB - folder not deleted - {}", tdbLocationFolder.getPath());
-//    }
-
+    log.info(".. .. closing TDB - {}", tdbLocation);
+    Txn.exec(dataset, TxnType.READ_COMMITTED_PROMOTE, dataset::close);
+    dataset.end();
   }
 
   @Override
-  public void addData(Model model) {
-    executeInLock(Lock.WRITE, () -> this.model.add(model));
-  }
-
-  @Override
-  public void addData(Model model, String graphUri) {
-    throw new RuntimeException("Add data with graph not supported"); //or we add to default graph?
-  }
-
-  @Override
-  public <R> R executeSelectQuery(Query query, QuerySolutionMap bindings, JenaResultSetHandler<R> resultSetHandler, String context) {
-    return executeInLock(Lock.READ, () -> {
-      if (log.isTraceEnabled()) log.trace("Select {} - {} \n{}",
-                                          context == null ? "" : "--- " + context + " --- ",
-                                          bindings,
-                                          query);
-
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
-        ResultSet resultSet = queryExecution.execSelect();
-        return resultSetHandler.handle(resultSet);
-      }
-      catch (RuntimeException e) {
-        log.error("Query failed: {}", query);
-        throw e;
-      }
+  public void addData(final Model model) {
+    validateReadiness();
+    Txn.executeWrite(dataset, () -> {
+      dataset.getDefaultModel().add(model);
+      dataset.commit();
     });
   }
 
+  /**
+   * @deprecated on this type of RdfStoreService, use {@link #addData(Model)} instead.
+   */
+  @Deprecated
   @Override
-  public <R> R executeSelectQuery(String query, JenaResultSetHandler<R> resultSetHandler, String context) {
-    return executeInLock(Lock.READ, () -> {
-      if (log.isDebugEnabled()) log.debug("Select {} \n{}", context == null ? "" : "--- " + context + " --- ", query);
+  public void addData(final Model model, final String graphUri) {
+    throw new UnsupportedOperationException("Add data with graph not supported");
+  }
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
-        ResultSet resultSet = queryExecution.execSelect();
-        return resultSetHandler.handle(resultSet);
-      }
-      catch (RuntimeException e) {
-        log.error("Query failed: {}", query);
-        throw e;
-      }
+  @Override
+  public void executeUpdateQuery(final String updateQuery) {
+    validateReadiness();
+    Txn.executeWrite(dataset, () -> {
+      final UpdateRequest request = UpdateFactory.create(updateQuery, Syntax.syntaxARQ);
+      UpdateExecutionFactory.create(request, dataset).execute();
+      dataset.commit();
     });
-  }
-
-  @Override
-  public <R> R executeSelectQuery(String query, JenaResultSetHandler<R> resultSetHandler) {
-    return executeSelectQuery(query, resultSetHandler, null);
-  }
-
-  @Override
-  public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
-    return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = bindings.asMap().isEmpty() ? QueryExecutionFactory.create(query, model)
-                                                                      : QueryExecutionFactory.create(query, model, bindings)
-      ) {
-        return queryExecution.execAsk();
-      }
-      catch (RuntimeException e) {
-        log.error("Query failed: {}", query);
-        throw e;
-      }
-    });
-  }
-
-  @Override
-  public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
-    return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model, bindings)) {
-        if (log.isTraceEnabled()) log.trace("Running construct query: \n{}", query);
-        return queryExecution.execConstruct();
-      }
-      catch (RuntimeException e) {
-        log.error("Query failed: {}", query);
-        throw e;
-      }
-    });
-  }
-
-  @Override
-  public Model executeConstructQuery(String query) {
-    return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
-        log.debug("Running construct query: \n{}", query);
-        return queryExecution.execConstruct();
-      }
-      catch (RuntimeException e) {
-        log.error("Query failed: {}", query);
-        throw e;
-      }
-    });
-  }
-
-  @Override
-  public void executeUpdateQuery(String updateQuery) {
-    executeInLock(Lock.WRITE, () -> UpdateAction.parseExecute(updateQuery, model));
-  }
-
-  @Override
-  public boolean graphExists(String graphUri) {
-    return datasetGraph.containsGraph(NodeFactory.createURI(graphUri));
   }
 
   @Override
   public void delete() {
-    executeInLock(Lock.WRITE, () -> model.removeAll());
+    validateReadiness();
+    Txn.executeWrite(dataset, () -> {
+      dataset.getDefaultModel().removeAll();
+      dataset.commit();
+    });
   }
 
-  //  @Override
-  public <R> R executeAskQuery(String query, JenaBooleanHandler<R> jenaBooleanHandler) {
-    return executeInLock(Lock.READ, () -> JenaTemplate.ask(model, query, jenaBooleanHandler));
+  @Override
+  public <R> R executeSelectQuery(
+    final Query query, final QuerySolutionMap bindings, final JenaResultSetHandler<R> resultSetHandler, final String context
+  ) {
+    if (log.isDebugEnabled()) {
+      log.debug("Select {} - {} \n{}", context == null ? "" : "--- " + context + " --- ", bindings, query);
+    }
+    return callQueryExecution(() -> createQueryExecution(query, bindings), resultSetHandler, context);
   }
 
-  private void executeInLock(boolean lock, Runnable executeInLock) {
-    model.enterCriticalSection(lock);
+  @Override
+  public <R> R executeSelectQuery(final String query, final JenaResultSetHandler<R> resultSetHandler, final String context) {
+    if (log.isDebugEnabled()) {
+      log.debug("Select {} \n{}", context == null ? "" : "--- " + context + " --- ", query);
+    }
+    return callQueryExecution(() -> createQueryExecution(query), resultSetHandler, context);
+  }
+
+  @Override
+  public boolean executeAskQuery(final Query query, final QuerySolutionMap bindings) {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> {
+      try (final QueryExecution queryExecution = createQueryExecution(query, bindings)) {
+        return safeQuery(queryExecution::execAsk, queryExecution);
+      }
+    });
+  }
+
+  @Override
+  public Model executeConstructQuery(final Query query, final QuerySolutionMap bindings) {
+    if (log.isDebugEnabled()) {
+      log.debug("Running construct query: \n{}\nbindings: {}", query, bindings);
+    }
+    return callQueryConstruct(() -> createQueryExecution(query, bindings));
+  }
+
+  @Override
+  public Model executeConstructQuery(final String query) {
+    if (log.isDebugEnabled()) {
+      log.debug("Running construct query: \n{}", query);
+    }
+    return callQueryConstruct(() -> createQueryExecution(query));
+  }
+
+  public Model constructAllTriples() {
+    return executeConstructQuery("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o. }");
+  }
+
+  public <R> R executeAskQuery(final String query, final JenaBooleanHandler<R> jenaBooleanHandler) {
+    return jenaBooleanHandler.handle(executeAskQuery(query));
+  }
+
+  /**
+   * It releases forcefully the {@code StoreConnection}
+   * and that means all local TDB base {@code Dataset} instances will loose their connections to the TDB.
+   */
+  public void forceRelease() {
+    log.warn("Trying to release forcefully the {} TDB all views ....", tdbLocation);
+    close();
+    final Location location = Location.create(tdbLocation);
+    try{
+      StoreConnection.expel(location, true);
+    }
+    catch (final FileException | RuntimeIOException e) {
+      final String journalPath = StoreConnection.getExisting(location).getTransactionManager().getJournal().getFilename();
+      log.warn(
+        "... couldn't expel the {} StoreConnection, trying to release the transaction journal: {}",
+        tdbLocation, journalPath, e
+      );
+      ChannelManager.release(journalPath);
+    }
+    log.warn("{} TDB all connections are force released", tdbLocation);
+  }
+
+  private <R> R callQueryExecution(
+    final Supplier<QueryExecution> queryExecutionSupplier,
+    final JenaResultSetHandler<R> resultSetHandler,
+    final String context
+  ) {
+    if(StringUtils.hasLength(context)) {
+      log.warn("Context is not supported on this type of RdfStoreService but one was provided: {}", context);
+    }
+    return callQueryExecution(queryExecutionSupplier, resultSetHandler);
+  }
+
+  private <R> R callQueryExecution(
+    final Supplier<QueryExecution> queryExecutionSupplier, final JenaResultSetHandler<R> resultSetHandler
+  ) {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> {
+      try (final QueryExecution queryExecution = queryExecutionSupplier.get()) {
+        return safeQuery(() -> resultSetHandler.handle(queryExecution.execSelect()), queryExecution);
+      }
+    });
+  }
+
+  private Model callQueryConstruct(final Supplier<QueryExecution> queryExecutionSupplier) {
+    validateReadiness();
+    return Txn.calculateRead(dataset, () -> {
+      try (final QueryExecution queryExecution = queryExecutionSupplier.get()) {
+        return safeQuery(queryExecution::execConstruct, queryExecution);
+      }
+    });
+  }
+
+  private void validateReadiness() {
+    if(!ready.get()) {
+      throw new InvalidRdfStoreServiceStateException();
+    }
+  }
+
+  private boolean validateInit(final File initFolder) {
+    boolean isValid = true;
+    final StringBuilder causesMsg = new StringBuilder();
+
+    log.info(".. .. Initialize TDB store - {} with data from: {}", tdbLocation, initFolder);
+    if(!initFolder.exists()) {
+      causesMsg.append("        * init folder does not exist\n");
+      isValid = false;
+    }
+    if(!initFolder.isDirectory()) {
+      causesMsg.append("        * init path is not a folder\n");
+      isValid = false;
+    }
+    if (!dataset.getDefaultModel().isEmpty()) {
+      causesMsg.append("        * store is not empty\n");
+      isValid = false;
+    }
+
+    // null if this abstract pathname does not denote a directory, or if an I/O error occurs.
+    if (initFolder.listFiles() == null) {
+      causesMsg.append("        * init directory is empty empty\n");
+      isValid = false;
+    }
+
+    if(!isValid) {
+      log.warn(".. .. Initialization failed for TDB store - {} because:\n{}", tdbLocation, causesMsg);
+    }
+
+    return isValid;
+  }
+
+  public QueryExecution createQueryExecution(final String query) {
+    return timeoutQueryExecution(QueryExecutionFactory.create(query, dataset));
+  }
+
+  public QueryExecution createQueryExecution(final Query query) {
+    return createQueryExecution(query, null);
+  }
+
+  public QueryExecution createQueryExecution(final Query query, final QuerySolutionMap bindings) {
+    final QueryExecution queryExecution = bindings == null || bindings.asMap().isEmpty()
+      ? QueryExecutionFactory.create(query, dataset)
+      : QueryExecutionFactory.create(query, dataset, bindings);
+
+    return timeoutQueryExecution(queryExecution);
+  }
+
+  private QueryExecution timeoutQueryExecution(final QueryExecution queryExecution) {
+    queryExecution.setTimeout(firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
+    return queryExecution;
+  }
+
+  protected <T> T safeQuery(final Supplier<T> supplier, final QueryExecution queryExecution) {
     try {
-      executeInLock.run();
+      return supplier.get();
     }
-    finally {
-      model.leaveCriticalSection();
+    catch (final QueryCancelledException exception) {
+      log.error("Query timed out: {}", queryExecution.getQuery());
+      queryExecution.abort();
+      throw exception;
     }
-  }
-
-
-  private <T> T executeInLock(boolean lock, Supplier<T> executeInLock) {
-    model.enterCriticalSection(lock);
-    try {
-      return executeInLock.get();
-    }
-    finally {
-      model.leaveCriticalSection();
+    catch(final TDBException | RuntimeIOException exception) {
+      ready.set(false);
+      log.error("Query failed: {}", queryExecution.getQuery());
+      throw exception;
     }
   }
 }
