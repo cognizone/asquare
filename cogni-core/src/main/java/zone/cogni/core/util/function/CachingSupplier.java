@@ -17,7 +17,7 @@ public class CachingSupplier<T> implements Supplier<T> {
 
   private final Object lock = new Object();
   private final Supplier<T> originalSupplier;
-  private T cachedValue;
+  private volatile T cachedValue;
 
   private CachingSupplier(Supplier<T> originalSupplier) {
     this.originalSupplier = originalSupplier;
@@ -26,13 +26,16 @@ public class CachingSupplier<T> implements Supplier<T> {
   @Override
   public T get() {
     if (log.isDebugEnabled()) log.debug(".. .. .. In CachingSupplier.get.");
-    synchronized (lock) {
-      if (cachedValue == null) {
-        if (log.isInfoEnabled()) log.info(".. .. .. .. creating cache");
 
-        cachedValue = originalSupplier.get();
+    if (cachedValue == null) {
+      synchronized (lock) {
+        if (cachedValue == null) {
+          if (log.isInfoEnabled()) log.info(".. .. .. .. creating cache");
 
-        if (log.isInfoEnabled()) log.info(".. .. .. .. creating cache done");
+          cachedValue = originalSupplier.get();
+
+          if (log.isInfoEnabled()) log.info(".. .. .. .. creating cache done");
+        }
       }
     }
 
