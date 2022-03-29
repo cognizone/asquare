@@ -176,18 +176,17 @@ public class OperationResultProcessor {
                                           String operationGroupId) {
     Context context = Context.create(permissionsSupplier, modelSupplier);
 
-    OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
-
-    List<SingleGroupResult> result = uris.stream()
-                                         .map(uri -> {
-                                           SingleGroupResult rootGroup = new SingleGroupResult(operationGroup, uri, null);
-                                           processGroup(context, rootGroup);
-                                           return rootGroup;
-                                         })
-                                         .collect(Collectors.toList());
-
-    log.debug("(validate) {}", context.monitor);
-    return result;
+    try {
+      if (operationRoot.isSingleFile()) {
+        return processSingleFileCase(context, uris, operationGroupId);
+      }
+      else {
+        return processMergedFilesCase(context, uris, operationGroupId);
+      }
+    }
+    finally {
+      log.debug("(validate) {}", context.monitor);
+    }
   }
 
 
@@ -219,6 +218,13 @@ public class OperationResultProcessor {
     return result;
   }
 
+  private List<SingleGroupResult> processSingleFileCase(Context context, List<String> uris, String operationGroupId) {
+    return uris.stream()
+            .map(uri -> processSingleFileCase(context, uri, operationGroupId))
+            .collect(Collectors.toList());
+
+  }
+
   private SingleGroupResult processMergedFilesCase(Context context, String uri, String operationGroupId) {
     OperationGroup rootGroup = operationRoot.getByPathId("root");
     SingleGroupResult rootGroupResult = new SingleGroupResult(rootGroup, uri, null);
@@ -228,6 +234,13 @@ public class OperationResultProcessor {
 
     if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
     return rootGroupResult.getGroupResult(operationGroupId);
+  }
+
+  private List<SingleGroupResult> processMergedFilesCase(Context context, List<String> uris, String operationGroupId) {
+    return uris.stream()
+            .map(uri -> processMergedFilesCase(context, uri, operationGroupId))
+            .collect(Collectors.toList());
+
   }
 
   private OperationGroup getMergedGroup(String operationGroupId) {
