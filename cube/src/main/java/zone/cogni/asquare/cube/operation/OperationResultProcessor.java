@@ -174,28 +174,16 @@ public class OperationResultProcessor {
                                           Supplier<Model> modelSupplier,
                                           List<String> uris,
                                           String operationGroupId) {
-    Context context = Context.create(permissionsSupplier, modelSupplier);
-
-    OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
-
-    List<SingleGroupResult> result = uris.stream()
-                                         .map(uri -> {
-                                           SingleGroupResult rootGroup = new SingleGroupResult(operationGroup, uri, null);
-                                           processGroup(context, rootGroup);
-                                           return rootGroup;
-                                         })
-                                         .collect(Collectors.toList());
-
-    log.debug("(validate) {}", context.monitor);
-    return result;
+    return uris.stream()
+               .map(uri-> validate(permissionsSupplier, modelSupplier, uri, operationGroupId))
+               .collect(Collectors.toList());
   }
 
-
-  public SingleGroupResult validate(Set<String> permissions,
-                                    Model model,
+  public SingleGroupResult validate(Supplier<Set<String>> permissionsSupplier,
+                                    Supplier<Model> modelSupplier,
                                     String uri,
                                     String operationGroupId) {
-    Context context = Context.create(() -> permissions, () -> model);
+    Context context = Context.create(permissionsSupplier, modelSupplier);
 
     try {
       if (operationRoot.isSingleFile()) {
@@ -208,6 +196,14 @@ public class OperationResultProcessor {
     finally {
       log.debug("(validate) {}", context.monitor);
     }
+  }
+
+
+  public SingleGroupResult validate(Set<String> permissions,
+                                    Model model,
+                                    String uri,
+                                    String operationGroupId) {
+    return validate(() -> permissions, () -> model, uri, operationGroupId);
   }
 
   private SingleGroupResult processSingleFileCase(Context context, String uri, String operationGroupId) {
