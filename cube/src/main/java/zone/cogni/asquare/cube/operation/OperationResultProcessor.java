@@ -174,27 +174,16 @@ public class OperationResultProcessor {
                                           Supplier<Model> modelSupplier,
                                           List<String> uris,
                                           String operationGroupId) {
-    Context context = Context.create(permissionsSupplier, modelSupplier);
-
-    try {
-      if (operationRoot.isSingleFile()) {
-        return processSingleFileCase(context, uris, operationGroupId);
-      }
-      else {
-        return processMergedFilesCase(context, uris, operationGroupId);
-      }
-    }
-    finally {
-      log.debug("(validate) {}", context.monitor);
-    }
+    return uris.stream()
+               .map(uri-> validate(permissionsSupplier, modelSupplier, uri, operationGroupId))
+               .collect(Collectors.toList());
   }
 
-
-  public SingleGroupResult validate(Set<String> permissions,
-                                    Model model,
+  public SingleGroupResult validate(Supplier<Set<String>> permissionsSupplier,
+                                    Supplier<Model> modelSupplier,
                                     String uri,
                                     String operationGroupId) {
-    Context context = Context.create(() -> permissions, () -> model);
+    Context context = Context.create(permissionsSupplier, modelSupplier);
 
     try {
       if (operationRoot.isSingleFile()) {
@@ -209,6 +198,14 @@ public class OperationResultProcessor {
     }
   }
 
+
+  public SingleGroupResult validate(Set<String> permissions,
+                                    Model model,
+                                    String uri,
+                                    String operationGroupId) {
+    return validate(() -> permissions, () -> model, uri, operationGroupId);
+  }
+
   private SingleGroupResult processSingleFileCase(Context context, String uri, String operationGroupId) {
     OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
 
@@ -216,13 +213,6 @@ public class OperationResultProcessor {
     processGroup(context, result);
 
     return result;
-  }
-
-  private List<SingleGroupResult> processSingleFileCase(Context context, List<String> uris, String operationGroupId) {
-    return uris.stream()
-            .map(uri -> processSingleFileCase(context, uri, operationGroupId))
-            .collect(Collectors.toList());
-
   }
 
   private SingleGroupResult processMergedFilesCase(Context context, String uri, String operationGroupId) {
@@ -234,13 +224,6 @@ public class OperationResultProcessor {
 
     if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
     return rootGroupResult.getGroupResult(operationGroupId);
-  }
-
-  private List<SingleGroupResult> processMergedFilesCase(Context context, List<String> uris, String operationGroupId) {
-    return uris.stream()
-            .map(uri -> processMergedFilesCase(context, uri, operationGroupId))
-            .collect(Collectors.toList());
-
   }
 
   private OperationGroup getMergedGroup(String operationGroupId) {
