@@ -1,0 +1,17 @@
+{
+  "imports": [ "convertor/imports/attributes/single-lower-conversion-profile.json" ],
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "name",
+          "property": "http://demo.com/person/model#name",
+          "type": "datatype",
+          "single": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "imports": [ "convertor/imports/types/animal-conversion-profile.json" ],
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "hasArms",
+          "property": "http://demo.com/person/model#hasArms",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}
