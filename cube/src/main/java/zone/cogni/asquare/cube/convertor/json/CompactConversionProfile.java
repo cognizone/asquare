@@ -1,11 +1,13 @@
 package zone.cogni.asquare.cube.convertor.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.InputStreamSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ public class CompactConversionProfile {
   }
 
   private Map<String, String> prefixes;
+  private List<String> imports;
   private List<Type> types = new ArrayList<>();
 
   public Map<String, String> getPrefixes() {
@@ -42,6 +45,30 @@ public class CompactConversionProfile {
 
   public void setPrefixes(Map<String, String> prefixes) {
     this.prefixes = prefixes;
+  }
+
+  void addPrefix(String prefix, String uri) {
+    if (prefixes == null)
+      prefixes = new HashMap<>();
+
+    if (!prefixes.containsKey(prefix)) {
+      prefixes.put(prefix, uri);
+      return;
+    }
+
+    // check if we have a match if it already exists
+    String existingUri = prefixes.get(prefix);
+    if (!existingUri.equals(uri)) {
+      throw new RuntimeException("prefix '" + prefix + "' has values '" + uri + "' and '" + existingUri + "'");
+    }
+  }
+
+  public List<String> getImports() {
+    return imports;
+  }
+
+  public void setImports(List<String> imports) {
+    this.imports = imports;
   }
 
   public List<Type> getTypes() {
@@ -58,6 +85,19 @@ public class CompactConversionProfile {
   public void setTypes(List<Type> types) {
     types.forEach(type -> type.setConversionProfile(this));
     this.types = types;
+  }
+
+  void addType(Type type) {
+    if (types == null)
+      types = new ArrayList<>();
+
+    boolean typeExists = getById(type.getId()) != null;
+    if (typeExists) {
+      throw new RuntimeException("type with id '" + type.getId() + "' already exists");
+    }
+
+    type.setConversionProfile(this);
+    types.add(type);
   }
 
   public static class Type {

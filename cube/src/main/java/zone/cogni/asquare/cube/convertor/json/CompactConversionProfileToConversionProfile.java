@@ -19,16 +19,21 @@ public class CompactConversionProfileToConversionProfile
 
   @Override
   public ConversionProfile apply(CompactConversionProfile compactConversionProfile) {
+    CompactConversionProfile collapsedConversionProfile = getCollapsedImportsConversionProfile(compactConversionProfile);
     ConversionProfile result = new ConversionProfile();
 
-    if (compactConversionProfile.getPrefixes() != null)
-      result.setPrefixes(compactConversionProfile.getPrefixes());
+    if (collapsedConversionProfile.getPrefixes() != null)
+      result.setPrefixes(collapsedConversionProfile.getPrefixes());
 
-    compactConversionProfile.getTypes()
-                            .forEach(type -> result.add(convertType(type)));
+    collapsedConversionProfile.getTypes()
+                              .forEach(type -> result.add(convertType(type)));
 
     result.done();
     return result;
+  }
+
+  private CompactConversionProfile getCollapsedImportsConversionProfile(CompactConversionProfile compactConversionProfile) {
+    return new CollapsedImportsCompactConversionProfile().apply(compactConversionProfile);
   }
 
   private ConversionProfile.Type convertType(CompactConversionProfile.Type type) {
@@ -54,7 +59,7 @@ public class CompactConversionProfileToConversionProfile
                                 Map<String, ConversionProfile.Attribute> attributeMap) {
     List<CompactConversionProfile.Attribute> attributes = type.getAttributes();
     attributes
-        .forEach(attribute -> addAttribute(attributeMap, attribute));
+            .forEach(attribute -> addAttribute(attributeMap, attribute));
 
     type.getRealSuperClasses()
         .forEach(superId -> getAllAttributes(type.getConversionProfile().getById(superId), attributeMap));
@@ -137,7 +142,8 @@ public class CompactConversionProfileToConversionProfile
     // type (object or datatype)
     if (!Objects.equals(currentAttribute.getType(), newAttribute.getType().toExpandedAttributeType()))
       throw new RuntimeException("Attributes types do not match: "
-                                 + currentAttribute.getType() + " and " + newAttribute.getType().toExpandedAttributeType());
+                                 + currentAttribute.getType() + " and " + newAttribute.getType()
+                                                                                      .toExpandedAttributeType());
 
   }
 
