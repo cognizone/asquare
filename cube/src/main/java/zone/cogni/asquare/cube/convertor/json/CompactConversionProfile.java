@@ -2,10 +2,13 @@ package zone.cogni.asquare.cube.convertor.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class CompactConversionProfile {
   }
 
   private Map<String, String> prefixes;
+  private List<String> imports;
   private List<Type> types = new ArrayList<>();
 
   public Map<String, String> getPrefixes() {
@@ -42,6 +46,30 @@ public class CompactConversionProfile {
 
   public void setPrefixes(Map<String, String> prefixes) {
     this.prefixes = prefixes;
+  }
+
+  void addPrefix(String prefix, String uri) {
+    if (prefixes == null)
+      prefixes = new HashMap<>();
+
+    if (!prefixes.containsKey(prefix)) {
+      prefixes.put(prefix, uri);
+      return;
+    }
+
+    // check if we have a match if it already exists
+    String existingUri = prefixes.get(prefix);
+    if (!existingUri.equals(uri)) {
+      throw new RuntimeException("prefix '" + prefix + "' has values '" + uri + "' and '" + existingUri + "'");
+    }
+  }
+
+  public List<String> getImports() {
+    return imports;
+  }
+
+  public void setImports(List<String> imports) {
+    this.imports = imports;
   }
 
   public List<Type> getTypes() {
@@ -60,7 +88,41 @@ public class CompactConversionProfile {
     this.types = types;
   }
 
+  void addType(Type newType) {
+    if (types == null) types = new ArrayList<>();
+
+    if (isTypePresent(newType)) {
+      Type currentType = getById(newType.getId());
+
+      if (isMergeAllowed(newType, currentType)) {
+        newType.getAttributes()
+               .forEach(currentType::addAttribute);
+      }
+      else {
+        throw new RuntimeException("type '" + newType.getId() + "' already defined with different fields");
+      }
+    }
+    else {
+      newType.setConversionProfile(this);
+      types.add(newType);
+    }
+  }
+
+
+  private boolean isMergeAllowed(Type newType, Type currentType) {
+    boolean newTypeIsEmpty = newType.getSuperClasses().isEmpty() && newType.getType() == null;
+    boolean typesHaveSameFields = newType.getSuperClasses().equals(currentType.getSuperClasses())
+                                  && newType.getType().equals(currentType.getType());
+    return newTypeIsEmpty || typesHaveSameFields;
+  }
+
+  private boolean isTypePresent(Type type) {
+    return getById(type.getId()) != null;
+  }
+
   public static class Type {
+
+    private static final Logger log = LoggerFactory.getLogger(Type.class);
 
     private Set<String> superClasses = new HashSet<>();
 
@@ -133,6 +195,70 @@ public class CompactConversionProfile {
                               .collect(Collectors.toSet());
     }
 
+    private void addAttribute(Attribute newAttribute) {
+      if (attributes == null) attributes = new ArrayList<>();
+
+      if (isAttributePresent(newAttribute)) {
+        Attribute currentAttribute = getById(newAttribute.getId());
+
+        mergePropertyField(newAttribute, currentAttribute);
+        mergeInverseField(newAttribute, currentAttribute);
+        mergeSingleField(newAttribute, currentAttribute);
+        mergeTypeField(newAttribute, currentAttribute);
+      }
+      else {
+        attributes.add(newAttribute);
+        newAttribute.setParentType(this);
+      }
+    }
+
+    private void mergePropertyField(Attribute newAttribute, Attribute currentAttribute) {
+      if (!newAttribute.getProperty().equals(currentAttribute.getProperty())) {
+        throw new RuntimeException("attribute '" + getFullAttributeName(currentAttribute) + "' has different properties " +
+                                   "'" + newAttribute.getProperty() + "' and '" + currentAttribute.getProperty() + "'.");
+      }
+    }
+
+    private void mergeInverseField(Attribute newAttribute, Attribute currentAttribute) {
+      if (newAttribute.isInverse() != currentAttribute.isInverse()) {
+        throw new RuntimeException("attribute '" + getFullAttributeName(currentAttribute) + "' has different inverses.");
+      }
+    }
+
+    private void mergeSingleField(Attribute newAttribute, Attribute currentAttribute) {
+      if (currentAttribute.isSingle() && !newAttribute.isSingle()) {
+        // less strict, add warning
+        log.warn("attribute '{}' was single and now not?", getFullAttributeName(currentAttribute));
+      }
+      else if (!currentAttribute.isSingle() && newAttribute.isSingle()) {
+        // make it more strict
+        currentAttribute.setSingle(true);
+      }
+    }
+
+    private void mergeTypeField(Attribute newAttribute, Attribute currentAttribute) {
+      if (currentAttribute.getType() == Attribute.Type.mix && newAttribute.getType() != Attribute.Type.mix) {
+        // make it more strict
+        currentAttribute.setType(newAttribute.getType());
+      }
+      else if (currentAttribute.getType() != Attribute.Type.mix && newAttribute.getType() == Attribute.Type.mix) {
+        // less strict, add a warning
+        log.warn("attribute '{}' type was '{}' and now 'mix'?",
+                 getFullAttributeName(currentAttribute), currentAttribute.getType());
+      }
+      else if (currentAttribute.getType() != newAttribute.getType()) {
+        throw new RuntimeException("attribute '" + getFullAttributeName(currentAttribute) + "' has non-overlapping types: "
+                                   + "'" + currentAttribute.getType() + "' and '" + newAttribute.getType() + "'.");
+      }
+    }
+
+    private String getFullAttributeName(Attribute attribute) {
+      return attribute.getParentType().getId() + "." + attribute.getId();
+    }
+
+    private boolean isAttributePresent(Attribute attribute) {
+      return getById(attribute.getId()) != null;
+    }
   }
 
   public static class Attribute {

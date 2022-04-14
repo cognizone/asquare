@@ -1,0 +1,16 @@
+{
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "name",
+          "property": "http://demo.com/person/model#name",
+          "type": "object",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

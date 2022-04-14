@@ -1,0 +1,19 @@
+{
+  "prefixes" : {
+    "a" : "http://demo.com/a#"
+  },
+  "types": [
+    {
+      "id": "Animal",
+      "type": "http://demo.com/person/model#Animal",
+      "attributes": [
+        {
+          "id": "name",
+          "property": "http://demo.com/person/model#name",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

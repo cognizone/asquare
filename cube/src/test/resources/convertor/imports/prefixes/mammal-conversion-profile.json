@@ -1,0 +1,21 @@
+{
+  "prefixes" : {
+    "b" : "http://demo.com/b#"
+  },
+  "imports": [ "convertor/imports/prefixes/animal-conversion-profile.json" ],
+  "types": [
+    {
+      "id": "Mammal",
+      "type": "http://demo.com/person/model#Mammal",
+      "superClasses": [ "Animal" ],
+      "attributes": [
+        {
+          "id": "hasHair",
+          "property": "http://demo.com/person/model#hasHair",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

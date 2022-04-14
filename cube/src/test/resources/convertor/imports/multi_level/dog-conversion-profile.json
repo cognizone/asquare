@@ -1,0 +1,18 @@
+{
+  "imports": [ "convertor/imports/multi_level/mammal-conversion-profile.json" ],
+  "types": [
+    {
+      "id": "Dog",
+      "type": "http://demo.com/person/model#Dog",
+      "superClasses": [ "Mammal" ],
+      "attributes": [
+        {
+          "id": "barks",
+          "property": "http://demo.com/person/model#barks",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "prefixes": {
+    "a": "http://demo.com/a#",
+    "c": "http://demo.com/c#"
+  },
+  "imports": [ "convertor/imports/prefixes/mammal-conversion-profile.json" ],
+  "types": [
+    {
+      "id": "Cat",
+      "type": "http://demo.com/person/model#Cat",
+      "superClasses": [ "Mammal" ],
+      "attributes": [
+        {
+          "id": "meows",
+          "property": "http://demo.com/person/model#meows",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}
