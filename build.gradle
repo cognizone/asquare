@@ -3,7 +3,7 @@ import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 buildscript {
   ext {
-    apachePoiVersion = '3.17'
+    apachePoiVersion = '5.2.2'
     commonsCodecVersion = '1.15'
     commonsIoVersion = '2.7'
     elasticsearchVersion = '7.5.2'
@@ -97,17 +97,18 @@ subprojects {
       dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+//      dependency('org.springframework.security:spring-security-saml2-service-provider:5.6.2')
+      dependency("org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE")
 
       // test
       dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
       dependency("org.elasticsearch.test:framework:$elasticsearchVersion")
       dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-      dependency("org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE")
     }
   }
 
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -412,6 +413,7 @@ project('security') {
     api('org.springframework.boot:spring-boot-starter-json')
     api('org.springframework.boot:spring-boot-starter-security')
     api('org.springframework.boot:spring-boot-starter-web')
+//    api('org.springframework.security:spring-security-saml2-service-provider')
     api("org.springframework.security.extensions:spring-security-saml2-core")
   }
 }
