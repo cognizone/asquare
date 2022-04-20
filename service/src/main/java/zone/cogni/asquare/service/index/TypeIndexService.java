@@ -5,21 +5,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Streams;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Resource;
-import org.elasticsearch.index.IndexNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import zone.cogni.asquare.access.ApplicationView;
-import zone.cogni.asquare.access.ElasticAccessService;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.async.AsyncTaskManager;
 import zone.cogni.asquare.service.elasticsearch.v7.GenericElastic7Configuration;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,8 +83,10 @@ public class TypeIndexService {
       indexConfigProvider.getElasticStore().deleteIndex(indexName);
       log.info(".. index '{}' deleted", indexName);
     }
-    catch(IndexNotFoundException ex) {
-      log.info(".. index '{}' not found", indexName);
+    catch (RuntimeException e) {
+      // missing index?
+      log.warn(".. delete index '{}' failed", indexName, e);
+      throw e;
     }
     indexConfigProvider.getElasticStore().createIndex(indexName, indexSettings);
     log.info(".. index '{}' created", indexName);

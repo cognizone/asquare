@@ -1,6 +1,5 @@
 package zone.cogni.asquare.cube.index;
 
-import org.elasticsearch.index.IndexNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -186,8 +185,10 @@ public class AliasedCollectionIndexingService
     try {
       elasticStore.deleteIndex(oldIndexName);
     }
-    catch (IndexNotFoundException ignore) {
-      log.warn("(deleteIndex) index '{}' did not exist.", oldIndexName);
+    catch (RuntimeException e) {
+      // missing index?
+      log.warn(".. delete index '{}' failed", oldIndexName, e);
+      throw e;
     }
   }
 

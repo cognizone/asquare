@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
-import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -19,12 +18,12 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
+import zone.cogni.asquare.access.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.access.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
@@ -291,8 +290,10 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
       elasticStore.deleteIndex(indexName);
       log.info(".. index '{}' deleted", indexName);
     }
-    catch(IndexNotFoundException ex) {
-      log.info(".. index '{}' not found", indexName);
+    catch (RuntimeException e) {
+      // missing index?
+      log.warn(".. delete index '{}' failed", indexName, e);
+      throw e;
     }
     elasticStore.createIndex(indexName, indexSettings);
     log.info(".. index '{}' created", indexName);
