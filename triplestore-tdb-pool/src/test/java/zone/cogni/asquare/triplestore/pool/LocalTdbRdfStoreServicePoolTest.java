@@ -186,7 +186,8 @@ class LocalTdbRdfStoreServicePoolTest {
     for (int i = 0; i < 3; i++) {
       Thread.sleep(1000L);
     }
-    assertEquals(1, StringUtils.countMatches(output.getAll(), "Timeout waiting for idle object"));
+    String all = output.getAll();
+    assertEquals(1, StringUtils.countMatches(all, "Timeout waiting for idle object"));
   }
 
   private RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getProvider() {
