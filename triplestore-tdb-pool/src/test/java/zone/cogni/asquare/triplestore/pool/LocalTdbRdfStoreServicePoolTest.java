@@ -187,10 +187,10 @@ class LocalTdbRdfStoreServicePoolTest {
       Thread.sleep(1000L);
     }
     String allOutput = output.getAll();
-    System.out.println("allOutput = '" + allOutput + "'") ;
-    Assertions.assertThat(StringUtils.countMatches(allOutput, "Timeout waiting for idle object"))
-                      .isEqualTo(1);
-//    assertEquals(1, );
+//    System.out.println("allOutput = '" + allOutput + "'") ;
+//    Assertions.assertThat()
+//                      .isEqualTo(1);
+    assertEquals(1, StringUtils.countMatches(allOutput, "Timeout waiting for idle object"));
   }
 
   private RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getProvider() {
