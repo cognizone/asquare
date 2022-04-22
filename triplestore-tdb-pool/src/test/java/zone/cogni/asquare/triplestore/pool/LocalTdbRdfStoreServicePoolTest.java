@@ -2,6 +2,7 @@ package zone.cogni.asquare.triplestore.pool;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.KeyedObjectPool;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -185,7 +186,11 @@ class LocalTdbRdfStoreServicePoolTest {
     for (int i = 0; i < 3; i++) {
       Thread.sleep(1000L);
     }
-    assertEquals(1, StringUtils.countMatches(output.getAll(), "Timeout waiting for idle object"));
+    String allOutput = output.getAll();
+    System.out.println("allOutput = '" + allOutput + "'") ;
+    Assertions.assertThat(StringUtils.countMatches(allOutput, "Timeout waiting for idle object"))
+                      .isEqualTo(1);
+//    assertEquals(1, );
   }
 
   private RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getProvider() {
