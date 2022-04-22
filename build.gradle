@@ -4,7 +4,7 @@ import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 buildscript {
   ext {
     apachePoiVersion = '5.2.2'
-    commonsLang3Version = '3.7'
+    commonsLang3Version = '3.9'
     commonsCodecVersion = '1.15'
     commonsIoVersion = '2.11.0'
     elasticsearchVersion = '7.5.2'
