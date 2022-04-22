@@ -4,8 +4,9 @@ import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 buildscript {
   ext {
     apachePoiVersion = '5.2.2'
+    commonsLang3Version = '3.11'
     commonsCodecVersion = '1.15'
-    commonsIoVersion = '2.7'
+    commonsIoVersion = '2.11.0'
     elasticsearchVersion = '7.5.2'
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
@@ -75,7 +76,7 @@ subprojects {
       dependency('javax.inject:javax.inject:1')
       dependency('joda-time:joda-time:2.9.9')
       dependency('org.apache.commons:commons-collections4:4.4')
-      dependency('org.apache.commons:commons-lang3:3.7')
+      dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
       dependency("org.apache.httpcomponents:fluent-hc:$httpComponentsVersion")
       dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
       dependency("org.apache.jena:jena-arq:$jenaVersion")
