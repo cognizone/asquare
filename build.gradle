@@ -69,7 +69,6 @@ subprojects {
     dependencies {
       // libs
       dependency("com.google.guava:guava:$guavaVersion")
-      dependency('com.google.code.findbugs:jsr305:3.0.1')
       dependency("commons-codec:commons-codec:$commonsCodecVersion")
       dependency("commons-io:commons-io:$commonsIoVersion")
       dependency('io.vavr:vavr:0.9.2')
@@ -312,7 +311,6 @@ project('cogni-libs') {
   dependencies {
     // libs
     api('com.google.guava:guava')
-    api('com.google.code.findbugs:jsr305')
     api('commons-io:commons-io')
     api('javax.inject:javax.inject')
     api('joda-time:joda-time')
@@ -356,7 +354,6 @@ project('cube') {
     api project(':triplestore-jena-memory')
 
     // libs
-    api('com.google.code.findbugs:jsr305')
     api('com.google.guava:guava')
     api('io.vavr:vavr')
     api('joda-time:joda-time')
@@ -493,7 +490,6 @@ project('triplestore-tdb2') {
     api project(':transactional')
 
     // libs
-    api('com.google.code.findbugs:jsr305')
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-tdb2')
 
