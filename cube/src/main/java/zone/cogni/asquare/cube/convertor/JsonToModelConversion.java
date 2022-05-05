@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
 import zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configuration.ModelType;
 import zone.cogni.asquare.cube.convertor.json.ConversionProfile;
-import zone.cogni.asquare.cube.sync.SynchronizeGraphs;
 
 import java.util.Set;
 import java.util.function.Function;

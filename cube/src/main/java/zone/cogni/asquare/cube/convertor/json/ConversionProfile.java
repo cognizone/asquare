@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /*
@@ -153,7 +154,7 @@ public class ConversionProfile {
   public Type getTypeFromRdfTypes(Collection<String> input) {
     List<Type> result = this.expandedClassIdTypeMap.values()
                                                    .stream()
-                                                   .filter(t -> CollectionUtils.isEqualCollection(t.expandedRdfTypes, input))
+                                                   .filter(isExactType(input))
                                                    .collect(Collectors.toList());
     if (result.size() != 1) {
       List<String> types = result.stream().map(Type::getRootClassId).collect(Collectors.toList());
@@ -163,13 +164,16 @@ public class ConversionProfile {
     return result.get(0);
   }
 
+  private Predicate<Type> isExactType(Collection<String> input) {
+    return t -> CollectionUtils.isEqualCollection(t.expandedRdfTypes, input);
+  }
+
   public Type getBestMatchingTypeFromRdfTypes(Collection<String> input) {
-    List<Type> result = this.classIdTypeMap.values()
-                                           .stream()
-                                           .filter(t -> CollectionUtils.containsAll(input, t.rdfTypes))
-                                           .sorted(Comparator.comparing(t -> CollectionUtils.intersection(((ConversionProfile.Type) t).rdfTypes, input)
-                                                                                            .size()).reversed())
-                                           .collect(Collectors.toList());
+    List<Type> result = this.expandedClassIdTypeMap.values()
+                                                   .stream()
+                                                   .filter(isCandidateType(input))
+                                                   .sorted(getBestMatchCalculation(input))
+                                                   .collect(Collectors.toList());
     if (result.isEmpty()) {
       throw new RuntimeException("no class matches input " + input);
     }
@@ -179,6 +183,15 @@ public class ConversionProfile {
     }
 
     return result.get(0);
+  }
+
+  private Predicate<Type> isCandidateType(Collection<String> input) {
+    return t -> CollectionUtils.containsAll(input, t.expandedRdfTypes);
+  }
+
+  private Comparator<Object> getBestMatchCalculation(Collection<String> input) {
+    return Comparator.comparing(t -> CollectionUtils.intersection(((Type) t).rdfTypes, input).size())
+                     .reversed();
   }
 
   public void add(Type type) {
@@ -420,6 +433,10 @@ public class ConversionProfile {
 
     public void setUri(String uri) {
       this.uri = uri;
+    }
+
+    public String getExpandedUri() {
+      return expandedUri;
     }
 
     public void setExpandedUri(String expandedUri) {

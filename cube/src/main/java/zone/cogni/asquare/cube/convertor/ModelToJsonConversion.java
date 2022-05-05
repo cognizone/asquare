@@ -744,12 +744,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return parent.conversionProfile.getTypeFromExpandedRdfType(rdfType);
       }
 
-      // TODO fix for expanded
       if (parent.configuration.isModelType(ModelType.PROFILE)) {
         return parent.conversionProfile.getBestMatchingTypeFromRdfTypes(rdfTypes);
       }
 
-      // TODO fix for expanded
       if (parent.configuration.isModelType(ModelType.ALL)) {
         return parent.conversionProfile.getTypeFromRdfTypes(rdfTypes);
       }
