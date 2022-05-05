@@ -1,0 +1,5 @@
+select distinct ?value {
+  ?uri a <#{[type]}> .
+  ?uri <#{[property]}> ?x.
+  bind (datatype(?x) as ?value)
+}

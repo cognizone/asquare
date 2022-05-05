@@ -5,6 +5,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 public interface Shacl {
 
@@ -35,10 +36,11 @@ public interface Shacl {
   Property datatype = createProperty(NS + "datatype");
   Property details = createProperty(NS + "details");
   Property focusNode = createProperty(NS + "focusNode");
-  Property not = createProperty(NS + "not");
   Property minCount = createProperty(NS + "minCount");
   Property maxCount = createProperty(NS + "maxCount");
   Property name = createProperty(NS + "name");
+  Property nodeKind = createProperty(NS + "nodeKind");
+  Property not = createProperty(NS + "not");
   Property or = createProperty(NS + "or");
   Property path = createProperty(NS + "path");
   Property property = createProperty(NS + "property");
@@ -49,6 +51,15 @@ public interface Shacl {
   Property sourceConstraintComponent = createProperty(NS + "sourceConstraintComponent");
   Property targetClass = createProperty(NS + "targetClass");
   Property value = createProperty(NS + "value");
+
+  interface NodeKind {
+    Resource IRI = createResource(NS + "IRI");
+    Resource Literal = createResource(NS + "Literal");
+    Resource BlankNode = createResource(NS + "BlankNode");
+    Resource IRIOrLiteral = createResource(NS + "IRIOrLiteral");
+    Resource BlankNodeOrIRI = createResource(NS + "BlankNodeOrIRI");
+    Resource BlankNodeOrLiteral = createResource(NS + "BlankNodeOrLiteral");
+  }
 
   interface Severity {
     Resource Info = ResourceFactory.createResource(NS + "Info");

@@ -1,6 +1,7 @@
 package zone.cogni.asquare.cube.convertor.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,9 @@ public class CompactConversionProfile {
 
   public static CompactConversionProfile read(InputStreamSource input) {
     try {
-      return new ObjectMapper().readValue(input.getInputStream(), CompactConversionProfile.class);
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+      return objectMapper.readValue(input.getInputStream(), CompactConversionProfile.class);
     }
     catch (IOException e) {
       throw new RuntimeException("failed to read resource " + input, e);
