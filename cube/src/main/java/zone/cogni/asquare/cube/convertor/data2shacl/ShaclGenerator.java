@@ -1,6 +1,8 @@
 package zone.cogni.asquare.cube.convertor.data2shacl;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -254,7 +256,7 @@ public class ShaclGenerator {
                                                          targetClass,
                                                          path);
     if (!hasInstanceWithoutProperty) {
-      shacl.add(propertyShape, Shacl.minCount, ResourceFactory.createTypedLiteral(1));
+      shacl.add(propertyShape, Shacl.minCount, getOneAsInteger());
     }
   }
 
@@ -269,8 +271,12 @@ public class ShaclGenerator {
                                                            targetClass,
                                                            path);
     if (!hasInstanceWithTwoProperties) {
-      shacl.add(propertyShape, Shacl.maxCount, ResourceFactory.createTypedLiteral(1));
+      shacl.add(propertyShape, Shacl.maxCount, getOneAsInteger());
     }
+  }
+
+  private Literal getOneAsInteger() {
+    return ResourceFactory.createTypedLiteral("1", XSDDatatype.XSDinteger);
   }
 
   private void setNodeKind(Configuration configuration,
