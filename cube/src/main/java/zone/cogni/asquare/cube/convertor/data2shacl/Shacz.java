@@ -9,5 +9,6 @@ public interface Shacz {
 
   Resource ShapesGraph = ResourceFactory.createResource(NS + "ShapesGraph");
   Property shapes = ResourceFactory.createProperty(NS + "shapes");
+  Property warn = ResourceFactory.createProperty(NS + "warn");
 
 }

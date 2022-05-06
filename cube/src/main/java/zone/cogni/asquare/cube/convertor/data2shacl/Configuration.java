@@ -8,6 +8,8 @@ public class Configuration {
 
   private boolean includeShapesGraph;
 
+  private boolean reportPossibleIssues;
+
   private List<String> ignoredClasses;
 
   public Configuration() {
@@ -48,6 +50,14 @@ public class Configuration {
 
   public void setIncludeShapesGraph(boolean includeShapesGraph) {
     this.includeShapesGraph = includeShapesGraph;
+  }
+
+  public boolean isReportPossibleIssues() {
+    return reportPossibleIssues;
+  }
+
+  public void setReportPossibleIssues(boolean reportPossibleIssues) {
+    this.reportPossibleIssues = reportPossibleIssues;
   }
 
   public List<String> getIgnoredClasses() {

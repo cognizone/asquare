@@ -10,6 +10,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.core.io.ClassPathResource;
 import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
@@ -19,6 +20,7 @@ import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -127,10 +129,33 @@ public class ShaclGenerator {
   private void addPrefixes(@Nonnull Configuration configuration,
                            @Nonnull Map<String, String> prefixes,
                            @Nonnull Model shacl) {
-    // todo better validation for overlap
-    // todo make shapes prefix not overlap data
+    doPrefixesCheck(configuration, prefixes);
+
     shacl.setNsPrefixes(prefixes);
     shacl.setNsPrefix(configuration.getShapesPrefix(), configuration.getShapesNamespace());
+  }
+
+  private void doPrefixesCheck(Configuration configuration, Map<String, String> prefixes) {
+    boolean samePrefix = prefixes.containsKey(configuration.getShapesPrefix());
+    if (!samePrefix) return;
+
+    String message = "configuration shape namespace with prefix '" + configuration.getShapesPrefix() + "'"
+                     + " and with uri '" + configuration.getShapesNamespace() + "'";
+    boolean sameNamespace = prefixes.get(configuration.getShapesPrefix()).equals(configuration.getShapesNamespace());
+    if (sameNamespace) {
+      throw new RuntimeException(
+              message
+              + " already defined in prefixes;"
+              + " it is highly recommended to create a new and unique shacl namespace!"
+      );
+    }
+
+    // same prefix different namespace
+    throw new RuntimeException(
+            message
+            + " has same prefix as one of prefixes. overlapping prefix namespace" +
+            " '" + prefixes.get(configuration.getShapesPrefix()) + "'."
+    );
   }
 
   private void addTypes(Configuration configuration, RdfStoreService rdfStoreService, Model shacl) {
@@ -149,23 +174,44 @@ public class ShaclGenerator {
                        @Nonnull String typeUri) {
     if (CollectionUtils.isNotEmpty(configuration.getIgnoredClasses())
         && configuration.getIgnoredClasses().contains(typeUri)) {
-      log.info("Ignoring type '{}'", typeUri);
+      String message = getMessage("ignoring type '{}'", typeUri);
+      log.info(message);
+
+      if (configuration.isReportPossibleIssues()) {
+        Resource shapesGraph = ResourceFactory.createResource(configuration.getShapesNamespace() + "ShapesGraph");
+        shacl.add(shapesGraph, Shacz.warn, message);
+      }
       return;
     }
     Resource targetClass = ResourceFactory.createResource(typeUri);
-    String localName = targetClass.getLocalName();
-
-    // todo same type but different namespace might still end up in same shape
-    Resource typeShape = ResourceFactory.createResource(configuration.getShapesNamespace() + localName);
-    if (shacl.contains(typeShape, null, (RDFNode) null)) {
-      log.error("type shape {} already exists", typeShape.getURI());
-      return;
-    }
+    Resource typeShape = calculateShapeBasedOnResource(configuration, shacl, null, targetClass);
 
     shacl.add(typeShape, RDF.type, Shacl.NodeShape);
     shacl.add(typeShape, Shacl.targetClass, targetClass);
 
     addProperties(configuration, rdfStoreService, shacl, typeShape, targetClass);
+  }
+
+  private Resource calculateShapeBasedOnResource(@Nonnull Configuration configuration,
+                                                 @Nonnull Model shacl,
+                                                 @Nullable String firstPart,
+                                                 @Nonnull Resource originalResource) {
+    String localName = firstPart == null ? originalResource.getLocalName()
+                                         : firstPart + "_" + originalResource.getLocalName();
+    Resource typeShape = ResourceFactory.createResource(configuration.getShapesNamespace() + localName);
+
+    boolean hasSameTypeShape = shacl.contains(typeShape, null, (RDFNode) null);
+    if (!hasSameTypeShape) return typeShape;
+
+    String namespacePrefix = shacl.getNsURIPrefix(originalResource.getNameSpace());
+    if (namespacePrefix == null) {
+      throw new RuntimeException("no name alternative found for '" + originalResource.getURI() + "':"
+                                 + " please add namespace to prefixes.");
+    }
+
+    String prefixLocalName = firstPart == null ? namespacePrefix + "_" + localName
+                                               : firstPart + "_" + namespacePrefix + "_" + localName;
+    return ResourceFactory.createResource(configuration.getShapesNamespace() + prefixLocalName);
   }
 
   private void addProperties(Configuration configuration,
@@ -189,23 +235,17 @@ public class ShaclGenerator {
                            @Nonnull Resource targetClass,
                            @Nonnull String property) {
     Resource path = ResourceFactory.createResource(property);
-
-    // todo same property but different namespace might still end up in same shape
-    Resource propertyShape = ResourceFactory.createResource(configuration.getShapesNamespace() + path.getLocalName());
-    if (shacl.contains(propertyShape, null, (RDFNode) null)) {
-      log.error("property shape {} already exists", propertyShape.getURI());
-      return;
-    }
+    Resource propertyShape = calculateShapeBasedOnResource(configuration, shacl, targetClass.getLocalName(), path);
 
     shacl.add(typeShape, Shacl.property, propertyShape);
     shacl.add(propertyShape, RDF.type, Shacl.PropertyShape);
+
     shacl.add(propertyShape, Shacl.path, path);
 
     setMinCount(configuration, rdfStoreService, shacl, targetClass, path, propertyShape);
     setMaxCount(configuration, rdfStoreService, shacl, targetClass, path, propertyShape);
 
     setNodeKind(configuration, rdfStoreService, shacl, targetClass, path, propertyShape);
-
   }
 
   private void setMinCount(Configuration configuration, RdfStoreService rdfStoreService, Model shacl, Resource targetClass, Resource path, Resource propertyShape) {
@@ -257,6 +297,9 @@ public class ShaclGenerator {
     if (nodeKindValue != null) {
       shacl.add(propertyShape, Shacl.nodeKind, nodeKindValue);
     }
+    else if (configuration.isReportPossibleIssues()) {
+      shacl.add(propertyShape, Shacz.warn, "no nodekind could be derived");
+    }
 
     if (nodeKindValue == Shacl.NodeKind.Literal) {
       setShaclDatatype(configuration, rdfStoreService, shacl, targetClass, path, propertyShape);
@@ -286,12 +329,23 @@ public class ShaclGenerator {
     List<String> datatypes = selectForTypeAndProperty(rdfStoreService, "select-datatype.sparql.spel",
                                                       targetClass, path);
     if (datatypes.size() != 1) {
-      log.warn("type '{}' and property '{}' does not have exactly one datatype: {}", targetClass, path, datatypes);
+      String message = getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
+                                  targetClass, path, datatypes);
+      log.warn(message);
+
+      if (configuration.isReportPossibleIssues()) {
+        shacl.add(propertyShape, Shacz.warn, message);
+      }
       return;
     }
 
     Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
     shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+  }
+
+  private String getMessage(String messagePattern, Object... parameters) {
+    return MessageFormatter.arrayFormat(messagePattern, parameters)
+                           .getMessage();
   }
 
   private void setShaclClass(Configuration configuration,
@@ -300,24 +354,44 @@ public class ShaclGenerator {
                              Resource targetClass,
                              Resource path,
                              Resource propertyShape) {
-    List<String> classes = selectForTypeAndProperty(rdfStoreService, "select-class.sparql.spel",
-                                                    targetClass, path);
+    List<String> classes = calculateClasses(configuration, rdfStoreService, targetClass, path);
+
     if (classes.isEmpty()) {
-      log.warn("type '{}' and property '{}' is empty.", targetClass, path);
+      String message = getMessage("type '{}' and property '{}' is empty.",
+                                  targetClass, path);
+      log.warn(message);
+
+      if (configuration.isReportPossibleIssues()) {
+        shacl.add(propertyShape, Shacz.warn, message);
+      }
       return;
     }
 
-    if (classes.size() > 1 && CollectionUtils.isNotEmpty(configuration.getIgnoredClasses())) {
-      classes = new ArrayList<>(CollectionUtils.removeAll(classes, configuration.getIgnoredClasses()));
-    }
 
     if (classes.size() != 1) {
-      log.warn("type '{}' and property '{}' does not have exactly one class: {}", targetClass, path, classes);
+      String message = getMessage("type '{}' and property '{}' does not have exactly one class: {}",
+                                  targetClass, path, classes);
+      log.warn(message);
+
+      if (configuration.isReportPossibleIssues()) {
+        shacl.add(propertyShape, Shacz.warn, message);
+      }
       return;
     }
 
     Resource classValue = ResourceFactory.createResource(classes.get(0));
     shacl.add(propertyShape, Shacl.classP, classValue);
+  }
+
+  private List<String> calculateClasses(Configuration configuration, RdfStoreService rdfStoreService, Resource targetClass, Resource path) {
+    List<String> classes = selectForTypeAndProperty(rdfStoreService, "select-class.sparql.spel",
+                                                    targetClass, path);
+
+    if (CollectionUtils.isEmpty(configuration.getIgnoredClasses())) {
+      return classes;
+    }
+
+    return new ArrayList<>(CollectionUtils.removeAll(classes, configuration.getIgnoredClasses()));
   }
 
   private List<String> selectForTypeAndProperty(RdfStoreService rdfStoreService,
