@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.convertor.json;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CompactConversionProfileToConversionProfile
         implements Function<CompactConversionProfile, ConversionProfile> {
@@ -26,7 +28,7 @@ public class CompactConversionProfileToConversionProfile
       result.setPrefixes(collapsedConversionProfile.getPrefixes());
 
     collapsedConversionProfile.getTypes()
-                              .forEach(type -> result.add(convertType(type)));
+                              .forEach(type -> result.add(convertType(result, type)));
 
     result.done();
     return result;
@@ -36,39 +38,57 @@ public class CompactConversionProfileToConversionProfile
     return new CollapsedImportsCompactConversionProfile().apply(compactConversionProfile);
   }
 
-  private ConversionProfile.Type convertType(CompactConversionProfile.Type type) {
+  private ConversionProfile.Type convertType(ConversionProfile profile, CompactConversionProfile.Type type) {
     ConversionProfile.Type expandedType = new ConversionProfile.Type();
     expandedType.setRootClassId(type.getId());
     expandedType.setRootRdfType(type.getType());
+    expandedType.setExpandedRootRdfType(curieToFullUri(profile, type.getType()));
     expandedType.setClassIds(calculateClassIds(type));
     expandedType.setRdfTypes(calculateRdfTypes(type));
+    expandedType.setExpandedRdfTypes(calculateExpandedRdfTypes(profile, type));
 
-    getAllAttributes(type).forEach(expandedType::add);
+
+    getAllAttributes(profile, type).forEach(expandedType::add);
 
     return expandedType;
   }
 
-  private Collection<ConversionProfile.Attribute> getAllAttributes(CompactConversionProfile.Type type) {
+
+  private String curieToFullUri(ConversionProfile profile, String curieOrUri) {
+    if (!curieOrUri.contains(":")) return curieOrUri;
+
+    Map<String, String> prefixes = profile.getPrefixes();
+    String prefix = StringUtils.substringBefore(curieOrUri, ":");
+    if (prefixes == null || !prefixes.containsKey(prefix))
+      return curieOrUri;
+
+    return prefixes.get(prefix) + StringUtils.substringAfter(curieOrUri, ":");
+  }
+
+  private Collection<ConversionProfile.Attribute> getAllAttributes(ConversionProfile profile,
+                                                                   CompactConversionProfile.Type type) {
     Map<String, ConversionProfile.Attribute> attributeMap = new HashMap<>();
 
-    getAllAttributes(type, attributeMap);
+    getAllAttributes(profile, type, attributeMap);
     return attributeMap.values();
   }
 
-  private void getAllAttributes(CompactConversionProfile.Type type,
+  private void getAllAttributes(ConversionProfile profile,
+                                CompactConversionProfile.Type type,
                                 Map<String, ConversionProfile.Attribute> attributeMap) {
     List<CompactConversionProfile.Attribute> attributes = type.getAttributes();
     attributes
-            .forEach(attribute -> addAttribute(attributeMap, attribute));
+            .forEach(attribute -> addAttribute(profile, attributeMap, attribute));
 
     type.getRealSuperClasses()
-        .forEach(superId -> getAllAttributes(type.getConversionProfile().getById(superId), attributeMap));
+        .forEach(superId -> getAllAttributes(profile, type.getConversionProfile().getById(superId), attributeMap));
   }
 
-  private void addAttribute(Map<String, ConversionProfile.Attribute> attributeMap,
+  private void addAttribute(ConversionProfile profile,
+                            Map<String, ConversionProfile.Attribute> attributeMap,
                             CompactConversionProfile.Attribute attribute) {
     if (!attributeMap.containsKey(attribute.getId())) {
-      attributeMap.put(attribute.getId(), convertAttribute(attribute));
+      attributeMap.put(attribute.getId(), convertAttribute(profile, attribute));
       return;
     }
 
@@ -106,11 +126,19 @@ public class CompactConversionProfileToConversionProfile
         .forEach(superId -> calculateRdfTypes(type.getConversionProfile().getById(superId), rdfTypes));
   }
 
-  private ConversionProfile.Attribute convertAttribute(CompactConversionProfile.Attribute attribute) {
+  private Collection<String> calculateExpandedRdfTypes(ConversionProfile profile, CompactConversionProfile.Type type) {
+    return calculateRdfTypes(type).stream()
+                                  .map(rdfType -> curieToFullUri(profile, rdfType))
+                                  .collect(Collectors.toList());
+  }
+
+  private ConversionProfile.Attribute convertAttribute(ConversionProfile profile,
+                                                       CompactConversionProfile.Attribute attribute) {
     ConversionProfile.Attribute convertedAttribute = new ConversionProfile.Attribute();
 
     convertedAttribute.setAttributeId(attribute.getId());
     convertedAttribute.setUri(attribute.getProperty());
+    convertedAttribute.setExpandedUri(curieToFullUri(profile, attribute.getProperty()));
     convertedAttribute.setSingle(attribute.isSingle());
     convertedAttribute.setInverse(attribute.isInverse());
     convertedAttribute.setType(attribute.getType().toExpandedAttributeType());

@@ -170,6 +170,9 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     Context context = new Context(this, model);
     Resource subject = ResourceFactory.createResource(root);
 
+    if (!modelContainsRoot(model, subject))
+      throw new RuntimeException("subject '" + root + "' not found in model");
+
     ObjectNode data = context.jsonRoot.putObject("data");
     processInstance(context, subject, data);
 
@@ -179,6 +182,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
 
     return context.jsonRoot;
+  }
+
+  private boolean modelContainsRoot(Model model, Resource subject) {
+    return model.contains(subject, null, (RDFNode) null);
   }
 
   private void reportMissedSubjects(Context context) {
@@ -215,8 +222,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
    * @param instanceRoot current root where JSON is going to be manipulated
    */
   private void processInstance(Context context,
-                                  Resource subject,
-                                  ObjectNode instanceRoot) {
+                               Resource subject,
+                               ObjectNode instanceRoot) {
     // only process once, at most
     if (context.alreadyProcessedResources.contains(subject)) return;
 
@@ -734,7 +741,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         if (rdfTypes.size() != 1) throw new RuntimeException("expecting exactly one type, found " + rdfTypes);
 
         String rdfType = rdfTypes.stream().findFirst().get();
-        return parent.conversionProfile.getTypeFromRdfType(rdfType);
+        return parent.conversionProfile.getTypeFromExpandedRdfType(rdfType);
       }
 
       if (parent.configuration.isModelType(ModelType.PROFILE)) {

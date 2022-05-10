@@ -1,0 +1,36 @@
+@base <http://demo.com/data#>.
+@prefix person: <http://demo.com/person/model#>.
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<#homer>
+    a               person:Person ;
+    person:name     "Homer Simpson" ;
+    person:spouse   <#marge> ;
+    person:hasChild <#bart>, <#lisa>, <#maggie> ;
+.
+
+<#marge>
+    a               person:Person ;
+    person:name     "Marge Simpson" ;
+    person:spouse   <#homer> ;
+    person:hasChild <#bart>, <#lisa>, <#maggie> ;
+.
+
+<#bart>
+    a            person:Person ;
+    person:name  "Bart Simpson" ;
+    person:talks true ;
+.
+
+<#lisa>
+    a            person:Person ;
+    person:name  "Lisa Simpson" ;
+    person:talks true ;
+.
+
+
+<#maggie>
+    a            person:Person ;
+    person:name  "Maggie Simpson" ;
+    person:talks false ;
+.

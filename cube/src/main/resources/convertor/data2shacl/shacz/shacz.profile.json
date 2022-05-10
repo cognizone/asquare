@@ -1,0 +1,133 @@
+{
+  "prefixes": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "shacz": "https://data.cogni.zone/model/ui/shacl-extension/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "types": [
+    {
+      "id": "ShapesGraph",
+      "type": "shacz:ShapesGraph",
+      "attributes": [
+        {
+          "id": "shacz:shapes",
+          "property": "shacz:shapes",
+          "single": false,
+          "type": "object"
+        }
+      ]
+    },
+    {
+      "id": "sh:Shape",
+      "type": "sh:Shape",
+      "attributes": [
+        {
+          "id": "sh:targetClass",
+          "property": "sh:targetClass",
+          "single": false,
+          "type": "datatype"
+        }
+      ]
+    },
+    {
+      "id": "sh:NodeShape",
+      "type": "sh:NodeShape",
+      "superClasses": [ "sh:Shape" ],
+      "attributes": [
+        {
+          "id": "property",
+          "property": "http://www.w3.org/ns/shacl#property",
+          "type": "object"
+        }
+      ]
+    },
+    {
+      "id": "sh:PropertyShape",
+      "type": "sh:PropertyShape",
+      "superClasses": [ "sh:Shape" ],
+      "attributes": [
+        {
+          "id": "sh:path",
+          "property": "sh:path",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:minCount",
+          "property": "sh:minCount",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:maxCount",
+          "property": "sh:maxCount",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:name",
+          "property": "sh:name",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:description",
+          "property": "sh:description",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:order",
+          "property": "sh:order",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:group",
+          "property": "sh:group",
+          "type": "object",
+          "single": true
+        }
+      ]
+    },
+    {
+      "id": "sh:PropertyGroup",
+      "type": "sh:PropertyGroup",
+      "attributes": [
+        {
+          "id": "sh:order",
+          "property": "sh:order",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "sh:label",
+          "property": "sh:label",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    },
+    {
+      "id": "sh:ShapesGraphNode",
+      "type": "sh:ShapesGraphNode",
+      "superClasses": [ "sh:NodeShape" ],
+      "attributes": [
+        {
+          "id": "shacz:isRoot",
+          "property": "shacz:isRoot",
+          "single": true,
+          "type": "datatype"
+        },
+        {
+          "id": "shacz:shortTemplate",
+          "property": "shacz:shortTemplate",
+          "single": true,
+          "type": "datatype"
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /*
@@ -65,6 +66,13 @@ public class ConversionProfile {
   private final Map<String, Type> classIdTypeMap = new HashMap<>();
 
   /**
+   * expanded classId lookup
+   */
+  @JsonIgnore
+  private final Map<String, Type> expandedClassIdTypeMap = new HashMap<>();
+
+
+  /**
    * Used for lookup of most specific Type from a list of classIds,
    * typically from lowest level (first collection) but possible from other levels.
    * <p>
@@ -76,6 +84,9 @@ public class ConversionProfile {
 
   @JsonIgnore
   private final Map<String, Type> rdfTypeTypeMap = new HashMap<>();
+
+  @JsonIgnore
+  private final Map<String, Type> expandedRdfTypeTypeMap = new HashMap<>();
 
   public Map<String, String> getPrefixes() {
     return prefixes;
@@ -105,6 +116,10 @@ public class ConversionProfile {
 
   public Type getTypeFromRdfType(String rdfType) {
     return rdfTypeTypeMap.get(rdfType);
+  }
+
+  public Type getTypeFromExpandedRdfType(String rdfType) {
+    return expandedRdfTypeTypeMap.get(rdfType);
   }
 
   public Type getTypeFromClassId(String classId) {
@@ -137,10 +152,10 @@ public class ConversionProfile {
   }
 
   public Type getTypeFromRdfTypes(Collection<String> input) {
-    List<Type> result = this.classIdTypeMap.values()
-                                           .stream()
-                                           .filter(t -> CollectionUtils.isEqualCollection(t.rdfTypes, input))
-                                           .collect(Collectors.toList());
+    List<Type> result = this.expandedClassIdTypeMap.values()
+                                                   .stream()
+                                                   .filter(isExactType(input))
+                                                   .collect(Collectors.toList());
     if (result.size() != 1) {
       List<String> types = result.stream().map(Type::getRootClassId).collect(Collectors.toList());
       throw new RuntimeException("expecting exactly one type for input " + input + ", found " + types);
@@ -149,21 +164,34 @@ public class ConversionProfile {
     return result.get(0);
   }
 
+  private Predicate<Type> isExactType(Collection<String> input) {
+    return t -> CollectionUtils.isEqualCollection(t.expandedRdfTypes, input);
+  }
+
   public Type getBestMatchingTypeFromRdfTypes(Collection<String> input) {
-    List<Type> result = this.classIdTypeMap.values()
-                                           .stream()
-                                           .filter(t -> CollectionUtils.containsAll(input, t.rdfTypes))
-                                           .sorted(Comparator.comparing(t -> CollectionUtils.intersection(((ConversionProfile.Type) t).rdfTypes, input).size()).reversed())
-                                           .collect(Collectors.toList());
+    List<Type> result = this.expandedClassIdTypeMap.values()
+                                                   .stream()
+                                                   .filter(isCandidateType(input))
+                                                   .sorted(getBestMatchCalculation(input))
+                                                   .collect(Collectors.toList());
     if (result.isEmpty()) {
       throw new RuntimeException("no class matches input " + input);
     }
     if (result.size() >= 2 && result.get(0).getRdfTypes().size() == result.get(1).getRdfTypes().size()) {
       throw new RuntimeException("there is a tie in the first result classes, can't pick one between: " +
-              result.get(0).getRdfTypes() + " and " + result.get(1).getRdfTypes());
+                                 result.get(0).getRdfTypes() + " and " + result.get(1).getRdfTypes());
     }
 
     return result.get(0);
+  }
+
+  private Predicate<Type> isCandidateType(Collection<String> input) {
+    return t -> CollectionUtils.containsAll(input, t.expandedRdfTypes);
+  }
+
+  private Comparator<Object> getBestMatchCalculation(Collection<String> input) {
+    return Comparator.comparing(t -> CollectionUtils.intersection(((Type) t).rdfTypes, input).size())
+                     .reversed();
   }
 
   public void add(Type type) {
@@ -173,7 +201,18 @@ public class ConversionProfile {
 
     types.add(type);
     classIdTypeMap.put(type.rootClassId, type);
+    expandedClassIdTypeMap.put(curieToFullUri(type.rootClassId), type);
     rdfTypeTypeMap.put(type.rootRdfType, type);
+    expandedRdfTypeTypeMap.put(curieToFullUri(type.rootRdfType), type);
+  }
+
+  private String curieToFullUri(String curieOrUri) {
+    if (!curieOrUri.contains(":")) return curieOrUri;
+
+    String prefix = StringUtils.substringBefore(curieOrUri, ":");
+    if (prefixes == null || !prefixes.containsKey(prefix)) return curieOrUri;
+
+    return prefixes.get(prefix) + StringUtils.substringAfter(curieOrUri, ":");
   }
 
   public void done() {
@@ -221,6 +260,9 @@ public class ConversionProfile {
      */
     private String rootRdfType;
 
+    @JsonIgnore
+    private String expandedRootRdfType;
+
     /**
      * all classIds of type
      */
@@ -230,6 +272,9 @@ public class ConversionProfile {
      * all rdfTypes
      */
     private Collection<String> rdfTypes;
+
+    @JsonIgnore
+    private Collection<String> expandedRdfTypes;
 
     private List<Attribute> attributes = new ArrayList<>();
 
@@ -258,6 +303,14 @@ public class ConversionProfile {
       this.rootRdfType = rootRdfType;
     }
 
+    public String getExpandedRootRdfType() {
+      return expandedRootRdfType;
+    }
+
+    public void setExpandedRootRdfType(String expandedRootRdfType) {
+      this.expandedRootRdfType = expandedRootRdfType;
+    }
+
     public Collection<String> getClassIds() {
       return classIds;
     }
@@ -272,6 +325,14 @@ public class ConversionProfile {
 
     public void setRdfTypes(Collection<String> rdfTypes) {
       this.rdfTypes = rdfTypes;
+    }
+
+    public Collection<String> getExpandedRdfTypes() {
+      return expandedRdfTypes;
+    }
+
+    public void setExpandedRdfTypes(Collection<String> expandedRdfTypes) {
+      this.expandedRdfTypes = expandedRdfTypes;
     }
 
     public List<Attribute> getAttributes() {
@@ -329,6 +390,7 @@ public class ConversionProfile {
   }
 
   public static class Attribute {
+
     public enum Type {
       reference,
       attribute,
@@ -345,6 +407,10 @@ public class ConversionProfile {
 
     private String attributeId;
     private String uri;
+
+    @JsonIgnore
+    private String expandedUri;
+
     private boolean inverse;
 
     @JsonIgnore
@@ -367,8 +433,17 @@ public class ConversionProfile {
 
     public void setUri(String uri) {
       this.uri = uri;
-      this.property = ResourceFactory.createProperty(uri);
     }
+
+    public String getExpandedUri() {
+      return expandedUri;
+    }
+
+    public void setExpandedUri(String expandedUri) {
+      this.expandedUri = expandedUri;
+      this.property = ResourceFactory.createProperty(expandedUri);
+    }
+
 
     public boolean isInverse() {
       return inverse;

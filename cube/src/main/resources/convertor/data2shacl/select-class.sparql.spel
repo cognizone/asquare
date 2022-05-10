@@ -1,0 +1,5 @@
+select distinct ?type {
+  ?uri a <#{[type]}> .
+  ?uri <#{[property]}> ?x.
+  ?x a ?type.
+}
