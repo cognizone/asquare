@@ -116,6 +116,16 @@ public class DeltaResource implements MutableResource {
     return constructAndCache(view, oldResource, newResource);
   }
 
+  public static DeltaResource editCachedDatabaseResource(ApplicationView view, MutableResource newResource) {
+    String resourceUri = newResource.getResource().getURI();
+    if (CachedDeltaResourceAspect.isResourceCached(view, resourceUri, newResource.getType())) {
+      TypedResource oldResource = CachedDeltaResourceAspect.find(view, resourceUri, newResource.getType())
+                                                           .getOldResource();
+      return constructAndCache(view, oldResource, newResource);
+    }
+    else return constructAndCache(view, newResource, null);
+  }
+
   public static DeltaResource createNew(ApplicationView view,
                                         Supplier<ApplicationProfile.Type> typeSupplier,
                                         Supplier<String> uriSupplier) {
