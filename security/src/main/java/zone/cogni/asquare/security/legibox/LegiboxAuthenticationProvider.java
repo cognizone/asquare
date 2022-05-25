@@ -30,9 +30,7 @@ public class LegiboxAuthenticationProvider implements AuthenticationProvider {
     LegiboxUser myLegiboxUser = myLegiboxUserService.getUser(authentication.getName());
     String encryptedPassword = myLegiboxUser.getPassword();
 
-    //TODO: to implement delegated password encoder with custom support for existing md5 encoded passwords
-    if ((StringUtils.startsWith(encryptedPassword, "{bcrypt}") && encoder.matches(presentedPassword, encryptedPassword)) ||
-        StringUtils.equals(DigestUtils.md5Hex(presentedPassword), encryptedPassword)) {//md5hex to cover old legilux passwords (future ones are bcrypt)
+    if (encoder.matches(presentedPassword, encryptedPassword)) {
       return myLegiboxUser;
     }
 
