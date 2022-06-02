@@ -590,6 +590,9 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     if (configuration.isJsonType(JsonType.DISABLED))
       return;
 
+    if (type == null)
+      throw new RuntimeException("cannot find type for instanceRoot " + instanceRoot);
+
     if (configuration.isJsonType(JsonType.ROOT)) {
       instanceRoot.put("type", type.getRootClassId());
       return;
@@ -616,6 +619,9 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private void setInstanceRootType(ObjectNode instanceRoot, ConversionProfile.Type type) {
     if (configuration.isJsonRootType(JsonRootType.DISABLED))
       return;
+
+    if (type == null)
+      throw new RuntimeException("cannot find type for instanceRoot " + instanceRoot);
 
     if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
       instanceRoot.put("rootType", type.getRootClassId());
