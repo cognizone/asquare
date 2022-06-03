@@ -9,11 +9,11 @@ import org.springframework.core.io.InputStreamSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -48,12 +48,12 @@ public class CompactConversionProfile {
   }
 
   public void setPrefixes(Map<String, String> prefixes) {
-    this.prefixes = prefixes;
+    this.prefixes = new TreeMap<>(prefixes);
   }
 
   void addPrefix(String prefix, String uri) {
     if (prefixes == null)
-      prefixes = new HashMap<>();
+      prefixes = new TreeMap<>();
 
     if (!prefixes.containsKey(prefix)) {
       prefixes.put(prefix, uri);
@@ -127,7 +127,6 @@ public class CompactConversionProfile {
 
     private static final Logger log = LoggerFactory.getLogger(Type.class);
 
-    private Set<String> superClasses = new HashSet<>();
 
     /**
      * for quick lookup based on classId
@@ -138,6 +137,7 @@ public class CompactConversionProfile {
      * for quick lookup based on rootRdfType: either there is one or a set
      */
     private String type;
+    private Set<String> superClasses = new HashSet<>();
 
     private List<Attribute> attributes = new ArrayList<>();
 
@@ -192,6 +192,7 @@ public class CompactConversionProfile {
                        .orElse(null);
     }
 
+    @JsonIgnore
     public Set<String> getRealSuperClasses() {
       return getSuperClasses().stream()
                               .filter(superId -> !superId.equals(id))
