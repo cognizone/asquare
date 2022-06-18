@@ -194,6 +194,7 @@ public class MonitoredPool {
     };
   }
 
+  @SuppressWarnings("Convert2MethodRef")
   public static <V> Consumer<InvocationContext<V>> logSummary() {
     return context -> {
       List<CallableResult<V>> results = context.getResults();
