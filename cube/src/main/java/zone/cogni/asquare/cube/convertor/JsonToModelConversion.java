@@ -90,13 +90,13 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
 
   private void addTypes(Model model, Resource uri, ConversionProfile.Type type) {
     if (configuration.isModelType(ModelType.ROOT)) {
-      model.add(uri, RDF.type, ResourceFactory.createResource(type.getRootRdfType()));
+      model.add(uri, RDF.type, ResourceFactory.createResource(type.getExpandedRootRdfType()));
       return;
     }
 
     if (configuration.isModelType(ModelType.PROFILE)
         || configuration.isModelType(ModelType.ALL)) {
-      type.getRdfTypes()
+      type.getExpandedRdfTypes()
           .forEach(rdfType -> model.add(uri, RDF.type, ResourceFactory.createResource(rdfType)));
       return;
     }
