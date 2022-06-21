@@ -1,6 +1,12 @@
 package zone.cogni.asquare.cube.convertor.data2shacl;
 
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.MapUtils;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Configuration {
   private String shapesPrefix;
@@ -11,6 +17,8 @@ public class Configuration {
   private boolean reportPossibleIssues;
 
   private List<String> ignoredClasses;
+
+  private Map<Set<String>, String> typeTranslations;
 
   public Configuration() {
   }
@@ -61,10 +69,29 @@ public class Configuration {
   }
 
   public List<String> getIgnoredClasses() {
-    return ignoredClasses;
+    return ListUtils.emptyIfNull(ignoredClasses);
   }
 
   public void setIgnoredClasses(List<String> ignoredClasses) {
     this.ignoredClasses = ignoredClasses;
+  }
+
+  public Map<Set<String>, String> getTypeTranslations() {
+    return MapUtils.emptyIfNull(typeTranslations);
+  }
+
+  public void setTypeTranslations(Map<Set<String>, String> typeTranslations) {
+    this.typeTranslations = typeTranslations;
+  }
+
+  public String getTypeTranslation(Set<String> types) {
+    if (typeTranslations == null) return null;
+    return typeTranslations.get(types);
+  }
+
+  public void addTypeTranslation(Set<String> types, String type) {
+    if (typeTranslations == null) typeTranslations = new HashMap<>();
+
+    typeTranslations.put(types, type);
   }
 }

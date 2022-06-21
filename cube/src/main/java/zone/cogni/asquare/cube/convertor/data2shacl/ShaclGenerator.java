@@ -24,8 +24,11 @@ import zone.cogni.core.spring.ResourceHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ShaclGenerator {
@@ -49,29 +52,7 @@ public class ShaclGenerator {
     log.info("(generateTypeGraphs) start");
 
     List<String> graphsOfType = getGraphsOfType(rdfStore, typeUri);
-    log.info("(generateTypeGraphs) fetched {} graph uris", graphsOfType.size());
-
-    Model fullModel = ModelFactory.createDefaultModel();
-    for (int i = 0; i < graphsOfType.size(); i++) {
-      String graph = graphsOfType.get(i);
-
-      Model model = paginatedQuery.getGraph(rdfStore, graph);
-      fullModel.add(model);
-
-
-      int graphCount = i + 1;
-      if (graphCount % 20 == 0) {
-        log.info("(generateTypeGraphs) load {}/{} with total of {} triples", graphCount, graphsOfType.size(), fullModel.size());
-      }
-      else {
-        log.debug("(generateTypeGraphs) load {}/{} with total of {} triples", graphCount, graphsOfType.size(), fullModel.size());
-      }
-    }
-
-    log.info("(generateTypeGraphs) loaded {} triples", fullModel.size());
-
-    InternalRdfStoreService graphRdfStore = new InternalRdfStoreService(fullModel);
-    return generate(configuration, prefixes, graphRdfStore);
+    return generate(configuration, prefixes, rdfStore, graphsOfType);
   }
 
   private List<String> getGraphsOfType(RdfStoreService rdfStoreService, String typeUri) {
@@ -92,15 +73,31 @@ public class ShaclGenerator {
 
   public Model generate(@Nonnull Configuration configuration,
                         @Nonnull Map<String, String> prefixes,
+                        @Nonnull RdfStoreService rdfStore,
+                        @Nonnull List<String> graphs) {
+    log.info("(generateTypeGraphs) fetched {} graph uris", graphs.size());
+
+    Model fullModel = paginatedQuery.getGraphs(rdfStore, graphs, 10);
+    InternalRdfStoreService graphRdfStore = new InternalRdfStoreService(fullModel);
+
+    return generate(configuration, prefixes, graphRdfStore);
+  }
+
+  public Model generate(@Nonnull Configuration configuration,
+                        @Nonnull Map<String, String> prefixes,
                         @Nonnull RdfStoreService rdfStoreService) {
     Model shacl = ModelFactory.createDefaultModel();
     try {
 
       addPrefixes(configuration, prefixes, shacl);
+      log.debug("(generate) add prefixes done: {}", prefixes.size());
+
       addTypes(configuration, rdfStoreService, shacl);
+      log.debug("(generate) add types done");
 
       if (configuration.isIncludeShapesGraph()) {
         addShapesGraph(configuration, shacl);
+        log.debug("(generate) add shapes graph done");
       }
 
       return shacl;
@@ -162,6 +159,7 @@ public class ShaclGenerator {
 
   private void addTypes(Configuration configuration, RdfStoreService rdfStoreService, Model shacl) {
     List<String> types = getTypes(rdfStoreService);
+    log.debug("(addTypes) found {} types", types.size());
     types.forEach(type -> addType(configuration, rdfStoreService, shacl, type));
   }
 
@@ -174,9 +172,8 @@ public class ShaclGenerator {
                        @Nonnull RdfStoreService rdfStoreService,
                        @Nonnull Model shacl,
                        @Nonnull String typeUri) {
-    if (CollectionUtils.isNotEmpty(configuration.getIgnoredClasses())
-        && configuration.getIgnoredClasses().contains(typeUri)) {
-      String message = getMessage("ignoring type '{}'", typeUri);
+    if (isIgnoredType(configuration, typeUri)) {
+      String message = getMessage("ignoring type '{}'", shortenUri(shacl, typeUri));
       log.info(message);
 
       if (configuration.isReportPossibleIssues()) {
@@ -185,13 +182,22 @@ public class ShaclGenerator {
       }
       return;
     }
+
     Resource targetClass = ResourceFactory.createResource(typeUri);
     Resource typeShape = calculateShapeBasedOnResource(configuration, shacl, null, targetClass);
 
     shacl.add(typeShape, RDF.type, Shacl.NodeShape);
     shacl.add(typeShape, Shacl.targetClass, targetClass);
 
+    if (log.isDebugEnabled())
+      log.debug("(addType) shape name '{}' for targetClass '{}'", typeShape.getURI(), targetClass.getURI());
+
     addProperties(configuration, rdfStoreService, shacl, typeShape, targetClass);
+  }
+
+  private boolean isIgnoredType(Configuration configuration, String typeUri) {
+    return CollectionUtils.isNotEmpty(configuration.getIgnoredClasses())
+           && configuration.getIgnoredClasses().contains(typeUri);
   }
 
   private Resource calculateShapeBasedOnResource(@Nonnull Configuration configuration,
@@ -222,6 +228,9 @@ public class ShaclGenerator {
                              Resource typeShape,
                              Resource targetClass) {
     List<String> properties = getProperties(rdfStoreService, targetClass);
+    if (log.isDebugEnabled())
+      log.debug("(addProperties) shape '{}' has {} properties", typeShape.getLocalName(), properties.size());
+
     properties.forEach(property -> addProperty(configuration,
                                                rdfStoreService,
                                                shacl,
@@ -336,7 +345,7 @@ public class ShaclGenerator {
                                                       targetClass, path);
     if (datatypes.size() != 1) {
       String message = getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
-                                  targetClass, path, datatypes);
+                                  shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, datatypes));
       log.warn(message);
 
       if (configuration.isReportPossibleIssues()) {
@@ -347,6 +356,27 @@ public class ShaclGenerator {
 
     Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
     shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+  }
+
+
+  @Nonnull
+  private List<String> shortenUri(@Nonnull Model shacl, @Nonnull List<String> uris) {
+    return uris.stream()
+               .map(uri -> shortenUri(shacl, uri))
+               .collect(Collectors.toList());
+  }
+
+  @Nonnull
+  private String shortenUri(@Nonnull Model shacl, @Nonnull String uri) {
+    return shortenUri(shacl, ResourceFactory.createResource(uri));
+  }
+
+  @Nonnull
+  private String shortenUri(@Nonnull Model shacl, @Nonnull Resource resource) {
+    String prefix = shacl.getNsURIPrefix(resource.getNameSpace());
+    if (prefix == null) return resource.getURI();
+
+    return prefix + ":" + resource.getLocalName();
   }
 
   private String getMessage(String messagePattern, Object... parameters) {
@@ -363,8 +393,8 @@ public class ShaclGenerator {
     List<String> classes = calculateClasses(configuration, rdfStoreService, targetClass, path);
 
     if (classes.isEmpty()) {
-      String message = getMessage("type '{}' and property '{}' is empty.",
-                                  targetClass, path);
+      String message = getMessage("type '{}' and property '{}' is considered an 'rdfs:Resource'.",
+                                  shortenUri(shacl, targetClass), shortenUri(shacl, path));
       log.warn(message);
 
       if (configuration.isReportPossibleIssues()) {
@@ -376,7 +406,7 @@ public class ShaclGenerator {
 
     if (classes.size() != 1) {
       String message = getMessage("type '{}' and property '{}' does not have exactly one class: {}",
-                                  targetClass, path, classes);
+                                  shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, classes));
       log.warn(message);
 
       if (configuration.isReportPossibleIssues()) {
@@ -392,12 +422,23 @@ public class ShaclGenerator {
   private List<String> calculateClasses(Configuration configuration, RdfStoreService rdfStoreService, Resource targetClass, Resource path) {
     List<String> classes = selectForTypeAndProperty(rdfStoreService, "select-class.sparql.spel",
                                                     targetClass, path);
+    // return is 0 or 1 result
+    if (classes.size() <= 1) return classes;
 
-    if (CollectionUtils.isEmpty(configuration.getIgnoredClasses())) {
-      return classes;
-    }
+    // try to translate lots of types to 1
+    Set<String> classSet = new HashSet<>(classes);
+    String translation = configuration.getTypeTranslation(classSet);
+    if (translation != null) return List.of(translation);
 
-    return new ArrayList<>(CollectionUtils.removeAll(classes, configuration.getIgnoredClasses()));
+    // cleanup unused types
+    classSet.removeAll(configuration.getIgnoredClasses());
+
+    // again, try to translate lots of types to 1
+    String translationRetry = configuration.getTypeTranslation(classSet);
+    if (translationRetry != null) return List.of(translationRetry);
+
+    // we tried, return as what's left
+    return new ArrayList<>(classes);
   }
 
   private List<String> selectForTypeAndProperty(RdfStoreService rdfStoreService,
