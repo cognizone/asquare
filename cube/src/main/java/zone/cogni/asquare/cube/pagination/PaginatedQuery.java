@@ -7,7 +7,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,7 @@ public class PaginatedQuery {
       List<Map<String, RDFNode>> rows = select(rdfStore, selectQuery);
       rows.forEach(row -> {
         Property p = ResourceFactory.createProperty(row.get("p").asResource().getURI());
-        model.add((Resource) row.get("s"), p, row.get("o"));
+        model.add(row.get("s").asResource(), p, row.get("o"));
       });
 
       int currentCount = (i + 1) * sublistSize;
