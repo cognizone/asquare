@@ -24,7 +24,7 @@ public class ShaclToConversionProfileTest {
     CompactConversionProfile profile = shaclToConversionProfile.apply(personShacl);
 
     // then
-    assertThat(profile.getPrefixes()).hasSize(6);
+    assertThat(profile.getContext().getPrefixes()).hasSize(6);
     assertThat(profile.getTypes()).hasSize(1);
 
     CompactConversionProfile.Type person = profile.getById("ex:Person");

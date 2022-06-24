@@ -24,11 +24,19 @@ class JsonToModelConversionTest {
   private static final String AnimalConversionProfile = "convertor/animal-conversion-profile.json";
   private static final String AnimalPersonConversionProfile = "convertor/animal-person-conversion-profile.json";
   private static final String PersonConversionProfile = "convertor/person-conversion-profile.json";
+  private static final String PersonConversionProfileCurie = "convertor/person-conversion-profile-curie.json";
 
   private static final ModelToJsonConversion.Configuration DefaultConfiguration = new ModelToJsonConversion.Configuration();
   private static final ModelToJsonConversion.Configuration RootOnlyConfiguration = new ModelToJsonConversion.Configuration();
+
   static {
     RootOnlyConfiguration.setModelType(ModelToJsonConversion.Configuration.ModelType.ROOT);
+  }
+
+  private static final ModelToJsonConversion.Configuration ContextConfiguration = new ModelToJsonConversion.Configuration();
+
+  static {
+    ContextConfiguration.setContextEnabled(true);
   }
 
 
@@ -107,8 +115,23 @@ class JsonToModelConversionTest {
     Resource s = ResourceFactory.createResource("http://demo.com/data#homer");
     Property p = ResourceFactory.createProperty("http://demo.com/person/model#owns");
     Resource o = ResourceFactory.createResource("http://demo.com/data#santaslittlehelper");
-    assertThat(newModel.contains(s, p, o));
+    assertThat(newModel.contains(s, p, o)).isTrue();
     assertThat(newModel.size()).isEqualTo(fromFile.size());
+  }
+
+  @Test
+  public void context_test() throws IOException {
+    // given
+    ObjectNode jsonNode = getObjectNode("convertor/person-data-homer-curie.json");
+    JsonToModelConversion conversion = getConversionProfile(PersonConversionProfileCurie,
+                                                            ContextConfiguration);
+
+    // when
+    Model newModel = conversion.apply(jsonNode);
+    newModel.write(System.out, "ttl");
+
+    // then
+    assertThat(newModel.size()).isEqualTo(11);
   }
 
   private ObjectNode getObjectNode(String path) throws IOException {

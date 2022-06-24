@@ -1,6 +1,8 @@
 {
-  "prefixes" : {
-    "c" : "http://demo.com/c#"
+  "context": {
+    "prefixes": {
+      "c": "http://demo.com/c#"
+    }
   },
   "imports": [ "convertor/imports/prefixes/mammal-conversion-profile.json" ],
   "types": [

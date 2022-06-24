@@ -1,6 +1,8 @@
 {
-  "prefixes" : {
-    "a" : "http://demo.com/a#"
+  "context": {
+    "prefixes": {
+      "a": "http://demo.com/a#"
+    }
   },
   "types": [
     {

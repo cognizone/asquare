@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class ConversionProfile {
     return new CompactConversionProfileToConversionProfile().apply(CompactConversionProfile.read(resource));
   }
 
-  private Map<String, String> prefixes;
+  private Context context = new Context();
   private List<Type> types = new ArrayList<>();
 
   /**
@@ -88,12 +89,14 @@ public class ConversionProfile {
   @JsonIgnore
   private final Map<String, Type> expandedRdfTypeTypeMap = new HashMap<>();
 
-  public Map<String, String> getPrefixes() {
-    return prefixes;
+  public Context getContext() {
+    Objects.requireNonNull(context, "context cannot be null");
+    return context;
   }
 
-  public void setPrefixes(Map<String, String> prefixes) {
-    this.prefixes = prefixes;
+  public void setContext(Context context) {
+    Objects.requireNonNull(context, "context cannot be null");
+    this.context = context;
   }
 
   public List<Type> getTypes() {
@@ -201,19 +204,11 @@ public class ConversionProfile {
 
     types.add(type);
     classIdTypeMap.put(type.rootClassId, type);
-    expandedClassIdTypeMap.put(curieToFullUri(type.rootClassId), type);
+    expandedClassIdTypeMap.put(context.curieToFullUri(type.rootClassId), type);
     rdfTypeTypeMap.put(type.rootRdfType, type);
-    expandedRdfTypeTypeMap.put(curieToFullUri(type.rootRdfType), type);
+    expandedRdfTypeTypeMap.put(context.curieToFullUri(type.rootRdfType), type);
   }
 
-  private String curieToFullUri(String curieOrUri) {
-    if (!curieOrUri.contains(":")) return curieOrUri;
-
-    String prefix = StringUtils.substringBefore(curieOrUri, ":");
-    if (prefixes == null || !prefixes.containsKey(prefix)) return curieOrUri;
-
-    return prefixes.get(prefix) + StringUtils.substringAfter(curieOrUri, ":");
-  }
 
   public void done() {
     calculateTypesByLevel();
@@ -247,6 +242,30 @@ public class ConversionProfile {
     classIdTypeMap.values()
                   .forEach(type -> result.append("\n").append(type));
     return result.toString();
+  }
+
+  public static class Context {
+
+    private Map<String, String> prefixes = new TreeMap<>();
+
+    public Map<String, String> getPrefixes() {
+      Objects.requireNonNull(prefixes, "prefixes cannot be null");
+      return prefixes;
+    }
+
+    public void setPrefixes(Map<String, String> prefixes) {
+      Objects.requireNonNull(prefixes, "prefixes cannot be null");
+      this.prefixes = prefixes;
+    }
+
+    private String curieToFullUri(String curieOrUri) {
+      if (!curieOrUri.contains(":")) return curieOrUri;
+
+      String prefix = StringUtils.substringBefore(curieOrUri, ":");
+      if (!prefixes.containsKey(prefix)) return curieOrUri;
+
+      return prefixes.get(prefix) + StringUtils.substringAfter(curieOrUri, ":");
+    }
   }
 
   public static class Type {

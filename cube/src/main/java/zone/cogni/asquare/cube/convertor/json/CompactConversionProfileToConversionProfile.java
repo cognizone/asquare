@@ -24,8 +24,7 @@ public class CompactConversionProfileToConversionProfile
     CompactConversionProfile collapsedConversionProfile = getCollapsedImportsConversionProfile(compactConversionProfile);
     ConversionProfile result = new ConversionProfile();
 
-    if (collapsedConversionProfile.getPrefixes() != null)
-      result.setPrefixes(collapsedConversionProfile.getPrefixes());
+    result.getContext().setPrefixes(collapsedConversionProfile.getContext().getPrefixes());
 
     collapsedConversionProfile.getTypes()
                               .forEach(type -> result.add(convertType(result, type)));
@@ -57,7 +56,7 @@ public class CompactConversionProfileToConversionProfile
   private String curieToFullUri(ConversionProfile profile, String curieOrUri) {
     if (!curieOrUri.contains(":")) return curieOrUri;
 
-    Map<String, String> prefixes = profile.getPrefixes();
+    Map<String, String> prefixes = profile.getContext().getPrefixes();
     String prefix = StringUtils.substringBefore(curieOrUri, ":");
     if (prefixes == null || !prefixes.containsKey(prefix))
       return curieOrUri;

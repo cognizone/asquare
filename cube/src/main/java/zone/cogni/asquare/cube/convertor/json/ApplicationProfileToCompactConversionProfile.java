@@ -18,7 +18,7 @@ public class ApplicationProfileToCompactConversionProfile
     Preconditions.checkNotNull(applicationProfile);
 
     CompactConversionProfile result = new CompactConversionProfile();
-    result.setPrefixes(ProfileConversionUtils.getPrefixes());
+    result.getContext().setPrefixes(ProfileConversionUtils.getPrefixes());
     result.setTypes(getTypes(applicationProfile));
     return result;
   }
