@@ -40,10 +40,10 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   public JsonToModelConversion(PrefixCcService prefixCcService, ConversionProfile conversionProfile) {
     this(prefixCcService, conversionProfile, new ModelToJsonConversion.Configuration());
     log.warn(
-      "\n\t---------------------------------------------------------------------------------------------" +
-      "\n\t  Please switch to JsonToModelConversion(PrefixCcService, ConversionProfile, Configuration)" +
-      "\n\t  also make sure Configuration is same in JsonToModelConversion and ModelToJsonConversion" +
-      "\n\t---------------------------------------------------------------------------------------------"
+            "\n\t---------------------------------------------------------------------------------------------" +
+            "\n\t  Please switch to JsonToModelConversion(PrefixCcService, ConversionProfile, Configuration)" +
+            "\n\t  also make sure Configuration is same in JsonToModelConversion and ModelToJsonConversion" +
+            "\n\t---------------------------------------------------------------------------------------------"
     );
   }
 
@@ -59,8 +59,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   public Model apply(JsonNode root) {
     Model model = ModelFactory.createDefaultModel();
 
-    if (conversionProfile.getPrefixes() != null)
-      model.setNsPrefixes(conversionProfile.getPrefixes());
+    model.setNsPrefixes(conversionProfile.getContext().getPrefixes());
 
     JsonNode dataNode = root.get("data");
 
@@ -75,7 +74,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
 
     ArrayNode included = (ArrayNode) root.get("included");
     included
-      .forEach(include -> processSingleNode(model, include));
+            .forEach(include -> processSingleNode(model, include));
   }
 
   private void processSingleNode(Model model, JsonNode node) {
@@ -125,28 +124,28 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
                             Resource uri,
                             JsonNode attributeValueNode) {
     attributeValueNode
-      .fields()
-      .forEachRemaining(typeField -> {
-        String attributeType = typeField.getKey();
-        JsonNode attributeValue = typeField.getValue();
+            .fields()
+            .forEachRemaining(typeField -> {
+              String attributeType = typeField.getKey();
+              JsonNode attributeValue = typeField.getValue();
 
-        if (attributeType.equals("rdf:langString") || attributeType.equals(RDF.langString.getURI())) {
-          addLanguages(model, attribute, uri, attributeValue);
-          return;
-        }
+              if (attributeType.equals("rdf:langString") || attributeType.equals(RDF.langString.getURI())) {
+                addLanguages(model, attribute, uri, attributeValue);
+                return;
+              }
 
-        if (attributeValue.isArray()) {
-          attributeValue
-            .forEach(element -> {
-              RDFNode object = getObject(attributeType, element);
-              if (object != null) model.add(uri, attribute.getProperty(), object);
+              if (attributeValue.isArray()) {
+                attributeValue
+                        .forEach(element -> {
+                          RDFNode object = getObject(attributeType, element);
+                          if (object != null) model.add(uri, attribute.getProperty(), object);
+                        });
+              }
+              else {
+                RDFNode object = getObject(attributeType, attributeValue);
+                if (object != null) model.add(uri, attribute.getProperty(), object);
+              }
             });
-        }
-        else {
-          RDFNode object = getObject(attributeType, attributeValue);
-          if (object != null) model.add(uri, attribute.getProperty(), object);
-        }
-      });
   }
 
   private void addReferences(Model model, ConversionProfile.Type type, Resource uri, JsonNode root) {
@@ -232,20 +231,20 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
                             Resource uri,
                             JsonNode languagesNode) {
     languagesNode
-      .fields()
-      .forEachRemaining(languageNode -> {
-        String language = languageNode.getKey();
-        JsonNode languageValue = languageNode.getValue();
+            .fields()
+            .forEachRemaining(languageNode -> {
+              String language = languageNode.getKey();
+              JsonNode languageValue = languageNode.getValue();
 
-        if (languageValue.isArray()) {
-          languageValue
-            .forEach(element -> addLanguageAttribute(model, uri, attribute.getProperty(), language, element
-              .textValue()));
-        }
-        else {
-          addLanguageAttribute(model, uri, attribute.getProperty(), language, languageValue.textValue());
-        }
-      });
+              if (languageValue.isArray()) {
+                languageValue
+                        .forEach(element -> addLanguageAttribute(model, uri, attribute.getProperty(), language, element
+                                .textValue()));
+              }
+              else {
+                addLanguageAttribute(model, uri, attribute.getProperty(), language, languageValue.textValue());
+              }
+            });
   }
 
   private void addLanguageAttribute(Model model, Resource uri, Property property, String language, String text) {

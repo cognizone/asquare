@@ -14,7 +14,7 @@ public class CollapsedImportsCompactConversionProfile implements Function<Compac
     private final CompactConversionProfile profileWithoutImports = new CompactConversionProfile();
 
     public void addPrefix(String prefix, String uri) {
-      profileWithoutImports.addPrefix(prefix, uri);
+      profileWithoutImports.getContext().addPrefix(prefix, uri);
     }
 
     public void addType(CompactConversionProfile.Type type) {
@@ -63,8 +63,7 @@ public class CollapsedImportsCompactConversionProfile implements Function<Compac
 
   public void processPrefixes(Builder builder, List<CompactConversionProfile> conversionProfiles) {
     conversionProfiles.stream()
-                      .filter(conversionProfile -> conversionProfile.getPrefixes() != null)
-                      .flatMap(conversionProfile -> conversionProfile.getPrefixes().entrySet().stream())
+                      .flatMap(conversionProfile -> conversionProfile.getContext().getPrefixes().entrySet().stream())
                       .forEach(entry -> builder.addPrefix(entry.getKey(), entry.getValue()));
   }
 

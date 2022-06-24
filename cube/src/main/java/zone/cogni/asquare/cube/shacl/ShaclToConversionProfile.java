@@ -26,7 +26,7 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   public CompactConversionProfile apply(@Nonnull Model shacl) {
     // TODO think a namespace normalizer?
     CompactConversionProfile profile = new CompactConversionProfile();
-    profile.setPrefixes(shacl.getNsPrefixMap());
+    profile.getContext().setPrefixes(shacl.getNsPrefixMap());
     profile.setTypes(calculateTypes(profile, shacl));
     return profile;
   }
@@ -66,7 +66,8 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   private String convertResourceToId(@Nonnull CompactConversionProfile profile,
                                      @Nonnull Resource resource) {
     String uri = resource.getURI();
-    Optional<String> optionalId = profile.getPrefixes()
+    Optional<String> optionalId = profile.getContext()
+                                         .getPrefixes()
                                          .entrySet()
                                          .stream()
                                          .filter(entry -> uri.startsWith(entry.getValue()))

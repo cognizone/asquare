@@ -11,19 +11,20 @@ import java.util.function.Function;
  * - conversions from JSON to RDF
  */
 public class ApplicationProfileToConversionProfile implements Function<ApplicationProfile, ConversionProfile> {
-
   @Override
+  @Deprecated
   public ConversionProfile apply(ApplicationProfile applicationProfile) {
     Preconditions.checkNotNull(applicationProfile);
 
     ConversionProfile result = new ConversionProfile();
-    result.setPrefixes(ProfileConversionUtils.getPrefixes());
+    result.getContext().setPrefixes(ProfileConversionUtils.getPrefixes());
     applicationProfile.getTypes()
                       .values()
                       .forEach(type -> result.add(convertType(type)));
     result.done();
     return result;
   }
+
 
   private ConversionProfile.Type convertType(ApplicationProfile.Type apType) {
     ConversionProfile.Type type = new ConversionProfile.Type();

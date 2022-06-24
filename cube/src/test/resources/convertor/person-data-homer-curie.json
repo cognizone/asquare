@@ -1,0 +1,53 @@
+{
+  "context": {
+    "prefix": {
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "person": "http://demo.com/person/model#"
+    }
+  },
+  "data": {
+    "uri": "http://demo.com/data#homer",
+    "type": "person:Person",
+    "rootType": "person:Person",
+    "references": {
+      "person:hasChild": [ "http://demo.com/data#bart" ],
+      "person:spouse": "http://demo.com/data#marge"
+    },
+    "attributes": {
+      "person:name": {
+        "xsd:string": "Homer Simpson"
+      },
+      "person:hasId": {
+        "http://demo.com/data-type/id-type": "123.456"
+      },
+      "person:hasDate": {
+        "xsd:date": [ "2021-04-29" ]
+      },
+      "person:website": {
+        "xsd:anyURI": [ "http://demo.com/homer/simpson" ]
+      }
+    }
+  },
+  "included": [
+    {
+      "uri": "http://demo.com/data#bart",
+      "type": "person:Person",
+      "rootType": "person:Person",
+      "attributes": {
+        "person:name": {
+          "xsd:string": "Bart Simpson"
+        }
+      }
+    },
+    {
+      "uri": "http://demo.com/data#marge",
+      "type": "person:Person",
+      "rootType": "person:Person",
+      "attributes": {
+        "person:name": {
+          "xsd:string": "Marge Simpson"
+        }
+      }
+    }
+  ]
+}

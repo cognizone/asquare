@@ -1,6 +1,8 @@
 {
-  "prefixes" : {
-    "b" : "http://demo.com/b#"
+  "context": {
+    "prefixes": {
+      "b": "http://demo.com/b#"
+    }
   },
   "imports": [ "convertor/imports/prefixes/animal-conversion-profile.json" ],
   "types": [

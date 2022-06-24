@@ -35,7 +35,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(dogProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(3);
   }
@@ -52,8 +52,8 @@ public class ConversionProfileImportsTest {
     // then
     assertThat(profile.getTypes()).hasSize(3);
     assertThat(profile.getImports()).isNull();
-    assertThat(profile.getPrefixes()).hasSize(3);
-    assertThat(profile.getPrefixes().keySet()).containsExactly("a", "b", "c");
+    assertThat(profile.getContext().getPrefixes()).hasSize(3);
+    assertThat(profile.getContext().getPrefixes().keySet()).containsExactly("a", "b", "c");
   }
 
   @Test
@@ -68,8 +68,8 @@ public class ConversionProfileImportsTest {
     // then
     assertThat(profile.getTypes()).hasSize(3);
     assertThat(profile.getImports()).isNull();
-    assertThat(profile.getPrefixes()).hasSize(3);
-    assertThat(profile.getPrefixes().keySet()).containsExactly("a", "b", "c");
+    assertThat(profile.getContext().getPrefixes()).hasSize(3);
+    assertThat(profile.getContext().getPrefixes().keySet()).containsExactly("a", "b", "c");
   }
 
   @Test
@@ -100,7 +100,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(2);
 
@@ -116,7 +116,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(2);
   }
@@ -147,7 +147,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(2);
   }
@@ -196,7 +196,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(1);
 
@@ -215,7 +215,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(1);
 
@@ -234,7 +234,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(1);
 
@@ -253,7 +253,7 @@ public class ConversionProfileImportsTest {
     CompactConversionProfile profile = new CollapsedImportsCompactConversionProfile().apply(animalProfile);
 
     // then
-    assertThat(profile.getPrefixes()).isNull();
+    assertThat(profile.getContext().getPrefixes()).isEmpty();
     assertThat(profile.getImports()).isNull();
     assertThat(profile.getTypes()).hasSize(1);
 

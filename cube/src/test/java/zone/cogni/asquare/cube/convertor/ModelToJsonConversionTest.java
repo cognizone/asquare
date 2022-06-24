@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.convertor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -258,12 +259,36 @@ public class ModelToJsonConversionTest {
     assertTrue(included.isArray());
     assertThat(included.size()).isEqualTo(2);
 
-    JsonNode marge = lookup( included, "http://demo.com/data#marge");
+    JsonNode marge = lookup(included, "http://demo.com/data#marge");
     JsonNode homerRef = navigate((ObjectNode) marge, "references", "spouse");
     assertTrue(homerRef.isTextual());
     assertThat(homerRef.textValue()).isEqualTo("http://demo.com/data#homer");
 
     System.out.println("json = \n" + json);
+  }
+
+  @Test
+  public void context_test() {
+    // given
+    Model homerModel = JenaUtils.read(new ClassPathResource("convertor/person-data-homer.ttl"));
+    ModelToJsonConversion conversion = getExpandedPersonConversion(getContextConfiguration());
+
+    // when
+    ObjectNode json = conversion.apply(homerModel, "http://demo.com/data#homer");
+
+    System.out.println(json.toPrettyString());
+
+    JsonNode prefixNode = navigate(json, "context", "prefix");
+    assertThat(prefixNode).isInstanceOf(ObjectNode.class);
+    assertThat(prefixNode.get("xsd")).isInstanceOf(TextNode.class);
+    assertThat(prefixNode.get("person")).isInstanceOf(TextNode.class);
+    assertThat(prefixNode.get("person").textValue()).isEqualTo("http://demo.com/person/model#");
+
+    assertThat(navigate(json, "data", "type").textValue()).isEqualTo("person:Person");
+    assertThat(navigate(json, "data", "rootType").textValue()).isEqualTo("person:Person");
+
+    assertThat(navigate(json, "data", "references", "person:spouse")).isNotNull();
+    assertThat(navigate(json, "data", "attributes", "person:name")).isNotNull();
   }
 
   private JsonNode navigate(ObjectNode json, String... path) {
@@ -310,6 +335,11 @@ public class ModelToJsonConversionTest {
     return new ModelToJsonConversion(configuration, ConversionProfile.read(input));
   }
 
+  private ModelToJsonConversion getExpandedPersonConversion(ModelToJsonConversion.Configuration configuration) {
+    InputStreamSource input = new ClassPathResource("convertor/person-conversion-profile-expanded.json");
+    return new ModelToJsonConversion(configuration, ConversionProfile.read(input));
+  }
+
   private ModelToJsonConversion getAnimalPersonConversion(ModelToJsonConversion.Configuration configuration) {
     InputStreamSource input = new ClassPathResource("convertor/animal-person-conversion-profile.json");
     return new ModelToJsonConversion(configuration, ConversionProfile.read(input));
@@ -336,6 +366,16 @@ public class ModelToJsonConversionTest {
     configuration.setLogIssues(true);
     configuration.setModelType(ModelType.ROOT);
     configuration.setJsonType(JsonType.ROOT);
+    return configuration;
+  }
+
+  private ModelToJsonConversion.Configuration getContextConfiguration() {
+    ModelToJsonConversion.Configuration configuration = new ModelToJsonConversion.Configuration();
+    configuration.setLogIssues(true);
+    configuration.setModelType(ModelType.ROOT);
+    configuration.setJsonType(JsonType.ROOT);
+    configuration.setJsonRootType(ModelToJsonConversion.Configuration.JsonRootType.ENABLED);
+    configuration.setContextEnabled(true);
     return configuration;
   }
 }

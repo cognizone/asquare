@@ -1,0 +1,48 @@
+{
+  "context": {
+    "prefixes": {
+      "person": "http://demo.com/person/model#"
+    }
+  },
+  "types": [
+    {
+      "id": "person:Person",
+      "type": "person:Person",
+      "attributes": [
+        {
+          "id": "person:name",
+          "property": "person:name",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "person:spouse",
+          "property": "person:spouse",
+          "type": "object",
+          "single": true
+        },
+        {
+          "id": "person:hasChild",
+          "property": "person:hasChild",
+          "type": "object"
+        },
+        {
+          "id": "person:hasDate",
+          "property": "person:hasDate",
+          "type": "datatype"
+        },
+        {
+          "id": "person:website",
+          "property": "person:website",
+          "type": "datatype"
+        },
+        {
+          "id": "person:hasId",
+          "property": "person:hasId",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}

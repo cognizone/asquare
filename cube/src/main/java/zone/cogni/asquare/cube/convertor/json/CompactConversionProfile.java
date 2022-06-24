@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.convertor.json;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -39,33 +41,20 @@ public class CompactConversionProfile {
     }
   }
 
-  private Map<String, String> prefixes;
+  private Context context = new Context();
   private List<String> imports;
   private List<Type> types = new ArrayList<>();
 
-  public Map<String, String> getPrefixes() {
-    return prefixes;
+  public Context getContext() {
+    Objects.requireNonNull(context, "context cannot be null");
+    return context;
   }
 
-  public void setPrefixes(Map<String, String> prefixes) {
-    this.prefixes = new TreeMap<>(prefixes);
+  public void setContext(Context context) {
+    Objects.requireNonNull(context, "context cannot be null");
+    this.context = context;
   }
 
-  void addPrefix(String prefix, String uri) {
-    if (prefixes == null)
-      prefixes = new TreeMap<>();
-
-    if (!prefixes.containsKey(prefix)) {
-      prefixes.put(prefix, uri);
-      return;
-    }
-
-    // check if we have a match if it already exists
-    String existingUri = prefixes.get(prefix);
-    if (!existingUri.equals(uri)) {
-      throw new RuntimeException("prefix '" + prefix + "' has values '" + uri + "' and '" + existingUri + "'");
-    }
-  }
 
   public List<String> getImports() {
     return imports;
@@ -121,6 +110,44 @@ public class CompactConversionProfile {
 
   private boolean isTypePresent(Type type) {
     return getById(type.getId()) != null;
+  }
+
+  public static class Context {
+
+    private Map<String, String> prefixes = new TreeMap<>();
+
+    public Map<String, String> getPrefixes() {
+      Objects.requireNonNull(prefixes, "prefixes cannot be null");
+      return prefixes;
+    }
+
+    public void setPrefixes(Map<String, String> prefixes) {
+      Objects.requireNonNull(prefixes, "prefixes cannot be null");
+      this.prefixes = prefixes;
+    }
+
+    public void addPrefix(String prefix, String uri) {
+      if (!prefixes.containsKey(prefix)) {
+        prefixes.put(prefix, uri);
+        return;
+      }
+
+      // fail if another uri already exists
+      String existingUri = prefixes.get(prefix);
+      if (!existingUri.equals(uri)) {
+        throw new RuntimeException("cannot add prefix '" + prefix + "':" +
+                                   " it has values '" + uri + "' and '" + existingUri + "'");
+      }
+    }
+
+    private String curieToFullUri(String curieOrUri) {
+      if (!curieOrUri.contains(":")) return curieOrUri;
+
+      String prefix = StringUtils.substringBefore(curieOrUri, ":");
+      if (!prefixes.containsKey(prefix)) return curieOrUri;
+
+      return prefixes.get(prefix) + StringUtils.substringAfter(curieOrUri, ":");
+    }
   }
 
   public static class Type {
