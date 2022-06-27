@@ -2,7 +2,6 @@ package zone.cogni.asquare.triplestore.pool;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -170,24 +169,23 @@ class LocalTdbRdfStoreServicePoolTest {
 
     for (int i = 0; i < 16; i++) {
       executor.submit(() -> {
-
           final LocalTdbRdfStoreService storeService = getProvider().getStore(key).get();
           waitForStart.await();
-          // let's keep store reference longer
-          TimeUnit.MILLISECONDS.wait(2500); //It times out at 2s
-
           return storeService.constructAllTriples();
       });
     }
 
+    // let's keep store reference longer
+    Thread.sleep(3500L); //It times out at 2s but eviction checks at every 1s, so with 3.5s we are sure it happens
+
     waitForStart.countDown(); // release all at once
-    executor.awaitTermination(4000L, TimeUnit.MILLISECONDS);
+    executor.awaitTermination(3000L, TimeUnit.MILLISECONDS);
+
     // wait for the logs to arrive, sleep to give chance for 'commons-pool-evictor' thread
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
       Thread.sleep(1000L);
     }
-    String all = output.getAll();
-    assertEquals(1, StringUtils.countMatches(all, "Timeout waiting for idle object"));
+    assertEquals(1, StringUtils.countMatches(output.getAll(), "Timeout waiting for idle object"));
   }
 
   private RdfStoreServiceProvider<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getProvider() {
