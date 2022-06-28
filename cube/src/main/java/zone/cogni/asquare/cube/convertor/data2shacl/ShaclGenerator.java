@@ -245,8 +245,12 @@ public class ShaclGenerator {
                            @Nonnull Resource typeShape,
                            @Nonnull Resource targetClass,
                            @Nonnull String property) {
+
     Resource path = ResourceFactory.createResource(property);
     Resource propertyShape = calculateShapeBasedOnResource(configuration, shacl, targetClass.getLocalName(), path);
+
+    if (log.isDebugEnabled())
+      log.debug("(addProperty) shape '{}' gets '{}'", typeShape.getLocalName(), propertyShape.getLocalName());
 
     shacl.add(typeShape, Shacl.property, propertyShape);
     shacl.add(propertyShape, RDF.type, Shacl.PropertyShape);
@@ -260,6 +264,8 @@ public class ShaclGenerator {
   }
 
   private void setMinCount(Configuration configuration, RdfStoreService rdfStoreService, Model shacl, Resource targetClass, Resource path, Resource propertyShape) {
+    if (log.isTraceEnabled()) log.trace("(setMinCount) start");
+
     boolean hasInstanceWithoutProperty = askTypeProperty(rdfStoreService,
                                                          "has-instance-without-property.sparql.spel",
                                                          targetClass,
@@ -275,6 +281,8 @@ public class ShaclGenerator {
                            Resource targetClass,
                            Resource path,
                            Resource propertyShape) {
+    if (log.isTraceEnabled()) log.trace("(setMaxCount) start");
+
     boolean hasInstanceWithTwoProperties = askTypeProperty(rdfStoreService,
                                                            "has-instance-with-two-properties.sparql.spel",
                                                            targetClass,
@@ -294,6 +302,8 @@ public class ShaclGenerator {
                            Resource targetClass,
                            Resource path,
                            Resource propertyShape) {
+    if (log.isTraceEnabled()) log.trace("(setNodeKind) start");
+
     boolean hasIri = askTypeProperty(rdfStoreService,
                                      "nodekind-is-iri.sparql.spel",
                                      targetClass,
