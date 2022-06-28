@@ -3,10 +3,10 @@ package zone.cogni.asquare.cube.index;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -25,30 +25,27 @@ public class IndexFolderService {
 
   private static final String indent = "        ";
 
-  private final ApplicationContext resourcePatternResolver;
-  private final String configurationClasspath;
+  private final ResourcePatternResolver resourcePatternResolver;
+  private final String configurationPath;
 
   private List<IndexFolder> indexFolders;
   private boolean initializationFailure;
 
-  public IndexFolderService(ApplicationContext resourcePatternResolver, String configurationClasspath) {
+  public IndexFolderService(ResourcePatternResolver resourcePatternResolver, String configurationPath) {
     this.resourcePatternResolver = resourcePatternResolver;
-    this.configurationClasspath = calculateConfigurationClasspath(configurationClasspath);
+    this.configurationPath = calculateConfigurationPath(configurationPath);
   }
 
   /**
-   * Predictable version of classpath used to find all configuration data.
+   * Path without / at end which will contain all configuration data.
    *
-   * @param configurationClasspath classpath
-   * @return configurationClasspath starting with <code>classpath:</code> and not ending with <code>/</code>
+   * @param configurationPath classpath
+   * @return configurationPath path not ending with <code>/</code>
    */
   @Nonnull
-  private String calculateConfigurationClasspath(@Nonnull String configurationClasspath) {
-    if (!configurationClasspath.startsWith("classpath:"))
-      throw new RuntimeException("please make sure classpath is explicit by starting with classpath:");
-
-    return configurationClasspath.endsWith("/") ? configurationClasspath.substring(0, configurationClasspath.length() - 1)
-                                                : configurationClasspath;
+  private String calculateConfigurationPath(@Nonnull String configurationPath) {
+    return configurationPath.endsWith("/") ? configurationPath.substring(0, configurationPath.length() - 1)
+                                           : configurationPath;
   }
 
   @PostConstruct
@@ -92,10 +89,19 @@ public class IndexFolderService {
    * @return paths after <code>configurationClasspath</code> as <code>String</code>
    */
   private List<String> getLocalPaths(@Nonnull Resource[] resources) {
-    String prefix = StringUtils.substringAfter(configurationClasspath, "classpath:");
+    String prefix = getLocalPathPrefix();
     return Arrays.stream(resources)
                  .map(r -> getLocalPath(prefix, r))
                  .collect(Collectors.toList());
+  }
+
+  private String getLocalPathPrefix() {
+    if (configurationPath.startsWith("classpath:"))
+      return StringUtils.substringAfter(configurationPath, "classpath:");
+    else if (configurationPath.startsWith("file:"))
+      return StringUtils.substringAfter(configurationPath, "file:");
+
+    throw new RuntimeException("Unknown path prefix, should it be supported? path is '" + configurationPath + "'.");
   }
 
   /**
@@ -182,11 +188,11 @@ public class IndexFolderService {
   }
 
   private Resource getResource(String path) {
-    return resourcePatternResolver.getResource(configurationClasspath + path);
+    return resourcePatternResolver.getResource(configurationPath + path);
   }
 
   private Resource[] getResources(String path) {
-    String locationPattern = configurationClasspath + path;
+    String locationPattern = configurationPath + path;
     try {
       return resourcePatternResolver.getResources(locationPattern);
     }
@@ -199,7 +205,7 @@ public class IndexFolderService {
   }
 
   private void validate() {
-    log.info("'{}' index service", configurationClasspath);
+    log.info("'{}' index service", configurationPath);
 
     List<String> indexNames = getValidIndexNames();
     log.info("{} index count: {}", indent, indexNames.size());
