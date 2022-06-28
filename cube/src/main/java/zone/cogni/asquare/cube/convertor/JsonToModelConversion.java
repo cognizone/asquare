@@ -2,7 +2,6 @@ package zone.cogni.asquare.cube.convertor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.datatypes.BaseDatatype;
@@ -60,7 +59,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   public Model apply(JsonNode root) {
     Model model = ModelFactory.createDefaultModel();
 
-    calculatePrefixes(root, model);
+    model.setNsPrefixes(conversionProfile.getContext().getPrefixes());
 
     JsonNode dataNode = root.get("data");
 
@@ -68,30 +67,6 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     addIncluded(model, root);
 
     return model;
-  }
-
-  private void calculatePrefixes(JsonNode root, Model model) {
-    if (!root.has("context")) return;
-    JsonNode contextNode = root.get("context");
-
-    if (!contextNode.has("prefix")) return;
-    JsonNode prefixesNode = contextNode.get("prefix");
-
-    if (!prefixesNode.isObject()) return;
-    ObjectNode prefixesObject = (ObjectNode) prefixesNode;
-
-    prefixesObject.fields().forEachRemaining(fieldEntry -> {
-      String prefix = fieldEntry.getKey();
-      JsonNode value = fieldEntry.getValue();
-      if (!value.isTextual())
-        throw new RuntimeException("prefixes must by string pairs, problem found for prefix '" + prefix + "'");
-
-      String namespace = value.textValue();
-      model.setNsPrefix(prefix, namespace);
-    });
-
-    // TODO what with profile... currently missing prefixes??
-//    model.setNsPrefixes(conversionProfile.getContext().getPrefixes());
   }
 
   private void addIncluded(Model model, JsonNode root) {
@@ -105,7 +80,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   private void processSingleNode(Model model, JsonNode node) {
     Resource uri = getUri(node);
 
-    ConversionProfile.Type type = getType(model, node);
+    ConversionProfile.Type type = getType(node);
 
     addTypes(model, uri, type);
     addAttributes(model, type, uri, node);
@@ -128,7 +103,6 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     throw new RuntimeException("you should never get here");
   }
 
-
   private void addAttributes(Model model,
                              ConversionProfile.Type type,
                              Resource uri,
@@ -138,12 +112,9 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     root.get("attributes")
         .fields()
         .forEachRemaining(attributeNames -> {
-          String attributeName = expandPrefix(model, attributeNames.getKey());
+          String attributeName = attributeNames.getKey();
+
           ConversionProfile.Attribute attribute = type.getByAttributeId(attributeName);
-
-          if (attribute == null)
-            throw new RuntimeException("attribute '" + attributeName + " not found for type '" + type.getRootClassId() + "'");
-
           addAttribute(model, attribute, uri, attributeNames.getValue());
         });
   }
@@ -210,33 +181,30 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     return ResourceFactory.createResource(dataNode.get("uri").textValue());
   }
 
-  private ConversionProfile.Type getType(Model model, JsonNode dataNode) {
-    return configuration.isModelType(ModelType.ROOT)
-           ? getTypeUsingRootCase(model, dataNode)
-           : getTypeUsingNormalCase(model, dataNode);
+  private ConversionProfile.Type getType(JsonNode dataNode) {
+    return configuration.isModelType(ModelType.ROOT) ? getTypeUsingRootCase(dataNode)
+                                                     : getTypeUsingNormalCase(dataNode);
   }
 
-  private ConversionProfile.Type getTypeUsingRootCase(Model model, JsonNode dataNode) {
+  private ConversionProfile.Type getTypeUsingRootCase(JsonNode dataNode) {
     // root
     if (dataNode.has("rootType")) {
       JsonNode rootType = dataNode.get("rootType");
-      String classId = expandPrefix(model, rootType.textValue());
-      return conversionProfile.getTypeFromClassId(classId);
+      return conversionProfile.getTypeFromClassId(rootType.textValue());
     }
 
     // single solution
     JsonNode type = dataNode.get("type");
 
     if (!dataNode.isArray()) {
-      String classId = expandPrefix(model, type.textValue());
-      ConversionProfile.Type result = conversionProfile.getTypeFromClassId(classId);
+      ConversionProfile.Type result = conversionProfile.getTypeFromClassId(type.textValue());
       if (result != null) return result;
     }
 
     // array solution
     Set<String> types = asStream(type, JsonNode::textValue).collect(Collectors.toSet());
     if (types.size() == 1) {
-      String classId = expandPrefix(model, types.stream().findFirst().get());
+      String classId = types.stream().findFirst().get();
       ConversionProfile.Type result = conversionProfile.getTypeFromClassId(classId);
       if (result != null) return result;
     }
@@ -244,21 +212,18 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     throw new RuntimeException("unable to determine type for node: \n" + dataNode.toPrettyString());
   }
 
-  private ConversionProfile.Type getTypeUsingNormalCase(Model model, JsonNode dataNode) {
+  private ConversionProfile.Type getTypeUsingNormalCase(JsonNode dataNode) {
     JsonNode type = dataNode.get("type");
 
     // single solution
     if (!dataNode.isArray()) {
-      String classId = expandPrefix(model, type.textValue());
-      ConversionProfile.Type result = conversionProfile.getTypeFromClassId(classId);
+      ConversionProfile.Type result = conversionProfile.getTypeFromClassId(type.textValue());
       if (result != null) return result;
     }
 
     // array solution
-    Set<String> classIds = asStream(type, JsonNode::textValue)
-            .map(shortUri -> expandPrefix(model, shortUri))
-            .collect(Collectors.toSet());
-    return conversionProfile.getTypeFromClassIds(classIds);
+    Set<String> types = asStream(type, JsonNode::textValue).collect(Collectors.toSet());
+    return conversionProfile.getTypeFromClassIds(types);
   }
 
   private void addLanguages(Model model,
@@ -280,12 +245,6 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
                 addLanguageAttribute(model, uri, attribute.getProperty(), language, languageValue.textValue());
               }
             });
-  }
-
-  private String expandPrefix(Model model, String string) {
-    if (!configuration.isContextEnabled()) return string;
-
-    return model.expandPrefix(string);
   }
 
   private void addLanguageAttribute(Model model, Resource uri, Property property, String language, String text) {
