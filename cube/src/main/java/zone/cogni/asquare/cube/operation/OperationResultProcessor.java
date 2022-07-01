@@ -93,7 +93,7 @@ public class OperationResultProcessor {
 
   private void validate(OperationRoot operationRoot) {
     operationRoot.validate();
-    operationRoot.getOperationIds().forEach(System.out::println);
+    log.info("Operation id's: {}",  String.join(", ", operationRoot.getOperationIds()));
   }
 
   public OperationRoot getOperationRoot() {
