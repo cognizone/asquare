@@ -27,6 +27,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -53,12 +54,12 @@ public class IndexService {
   private final Long iterationTimeoutMs;
 
   public IndexService(
-    IndexConfigProvider indexConfigProvider,
-    @Qualifier("indexingGraphTaskExecutor") AsyncTaskManager indexingGraphTaskExecutor,
-    @Qualifier("indexingTaskExecutor") AsyncTaskManager indexingTaskExecutor,
-    @Value("${index.iterationTimeoutMs:3600000}") Long iterationTimeoutMs,
-    @Value("${asquare.ap.config:config}") String configIndexName,
-    GraphIndexService graphIndexService) {
+          IndexConfigProvider indexConfigProvider,
+          @Qualifier("indexingGraphTaskExecutor") AsyncTaskManager indexingGraphTaskExecutor,
+          @Qualifier("indexingTaskExecutor") AsyncTaskManager indexingTaskExecutor,
+          @Value("${index.iterationTimeoutMs:3600000}") Long iterationTimeoutMs,
+          @Value("${asquare.ap.config:config}") String configIndexName,
+          GraphIndexService graphIndexService) {
 
     this.configIndexName = configIndexName;
     this.iterationTimeoutMs = iterationTimeoutMs;
@@ -158,18 +159,18 @@ public class IndexService {
     // delete all documents matching this graph in elastic
     try {
       ObjectNode deleteQuery = (ObjectNode) (new ObjectMapper()).readTree(
-        "{" +
-        "  \"query\":{" +
-        "    \"bool\":{" +
-        "      \"must\":[{ " +
-        "        \"match\": {" +
-        "           \"graph\":\"" + graphUri + "\"" +
-        "          }" +
-        "        }" +
-        "      ]" +
-        "    }" +
-        "  }" +
-        "}");
+              "{" +
+              "  \"query\":{" +
+              "    \"bool\":{" +
+              "      \"must\":[{ " +
+              "        \"match\": {" +
+              "           \"graph\":\"" + graphUri + "\"" +
+              "          }" +
+              "        }" +
+              "      ]" +
+              "    }" +
+              "  }" +
+              "}");
 
       for (String indexName : indexListToDelete) {
         indexConfigProvider.getElasticStore().deleteByQuery(indexName, deleteQuery);
@@ -283,7 +284,7 @@ public class IndexService {
     if (failed > 0) {
       for (ResourceIndex failedResource : resources) {
         log.error("Resource {} of type {} from graph {} failed all reindex attemts.",
-                failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
+                  failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
       }
     }
 
@@ -306,9 +307,7 @@ public class IndexService {
 
     long startIteration = System.currentTimeMillis();
 
-    Map<String, List<ResourceIndex>> resourcesByGraph = resources.stream().collect(Collectors.toMap(ResourceIndex::getGraph,
-                                                                                                    Arrays::asList,
-                                                                                                    ListUtils::union));
+    LinkedHashMap<String, List<ResourceIndex>> resourcesByGraph = groupByGraph(resources);
 
     log.info("Starting iteration. Found {} resources in {} graphs", resources.size(), resourcesByGraph.size());
 
@@ -338,6 +337,13 @@ public class IndexService {
     // timeout resources are not repeated
     // interruptedGraphs.stream().map(resourcesByGraph::get).forEach(failedResources::addAll);
     log.info("Indexing iteration is done. Duration: {}, failed resources: {}", IndexUtils.prettyDurationMs(System.currentTimeMillis() - startIteration), failedResources.size() + interruptedGraphs.size());
+  }
+
+  //still group by graph but we keep the original order, some indexings need that
+  private LinkedHashMap<String, List<ResourceIndex>> groupByGraph(List<ResourceIndex> resources) {
+    return resources
+            .stream()
+            .collect(Collectors.toMap(ResourceIndex::getGraph, Arrays::asList, ListUtils::union, LinkedHashMap::new));
   }
 
   /**
@@ -383,7 +389,7 @@ public class IndexService {
     if (failed > 0) {
       for (ResourceIndex failedResource : resources) {
         log.error("Resource {} of type {} from graph {} failed all reindex attempts.",
-                failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
+                  failedResource.getUri(), failedResource.getType(), failedResource.getGraph());
       }
     }
 
@@ -399,9 +405,7 @@ public class IndexService {
 
     long startIteration = System.currentTimeMillis();
 
-    Map<String, List<ResourceIndex>> resourcesByGraph = resources.stream().collect(Collectors.toMap(ResourceIndex::getGraph,
-            Arrays::asList,
-            ListUtils::union));
+    LinkedHashMap<String, List<ResourceIndex>> resourcesByGraph = groupByGraph(resources);
 
     log.info("Starting iteration. Found {} resources in {} graphs", resources.size(), resourcesByGraph.size());
 
@@ -410,7 +414,8 @@ public class IndexService {
         log.info("Starting graph indexing {}", graph);
 
         graphIndexService.indexGraphSync(graph, resourcesByGraph.get(graph), failedResources, Params.noRefresh().withTimestamp(timestamp), rdfStoreService, null);
-      } catch (Exception ex) {
+      }
+      catch (Exception ex) {
         log.info("Graph {} indexing is failed. Adding to list of failed resources.", graph, ex);
         failedResources.addAll(resourcesByGraph.get(graph));
       }
