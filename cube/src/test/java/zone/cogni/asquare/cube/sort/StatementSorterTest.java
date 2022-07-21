@@ -83,7 +83,10 @@ class StatementSorterTest {
                                                           .put("xsd", "http://www.w3.org/2001/XMLSchema#")
                                                           .build();
 
-    String rdf = new SortedStatementsString(namespaces).apply(statements);
+    String rdf = SortedStatementsString.newBuilder()
+                                       .withNamespaces(namespaces)
+                                       .build()
+                                       .apply(statements);
 
     System.out.println("--------------------------------------------------------------------------------");
     System.out.println(rdf);

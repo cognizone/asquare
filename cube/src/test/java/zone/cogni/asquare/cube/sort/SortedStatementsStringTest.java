@@ -58,7 +58,25 @@ class SortedStatementsStringTest {
     assertThat(newModel.size()).isEqualTo(252);
   }
 
-    private Model getModelFromString(String rdf) {
+  @Test
+  public void skos_with_base() {
+    // given
+    Model rdfXml = loadModel("digest/skos.rdf");
+
+    // when
+    List<Statement> statements = new StatementSorter().apply(rdfXml);
+    String rdf = SortedStatementsString.newBuilder()
+                                       .withBase("http://www.w3.org/2004/02/skos/core#")
+                                       .withIndent(8)
+                                       .build()
+                                       .apply(statements);
+
+    // then
+    Model newModel = getModelFromString(rdf);
+    assertThat(newModel.size()).isEqualTo(252);
+  }
+
+  private Model getModelFromString(String rdf) {
     Model model = ModelFactory.createDefaultModel();
     model.read(new StringReader(rdf), null, "TTL");
     return model;
