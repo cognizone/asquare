@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Function;
 
@@ -79,6 +80,15 @@ public class SortedStatementsString implements Function<List<Statement>, String>
   }
 
   public void setNamespaces(Map<String, String> namespaces) {
+    Objects.requireNonNull(namespaces, "namespaces cannot be null");
+
+    if (!this.namespaces.isEmpty())
+      this.namespaces.clear();
+
+    addNamespaces(namespaces);
+  }
+
+  public void addNamespaces(Map<String, String> namespaces) {
     this.namespaces.putAll(namespaces);
   }
 
