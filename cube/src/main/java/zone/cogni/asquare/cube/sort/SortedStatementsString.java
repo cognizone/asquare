@@ -2,6 +2,7 @@ package zone.cogni.asquare.cube.sort;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-public class SortedStatementsString implements Function<List<Statement>, String> {
+public class SortedStatementsString implements Function<Model, String> {
 
   public static Builder newBuilder() {
     return new Builder();
@@ -101,6 +102,11 @@ public class SortedStatementsString implements Function<List<Statement>, String>
   }
 
   @Override
+  public String apply(Model model) {
+    List<Statement> statements = new StatementSorter().apply(model);
+    return apply(statements);
+  }
+
   public String apply(List<Statement> statements) {
     StringBuilder result = new StringBuilder();
 

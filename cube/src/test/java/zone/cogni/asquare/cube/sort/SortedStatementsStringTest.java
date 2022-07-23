@@ -64,12 +64,11 @@ class SortedStatementsStringTest {
     Model rdfXml = loadModel("digest/skos.rdf");
 
     // when
-    List<Statement> statements = new StatementSorter().apply(rdfXml);
     String rdf = SortedStatementsString.newBuilder()
                                        .withBase("http://www.w3.org/2004/02/skos/core#")
                                        .withIndent(8)
                                        .build()
-                                       .apply(statements);
+                                       .apply(rdfXml);
 
     // then
     Model newModel = getModelFromString(rdf);
