@@ -1,9 +1,11 @@
 package zone.cogni.asquare.cube.sort;
 
-import com.google.common.collect.ImmutableMap;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,40 +13,118 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-public class SortedStatementsString implements Function<List<Statement>, String> {
+public class SortedStatementsString implements Function<Model, String> {
 
-  private static final int DEFAULT_INDENT = 24;
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
-  private final int indent;
+  public static class Builder {
+    private String base;
+    private Map<String, String> namespaces;
+    private int indent = 8;
+
+    public Builder withBase(String base) {
+      this.base = base;
+      return this;
+    }
+
+    public Builder withNamespaces(Map<String, String> namespaces) {
+      this.namespaces = namespaces;
+      return this;
+    }
+
+    public Builder withIndent(int indent) {
+      if (indent < 0) throw new RuntimeException("cannot have negative indent");
+
+      this.indent = indent;
+      return this;
+    }
+
+    public SortedStatementsString build() {
+      SortedStatementsString result = new SortedStatementsString();
+
+      if (StringUtils.isNotBlank(base))
+        result.setBase(base);
+
+      if (MapUtils.isNotEmpty(namespaces))
+        result.setNamespaces(namespaces);
+
+      result.setIndent(indent);
+
+      return result;
+    }
+
+  }
+
+  private String base;
   private final Map<String, String> namespaces = new TreeMap<>();
+  private int indent;
 
   public SortedStatementsString() {
-    this(DEFAULT_INDENT, ImmutableMap.of());
   }
 
-  public SortedStatementsString(Map<String, String> namespaces) {
-    this(DEFAULT_INDENT, namespaces);
+  public String getBase() {
+    return base;
   }
 
-  public SortedStatementsString(int indent, Map<String, String> namespaces) {
-    this.indent = indent;
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public Map<String, String> getNamespaces() {
+    return namespaces;
+  }
+
+  public void setNamespaces(Map<String, String> namespaces) {
+    Objects.requireNonNull(namespaces, "namespaces cannot be null");
+
+    if (!this.namespaces.isEmpty())
+      this.namespaces.clear();
+
+    addNamespaces(namespaces);
+  }
+
+  public void addNamespaces(Map<String, String> namespaces) {
     this.namespaces.putAll(namespaces);
   }
 
+  public int getIndent() {
+    return indent;
+  }
+
+  public void setIndent(int indent) {
+    this.indent = indent;
+  }
+
   @Override
+  public String apply(Model model) {
+    List<Statement> statements = new StatementSorter().apply(model);
+    return apply(statements);
+  }
+
   public String apply(List<Statement> statements) {
     StringBuilder result = new StringBuilder();
 
+    addBase(result);
     addNamespaces(result);
     statementMapToString(result, getStatementMap(statements));
 
     return result.toString();
   }
 
+  private void addBase(StringBuilder result) {
+    if (StringUtils.isBlank(base)) return;
+
+    result.append("@base <").append(base).append("> .\n\n");
+  }
+
   private void addNamespaces(StringBuilder result) {
+
     namespaces.forEach((key, value) -> {
       result.append("@prefix ")
             .append(StringUtils.rightPad(key + ":", 8))
@@ -83,17 +163,22 @@ public class SortedStatementsString implements Function<List<Statement>, String>
   }
 
   private void predicateMapToString(StringBuilder result, Map<String, List<String>> predicateMap) {
+    int maxLength = predicateMap.keySet()
+                                .stream()
+                                .mapToInt(String::length)
+                                .max()
+                                .getAsInt();
     predicateMap.forEach((predicate, objects) -> {
       result.append(StringUtils.repeat(' ', indent))
-            .append(StringUtils.rightPad(predicate, indent - 1));
+            .append(StringUtils.rightPad(predicate, maxLength + 1));
 
-      objectListToString(result, objects);
+      objectListToString(result, objects, indent + maxLength + 1);
     });
   }
 
-  private void objectListToString(StringBuilder result, List<String> objects) {
+  private void objectListToString(StringBuilder result, List<String> objects, int indent) {
     for (int i = 0; i < objects.size(); i++) {
-      if (i != 0) result.append(StringUtils.repeat(' ', 2 * indent - 1));
+      if (i != 0) result.append(StringUtils.repeat(' ', indent));
 
       result.append(" ").append(objects.get(i));
 
@@ -135,6 +220,13 @@ public class SortedStatementsString implements Function<List<Statement>, String>
 
   private String getShortUri(String fullUri) {
     String shortResult = fullUri.substring(1, fullUri.length() - 1);
+
+    if (RDF.type.getURI().equals(shortResult))
+      return "a";
+
+    if (base != null && shortResult.startsWith(base))
+      return "<" + StringUtils.substringAfter(shortResult, base) + ">";
+
     for (Map.Entry<String, String> entry : namespaces.entrySet()) {
       if (!shortResult.startsWith(entry.getValue())) continue;
 
