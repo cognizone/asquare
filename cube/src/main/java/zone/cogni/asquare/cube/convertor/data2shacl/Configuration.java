@@ -13,6 +13,7 @@ import java.util.Set;
 public class Configuration {
   private String shapesPrefix;
   private String shapesNamespace;
+  private boolean includeEmptyShapesNamespace;
 
   private boolean includeShapesGraph;
 
@@ -52,6 +53,14 @@ public class Configuration {
 
   public void setShapesNamespace(String shapesNamespace) {
     this.shapesNamespace = shapesNamespace;
+  }
+
+  public boolean isIncludeEmptyShapesNamespace() {
+    return includeEmptyShapesNamespace;
+  }
+
+  public void setIncludeEmptyShapesNamespace(boolean includeEmptyShapesNamespace) {
+    this.includeEmptyShapesNamespace = includeEmptyShapesNamespace;
   }
 
   public boolean isIncludeShapesGraph() {

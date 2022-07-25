@@ -131,7 +131,10 @@ public class ShaclGenerator {
     doPrefixesCheck(configuration, prefixes);
 
     shacl.setNsPrefixes(prefixes);
-    shacl.setNsPrefix(configuration.getShapesPrefix(), configuration.getShapesNamespace());
+
+    if (configuration.isIncludeEmptyShapesNamespace()) {
+      shacl.setNsPrefix(configuration.getShapesPrefix(), configuration.getShapesNamespace());
+    }
   }
 
   private void doPrefixesCheck(Configuration configuration, Map<String, String> prefixes) {
@@ -205,7 +208,7 @@ public class ShaclGenerator {
                                                  @Nullable String firstPart,
                                                  @Nonnull Resource originalResource) {
     String localName = firstPart == null ? originalResource.getLocalName()
-                                         : firstPart + "_" + originalResource.getLocalName();
+                                         : firstPart + "/" + originalResource.getLocalName();
     Resource typeShape = ResourceFactory.createResource(configuration.getShapesNamespace() + localName);
 
     boolean hasSameTypeShape = shacl.contains(typeShape, null, (RDFNode) null);
