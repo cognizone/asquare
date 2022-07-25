@@ -1,9 +1,9 @@
 package zone.cogni.asquare.cube.urigenerator.json;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.json5.Json5Light;
 
 import java.io.IOException;
@@ -22,8 +22,22 @@ public class UriGeneratorRoot {
       return result;
     }
     catch (IOException e) {
-      throw new RuntimeException("Unable to load uri generator configuration.", e);
+      String extra = getPath(resource) != null ? " Path " + getPath(resource) : "";
+      throw new RuntimeException("Unable to load uri generator configuration." + extra, e);
     }
+  }
+
+  private static String getPath(InputStreamSource resource) {
+    try {
+      if (resource instanceof Resource) {
+        Resource r = (Resource) resource;
+        return r.getFile().getPath();
+      }
+    }
+    catch (IOException e) {
+      return null;
+    }
+    return null;
   }
 
   private Map<String, String> prefixes;
