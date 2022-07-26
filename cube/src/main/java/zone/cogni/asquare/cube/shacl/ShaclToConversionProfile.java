@@ -173,6 +173,8 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
 
       if (nodeKind.equals(Shacl.NodeKind.Literal))
         return CompactConversionProfile.Attribute.Type.datatype;
+      else if (nodeKind.equals(Shacl.NodeKind.IRI) && !propertyShape.hasProperty(Shacl.classP))
+        return CompactConversionProfile.Attribute.Type.datatype;
       else if (nodeKind.equals(Shacl.NodeKind.IRI))
         return CompactConversionProfile.Attribute.Type.object;
     }

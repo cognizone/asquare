@@ -1,0 +1,52 @@
+@prefix ex:   <http://example.org/person#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+ex:PersonShape
+    a              sh:NodeShape ;
+    sh:targetClass ex:Person ;
+    sh:property    ex:PersonFirstName, ex:PersonLastName, ex:PersonHomepage, ex:PersonSpouse
+.
+
+ex:PersonFirstName
+    a              sh:PropertyShape ;
+    sh:path        ex:firstName ;
+    sh:minCount    1 ;
+    sh:maxCount    1 ;
+    sh:name        "first name" ;
+    sh:description "The person's given name(s)" ;
+    sh:order       0 ;
+    sh:group       ex:NameGroup .
+
+ex:PersonLastName
+    a              sh:PropertyShape ;
+    sh:path        ex:lastName ;
+    sh:minCount    1 ;
+    sh:maxCount    1 ;
+    sh:name        "last name" ;
+    sh:description "The person's last name" ;
+    sh:order       1 ;
+    sh:group       ex:NameGroup .
+
+ex:PersonHomepage
+    a           sh:PropertyShape ;
+    sh:path     ex:homepage ;
+    sh:nodeKind sh:IRI ;
+.
+
+ex:PersonSpouse
+    a           sh:PropertyShape ;
+    sh:path     ex:spouse ;
+    sh:nodeKind sh:IRI ;
+    sh:class    ex:Person ;
+    sh:minCount 0 ;
+    sh:maxCount 1 ;
+.
+
+ex:NameGroup
+    a          sh:PropertyGroup ;
+    sh:order   0 ;
+    rdfs:label "Name" .
