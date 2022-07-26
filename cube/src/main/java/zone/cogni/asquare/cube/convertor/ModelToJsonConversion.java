@@ -191,8 +191,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     processInstance(model, context, subject, data);
 
     if (configuration.logIssues) {
-      reportMissedSubjects(context);
-      reportUnprocessedTriples(context);
+      reportMissedSubjects(root, context);
+      reportUnprocessedTriples(root, context);
     }
 
     return context.jsonRoot;
@@ -213,19 +213,20 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     prefixMap.forEach(prefixNode::put);
   }
 
-  private void reportMissedSubjects(Context context) {
+  private void reportMissedSubjects(String root, Context context) {
     Set<Resource> missedSubjects = context.subjectTypeMap.keySet();
     missedSubjects.removeAll(context.alreadyProcessedResources);
 
     if (missedSubjects.size() > 1) {
-      log.warn("missed {} subjects out of {}. missed subjects: {}",
+      log.warn("<{}> missed {} subjects out of {}. missed subjects: {}",
+               root,
                missedSubjects.size(),
                context.subjectTypeMap.size(),
                missedSubjects);
     }
   }
 
-  private void reportUnprocessedTriples(Context context) {
+  private void reportUnprocessedTriples(String root, Context context) {
     if (!log.isWarnEnabled()) return;
 
     Model remainingModel = ModelFactory.createDefaultModel();
@@ -233,7 +234,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     remainingModel.remove(context.alreadyProcessedModel);
 
     if (remainingModel.size() > 1) {
-      log.warn("missed {} triples \n{}",
+      log.warn("<{}> missed {} triples \n{}",
+               root,
                remainingModel.size(),
                JenaUtils.toString(remainingModel, "ttl"));
     }
@@ -257,8 +259,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     // process instance fields
     ConversionProfile.Type type = context.subjectTypeMap.get(subject);
     setInstanceUri(subject, instanceRoot);
-    setInstanceType(model, instanceRoot, type);
-    setInstanceRootType(model, instanceRoot, type);
+    setInstanceType(context, model, instanceRoot, subject, type);
+    setInstanceRootType(context, model, instanceRoot, subject, type);
 
     // bookkeeping -> must be before processing attributes !
     context.alreadyProcessedResources.add(subject);
@@ -626,12 +628,18 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     instanceRoot.put("uri", subject.getURI());
   }
 
-  private void setInstanceType(Model model, ObjectNode instanceRoot, ConversionProfile.Type type) {
+  private void setInstanceType(@Nonnull Context context,
+                               @Nonnull Model model,
+                               @Nonnull ObjectNode instanceRoot,
+                               @Nonnull Resource instance,
+                               ConversionProfile.Type type) {
     if (configuration.isJsonType(JsonType.DISABLED))
       return;
 
-    if (type == null)
-      throw new RuntimeException("cannot find type for instanceRoot " + instanceRoot);
+    if (type == null) {
+      throw new RuntimeException("cannot find type for instance '" + instance.getURI() + "'" +
+                                 ": found types '" + context.subjectTypeMap.get(instance) + "'.");
+    }
 
     if (configuration.isJsonType(JsonType.ROOT)) {
       instanceRoot.put("type", configureString(model, type.getRootClassId()));
@@ -662,12 +670,18 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return model.shortForm(string);
   }
 
-  private void setInstanceRootType(Model model, ObjectNode instanceRoot, ConversionProfile.Type type) {
+  private void setInstanceRootType(@Nonnull Context context,
+                                   @Nonnull Model model,
+                                   @Nonnull ObjectNode instanceRoot,
+                                   @Nonnull Resource instance,
+                                   ConversionProfile.Type type) {
     if (configuration.isJsonRootType(JsonRootType.DISABLED))
       return;
 
-    if (type == null)
-      throw new RuntimeException("cannot find type for instanceRoot " + instanceRoot);
+    if (type == null) {
+      throw new RuntimeException("cannot find type for instance '" + instance.getURI() + "'" +
+                                 ": found types '" + context.subjectTypeMap.get(instance) + "'.");
+    }
 
     if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
       instanceRoot.put("rootType", configureString(model, type.getRootClassId()));
