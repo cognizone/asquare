@@ -191,8 +191,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     processInstance(model, context, subject, data);
 
     if (configuration.logIssues) {
-      reportMissedSubjects(root, context);
-      reportUnprocessedTriples(root, context);
+      reportMissedSubjects(context, root);
+      reportUnprocessedTriples(context, root);
     }
 
     return context.jsonRoot;
@@ -213,7 +213,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     prefixMap.forEach(prefixNode::put);
   }
 
-  private void reportMissedSubjects(String root, Context context) {
+  private void reportMissedSubjects(Context context, String root) {
     Set<Resource> missedSubjects = context.subjectTypeMap.keySet();
     missedSubjects.removeAll(context.alreadyProcessedResources);
 
@@ -226,7 +226,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
   }
 
-  private void reportUnprocessedTriples(String root, Context context) {
+  private void reportUnprocessedTriples(Context context, String root) {
     if (!log.isWarnEnabled()) return;
 
     Model remainingModel = ModelFactory.createDefaultModel();
