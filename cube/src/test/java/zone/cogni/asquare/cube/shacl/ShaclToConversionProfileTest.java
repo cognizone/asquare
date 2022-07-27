@@ -89,6 +89,29 @@ public class ShaclToConversionProfileTest {
     assertThat(daughters.isSingle()).isFalse();
   }
 
+  @Test
+  public void iri_resource_shacl_conversion() {
+    // given
+    Model personShacl = getShaclModel("iri-resource-person.shacl.ttl");
+
+    // when
+    CompactConversionProfile profile = shaclToConversionProfile.apply(personShacl);
+
+    // then
+    CompactConversionProfile.Type personType = profile.getById("ex:Person");
+    assertThat(personType.getAttributes()).hasSize(4);
+
+    CompactConversionProfile.Attribute spouse = personType.getById("ex:spouse");
+    assertThat(spouse).isNotNull();
+    assertThat(spouse.getType()).isEqualTo(CompactConversionProfile.Attribute.Type.object);
+    assertThat(spouse.isSingle()).isTrue();
+
+    CompactConversionProfile.Attribute homepage = personType.getById("ex:homepage");
+    assertThat(homepage).isNotNull();
+    assertThat(homepage.getType()).isEqualTo(CompactConversionProfile.Attribute.Type.datatype);
+    assertThat(homepage.isSingle()).isFalse();
+  }
+
   @Nonnull
   private Model getShaclModel(String file) {
     Resource resource = new ClassPathResource("shacl/" + file);
