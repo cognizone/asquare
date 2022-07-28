@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.pagination;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import joptsimple.internal.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -60,10 +61,10 @@ public class PaginatedQuery {
     int graphCount = graphUris.size();
     Model model = ModelFactory.createDefaultModel();
 
-    List<List<String>> lists = Lists.partition(graphUris, sublistSize);
-    for (int i = 0; i < lists.size(); i++) {
-      List<String> graphs = lists.get(i);
-      String selectQuery = getGraphsSelectQuery(graphs);
+    List<List<String>> graphUrisSublists = Lists.partition(graphUris, sublistSize);
+    for (int i = 0; i < graphUrisSublists.size(); i++) {
+      List<String> sublist = graphUrisSublists.get(i);
+      String selectQuery = getGraphsSelectQuery(sublist);
 
       List<Map<String, RDFNode>> rows = select(rdfStore, selectQuery);
       rows.forEach(row -> {
@@ -79,22 +80,29 @@ public class PaginatedQuery {
     return model;
   }
 
-  private String getGraphsSelectQuery(List<String> graphs) {
+  /**
+   * Build a select query for fetching all triples in a set of graphs.
+   * We are using <code>select</code> queries because in Virtuoso construct query pagination is unreliable.
+   *
+   * @param graphs list of graphs from where to fetch triples
+   * @return select query to fetch all triples from graphs
+   */
+  @Nonnull
+  private String getGraphsSelectQuery(@Nonnull List<String> graphs) {
     String inPart = Strings.join(graphs.stream().map(s -> "<" + s + ">").collect(Collectors.toList()),
                                  ", ");
-    String selectQuery = "select ?g ?s ?p ?o " +
-                         "where {" +
-                         "  graph ?g {" +
-                         "    ?s ?p ?o" +
-                         "  }" +
-                         "  filter (?g in (" + inPart + ")) " +
-                         "}";
 
-    return selectQuery;
+    return "select ?g ?s ?p ?o " +
+           "where {" +
+           "  graph ?g {" +
+           "    ?s ?p ?o" +
+           "  }" +
+           "  filter (?g in (" + inPart + ")) " +
+           "}";
   }
 
   @Nonnull
-  public Model getGraph(RdfStoreService rdfStore, String graphUri) {
+  public Model getGraph(@Nonnull RdfStoreService rdfStore, @Nonnull String graphUri) {
     String constructGraph = "construct { ?s ?p ?o }" +
                             " where {" +
                             "   graph <" + graphUri + "> {" +
@@ -144,6 +152,11 @@ public class PaginatedQuery {
   }
 
   public List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query) {
+    // skip if there is a limit
+    if (hasLimitAtEnd(query)) {
+      return rdfStore.executeSelectQuery(query, JenaQueryUtils::convertToListOfMaps);
+    }
+
     long batchNumber = 0;
     List<Map<String, RDFNode>> result = new ArrayList<>();
     while (true) {
@@ -155,6 +168,11 @@ public class PaginatedQuery {
     }
 
     return result;
+  }
+
+  private boolean hasLimitAtEnd(String query) {
+    String lastPart = StringUtils.substringAfterLast(query, "}");
+    return lastPart.toLowerCase().contains("limit");
   }
 
   private List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query, long batchNumber) {
