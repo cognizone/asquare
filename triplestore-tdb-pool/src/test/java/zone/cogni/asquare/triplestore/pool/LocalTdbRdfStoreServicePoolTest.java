@@ -185,6 +185,11 @@ class LocalTdbRdfStoreServicePoolTest {
     for (int i = 0; i < 4; i++) {
       Thread.sleep(1000L);
     }
+    System.out.println("---------------------------------------------------------------------------------");
+    System.out.println("Current output");
+    System.out.println("---------------------------------------------------------------------------------");
+    System.out.println(output.getAll());
+    System.out.println("---------------------------------------------------------------------------------");
     assertEquals(1, StringUtils.countMatches(output.getAll(), "Timeout waiting for idle object"));
   }
 
