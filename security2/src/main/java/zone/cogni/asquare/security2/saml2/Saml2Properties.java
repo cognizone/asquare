@@ -15,7 +15,7 @@ public class Saml2Properties {
   private String idpUrl;
   private Attributes attributes;
   private String roleMappingUrl;
-  private Map<String,User> basicAuthUsers = new HashMap<>(); //init so we allow empty config
+  private Map<String, User> basicAuthUsers = new HashMap<>(); //init so we allow empty config
 
   public enum KeyStoreType {JKS}
 
