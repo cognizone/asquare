@@ -15,7 +15,11 @@ public class SelectedGraph {
   }
 
   public boolean isMissingModificationStamp() {
-    return StringUtils.isBlank(modificationStamp);
+    return !hasModificationStamp();
+  }
+
+  public boolean hasModificationStamp() {
+    return StringUtils.isNotBlank(modificationStamp);
   }
 
   public String getGraphUri() {

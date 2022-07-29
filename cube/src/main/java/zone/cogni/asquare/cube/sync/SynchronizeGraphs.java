@@ -150,19 +150,22 @@ public class SynchronizeGraphs {
     }
   }
 
+  private Supplier<Model> getSourceModelSupplier(SelectedGraph selectedGraph) {
+    return getSourceModelSupplier(selectedGraph.getGraphUri());
+  }
 
   private Supplier<Model> getSourceModelSupplier(String graphUri) {
     return CachingSupplier.memoize(
-      () -> paginatedQuery.getGraph(source, graphUri)
+            () -> paginatedQuery.getGraph(source, graphUri)
     );
   }
 
   private Supplier<SelectedGraph> getSelectedGraphFromModel(Supplier<Model> sourceModelSupplier, String graphUri) {
     return CachingSupplier.memoize(
-      () -> {
-        String stamp = getStamp(sourceModelSupplier.get(), graphUri);
-        return new SelectedGraph(graphUri, stamp);
-      });
+            () -> {
+              String stamp = getStamp(sourceModelSupplier.get(), graphUri);
+              return new SelectedGraph(graphUri, stamp);
+            });
   }
 
   private String getStamp(Model sourceModel, String graphUri) {
@@ -183,13 +186,13 @@ public class SynchronizeGraphs {
 
   private Model getCalculatedTargetModel(Model sourceModel) {
     return new ModelToModel(templateService, getSyncResources())
-      .convert(sourceModel, "sync");
+            .convert(sourceModel, "sync");
   }
 
   private Resource[] getSyncResources() {
     try {
       return new PathMatchingResourcePatternResolver()
-        .getResources("classpath:" + configurationFolder + "/*/*.sparql");
+              .getResources("classpath:" + configurationFolder + "/*/*.sparql");
     }
     catch (IOException e) {
       throw new RuntimeException("failed to fetch 'sync' resources", e);
@@ -326,7 +329,7 @@ public class SynchronizeGraphs {
     return graphsToUpdate.stream()
                          .map(selectedGraph -> getSyncCall(defaultModificationStamp,
                                                            () -> selectedGraph,
-                                                           getSourceModelSupplier(selectedGraph.getGraphUri())))
+                                                           getSourceModelSupplier(selectedGraph)))
                          .collect(Collectors.toList());
   }
 
@@ -343,8 +346,9 @@ public class SynchronizeGraphs {
         target.deleteGraph(sourceSelectedGraph.getGraphUri());
       }
       else {
-        updateSourceGraph(sourceSelectedGraph, defaultModificationStamp);
-        updateTargetGraph(sourceSelectedGraph, sourceModelSupplier);
+        boolean sourceChanged = updateSourceGraph(sourceSelectedGraph, defaultModificationStamp);
+        Supplier<Model> sourceModelSupplierToUse = sourceChanged ? getSourceModelSupplier(sourceSelectedGraph) : sourceModelSupplier;
+        updateTargetGraph(sourceSelectedGraph, sourceModelSupplierToUse);
       }
 
       log.info("synchronizing {} done", graphUri);
@@ -356,11 +360,12 @@ public class SynchronizeGraphs {
     return sourceModelSupplier.get().isEmpty();
   }
 
-  private void updateSourceGraph(SelectedGraph sourceSelectedGraph, String defaultModificationStamp) {
-    if (sourceSelectedGraph.isMissingModificationStamp()) {
-      sourceSelectedGraph.setModificationStamp(defaultModificationStamp);
-      addModificationStampToSource(sourceSelectedGraph);
-    }
+  private boolean updateSourceGraph(SelectedGraph sourceSelectedGraph, String defaultModificationStamp) {
+    if (sourceSelectedGraph.hasModificationStamp()) return false; //no updates
+
+    sourceSelectedGraph.setModificationStamp(defaultModificationStamp);
+    addModificationStampToSource(sourceSelectedGraph);
+    return true; //source data changed !
   }
 
   private void addModificationStampToSource(SelectedGraph selectedGraph) {
