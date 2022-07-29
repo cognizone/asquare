@@ -271,7 +271,7 @@ public class ModelToJsonConversionTest {
   public void context_test() {
     // given
     Model homerModel = JenaUtils.read(new ClassPathResource("convertor/person-data-homer.ttl"));
-    ModelToJsonConversion conversion = getExpandedPersonConversion(getContextConfiguration());
+    ModelToJsonConversion conversion = getContextPersonConversion(getContextConfiguration());
 
     // when
     ObjectNode json = conversion.apply(homerModel, "http://demo.com/data#homer");
@@ -281,8 +281,8 @@ public class ModelToJsonConversionTest {
     JsonNode prefixNode = navigate(json, "context", "prefix");
     assertThat(prefixNode).isInstanceOf(ObjectNode.class);
     assertThat(prefixNode.get("xsd")).isInstanceOf(TextNode.class);
-    assertThat(prefixNode.get("person")).isInstanceOf(TextNode.class);
-    assertThat(prefixNode.get("person").textValue()).isEqualTo("http://demo.com/person/model#");
+    assertThat(prefixNode.get("demo")).isInstanceOf(TextNode.class);
+    assertThat(prefixNode.get("demo").textValue()).isEqualTo("http://demo.com/onto#");
 
     assertThat(navigate(json, "data", "type").textValue()).isEqualTo("person:Person");
     assertThat(navigate(json, "data", "rootType").textValue()).isEqualTo("person:Person");
@@ -332,6 +332,11 @@ public class ModelToJsonConversionTest {
 
   private ModelToJsonConversion getPersonConversion(ModelToJsonConversion.Configuration configuration) {
     InputStreamSource input = new ClassPathResource("convertor/person-conversion-profile.json");
+    return new ModelToJsonConversion(configuration, ConversionProfile.read(input));
+  }
+
+  private ModelToJsonConversion getContextPersonConversion(ModelToJsonConversion.Configuration configuration) {
+    InputStreamSource input = new ClassPathResource("convertor/person-conversion-profile-context.json");
     return new ModelToJsonConversion(configuration, ConversionProfile.read(input));
   }
 

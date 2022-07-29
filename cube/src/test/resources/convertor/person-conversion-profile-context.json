@@ -1,0 +1,49 @@
+{
+  "context": {
+    "prefixes": {
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "demo": "http://demo.com/onto#"
+    }
+  },
+  "types": [
+    {
+      "id": "http://demo.com/person/model#Person",
+      "type": "http://demo.com/person/model#Person",
+      "attributes": [
+        {
+          "id": "http://demo.com/person/model#name",
+          "property": "http://demo.com/person/model#name",
+          "type": "datatype",
+          "single": true
+        },
+        {
+          "id": "http://demo.com/person/model#spouse",
+          "property": "http://demo.com/person/model#spouse",
+          "type": "object",
+          "single": true
+        },
+        {
+          "id": "http://demo.com/person/model#hasChild",
+          "property": "http://demo.com/person/model#hasChild",
+          "type": "object"
+        },
+        {
+          "id": "http://demo.com/person/model#hasDate",
+          "property": "http://demo.com/person/model#hasDate",
+          "type": "datatype"
+        },
+        {
+          "id": "http://demo.com/person/model#website",
+          "property": "http://demo.com/person/model#website",
+          "type": "datatype"
+        },
+        {
+          "id": "http://demo.com/person/model#hasId",
+          "property": "http://demo.com/person/model#hasId",
+          "type": "datatype",
+          "single": true
+        }
+      ]
+    }
+  ]
+}
