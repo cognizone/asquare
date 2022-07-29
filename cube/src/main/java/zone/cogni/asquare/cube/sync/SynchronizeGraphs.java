@@ -224,9 +224,9 @@ public class SynchronizeGraphs {
   private Collection<SelectedGraph> getGraphsToUpdate(Map<String, SelectedGraph> sourceMap,
                                                       Map<String, SelectedGraph> targetMap) {
     return sourceMap.values()
-            .stream()
-            .filter(sourceSelectGraph -> shouldUpdateTarget(sourceSelectGraph, targetMap))
-            .collect(Collectors.toList());
+                    .stream()
+                    .filter(sourceSelectGraph -> shouldUpdateTarget(sourceSelectGraph, targetMap))
+                    .collect(Collectors.toList());
   }
 
   private boolean shouldUpdateTarget(SelectedGraph sourceSelectGraph, Map<String, SelectedGraph> targetMap) {
@@ -264,8 +264,8 @@ public class SynchronizeGraphs {
   private Map<String, SelectedGraph> getSelectedGraphMap(RdfStoreService rdfStore) {
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStore, getQuery("select-graphs.sparql"));
     return rows.stream()
-            .map(this::getSelectedGraph)
-            .collect(Collectors.toMap(SelectedGraph::getGraphUri, Function.identity(), (a, b) -> a));
+               .map(this::getSelectedGraph)
+               .collect(Collectors.toMap(SelectedGraph::getGraphUri, Function.identity(), (a, b) -> a));
   }
 
   private SelectedGraph getSelectedGraph(Map<String, RDFNode> row) {
@@ -299,8 +299,8 @@ public class SynchronizeGraphs {
 
   private List<Callable<String>> getDeleteCalls(Collection<String> graphUris) {
     return graphUris.stream()
-            .map(this::getDeleteCall)
-            .collect(Collectors.toList());
+                    .map(this::getDeleteCall)
+                    .collect(Collectors.toList());
   }
 
   private Callable<String> getDeleteCall(String graphUri) {
@@ -314,8 +314,8 @@ public class SynchronizeGraphs {
 
   private List<Callable<String>> getSyncCallsFromGraphUri(Collection<String> graphUris, String defaultModificationStamp) {
     return graphUris.stream()
-            .map(graphUri -> getSyncCallFromGraphUri(graphUri, defaultModificationStamp))
-            .collect(Collectors.toList());
+                    .map(graphUri -> getSyncCallFromGraphUri(graphUri, defaultModificationStamp))
+                    .collect(Collectors.toList());
   }
 
   private Callable<String> getSyncCallFromGraphUri(String graphUri, String defaultModificationStamp) {
@@ -327,10 +327,10 @@ public class SynchronizeGraphs {
   private List<Callable<String>> getSyncCallsFromSelectedGraphs(Collection<SelectedGraph> graphsToUpdate,
                                                                 String defaultModificationStamp) {
     return graphsToUpdate.stream()
-            .map(selectedGraph -> getSyncCall(defaultModificationStamp,
-                                              () -> selectedGraph,
-                                              getSourceModelSupplier(selectedGraph)))
-            .collect(Collectors.toList());
+                         .map(selectedGraph -> getSyncCall(defaultModificationStamp,
+                                                           () -> selectedGraph,
+                                                           getSourceModelSupplier(selectedGraph)))
+                         .collect(Collectors.toList());
   }
 
   private Callable<String> getSyncCall(String defaultModificationStamp,
