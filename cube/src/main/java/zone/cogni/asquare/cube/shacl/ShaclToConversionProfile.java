@@ -131,20 +131,40 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
     attribute.setProperty(calculateProperty(propertyShape));
     attribute.setSingle(calculateSingle(propertyShape));
     attribute.setType(calculateAttributeType(propertyShape));
-    attribute.setInverse(false);
+    attribute.setInverse(calculateInverse(propertyShape));
     return attribute;
+  }
+
+  private boolean calculateInverse(Resource propertyShape) {
+    if (propertyShape.hasProperty(Shacl.path)) return false;
+    if (propertyShape.hasProperty(Shacl.inversePath)) return true;
+
+    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
   }
 
   @Nonnull
   private String calculatePathId(@Nonnull CompactConversionProfile profile,
                                  @Nonnull Resource propertyShape) {
-    Resource resource = propertyShape.getPropertyResourceValue(Shacl.path);
-    return convertResourceToId(profile, resource);
+    if (propertyShape.hasProperty(Shacl.path)) {
+      Resource resource = propertyShape.getPropertyResourceValue(Shacl.path);
+      return convertResourceToId(profile, resource);
+    }
+    else if (propertyShape.hasProperty(Shacl.inversePath)) {
+      Resource resource = propertyShape.getPropertyResourceValue(Shacl.inversePath);
+      return convertResourceToId(profile, resource);
+    }
+
+    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
   }
 
   @Nonnull
   private String calculateProperty(@Nonnull Resource propertyShape) {
-    return propertyShape.getPropertyResourceValue(Shacl.path).getURI();
+    if (propertyShape.hasProperty(Shacl.path))
+      return propertyShape.getPropertyResourceValue(Shacl.path).getURI();
+    if (propertyShape.hasProperty(Shacl.inversePath))
+      return propertyShape.getPropertyResourceValue(Shacl.inversePath).getURI();
+
+    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
