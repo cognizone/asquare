@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.shacl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
@@ -131,20 +132,38 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
     attribute.setProperty(calculateProperty(propertyShape));
     attribute.setSingle(calculateSingle(propertyShape));
     attribute.setType(calculateAttributeType(propertyShape));
-    attribute.setInverse(false);
+    attribute.setInverse(isInversePropertyShape(propertyShape));
     return attribute;
+  }
+
+  private boolean isInversePropertyShape(Resource propertyShape) {
+    boolean hasPath = propertyShape.hasProperty(Shacl.path);
+    boolean hasInversePath = propertyShape.hasProperty(Shacl.inversePath);
+
+    if (hasPath && hasInversePath)
+      throw new RuntimeException("both 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
+
+    if (hasPath) return false;
+    if (hasInversePath) return true;
+
+    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
   }
 
   @Nonnull
   private String calculatePathId(@Nonnull CompactConversionProfile profile,
                                  @Nonnull Resource propertyShape) {
-    Resource resource = propertyShape.getPropertyResourceValue(Shacl.path);
+    Resource resource = getPathOrInversePathResource(propertyShape);
     return convertResourceToId(profile, resource);
   }
 
   @Nonnull
   private String calculateProperty(@Nonnull Resource propertyShape) {
-    return propertyShape.getPropertyResourceValue(Shacl.path).getURI();
+    return getPathOrInversePathResource(propertyShape).getURI();
+  }
+
+  private Resource getPathOrInversePathResource(Resource propertyShape) {
+    Property pathProperty = isInversePropertyShape(propertyShape) ? Shacl.inversePath : Shacl.path;
+    return propertyShape.getPropertyResourceValue(pathProperty);
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
