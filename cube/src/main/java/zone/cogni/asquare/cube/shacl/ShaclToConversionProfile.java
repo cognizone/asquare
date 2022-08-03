@@ -161,8 +161,8 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   }
 
   private Resource getPathOrInversePathResource(Resource propertyShape) {
-  Property pathProperty = isInversePropertyShape(propertyShape) ? Shacl.inversePath : Shacl.path;
-  return propertyShape.getPropertyResourceValue(pathProperty);
+    Property pathProperty = isInversePropertyShape(propertyShape) ? Shacl.inversePath : Shacl.path;
+    return propertyShape.getPropertyResourceValue(pathProperty);
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
