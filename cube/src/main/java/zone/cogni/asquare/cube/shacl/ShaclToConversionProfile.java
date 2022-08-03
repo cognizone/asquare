@@ -131,13 +131,19 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
     attribute.setProperty(calculateProperty(propertyShape));
     attribute.setSingle(calculateSingle(propertyShape));
     attribute.setType(calculateAttributeType(propertyShape));
-    attribute.setInverse(calculateInverse(propertyShape));
+    attribute.setInverse(isInversePropertyShape(propertyShape));
     return attribute;
   }
 
-  private boolean calculateInverse(Resource propertyShape) {
-    if (propertyShape.hasProperty(Shacl.path)) return false;
-    if (propertyShape.hasProperty(Shacl.inversePath)) return true;
+  private boolean isInversePropertyShape(Resource propertyShape) {
+    boolean hasPath = propertyShape.hasProperty(Shacl.path);
+    boolean hasInversePath = propertyShape.hasProperty(Shacl.inversePath);
+
+    if (hasPath && hasInversePath)
+      throw new RuntimeException("both 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
+
+    if (hasPath) return false;
+    if (hasInversePath) return true;
 
     throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
   }
@@ -145,26 +151,19 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   @Nonnull
   private String calculatePathId(@Nonnull CompactConversionProfile profile,
                                  @Nonnull Resource propertyShape) {
-    if (propertyShape.hasProperty(Shacl.path)) {
-      Resource resource = propertyShape.getPropertyResourceValue(Shacl.path);
-      return convertResourceToId(profile, resource);
-    }
-    else if (propertyShape.hasProperty(Shacl.inversePath)) {
-      Resource resource = propertyShape.getPropertyResourceValue(Shacl.inversePath);
-      return convertResourceToId(profile, resource);
-    }
-
-    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
+    Resource resource = getPathOrInversePathResource(propertyShape);
+    return convertResourceToId(profile, resource);
   }
 
   @Nonnull
   private String calculateProperty(@Nonnull Resource propertyShape) {
-    if (propertyShape.hasProperty(Shacl.path))
-      return propertyShape.getPropertyResourceValue(Shacl.path).getURI();
-    if (propertyShape.hasProperty(Shacl.inversePath))
-      return propertyShape.getPropertyResourceValue(Shacl.inversePath).getURI();
+    return getPathOrInversePathResource(propertyShape).getURI();
+  }
 
-    throw new RuntimeException("missing 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
+  private Resource getPathOrInversePathResource(Resource propertyShape) {
+    boolean isInverse = isInversePropertyShape(propertyShape);
+    return isInverse ? propertyShape.getPropertyResourceValue(Shacl.inversePath)
+                     : propertyShape.getPropertyResourceValue(Shacl.path);
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
