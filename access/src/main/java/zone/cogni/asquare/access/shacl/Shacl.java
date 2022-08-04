@@ -37,6 +37,7 @@ public interface Shacl {
   Property details = createProperty(NS + "details");
   Property focusNode = createProperty(NS + "focusNode");
   Property inversePath = createProperty(NS + "inversePath");
+  Property languageIn = createProperty(NS + "languageIn");
   Property minCount = createProperty(NS + "minCount");
   Property maxCount = createProperty(NS + "maxCount");
   Property name = createProperty(NS + "name");

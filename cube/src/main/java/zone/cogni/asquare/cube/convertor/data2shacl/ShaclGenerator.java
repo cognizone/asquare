@@ -348,12 +348,12 @@ public class ShaclGenerator {
     return null;
   }
 
-  private void setShaclDatatype(Configuration configuration,
-                                RdfStoreService rdfStoreService,
-                                Model shacl,
-                                Resource targetClass,
-                                Resource path,
-                                Resource propertyShape) {
+  private void setShaclDatatype(@Nonnull Configuration configuration,
+                                @Nonnull RdfStoreService rdfStoreService,
+                                @Nonnull Model shacl,
+                                @Nonnull Resource targetClass,
+                                @Nonnull Resource path,
+                                @Nonnull Resource propertyShape) {
     List<String> datatypes = selectForTypeAndProperty(rdfStoreService, "select-datatype.sparql.spel",
                                                       targetClass, path);
     if (datatypes.size() != 1) {
@@ -369,6 +369,29 @@ public class ShaclGenerator {
 
     Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
     shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+
+    if (RDF.langString.equals(datatypeValue)) {
+      setLanguageIn(rdfStoreService, shacl, targetClass, path, propertyShape);
+    }
+  }
+
+  private void setLanguageIn(@Nonnull RdfStoreService rdfStoreService,
+                             @Nonnull Model shacl,
+                             @Nonnull Resource targetClass,
+                             @Nonnull Resource path,
+                             @Nonnull Resource propertyShape) {
+
+    List<Map<String, RDFNode>> rows = getRowsForTypeAndProperty(rdfStoreService, "select-languages.sparql.spel",
+                                                                targetClass, path);
+    if (rows.isEmpty()) return;
+
+    List<String> languages = rows.stream()
+                                 .map(row -> row.get(0).asLiteral().getString())
+                                 .collect(Collectors.toList());
+
+    languages.forEach(language -> {
+      shacl.add(propertyShape, Shacl.languageIn, language);
+    });
   }
 
 
@@ -458,12 +481,17 @@ public class ShaclGenerator {
                                                 String fileName,
                                                 Resource type,
                                                 Resource property) {
+    List<Map<String, RDFNode>> rows = getRowsForTypeAndProperty(rdfStoreService, fileName, type, property);
+    return paginatedQuery.convertSingleColumnUriToStringList(rows);
+  }
+
+  private List<Map<String, RDFNode>> getRowsForTypeAndProperty(RdfStoreService rdfStoreService, String fileName, Resource type, Resource property) {
     Map<String, String> parameters = Map.of("type", type.getURI(),
                                             "property", property.getURI());
     String query = spelService.processTemplate(getResource(fileName),
                                                parameters);
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
-    return paginatedQuery.convertSingleColumnUriToStringList(rows);
+    return rows;
   }
 
   private boolean askTypeProperty(RdfStoreService rdfStoreService, String queryFile, Resource type, Resource property) {
