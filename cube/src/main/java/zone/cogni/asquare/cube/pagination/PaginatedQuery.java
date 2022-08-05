@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.pagination;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import joptsimple.internal.Strings;
@@ -191,17 +192,33 @@ public class PaginatedQuery {
    * Since result currently is somewhat inflexible, we are adding flexibility with convertors.
    */
   public List<String> convertSingleColumnUriToStringList(List<Map<String, RDFNode>> results) {
+    return convertSingleColumnToList(results, input -> input.asResource().getURI());
+  }
+
+  /**
+   * Converts single column result set to a certain type using a conversion function.
+   *
+   * @param results    rows after query
+   * @param conversion conversion function
+   * @param <T>        type of elements in the list
+   * @return list of results
+   * @throws RuntimeException in case there is not exactly one column
+   */
+  public <T> List<T> convertSingleColumnToList(@Nonnull List<Map<String, RDFNode>> results,
+                                               @Nonnull Function<RDFNode, T> conversion) {
     if (results.isEmpty()) return Collections.emptyList();
 
     Map<String, RDFNode> firstRow = results.get(0);
     if (firstRow.size() != 1)
-      throw new RuntimeException("Expected exactly one result per row. Found " + firstRow.size());
+      throw new RuntimeException("Expected exactly one result per row. Found row size of '" + firstRow.size() + "'");
 
+    String columnName = firstRow.keySet().stream().findFirst().get();
     return results.stream()
-                  .map(row -> row.values().stream().findFirst().get())
-                  .map(rdfNode -> rdfNode.asResource().getURI())
+                  .map(row -> row.get(columnName))
+                  .map(conversion)
                   .collect(Collectors.toList());
   }
+
 
   public RdfStoreService getRdfStore(Model model) {
     return new InternalRdfStoreService(model);

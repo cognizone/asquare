@@ -48,14 +48,12 @@ public class ShaclGeneratorTest {
   private HashMap<String, String> getPrefixes() {
     HashMap<String, String> result = new HashMap<>();
     result.put("sh", Shacl.NS);
-    result.put("shacz", Shacz.NS);
     return result;
   }
 
   private Configuration getConfiguration() {
     Configuration configuration = new Configuration();
     configuration.setShapesNamespace("sh-demo", "http://demo.com/shacl/");
-    configuration.setIncludeShapesGraph(true);
     configuration.setIgnoredClasses(List.of("http://www.w3.org/2004/02/skos/core#Concept",
                                             "http://data.legilux.public.lu/resource/ontology/jolux#Work",
                                             "http://data.legilux.public.lu/resource/ontology/jolux#WorkAtOj",
