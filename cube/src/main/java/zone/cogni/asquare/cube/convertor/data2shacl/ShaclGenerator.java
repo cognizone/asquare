@@ -67,8 +67,7 @@ public class ShaclGenerator {
                         @Nonnull RdfStoreService rdfStoreService,
                         @Nonnull String graph) {
     Model model = paginatedQuery.getGraph(rdfStoreService, graph);
-    InternalRdfStoreService graphRdfStore = new InternalRdfStoreService(model);
-    return generate(configuration, prefixes, graphRdfStore);
+    return generate(configuration, prefixes, model);
   }
 
   public Model generate(@Nonnull Configuration configuration,
@@ -78,8 +77,13 @@ public class ShaclGenerator {
     log.info("(generateTypeGraphs) fetched {} graph uris", graphs.size());
 
     Model fullModel = paginatedQuery.getGraphs(rdfStore, graphs, 10);
-    InternalRdfStoreService graphRdfStore = new InternalRdfStoreService(fullModel);
+    return generate(configuration, prefixes, fullModel);
+  }
 
+  public Model generate(@Nonnull Configuration configuration,
+                        @Nonnull Map<String, String> prefixes,
+                        @Nonnull Model inputModel) {
+    InternalRdfStoreService graphRdfStore = new InternalRdfStoreService(inputModel);
     return generate(configuration, prefixes, graphRdfStore);
   }
 
