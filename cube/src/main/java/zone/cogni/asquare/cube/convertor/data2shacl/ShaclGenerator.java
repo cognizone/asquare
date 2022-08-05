@@ -161,8 +161,7 @@ public class ShaclGenerator {
                        @Nonnull Model shacl,
                        @Nonnull String typeUri) {
     if (isIgnoredType(configuration, typeUri)) {
-      String message = getMessage("ignoring type '{}'", shortenUri(shacl, typeUri));
-      log.info(message);
+      log.info(getMessage("ignoring type '{}'", shortenUri(shacl, typeUri)));
       return;
     }
 
@@ -323,9 +322,8 @@ public class ShaclGenerator {
                                 @Nonnull Resource propertyShape) {
     List<String> datatypes = selectUris(rdfStore, "select-datatype.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
     if (datatypes.size() != 1) {
-      String message = getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
-                                  shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, datatypes));
-      log.warn(message);
+      log.warn(getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
+                          shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, datatypes)));
       return;
     }
 
