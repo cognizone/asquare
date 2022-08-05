@@ -284,9 +284,10 @@ public class ShaclGenerator {
                            @Nonnull Resource propertyShape) {
     if (log.isTraceEnabled()) log.trace("(setNodeKind) start");
 
-    boolean hasIri = askQuery(rdfStore, "nodekind-is-iri.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
-    boolean hasBlank = askQuery(rdfStore, "nodekind-is-blank.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
-    boolean hasLiteral = askQuery(rdfStore, "nodekind-is-literal.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
+    Map<String, String> typeAndPropertyParameters = getTypeAndPropertyParameters(targetClass, path);
+    boolean hasIri = askQuery(rdfStore, "nodekind-is-iri.sparql.spel", typeAndPropertyParameters);
+    boolean hasBlank = askQuery(rdfStore, "nodekind-is-blank.sparql.spel", typeAndPropertyParameters);
+    boolean hasLiteral = askQuery(rdfStore, "nodekind-is-literal.sparql.spel", typeAndPropertyParameters);
 
     Resource nodeKindValue = calculateNodeKind(hasIri, hasBlank, hasLiteral);
     if (nodeKindValue != null) {
