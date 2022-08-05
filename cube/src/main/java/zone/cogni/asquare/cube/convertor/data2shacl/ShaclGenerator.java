@@ -95,27 +95,12 @@ public class ShaclGenerator {
       addTypes(configuration, rdfStoreService, shacl);
       log.debug("(generate) add types done");
 
-      if (configuration.isIncludeShapesGraph()) {
-        addShapesGraph(configuration, shacl);
-        log.debug("(generate) add shapes graph done");
-      }
-
       return shacl;
     }
     catch (RuntimeException e) {
       shacl.write(System.out, "ttl");
       throw e;
     }
-  }
-
-  private void addShapesGraph(@Nonnull Configuration configuration,
-                              @Nonnull Model shacl) {
-    Resource shapesGraph = ResourceFactory.createResource(configuration.getShapesNamespace() + "ShapesGraph");
-    shacl.add(shapesGraph, RDF.type, Shacz.ShapesGraph);
-
-    getShapes(shacl)
-            .map(Statement::getSubject)
-            .forEach(shape -> shacl.add(shapesGraph, Shacz.shapes, shape));
   }
 
   private Stream<Statement> getShapes(@Nonnull Model shacl) {
@@ -179,10 +164,10 @@ public class ShaclGenerator {
       String message = getMessage("ignoring type '{}'", shortenUri(shacl, typeUri));
       log.info(message);
 
-      if (configuration.isReportPossibleIssues()) {
-        Resource shapesGraph = ResourceFactory.createResource(configuration.getShapesNamespace() + "ShapesGraph");
-        shacl.add(shapesGraph, Shacz.warn, message);
-      }
+//      if (configuration.isReportPossibleIssues()) {
+//        Resource shapesGraph = ResourceFactory.createResource(configuration.getShapesNamespace() + "ShapesGraph");
+//        shacl.add(shapesGraph, Hanami.warn, message);
+//      }
       return;
     }
 
@@ -325,8 +310,8 @@ public class ShaclGenerator {
     if (nodeKindValue != null) {
       shacl.add(propertyShape, Shacl.nodeKind, nodeKindValue);
     }
-    else if (configuration.isReportPossibleIssues()) {
-      shacl.add(propertyShape, Shacz.warn, "no nodekind could be derived");
+    else {
+      log.warn("No sh:nodeKind could be derived for '{}'", propertyShape.getURI());
     }
 
     if (nodeKindValue == Shacl.NodeKind.Literal) {
@@ -360,10 +345,6 @@ public class ShaclGenerator {
       String message = getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
                                   shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, datatypes));
       log.warn(message);
-
-      if (configuration.isReportPossibleIssues()) {
-        shacl.add(propertyShape, Shacz.warn, message);
-      }
       return;
     }
 
@@ -383,17 +364,12 @@ public class ShaclGenerator {
 
     List<Map<String, RDFNode>> rows = getRowsForTypeAndProperty(rdfStoreService, "select-languages.sparql.spel",
                                                                 targetClass, path);
-    if (rows.isEmpty()) return;
-
-    List<String> languages = rows.stream()
-                                 .map(row -> row.get(0).asLiteral().getString())
-                                 .collect(Collectors.toList());
-
+    List<String> languages = paginatedQuery.convertSingleColumnToList(rows,
+                                                                      input -> input.asLiteral().getString());
     languages.forEach(language -> {
       shacl.add(propertyShape, Shacl.languageIn, language);
     });
   }
-
 
   @Nonnull
   private List<String> shortenUri(@Nonnull Model shacl, @Nonnull List<String> uris) {
@@ -432,10 +408,6 @@ public class ShaclGenerator {
       String message = getMessage("type '{}' and property '{}' is considered an 'rdfs:Resource'.",
                                   shortenUri(shacl, targetClass), shortenUri(shacl, path));
       log.warn(message);
-
-      if (configuration.isReportPossibleIssues()) {
-        shacl.add(propertyShape, Shacz.warn, message);
-      }
       return;
     }
 
@@ -444,10 +416,6 @@ public class ShaclGenerator {
       String message = getMessage("type '{}' and property '{}' does not have exactly one class: {}",
                                   shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, classes));
       log.warn(message);
-
-      if (configuration.isReportPossibleIssues()) {
-        shacl.add(propertyShape, Shacz.warn, message);
-      }
       return;
     }
 
@@ -490,8 +458,7 @@ public class ShaclGenerator {
                                             "property", property.getURI());
     String query = spelService.processTemplate(getResource(fileName),
                                                parameters);
-    List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
-    return rows;
+    return paginatedQuery.select(rdfStoreService, query);
   }
 
   private boolean askTypeProperty(RdfStoreService rdfStoreService, String queryFile, Resource type, Resource property) {

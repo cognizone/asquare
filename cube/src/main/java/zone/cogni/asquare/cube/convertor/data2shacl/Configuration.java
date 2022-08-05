@@ -15,10 +15,6 @@ public class Configuration {
   private String shapesNamespace;
   private boolean includeEmptyShapesNamespace;
 
-  private boolean includeShapesGraph;
-
-  private boolean reportPossibleIssues;
-
   private List<String> ignoredClasses = new ArrayList<>();
 
   private Map<Set<String>, String> typeTranslations = new HashMap<>();
@@ -61,22 +57,6 @@ public class Configuration {
 
   public void setIncludeEmptyShapesNamespace(boolean includeEmptyShapesNamespace) {
     this.includeEmptyShapesNamespace = includeEmptyShapesNamespace;
-  }
-
-  public boolean isIncludeShapesGraph() {
-    return includeShapesGraph;
-  }
-
-  public void setIncludeShapesGraph(boolean includeShapesGraph) {
-    this.includeShapesGraph = includeShapesGraph;
-  }
-
-  public boolean isReportPossibleIssues() {
-    return reportPossibleIssues;
-  }
-
-  public void setReportPossibleIssues(boolean reportPossibleIssues) {
-    this.reportPossibleIssues = reportPossibleIssues;
   }
 
   public List<String> getIgnoredClasses() {
