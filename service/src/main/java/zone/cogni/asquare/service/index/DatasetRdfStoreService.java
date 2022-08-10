@@ -1,6 +1,7 @@
 package zone.cogni.asquare.service.index;
 
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -67,5 +68,44 @@ public class DatasetRdfStoreService implements RdfStoreService {
   @Override
   public void delete() {
     dataset.close();
+  }
+
+  /**
+   * <p>
+   * Create and return an in memory dataset copy.
+   * </p>
+   * <p>
+   * The operation runs in a write transaction.
+   * </p>
+   * <p>
+   * It should be noted that this might have a big performance or memory impact when huge datasets are copied.
+   * </p>
+   *
+   * @return a copy of current Dataset
+   */
+  public Dataset copy() {
+    Dataset datasetCopy = DatasetFactory.create();
+
+    try {
+      dataset.getLock().enterCriticalSection(false);
+
+      // copy named models
+      dataset.listNames()
+             .forEachRemaining(name -> {
+               Model namedModel = dataset.getNamedModel(name);
+               datasetCopy.addNamedModel(name, namedModel);
+             });
+
+      // copy default model
+      Model defaultModel = dataset.getDefaultModel();
+      if (defaultModel != null) {
+        datasetCopy.setDefaultModel(defaultModel);
+      }
+    }
+    finally {
+      dataset.getLock().leaveCriticalSection();
+    }
+
+    return datasetCopy;
   }
 }
