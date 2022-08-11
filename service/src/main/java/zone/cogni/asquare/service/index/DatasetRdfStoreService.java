@@ -11,10 +11,11 @@ import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.libs.jena.utils.DatasetHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 public class DatasetRdfStoreService implements RdfStoreService {
-  private Dataset dataset;
+  private final Dataset dataset;
 
   public DatasetRdfStoreService(Dataset dataset) {
     this.dataset = dataset;
@@ -65,7 +66,29 @@ public class DatasetRdfStoreService implements RdfStoreService {
   }
 
   @Override
+  public void replaceGraph(String graphUri, Model model) {
+    dataset.removeNamedModel(graphUri)
+           .getNamedModel(graphUri)
+           .add(model);
+  }
+
+  @Override
+  public void deleteGraph(String graphUri) {
+    dataset.removeNamedModel(graphUri);
+  }
+
+  @Override
   public void delete() {
     dataset.close();
+  }
+
+  /**
+   * Create and return an in memory dataset copy.
+   *
+   * @return a copy of current Dataset
+   * @see zone.cogni.libs.jena.utils.DatasetHelper#copy(Dataset)
+   */
+  public Dataset copy() {
+    return DatasetHelper.copy(dataset);
   }
 }
