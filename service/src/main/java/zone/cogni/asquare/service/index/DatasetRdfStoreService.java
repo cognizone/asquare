@@ -1,7 +1,6 @@
 package zone.cogni.asquare.service.index;
 
 import org.apache.jena.query.Dataset;
-import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -12,6 +11,7 @@ import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.libs.jena.utils.DatasetHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 public class DatasetRdfStoreService implements RdfStoreService {
@@ -71,40 +71,12 @@ public class DatasetRdfStoreService implements RdfStoreService {
   }
 
   /**
-   * <p>
    * Create and return an in memory dataset copy.
-   * </p>
-   * <p>
-   * The operation runs in a write transaction.
-   * </p>
-   * <p>
-   * It should be noted that this might have a big performance or memory impact when huge datasets are copied.
-   * </p>
    *
    * @return a copy of current Dataset
+   * @see zone.cogni.libs.jena.utils.DatasetHelper#copy(Dataset)
    */
   public Dataset copy() {
-    Dataset datasetCopy = DatasetFactory.create();
-
-    try {
-      dataset.getLock().enterCriticalSection(false);
-
-      // copy named models
-      dataset.listNames()
-             .forEachRemaining(name -> {
-               Model datasetNamedModel = dataset.getNamedModel(name);
-               datasetCopy.getNamedModel(name)
-                          .add(datasetNamedModel);
-             });
-
-      // copy default model
-      Model datasetDefaultModel = dataset.getDefaultModel();
-      datasetCopy.getDefaultModel().add(datasetDefaultModel);
-    }
-    finally {
-      dataset.getLock().leaveCriticalSection();
-    }
-
-    return datasetCopy;
+    return DatasetHelper.copy(dataset);
   }
 }
