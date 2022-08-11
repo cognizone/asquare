@@ -66,6 +66,16 @@ public class DatasetRdfStoreService implements RdfStoreService {
   }
 
   @Override
+  public void replaceGraph(String graphUri, Model model) {
+    dataset.replaceNamedModel(graphUri, model);
+  }
+
+  @Override
+  public void deleteGraph(String graphUri) {
+    dataset.removeNamedModel(graphUri);
+  }
+
+  @Override
   public void delete() {
     dataset.close();
   }
