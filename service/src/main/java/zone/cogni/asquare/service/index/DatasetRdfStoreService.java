@@ -15,7 +15,7 @@ import zone.cogni.libs.jena.utils.DatasetHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 public class DatasetRdfStoreService implements RdfStoreService {
-  private Dataset dataset;
+  private final Dataset dataset;
 
   public DatasetRdfStoreService(Dataset dataset) {
     this.dataset = dataset;
@@ -67,7 +67,9 @@ public class DatasetRdfStoreService implements RdfStoreService {
 
   @Override
   public void replaceGraph(String graphUri, Model model) {
-    dataset.replaceNamedModel(graphUri, model);
+    dataset.removeNamedModel(graphUri)
+           .getNamedModel(graphUri)
+           .add(model);
   }
 
   @Override
