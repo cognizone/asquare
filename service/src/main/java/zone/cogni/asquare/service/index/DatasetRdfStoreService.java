@@ -92,15 +92,14 @@ public class DatasetRdfStoreService implements RdfStoreService {
       // copy named models
       dataset.listNames()
              .forEachRemaining(name -> {
-               Model namedModel = dataset.getNamedModel(name);
-               datasetCopy.addNamedModel(name, namedModel);
+               Model datasetNamedModel = dataset.getNamedModel(name);
+               datasetCopy.getNamedModel(name)
+                          .add(datasetNamedModel);
              });
 
       // copy default model
-      Model defaultModel = dataset.getDefaultModel();
-      if (defaultModel != null) {
-        datasetCopy.setDefaultModel(defaultModel);
-      }
+      Model datasetDefaultModel = dataset.getDefaultModel();
+      datasetCopy.getDefaultModel().add(datasetDefaultModel);
     }
     finally {
       dataset.getLock().leaveCriticalSection();
