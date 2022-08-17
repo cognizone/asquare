@@ -329,8 +329,8 @@ public class ShaclGenerator {
                                 @Nonnull Resource propertyShape) {
     List<String> datatypes = selectUris(rdfStore, "select-datatype.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
     if (datatypes.isEmpty()) {
-      log.warn(getMessage("type '{}' and property '{}' does not have exactly a datatype",
-                          shortenUri(shacl, targetClass), shortenUri(shacl, path)));
+      log.warn("type '{}' and property '{}' does not have at least one datatype",
+                     shortenUri(shacl, targetClass), shortenUri(shacl, path));
       return;
     }
 
