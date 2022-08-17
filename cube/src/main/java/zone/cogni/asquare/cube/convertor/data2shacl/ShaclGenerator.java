@@ -335,28 +335,37 @@ public class ShaclGenerator {
     }
 
     if (datatypes.size() > 1) {
-      datatypes.forEach(datatype -> {
-        Resource datatypeValue = ResourceFactory.createResource(datatype);
-
-        String orInstanceName = datatypeValue.getLocalName().toLowerCase();
-        Resource singleOrInstance = ResourceFactory.createResource(propertyShape.getURI() + "/" + orInstanceName);
-
-        shacl.add(propertyShape, Shacl.or, singleOrInstance);
-        shacl.add(singleOrInstance, RDF.type, Shacl.PropertyShape);
-        shacl.add(singleOrInstance, Shacl.datatype, datatypeValue);
-
-        if (datatypeValue.equals(RDF.langString)) {
-          setLanguageIn(rdfStore, shacl, targetClass, path, singleOrInstance);
-        }
-      });
+      setOrShaclDatatype(rdfStore, shacl, targetClass, path, propertyShape, datatypes);
     }
     else {
-      Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
-      shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+      setSingleShaclDatatype(rdfStore, shacl, targetClass, path, propertyShape, datatypes);
+    }
+  }
 
-      if (RDF.langString.equals(datatypeValue)) {
-        setLanguageIn(rdfStore, shacl, targetClass, path, propertyShape);
+  private void setOrShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
+    datatypes.forEach(datatype -> {
+      Resource datatypeValue = ResourceFactory.createResource(datatype);
+
+      // TODO not supporting same local name in different namespaces yet
+      String orInstanceName = datatypeValue.getLocalName().toLowerCase();
+      Resource singleOrInstance = ResourceFactory.createResource(propertyShape.getURI() + "/" + orInstanceName);
+
+      shacl.add(propertyShape, Shacl.or, singleOrInstance);
+      shacl.add(singleOrInstance, RDF.type, Shacl.PropertyShape);
+      shacl.add(singleOrInstance, Shacl.datatype, datatypeValue);
+
+      if (datatypeValue.equals(RDF.langString)) {
+        setLanguageIn(rdfStore, shacl, targetClass, path, singleOrInstance);
       }
+    });
+  }
+
+  private void setSingleShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
+    Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
+    shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+
+    if (RDF.langString.equals(datatypeValue)) {
+      setLanguageIn(rdfStore, shacl, targetClass, path, propertyShape);
     }
   }
 
