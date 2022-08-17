@@ -24,6 +24,7 @@ import zone.cogni.core.spring.ResourceHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -157,7 +158,9 @@ public class ShaclGenerator {
 
   private List<String> getTypes(RdfStoreService rdfStoreService) {
     List<Map<String, RDFNode>> rows = getRows(rdfStoreService, "select-types.sparql");
-    return paginatedQuery.convertSingleColumnUriToStringList(rows);
+    List<String> types = paginatedQuery.convertSingleColumnUriToStringList(rows);
+    Collections.sort(types);
+    return types;
   }
 
   private void addType(@Nonnull Configuration configuration,
@@ -325,12 +328,39 @@ public class ShaclGenerator {
                                 @Nonnull Resource path,
                                 @Nonnull Resource propertyShape) {
     List<String> datatypes = selectUris(rdfStore, "select-datatype.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
-    if (datatypes.size() != 1) {
-      log.warn(getMessage("type '{}' and property '{}' does not have exactly one datatype: {}",
-                          shortenUri(shacl, targetClass), shortenUri(shacl, path), shortenUri(shacl, datatypes)));
+    if (datatypes.isEmpty()) {
+      log.warn("type '{}' and property '{}' does not have at least one datatype",
+                     shortenUri(shacl, targetClass), shortenUri(shacl, path));
       return;
     }
 
+    if (datatypes.size() > 1) {
+      setOrShaclDatatype(rdfStore, shacl, targetClass, path, propertyShape, datatypes);
+    }
+    else {
+      setSingleShaclDatatype(rdfStore, shacl, targetClass, path, propertyShape, datatypes);
+    }
+  }
+
+  private void setOrShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
+    datatypes.forEach(datatype -> {
+      Resource datatypeValue = ResourceFactory.createResource(datatype);
+
+      // TODO not supporting same local name in different namespaces yet
+      String orInstanceName = datatypeValue.getLocalName().toLowerCase();
+      Resource singleOrInstance = ResourceFactory.createResource(propertyShape.getURI() + "/" + orInstanceName);
+
+      shacl.add(propertyShape, Shacl.or, singleOrInstance);
+      shacl.add(singleOrInstance, RDF.type, Shacl.PropertyShape);
+      shacl.add(singleOrInstance, Shacl.datatype, datatypeValue);
+
+      if (datatypeValue.equals(RDF.langString)) {
+        setLanguageIn(rdfStore, shacl, targetClass, path, singleOrInstance);
+      }
+    });
+  }
+
+  private void setSingleShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
     Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
     shacl.add(propertyShape, Shacl.datatype, datatypeValue);
 
@@ -459,7 +489,9 @@ public class ShaclGenerator {
     String query = spelService.processTemplate(getResource("select-properties.sparql.spel"),
                                                Map.of("type", targetClass.getURI()));
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
-    return paginatedQuery.convertSingleColumnUriToStringList(rows);
+    List<String> properties = paginatedQuery.convertSingleColumnUriToStringList(rows);
+    Collections.sort(properties);
+    return properties;
   }
 
   private List<Map<String, RDFNode>> getRows(RdfStoreService rdfStoreService, String fileName) {

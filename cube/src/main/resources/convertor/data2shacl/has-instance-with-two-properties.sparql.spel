@@ -2,5 +2,12 @@ ask {
   ?uri a <#{[type]}> .
   ?uri <#{[property]}>
            ?x, ?y.
-  filter (?x != ?y)
+
+  # difference is calculated on all 3 options
+  # because Jena has custom datatype issue
+  filter (
+        str(?x) != str(?y)
+     || datatype(?x) != datatype(?y)
+     || lang(?x) != lang(?y)
+  )
 }

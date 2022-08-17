@@ -1,5 +1,9 @@
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
 select distinct ?value {
   ?uri a <#{[type]}> .
   ?uri <#{[property]}> ?x.
-  bind (datatype(?x) as ?value)
+
+  bind (datatype(?x) as ?datatypeValue)
+  bind (coalesce(?datatypeValue, rdfs:langString) as ?value)
 }
