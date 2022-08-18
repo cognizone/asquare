@@ -96,11 +96,14 @@ public class IndexFolderService {
   }
 
   private String getLocalPathPrefix() {
+    String result = null;
     if (configurationPath.startsWith("classpath:"))
-      return StringUtils.substringAfter(configurationPath, "classpath:");
+      result = StringUtils.substringAfter(configurationPath, "classpath:");
     else if (configurationPath.startsWith("file:"))
-      return StringUtils.substringAfter(configurationPath, "file:");
-
+      result = StringUtils.substringAfter(configurationPath, "file:");
+    if (result != null) {
+      return File.separatorChar != '/' ? result.replace(File.separatorChar, '/') : result;
+    }
     throw new RuntimeException("Unknown path prefix, should it be supported? path is '" + configurationPath + "'.");
   }
 
