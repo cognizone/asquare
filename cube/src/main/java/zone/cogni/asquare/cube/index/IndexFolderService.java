@@ -105,8 +105,6 @@ public class IndexFolderService {
       throw new RuntimeException("Unknown path prefix, should it be supported? path is '" + configurationPath + "'.");
 
     return File.separatorChar != '/' ? result.replace(File.separatorChar, '/') : result;
-
-
   }
 
   /**
