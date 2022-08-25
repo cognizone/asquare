@@ -11,9 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Configuration {
-  private String shapesPrefix;
   private String shapesNamespace;
-  private boolean includeEmptyShapesNamespace;
 
   private List<String> ignoredClasses = new ArrayList<>();
 
@@ -22,25 +20,8 @@ public class Configuration {
   public Configuration() {
   }
 
-  public Configuration(String shapesPrefix, String shapesNamespace) {
-    this.shapesPrefix = shapesPrefix;
+  public Configuration(String shapesNamespace) {
     this.shapesNamespace = shapesNamespace;
-  }
-
-  public void setShapesNamespace(String prefix, String namespace) {
-    if (!namespace.endsWith("/") && !namespace.endsWith("#"))
-      throw new RuntimeException("invalid namespace, please make it end on '#' or '/'");
-
-    setShapesPrefix(prefix);
-    setShapesNamespace(namespace);
-  }
-
-  public String getShapesPrefix() {
-    return shapesPrefix;
-  }
-
-  public void setShapesPrefix(String shapesPrefix) {
-    this.shapesPrefix = shapesPrefix;
   }
 
   public String getShapesNamespace() {
@@ -49,14 +30,6 @@ public class Configuration {
 
   public void setShapesNamespace(String shapesNamespace) {
     this.shapesNamespace = shapesNamespace;
-  }
-
-  public boolean isIncludeEmptyShapesNamespace() {
-    return includeEmptyShapesNamespace;
-  }
-
-  public void setIncludeEmptyShapesNamespace(boolean includeEmptyShapesNamespace) {
-    this.includeEmptyShapesNamespace = includeEmptyShapesNamespace;
   }
 
   public List<String> getIgnoredClasses() {
