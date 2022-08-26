@@ -255,15 +255,25 @@ public class JenaUtils {
 
   private static String getRdfSyntax(Resource resource) {
     String extension = StringUtils.lowerCase(StringUtils.substringAfterLast(resource.getFilename(), "."));
-    if ("owl".equals(extension)) {
+    if ("owl".equals(extension) || "rdf".equals(extension)) {
+      // .rdf is extension for application/rdf+xml and is default syntax in Jena
+      // .owl is here for legacy reasons, but it is often RDF XML because it is the Protégé default
       return null;
     }
     if ("nt".equals(extension)) {
+      // .nt is extension for application/n-triples
       return "N-TRIPLE";
     }
-    if ("n3".equals(extension) || "ttl".equals(extension)) {
+    if ("n3".equals(extension)) {
+      // .n3 is extension for text/n3
+      return "N3";
+    }
+    if ("ttl".equals(extension)) {
+      // .ttl is extension for text/turtle
       return "TURTLE";
     }
+
+    // any other extension falls back to RDF XML
     return null;
   }
 

@@ -94,7 +94,7 @@ public class ShaclGenerator {
     Model shacl = ModelFactory.createDefaultModel();
     try {
 
-      addPrefixes(configuration, prefixes, shacl);
+      addPrefixes(prefixes, shacl);
       log.debug("(generate) add prefixes done: {}", prefixes.size());
 
       addTypes(configuration, rdfStoreService, shacl);
@@ -115,39 +115,9 @@ public class ShaclGenerator {
     );
   }
 
-  private void addPrefixes(@Nonnull Configuration configuration,
-                           @Nonnull Map<String, String> prefixes,
+  private void addPrefixes(@Nonnull Map<String, String> prefixes,
                            @Nonnull Model shacl) {
-    doPrefixesCheck(configuration, prefixes);
-
     shacl.setNsPrefixes(prefixes);
-
-    if (configuration.isIncludeEmptyShapesNamespace()) {
-      shacl.setNsPrefix(configuration.getShapesPrefix(), configuration.getShapesNamespace());
-    }
-  }
-
-  private void doPrefixesCheck(Configuration configuration, Map<String, String> prefixes) {
-    boolean samePrefix = prefixes.containsKey(configuration.getShapesPrefix());
-    if (!samePrefix) return;
-
-    String message = "configuration shape namespace with prefix '" + configuration.getShapesPrefix() + "'"
-                     + " and with uri '" + configuration.getShapesNamespace() + "'";
-    boolean sameNamespace = prefixes.get(configuration.getShapesPrefix()).equals(configuration.getShapesNamespace());
-    if (sameNamespace) {
-      throw new RuntimeException(
-              message
-              + " already defined in prefixes;"
-              + " it is highly recommended to create a new and unique shacl namespace!"
-      );
-    }
-
-    // same prefix different namespace
-    throw new RuntimeException(
-            message
-            + " has same prefix as one of prefixes. overlapping prefix namespace" +
-            " '" + prefixes.get(configuration.getShapesPrefix()) + "'."
-    );
   }
 
   private void addTypes(Configuration configuration, RdfStoreService rdfStoreService, Model shacl) {
