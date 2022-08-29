@@ -4,15 +4,24 @@ package zone.cogni.sem.jena.template;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.RDFNode;
 import zone.cogni.sem.jena.JenaUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 public final class JenaResultSetHandlers {
+
+  public static final JenaResultSetHandler<String> asJson = resultSet -> {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ResultSetFormatter.outputAsJSON(out, resultSet);
+    return out.toString(StandardCharsets.UTF_8);
+  };
 
   public static final JenaResultSetHandler<ResultSet> inMemoryResultSetResolver = ResultSetFactory::copyResults;
 
