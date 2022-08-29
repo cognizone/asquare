@@ -5,6 +5,7 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -161,6 +162,7 @@ class LocalTdbRdfStoreServicePoolTest {
   }
 
   @Test
+  @Disabled
   void testTooManyRequestsToSameTDB(final CapturedOutput output) throws InterruptedException {
     final LocalTdbPoolKey key = new LocalTdbPoolKey(databasesPath, "http://example.com/test");
 
