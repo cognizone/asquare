@@ -217,7 +217,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     Set<Resource> missedSubjects = new HashSet<>(context.subjectTypeMap.keySet());
     missedSubjects.removeAll(context.alreadyProcessedResources);
 
-    if (missedSubjects.size() > 1) {
+    if (!missedSubjects.isEmpty()) {
       log.warn("<{}> missed {} subjects out of {}. missed subjects: {}",
                root,
                missedSubjects.size(),
@@ -229,11 +229,9 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private void reportUnprocessedTriples(Context context, String root) {
     if (!log.isWarnEnabled()) return;
 
-    Model remainingModel = ModelFactory.createDefaultModel();
-    remainingModel.add(context.model);
-    remainingModel.remove(context.alreadyProcessedModel);
+    Model remainingModel = context.model.difference(context.alreadyProcessedModel);
 
-    if (remainingModel.size() > 1) {
+    if (!remainingModel.isEmpty()) {
       log.warn("<{}> missed {} triples \n{}",
                root,
                remainingModel.size(),
