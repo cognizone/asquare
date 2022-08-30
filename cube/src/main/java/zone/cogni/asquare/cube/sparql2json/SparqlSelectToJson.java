@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Streams;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
@@ -17,8 +16,6 @@ import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,73 +23,17 @@ import java.util.stream.Collectors;
 
 public class SparqlSelectToJson {
 
-  public static class QueryContext {
-    private Resource resource;
-    private Map<String, String> parameters;
-
-    private String queryString;
-    private Query query;
-
-    public QueryContext(Resource resource, Map<String, String> parameters) {
-      this.resource = resource;
-      this.parameters = parameters;
-    }
-
-    public Resource getResource() {
-      return resource;
-    }
-
-    public void setResource(Resource resource) {
-      this.resource = resource;
-    }
-
-    public Map<String, String> getParameters() {
-      return parameters;
-    }
-
-    public void setParameters(Map<String, String> parameters) {
-      this.parameters = parameters;
-    }
-
-    public String getQueryString() {
-      return queryString;
-    }
-
-    public void setQueryString(String queryString) {
-      this.queryString = queryString;
-    }
-
-    public Query getQuery() {
-      return query;
-    }
-
-    public void setQuery(Query query) {
-      this.query = query;
-    }
-  }
-
-  private final List<QueryContext> queries;
+  private final List<Query> queries;
 
   public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
-    this.queries = asQueryContexts(queryResources, templateService, context);
+    this.queries = asQueries(queryResources, templateService, context);
   }
 
-  private List<QueryContext> asQueryContexts(Resource[] queryResources, TemplateService templateService, Map<String, String> parameters) {
-    List<QueryContext> result = new ArrayList<>();
-
-    Arrays.stream(queryResources).forEach(queryResource -> {
-      QueryContext queryContext = new QueryContext(queryResource, parameters);
-
-      String queryString = templateService.processTemplate(queryContext.resource, queryContext.parameters);
-      queryContext.setQueryString(queryString);
-
-      Query query = QueryFactory.create(queryString);
-      queryContext.setQuery(query);
-
-      result.add(queryContext);
-    });
-
-    return result;
+  private List<Query> asQueries(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
+    return Arrays.stream(queryResources)
+            .map(resource -> templateService.processTemplate(resource, context))
+            .map(QueryFactory::create)
+            .collect(Collectors.toList());
   }
 
   public ObjectNode convert(Model model, Map<String, RDFNode> bindings) {
@@ -106,28 +47,25 @@ public class SparqlSelectToJson {
     QuerySolutionMap querySolutionMap = new QuerySolutionMap();
     bindings.forEach(querySolutionMap::add);
 
-    queries.forEach(queryContext -> addQueryData(queryContext, facetNode, rdfStore, querySolutionMap));
+    queries.forEach(query -> addQueryData(facetNode, rdfStore, query, querySolutionMap));
 
     return facetNode;
   }
 
-  private void addQueryData(QueryContext context, ObjectNode facetNode, RdfStoreService rdfStore, QuerySolutionMap querySolutionMap) {
+  private void addQueryData(ObjectNode facetNode, RdfStoreService rdfStore, Query query, QuerySolutionMap querySolutionMap) {
     List<QuerySolution> results = // ????
-            rdfStore.executeSelectQuery(context.query, querySolutionMap, resultSet -> Streams.stream(resultSet)
-                                                                                             .collect(Collectors.toList()));
+      rdfStore.executeSelectQuery(query, querySolutionMap, resultSet -> Streams.stream(resultSet)
+                                                                               .collect(Collectors.toList()));
     if (results.isEmpty()) return;
 
-    List<String> queryVariableNames = context.query.getResultVars();
+    List<String> queryVariableNames = query.getResultVars();
     if (queryVariableNames.size() <= 1)
       throw new RuntimeException("Select query must specify at least one level and a value!");
 
-    addQueryData(context, facetNode, queryVariableNames, results);
+    addQueryData(facetNode, queryVariableNames, results);
   }
 
-  private void addQueryData(QueryContext context,
-                            ObjectNode facetNode,
-                            List<String> queryVariableNames,
-                            List<QuerySolution> results) {
+  private void addQueryData(ObjectNode facetNode, List<String> queryVariableNames, List<QuerySolution> results) {
     PropertyConversion propertyConversion = getPropertyConversion(queryVariableNames);
     String valueVariable = propertyConversion.getPropertyName();
 
@@ -137,9 +75,9 @@ public class SparqlSelectToJson {
 
       ObjectNode current = buildPath(facetNode, queryVariableNames, result);
 
-      String levelBeforeValue = getLastLevelKey(context, queryVariableNames, result);
+      String levelBeforeValue = getLastLevelKey(queryVariableNames, result);
 
-      addValue(context, current, levelBeforeValue, value, propertyConversion);
+      addValue(current, levelBeforeValue, value, propertyConversion);
     });
   }
 
@@ -169,11 +107,7 @@ public class SparqlSelectToJson {
     return current;
   }
 
-  private void addValue(QueryContext context,
-                        ObjectNode current,
-                        String lastLevel,
-                        RDFNode value,
-                        PropertyConversion propertyConversion) {
+  private void addValue(ObjectNode current, String lastLevel, RDFNode value, PropertyConversion propertyConversion) {
     boolean isPresent = current.has(lastLevel);
     JsonNode convertedValue = propertyConversion.getConversion().apply(value);
     if (isPresent && propertyConversion.isList()) {
@@ -181,9 +115,7 @@ public class SparqlSelectToJson {
       array.add(convertedValue);
     }
     else if (isPresent && !propertyConversion.isList()) {
-      throw new RuntimeException("multiple results found, please define as 'xxxList':" +
-                                 " property '" + propertyConversion.getPropertyName() + "'\n" +
-                                 "\tquery: \n" + context.queryString);
+      throw new RuntimeException("multiple results found for " + propertyConversion.getPropertyName());
     }
     else if (!isPresent && propertyConversion.isList()) {
       ArrayNode array = JsonNodeFactory.instance.arrayNode();
@@ -200,16 +132,10 @@ public class SparqlSelectToJson {
       throw new RuntimeException("Path variable " + varName + " is not a literal. All path variables should be literals.");
   }
 
-  private String getLastLevelKey(@Nonnull QueryContext context,
-                                 @Nonnull List<String> queryVariableNames,
-                                 @Nonnull QuerySolution result) {
+  private String getLastLevelKey(List<String> queryVariableNames, QuerySolution result) {
     String varName = queryVariableNames.get(queryVariableNames.size() - 2);
     checkIsLiteral(result, varName);
-    String lastLevelKey = result.get(varName).asLiteral().getLexicalForm();
-    if (StringUtils.isBlank(lastLevelKey))
-      throw new RuntimeException("seems last key is empty for query: \n" + context.getQueryString());
-
-    return lastLevelKey;
+    return result.get(varName).asLiteral().getLexicalForm();
   }
 }
 
