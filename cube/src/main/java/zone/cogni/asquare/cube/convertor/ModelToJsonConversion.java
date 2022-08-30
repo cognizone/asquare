@@ -21,9 +21,6 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
@@ -33,6 +30,9 @@ import zone.cogni.asquare.cube.convertor.json.ConversionProfile;
 import zone.cogni.libs.jena.utils.JenaUtils;
 
 import javax.annotation.Nonnull;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -214,7 +214,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   }
 
   private void reportMissedSubjects(Context context, String root) {
-    Set<Resource> missedSubjects = context.subjectTypeMap.keySet();
+    Set<Resource> missedSubjects = new HashSet<>(context.subjectTypeMap.keySet());
     missedSubjects.removeAll(context.alreadyProcessedResources);
 
     if (missedSubjects.size() > 1) {
@@ -717,19 +717,18 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   }
 
   private String literalToDate(Literal literal) {
-    return date2string(ISODateTimeFormat.dateTimeParser().parseDateTime(literal.getLexicalForm()));
+    return LocalDate.parse(literal.getLexicalForm()).toString();
   }
 
-  private String date2string(DateTime date) {
-    return date == null ? null : date.toString(ISODateTimeFormat.date());
-  }
-
+  /**
+   * Tested on formats like 2016-01-01T00:00:00Z , 2021-02-11T08:19:21.489344Z and 2022-08-08T08:08:08.888+02:00
+   *
+   * @param literal dateTime literal
+   * @return dateTime string as is but after format validation
+   */
   private String literalToDateTime(Literal literal) {
-    return dateTime2string(ISODateTimeFormat.dateTimeParser().parseDateTime(literal.getLexicalForm()));
-  }
-
-  private String dateTime2string(DateTime dateTime) {
-    return dateTime == null ? null : dateTime.withZone(DateTimeZone.UTC).toString(ISODateTimeFormat.dateTime());
+    ZonedDateTime zonedDateTime = ZonedDateTime.parse(literal.getLexicalForm());
+    return zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
   }
 
   private TextNode getTextNode(String value) {

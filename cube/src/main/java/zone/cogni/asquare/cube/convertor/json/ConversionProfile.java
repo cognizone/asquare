@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,13 +63,13 @@ public class ConversionProfile {
    * simple classId lookup
    */
   @JsonIgnore
-  private final Map<String, Type> classIdTypeMap = new HashMap<>();
+  private final Map<String, Type> classIdTypeMap = new TreeMap<>();
 
   /**
    * expanded classId lookup
    */
   @JsonIgnore
-  private final Map<String, Type> expandedClassIdTypeMap = new HashMap<>();
+  private final Map<String, Type> expandedClassIdTypeMap = new TreeMap<>();
 
 
   /**
@@ -84,10 +83,10 @@ public class ConversionProfile {
   private final List<Collection<Type>> typesByLevel = new ArrayList<>();
 
   @JsonIgnore
-  private final Map<String, Type> rdfTypeTypeMap = new HashMap<>();
+  private final Map<String, Type> rdfTypeTypeMap = new TreeMap<>();
 
   @JsonIgnore
-  private final Map<String, Type> expandedRdfTypeTypeMap = new HashMap<>();
+  private final Map<String, Type> expandedRdfTypeTypeMap = new TreeMap<>();
 
   public Context getContext() {
     Objects.requireNonNull(context, "context cannot be null");
@@ -301,10 +300,10 @@ public class ConversionProfile {
      * all attributes
      */
     @JsonIgnore
-    private final Map<String, Attribute> attributeIdMap = new HashMap<>();
+    private final Map<String, Attribute> attributeIdMap = new TreeMap<>();
 
     @JsonIgnore
-    private final Map<String, Attribute> attributeUriMap = new HashMap<>();
+    private final Map<String, Attribute> attributeUriMap = new TreeMap<>();
 
     public String getRootClassId() {
       return rootClassId;
