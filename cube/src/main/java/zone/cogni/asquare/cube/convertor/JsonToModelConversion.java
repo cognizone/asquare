@@ -215,15 +215,15 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   private ConversionProfile.Type getTypeUsingNormalCase(JsonNode dataNode) {
     JsonNode type = dataNode.get("type");
 
-    // single solution
-    if (!type.isArray()) {
-      ConversionProfile.Type result = conversionProfile.getTypeFromClassId(type.textValue());
-      if (result != null) return result;
+    if (type.isArray()) {
+      // array solution
+      Set<String> types = asStream(type, JsonNode::textValue).collect(Collectors.toSet());
+      return conversionProfile.getTypeFromClassIds(types);
     }
-
-    // array solution
-    Set<String> types = asStream(type, JsonNode::textValue).collect(Collectors.toSet());
-    return conversionProfile.getTypeFromClassIds(types);
+    else {
+      // single solution
+      return conversionProfile.getTypeFromClassId(type.textValue());
+    }
   }
 
   private void addLanguages(Model model,
