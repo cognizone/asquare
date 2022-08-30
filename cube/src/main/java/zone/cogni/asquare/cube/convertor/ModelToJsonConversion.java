@@ -230,7 +230,6 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     if (!log.isWarnEnabled()) return;
 
     Model remainingModel = context.model.difference(context.alreadyProcessedModel);
-    remainingModel.setNsPrefixes(conversionProfile.getContext().getPrefixes());
 
     if (!remainingModel.isEmpty()) {
       log.warn("<{}> missed {} triples \n{}",
