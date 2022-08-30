@@ -196,7 +196,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     // single solution
     JsonNode type = dataNode.get("type");
 
-    if (!dataNode.isArray()) {
+    if (!type.isArray()) {
       ConversionProfile.Type result = conversionProfile.getTypeFromClassId(type.textValue());
       if (result != null) return result;
     }
@@ -216,7 +216,7 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     JsonNode type = dataNode.get("type");
 
     // single solution
-    if (!dataNode.isArray()) {
+    if (!type.isArray()) {
       ConversionProfile.Type result = conversionProfile.getTypeFromClassId(type.textValue());
       if (result != null) return result;
     }
