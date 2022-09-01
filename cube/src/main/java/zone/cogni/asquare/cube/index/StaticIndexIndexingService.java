@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.convertor.ModelToJsonConversion;
+import zone.cogni.asquare.cube.index.IndexFolderUriReport.CollectionFolderUriReport;
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
@@ -55,6 +56,8 @@ public class StaticIndexIndexingService
 
   private static final Logger log = LoggerFactory.getLogger(StaticIndexIndexingService.class);
 
+  private final int indexBlockSize;
+
   private final IndexFolderService indexFolderService;
 
   private final SpelService spelService;
@@ -70,7 +73,8 @@ public class StaticIndexIndexingService
    */
   private final Map<String, String> queryTemplateParameters;
 
-  public StaticIndexIndexingService(@Nonnull SpelService spelService,
+  public StaticIndexIndexingService(int indexBlockSize,
+                                    @Nonnull SpelService spelService,
                                     @Nonnull PaginatedQuery paginatedQuery,
                                     @Nonnull MonitoredPool indexMonitoredPool,
                                     @Nonnull RdfStoreService rdfStore,
@@ -78,6 +82,7 @@ public class StaticIndexIndexingService
                                     @Nonnull ModelToJsonConversion modelToJsonConversion,
                                     @Nonnull IndexFolderService indexFolderService,
                                     @Nonnull Map<String, String> queryTemplateParameters) {
+    this.indexBlockSize = indexBlockSize;
     this.indexFolderService = indexFolderService;
     this.queryTemplateParameters = queryTemplateParameters;
     this.spelService = spelService;
@@ -128,7 +133,7 @@ public class StaticIndexIndexingService
    * Deletes and recreates <code>index</code> if <code>clear</code> is <code>true</code>.
    *
    * @param indexFolder of index to be deleted and created
-   * @param clear         if <code>false</code> this method does nothing
+   * @param clear       if <code>false</code> this method does nothing
    */
   private void clearIndex(@Nonnull IndexFolder indexFolder, boolean clear) {
     if (!clear) return;
@@ -183,37 +188,65 @@ public class StaticIndexIndexingService
   private void indexByCollection(@Nonnull IndexFolder indexFolder,
                                  @Nonnull List<String> collections) {
     log.info("(indexByCollection) index '{}' and collections: {}", indexFolder.getName(), String.join(", ", collections));
-    List<Callable<String>> callables = getCallables(indexFolder, collections).collect(Collectors.toList());
 
-    log.info("(indexByCollection) {} uris found", callables.size());
-    indexMonitoredPool.invoke(callables);
+    IndexFolderUriReport uriReport = loadUriReport(indexFolder, collections);
+    int originalUriReportSize = uriReport.getSize();
+    log.info("(indexByCollection) loaded uri report, found {} uris", originalUriReportSize);
+
+    while (!uriReport.isEmpty()) {
+      IndexFolderUriReport subsetUriReport = uriReport.extractSubset(indexBlockSize);
+      List<Callable<String>> callables = getCallables(subsetUriReport);
+
+      log.info("(indexByCollection) processing subset of {} uris", callables.size());
+      indexMonitoredPool.invoke(callables);
+
+      log.info("(indexByCollection) processing subset done, {} uris remaining", uriReport.getSize());
+    }
+
+    log.info("(indexByCollection) done, processed {} uris", originalUriReportSize);
   }
 
-  /**
-   * @param indexFolder of index
-   * @param collections   set of collections, each of them being a collection object urisgeing loaded in index
-   * @return stream of <code>Callable</code>s for a set of collections in an index
-   */
   @Nonnull
-  private Stream<Callable<String>> getCallables(@Nonnull IndexFolder indexFolder,
-                                                @Nonnull List<String> collections) {
-    return collections.stream()
-                      .map(indexFolder::getValidCollectionFolder)
-                      .flatMap(collectionFolder -> getCallables(indexFolder, collectionFolder));
+  private IndexFolderUriReport loadUriReport(@Nonnull IndexFolder indexFolder,
+                                             @Nonnull List<String> collections) {
+    IndexFolderUriReport result = new IndexFolderUriReport(indexFolder);
+
+    collections.stream()
+               .map(indexFolder::getValidCollectionFolder)
+               .forEach(collectionFolder -> {
+                 result.addCollection(collectionFolder,
+                                      getCollectionUris(this, collectionFolder));
+               });
+
+    return result;
   }
 
   /**
-   * @param indexFolder      of index
-   * @param collectionFolder of object uris being loaded in index
+   * @param uriReport create callables for a single index folder
+   * @return stream of <code>Callable</code>s for a single collection in an index
+   */
+  private List<Callable<String>> getCallables(IndexFolderUriReport uriReport) {
+    return uriReport.getCollectionFolderReports()
+                    .stream()
+                    .flatMap(this::getCallables)
+                    .collect(Collectors.toList());
+  }
+
+  /**
+   * @param collectionFolderUriReport create callables for a single collection of uris
    * @return stream of <code>Callable</code>s for a single collection in an index
    */
   @Nonnull
-  private Stream<Callable<String>> getCallables(@Nonnull IndexFolder indexFolder,
-                                                @Nonnull CollectionFolder collectionFolder) {
+  private Stream<Callable<String>> getCallables(@Nonnull CollectionFolderUriReport collectionFolderUriReport) {
+    IndexFolder indexFolder = collectionFolderUriReport.getIndexFolderUriReport().getIndexFolder();
+    CollectionFolder collectionFolder = collectionFolderUriReport.getCollectionFolder();
+
     log.info("(getCallables) for index '{}' and collection '{}'", indexFolder.getName(), collectionFolder.getName());
+
     List<Resource> collectionConstructQueries = collectionFolder.getConstructQueryResources();
     List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
-    return getCollectionUris(this, collectionFolder)
+    return collectionFolderUriReport
+            .getUris()
             .stream()
             .map(uri -> getCallable(getIndexMethod(indexFolder, facetQueryResources, uri),
                                     collectionConstructQueries,
