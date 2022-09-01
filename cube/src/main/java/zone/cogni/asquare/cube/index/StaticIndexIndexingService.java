@@ -73,6 +73,19 @@ public class StaticIndexIndexingService
    */
   private final Map<String, String> queryTemplateParameters;
 
+  public StaticIndexIndexingService(@Nonnull SpelService spelService,
+                                    @Nonnull PaginatedQuery paginatedQuery,
+                                    @Nonnull MonitoredPool indexMonitoredPool,
+                                    @Nonnull RdfStoreService rdfStore,
+                                    @Nonnull Elasticsearch7Store elasticStore,
+                                    @Nonnull ModelToJsonConversion modelToJsonConversion,
+                                    @Nonnull IndexFolderService indexFolderService,
+                                    @Nonnull Map<String, String> queryTemplateParameters) {
+    this(20000,
+         spelService, paginatedQuery, indexMonitoredPool, rdfStore, elasticStore,
+         modelToJsonConversion, indexFolderService, queryTemplateParameters);
+  }
+
   public StaticIndexIndexingService(int indexBlockSize,
                                     @Nonnull SpelService spelService,
                                     @Nonnull PaginatedQuery paginatedQuery,

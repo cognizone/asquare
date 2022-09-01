@@ -10,33 +10,6 @@ import java.util.List;
  */
 class IndexFolderUriReport {
 
-  static class CollectionFolderUriReport {
-
-    private final IndexFolderUriReport indexFolderUriReport;
-    private final CollectionFolder collectionFolder;
-    private final List<String> uris;
-
-    public CollectionFolderUriReport(IndexFolderUriReport indexFolderUriReport,
-                                     CollectionFolder collectionFolder,
-                                     List<String> uris) {
-      this.indexFolderUriReport = indexFolderUriReport;
-      this.collectionFolder = collectionFolder;
-      this.uris = uris;
-    }
-
-    public IndexFolderUriReport getIndexFolderUriReport() {
-      return indexFolderUriReport;
-    }
-
-    public CollectionFolder getCollectionFolder() {
-      return collectionFolder;
-    }
-
-    public List<String> getUris() {
-      return Collections.unmodifiableList(uris);
-    }
-  }
-
   private final IndexFolder indexFolder;
   private final List<CollectionFolderUriReport> collectionFolderUriReports = new ArrayList<>();
 
@@ -120,6 +93,33 @@ class IndexFolderUriReport {
 
     // recursion to fill her up
     extractSubset(extractedSubset, sizeToGrow - currentCollectionSize);
+  }
+
+  static class CollectionFolderUriReport {
+
+    private final IndexFolderUriReport indexFolderUriReport;
+    private final CollectionFolder collectionFolder;
+    private final List<String> uris;
+
+    public CollectionFolderUriReport(IndexFolderUriReport indexFolderUriReport,
+                                     CollectionFolder collectionFolder,
+                                     List<String> uris) {
+      this.indexFolderUriReport = indexFolderUriReport;
+      this.collectionFolder = collectionFolder;
+      this.uris = uris;
+    }
+
+    public IndexFolderUriReport getIndexFolderUriReport() {
+      return indexFolderUriReport;
+    }
+
+    public CollectionFolder getCollectionFolder() {
+      return collectionFolder;
+    }
+
+    public List<String> getUris() {
+      return Collections.unmodifiableList(uris);
+    }
   }
 
 }
