@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Keeps a list of all URIs linked to each of the collections. Only URIs are stored to save memory for indexing.
+ * When pulling out blocks of URIs which are going to be indexed the memory should remain at a predictable level.
+ */
 class IndexFolderUriReport {
 
   static class CollectionFolderUriReport {
@@ -64,6 +68,15 @@ class IndexFolderUriReport {
     );
   }
 
+
+  /**
+   * Creates and returns a new report instance which will contain maximum uris allowed by the size parameter.
+   * Those uris are removed from the current report instance.
+   *
+   * @param size number of URIs to extract from current report
+   * @return new instance of a report with number of URIs which exactly matches the size,
+   * or if not enough uris are present the remainder of the uris
+   */
   public IndexFolderUriReport extractSubset(int size) {
     if (isEmpty())
       throw new RuntimeException("please check for emptiness before invoking this method");
