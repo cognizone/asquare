@@ -172,13 +172,19 @@ public class ShaclGenerator {
 
     String namespacePrefix = shacl.getNsURIPrefix(originalResource.getNameSpace());
     if (namespacePrefix == null) {
-      throw new RuntimeException("no name alternative found for '" + originalResource.getURI() + "':"
-                                 + " please add namespace to prefixes.");
+      namespacePrefix = "ns" + getAvailableNamespaceIndex(shacl);
+      shacl.setNsPrefix(namespacePrefix, originalResource.getNameSpace());
     }
 
     String prefixLocalName = firstPart == null ? namespacePrefix + "_" + localName
                                                : firstPart + "_" + namespacePrefix + "_" + localName;
     return ResourceFactory.createResource(configuration.getShapesNamespace() + prefixLocalName);
+  }
+
+  private long getAvailableNamespaceIndex(Model shacl) {
+    return shacl.getNsPrefixMap().keySet().stream()
+            .filter(key-> key.matches("^ns[0123456789]*$"))
+            .count();
   }
 
   private void addProperties(Configuration configuration,
