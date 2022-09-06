@@ -172,8 +172,9 @@ public class ShaclGenerator {
 
     String namespacePrefix = shacl.getNsURIPrefix(originalResource.getNameSpace());
     if (namespacePrefix == null) {
-      throw new RuntimeException("no name alternative found for '" + originalResource.getURI() + "':"
-                                 + " please add namespace to prefixes.");
+      long nrTempPrefixes = shacl.getNsPrefixMap().keySet().stream().filter(key -> key.startsWith("ns")).count();
+      namespacePrefix = "ns" + nrTempPrefixes;
+      shacl.setNsPrefix(namespacePrefix, originalResource.getNameSpace());
     }
 
     String prefixLocalName = firstPart == null ? namespacePrefix + "_" + localName
