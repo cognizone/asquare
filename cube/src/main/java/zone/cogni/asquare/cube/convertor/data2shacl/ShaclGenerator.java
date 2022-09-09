@@ -23,12 +23,7 @@ import zone.cogni.core.spring.ResourceHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -181,10 +176,14 @@ public class ShaclGenerator {
     return ResourceFactory.createResource(configuration.getShapesNamespace() + prefixLocalName);
   }
 
-  private long getAvailableNamespaceIndex(Model shacl) {
-    return shacl.getNsPrefixMap().keySet().stream()
-            .filter(key-> key.matches("^ns[0123456789]*$"))
-            .count();
+  private int getAvailableNamespaceIndex(Model shacl) {
+
+    Optional<Integer> maxValue = shacl.getNsPrefixMap().keySet().stream()
+            .filter(key-> key.matches("^ns[0123456789]+$"))
+            .map(key-> Integer.parseInt(key.substring(2)))
+            .max(Integer::compare);
+
+    return maxValue.map(integer -> integer + 1).orElse(0);
   }
 
   private void addProperties(Configuration configuration,
