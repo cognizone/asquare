@@ -23,12 +23,7 @@ import zone.cogni.core.spring.ResourceHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -172,13 +167,23 @@ public class ShaclGenerator {
 
     String namespacePrefix = shacl.getNsURIPrefix(originalResource.getNameSpace());
     if (namespacePrefix == null) {
-      throw new RuntimeException("no name alternative found for '" + originalResource.getURI() + "':"
-                                 + " please add namespace to prefixes.");
+      namespacePrefix = "ns" + getAvailableNamespaceIndex(shacl);
+      shacl.setNsPrefix(namespacePrefix, originalResource.getNameSpace());
     }
 
     String prefixLocalName = firstPart == null ? namespacePrefix + "_" + localName
                                                : firstPart + "_" + namespacePrefix + "_" + localName;
     return ResourceFactory.createResource(configuration.getShapesNamespace() + prefixLocalName);
+  }
+
+  private int getAvailableNamespaceIndex(Model shacl) {
+
+    Optional<Integer> maxValue = shacl.getNsPrefixMap().keySet().stream()
+            .filter(key-> key.matches("^ns[0123456789]+$"))
+            .map(key-> Integer.parseInt(key.substring(2)))
+            .max(Integer::compare);
+
+    return maxValue.map(integer -> integer + 1).orElse(0);
   }
 
   private void addProperties(Configuration configuration,
