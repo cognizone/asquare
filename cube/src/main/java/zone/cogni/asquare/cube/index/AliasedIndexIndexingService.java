@@ -206,7 +206,7 @@ public class AliasedIndexIndexingService
             indexToFill, indexFolder.getName(), collectionFolder.getName()
     );
 
-    List<Resource> constructQueries = collectionFolder.getConstructQueryResources();
+    List<String> constructQueries = collectionFolder.getConstructQueries();
     List<Resource> facetQueries = collectionFolder.getFacetQueryResources();
     return getCollectionUris(this, collectionFolder)
             .stream()
@@ -224,7 +224,7 @@ public class AliasedIndexIndexingService
 
   @Nonnull
   private Callable<String> getCallable(@Nonnull IndexMethod indexMethod,
-                                       @Nonnull List<Resource> collectionConstructQueries,
+                                       @Nonnull List<String> collectionConstructQueries,
                                        @Nonnull String uri) {
     return getCallableForUri(this, indexMethod, collectionConstructQueries, uri);
   }

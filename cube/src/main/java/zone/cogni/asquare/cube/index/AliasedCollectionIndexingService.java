@@ -160,7 +160,7 @@ public class AliasedCollectionIndexingService
   private List<Callable<String>> getCallables(@Nonnull String indexToFill,
                                               @Nonnull CollectionFolder collectionFolder) {
     log.info("(getCallables) for index '{}' and collection '{}'", indexToFill, collectionFolder.getName());
-    List<Resource> collectionConstructQueries = collectionFolder.getConstructQueryResources();
+    List<String> collectionConstructQueries = collectionFolder.getConstructQueries();
     List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
 
     return getCollectionUris(this, collectionFolder)
@@ -173,7 +173,7 @@ public class AliasedCollectionIndexingService
 
   @Nonnull
   private Callable<String> getCallable(@Nonnull IndexMethod indexMethod,
-                                       @Nonnull List<Resource> collectionConstructQueries,
+                                       @Nonnull List<String> collectionConstructQueries,
                                        @Nonnull String uri) {
     return getCallableForUri(this, indexMethod, collectionConstructQueries, uri);
   }
