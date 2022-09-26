@@ -23,6 +23,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCall
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCollectionUris;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexFolder;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexMethodForUri;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexableUris;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUrisFromQuery;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidCollectionFolderNames;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSynchronously;
@@ -256,7 +257,7 @@ public class StaticIndexIndexingService
 
     log.info("(getCallables) for index '{}' and collection '{}'", indexFolder.getName(), collectionFolder.getName());
 
-    List<Resource> collectionConstructQueries = collectionFolder.getConstructQueryResources();
+    List<String> collectionConstructQueries = collectionFolder.getConstructQueries();
     List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
     return collectionFolderUriReport
             .getUris()
@@ -275,7 +276,7 @@ public class StaticIndexIndexingService
 
   @Nonnull
   private Callable<String> getCallable(@Nonnull IndexMethod indexMethod,
-                                       @Nonnull List<Resource> collectionConstructQueries,
+                                       @Nonnull List<String> collectionConstructQueries,
                                        @Nonnull String uri) {
     return getCallableForUri(this, indexMethod, collectionConstructQueries, uri);
   }
@@ -297,18 +298,20 @@ public class StaticIndexIndexingService
   public void indexUris(@Nonnull String index,
                         @Nonnull String collection,
                         @Nonnull List<String> uris) {
-    if (uris.size() > 10) {
-      log.warn("Method should probably not be used when passing in too many uris." +
-               " Elasticsearch is called synchronously which is slower than asynchronously." +
-               " Number of URIs being indexed is {}.", uris.size());
-    }
-
     // get index and collection folder
     IndexFolder indexFolder = getIndexFolder(this, index);
     CollectionFolder collectionFolder = indexFolder.getValidCollectionFolder(collection);
 
+    List<String> indexableUris = getIndexableUris(this, collectionFolder, uris);
+
+    if (indexableUris.size() > 10) {
+      log.warn("Method should probably not be used when passing in too many uris." +
+               " Elasticsearch is called synchronously which is slower than asynchronously." +
+               " Number of URIs being indexed is {}.", indexableUris.size());
+    }
+
     // index uris
-    indexSynchronously(this, collectionFolder, indexFolder.getName(), uris);
+    indexSynchronously(this, collectionFolder, indexFolder.getName(), indexableUris);
   }
 
   @Override
