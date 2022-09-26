@@ -164,7 +164,8 @@ class InternalIndexingServiceUtils {
     List<List<String>> uriSubLists = Lists.partition(uris, 20);
     List<String> indexableUris =
             uriSubLists.stream()
-                       .flatMap(uriSubList -> selectIndexableUris(context, collectionFolder, uriSubList).stream())
+                       .map(uriSubList -> selectIndexableUris(context, collectionFolder, uriSubList))
+                       .flapMap(Collection::stream)
                        .collect(Collectors.toList());
 
     if (indexableUris.size() != uris.size()) {
@@ -185,7 +186,8 @@ class InternalIndexingServiceUtils {
                                                   @Nonnull List<String> uris) {
     return collectionFolder.getSelectQueries()
                            .stream()
-                           .flatMap(query -> selectIndexableUris(context, query, uris).stream())
+                           .map(query -> selectIndexableUris(context, query, uris))
+                           .flatMap(Collection::stream)
                            .distinct()
                            .collect(Collectors.toList());
   }
