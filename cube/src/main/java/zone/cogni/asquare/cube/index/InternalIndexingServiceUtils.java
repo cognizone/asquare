@@ -13,6 +13,7 @@ import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +166,7 @@ class InternalIndexingServiceUtils {
     List<String> indexableUris =
             uriSubLists.stream()
                        .map(uriSubList -> selectIndexableUris(context, collectionFolder, uriSubList))
-                       .flapMap(Collection::stream)
+                       .flatMap(Collection::stream)
                        .collect(Collectors.toList());
 
     if (indexableUris.size() != uris.size()) {
