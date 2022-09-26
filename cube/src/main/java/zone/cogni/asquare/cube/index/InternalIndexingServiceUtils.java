@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.index;
 
+import com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -49,17 +50,13 @@ class InternalIndexingServiceUtils {
     PaginatedQuery paginatedQuery = context.getPaginatedQuery();
     RdfStoreService rdfStore = context.getRdfStore();
 
-    // in case where have a query in the format of #{uri} we can map it to ?uri
-    Map<String, String> queryTemplateParameters = new HashMap<>(context.getQueryTemplateParameters());
-    queryTemplateParameters.put("uri", "?uri");
-
-    return collectionFolder.getSelectQueries()
-                           .stream()
-                           .map(query -> spelService.processTemplate(query, queryTemplateParameters))
-                           .map(query -> paginatedQuery.select(rdfStore, query))
-                           .flatMap(queryResult -> paginatedQuery.convertSingleColumnUriToStringList(queryResult)
-                                                                 .stream())
-                           .collect(Collectors.toList());
+    return collectionFolder
+            .getSelectQueries()
+            .stream()
+            .map(query -> spelService.processTemplate(query, context.getQueryTemplateParameters()))
+            .map(query -> paginatedQuery.select(rdfStore, query))
+            .flatMap(queryResult -> paginatedQuery.convertSingleColumnUriToStringList(queryResult).stream())
+            .collect(Collectors.toList());
   }
 
   static void indexSynchronously(@Nonnull IndexingServiceContext indexingServiceContext,
@@ -163,9 +160,12 @@ class InternalIndexingServiceUtils {
     if (!shouldCheckForIndexableUris(collectionFolder))
       return uris;
 
-    List<String> indexableUris = uris.stream()
-                                     .filter(uri -> isIndexableUri(context, collectionFolder, uri))
-                                     .collect(Collectors.toList());
+
+    List<List<String>> uriSubLists = Lists.partition(uris, 20);
+    List<String> indexableUris =
+            uriSubLists.stream()
+                       .flatMap(uriSubList -> selectIndexableUris(context, collectionFolder, uriSubList).stream())
+                       .collect(Collectors.toList());
 
     if (indexableUris.size() != uris.size()) {
       log.info("(index uri) ignoring {} of {} uris for indexing", uris.size() - indexableUris.size(), uris.size());
@@ -177,29 +177,37 @@ class InternalIndexingServiceUtils {
   private static boolean shouldCheckForIndexableUris(@Nonnull CollectionFolder collectionFolder) {
     return collectionFolder.getSelectQueries()
                            .stream()
-                           .anyMatch(query -> query.contains("#{[uri]}"));
+                           .anyMatch(query -> query.contains("#{[uriFilter]}"));
   }
 
-  private static boolean isIndexableUri(IndexingServiceContext context, CollectionFolder collectionFolder, String uri) {
+  private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
+                                                  @Nonnull CollectionFolder collectionFolder,
+                                                  @Nonnull List<String> uris) {
     return collectionFolder.getSelectQueries()
                            .stream()
-                           .anyMatch(query -> isIndexableUri(context, query, uri));
+                           .flatMap(query -> selectIndexableUris(context, query, uris).stream())
+                           .distinct()
+                           .collect(Collectors.toList());
   }
 
-  private static boolean isIndexableUri(IndexingServiceContext context, String templateQuery, String uri) {
-    // in this case we do not have '<' and '>' in the query, which is actually better!
-    // but we need to "fix" the default templateParameterMap here :(
-    Map<String, String> templateParameterMap = getTemplateParameterMap(context, uri);
-    templateParameterMap.put("uri", "<" + uri + ">");
+  private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
+                                                  @Nonnull String templateQuery,
+                                                  @Nonnull List<String> uris) {
+    // add uriFilter parameter
+    Map<String, String> templateParameterMap = new HashMap<>(context.getQueryTemplateParameters());
+    templateParameterMap.put("uriFilter", getUriFilter(uris));
 
+    // run query with filter
     String query = context.getSpelService().processTemplate(templateQuery, templateParameterMap);
     List<Map<String, RDFNode>> rows = context.getPaginatedQuery().select(context.getRdfStore(), query);
+    return context.getPaginatedQuery().convertSingleColumnUriToStringList(rows);
+  }
 
-    if (rows.size() == 1) return true;
-    if (rows.size() == 0) return false;
-
-    List<String> wrongUris = context.getPaginatedQuery().convertSingleColumnUriToStringList(rows);
-    throw new RuntimeException("Check for indexable URI failed for '" + uri + "': found " + wrongUris);
+  private static String getUriFilter(List<String> uris) {
+    String inClause = uris.stream()
+                          .map(uri -> "<" + uri + ">")
+                          .collect(Collectors.joining(","));
+    return "\n\t filter ( ?uri in ( " + inClause + " ) )";
   }
 
   private InternalIndexingServiceUtils() {
