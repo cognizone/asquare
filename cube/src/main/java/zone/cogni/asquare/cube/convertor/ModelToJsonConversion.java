@@ -205,12 +205,28 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private void processContext(Context context, Model model) {
     if (!configuration.isContextEnabled()) return;
 
-    Map<String, String> prefixes = conversionProfile.getContext().getPrefixes();
+    Map<String, String> prefixes = mergePrefixMaps(
+            conversionProfile.getContext().getPrefixes(),
+            model.getNsPrefixMap()
+    );
     if (MapUtils.isEmpty(prefixes)) return;
 
     ObjectNode contextNode = context.jsonRoot.putObject("context");
     ObjectNode prefixNode = contextNode.putObject("prefix");
     prefixes.forEach(prefixNode::put);
+  }
+
+  private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
+    Map<String, String> result = new HashMap<>(map1);
+
+    result.putAll(
+            map2.entrySet().stream()
+                    .filter(e -> !map1.containsValue(e.getValue()))
+                    .map(e -> map1.containsKey(e.getKey()) ? Map.entry(e.getKey()+"0", e.getValue()) : e)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+    );
+
+    return result;
   }
 
   private void reportMissedSubjects(Context context, String root) {
