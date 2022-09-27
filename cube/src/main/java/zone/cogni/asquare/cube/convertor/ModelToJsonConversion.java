@@ -217,16 +217,18 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   }
 
   private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
-    Map<String, String> result = new HashMap<>(map1);
+    Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
+                                                    .filter(e -> !map1.containsValue(e.getValue()))
+                                                    .map(e -> {
+                                                      if (!map1.containsKey(e.getKey())) return e;
+                                                      int i = 0;
+                                                      while (map1.containsKey(e.getKey()+i)) i++;
+                                                      return Map.entry(e.getKey()+i, e.getValue());
+                                                    });
 
-    result.putAll(
-            map2.entrySet().stream()
-                    .filter(e -> !map1.containsValue(e.getValue()))
-                    .map(e -> map1.containsKey(e.getKey()) ? Map.entry(e.getKey()+"0", e.getValue()) : e)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-    );
 
-    return result;
+    return Stream.concat(map1.entrySet().stream(), map2FilteredStream).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
   }
 
   private void reportMissedSubjects(Context context, String root) {
