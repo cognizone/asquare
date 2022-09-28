@@ -219,17 +219,31 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
     Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
                                                     .filter(e -> !map1.containsValue(e.getValue()))
-                                                    .map(e -> {
-                                                      if (!map1.containsKey(e.getKey())) return e;
-                                                      int i = 0;
-                                                      while (map1.containsKey(e.getKey()+i)) i++;
-                                                      return Map.entry(e.getKey()+i, e.getValue());
-                                                    });
+                                                    .map(e -> newKeyEntry(map1, e));
 
 
     return Stream.concat(map1.entrySet().stream(), map2FilteredStream)
                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+  }
+
+  private Map.Entry<String, String> newKeyEntry(Map<String, String> refMap, Map.Entry<String, String> entryToHandle) {
+    if (!refMap.containsKey(entryToHandle.getKey())) return entryToHandle;
+
+    String key = entryToHandle.getKey();
+    int uniqueSuffix = 0;
+    while (refMap.containsKey(key+uniqueSuffix)) uniqueSuffix++;
+
+    return Map.entry(key+uniqueSuffix, entryToHandle.getValue());
+  }
+
+  private String getUniquePrefix(Set<String> prefixNames, String prefixToHandle) {
+    if (!prefixNames.contains(prefixToHandle)) return prefixToHandle;
+    int i = 0;
+    while (prefixNames.contains(prefixToHandle+i)) {
+      i++;
+    }
+    return prefixToHandle+i;
   }
 
   private void reportMissedSubjects(Context context, String root) {
