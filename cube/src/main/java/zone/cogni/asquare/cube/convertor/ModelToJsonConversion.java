@@ -237,15 +237,6 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return Map.entry(key+uniqueSuffix, entryToHandle.getValue());
   }
 
-  private String getUniquePrefix(Set<String> prefixNames, String prefixToHandle) {
-    if (!prefixNames.contains(prefixToHandle)) return prefixToHandle;
-    int i = 0;
-    while (prefixNames.contains(prefixToHandle+i)) {
-      i++;
-    }
-    return prefixToHandle+i;
-  }
-
   private void reportMissedSubjects(Context context, String root) {
     Set<Resource> missedSubjects = new HashSet<>(context.subjectTypeMap.keySet());
     missedSubjects.removeAll(context.alreadyProcessedResources);
