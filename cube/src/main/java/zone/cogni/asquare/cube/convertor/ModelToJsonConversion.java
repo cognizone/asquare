@@ -205,12 +205,36 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private void processContext(Context context, Model model) {
     if (!configuration.isContextEnabled()) return;
 
-    Map<String, String> prefixes = conversionProfile.getContext().getPrefixes();
+    Map<String, String> prefixes = mergePrefixMaps(
+            conversionProfile.getContext().getPrefixes(),
+            model.getNsPrefixMap()
+    );
     if (MapUtils.isEmpty(prefixes)) return;
 
     ObjectNode contextNode = context.jsonRoot.putObject("context");
     ObjectNode prefixNode = contextNode.putObject("prefix");
     prefixes.forEach(prefixNode::put);
+  }
+
+  private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
+    Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
+                                                    .filter(e -> !map1.containsValue(e.getValue()))
+                                                    .map(e -> newKeyEntry(map1, e));
+
+
+    return Stream.concat(map1.entrySet().stream(), map2FilteredStream)
+                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+  }
+
+  private Map.Entry<String, String> newKeyEntry(Map<String, String> refMap, Map.Entry<String, String> entryToHandle) {
+    if (!refMap.containsKey(entryToHandle.getKey())) return entryToHandle;
+
+    String key = entryToHandle.getKey();
+    int uniqueSuffix = 0;
+    while (refMap.containsKey(key+uniqueSuffix)) uniqueSuffix++;
+
+    return Map.entry(key+uniqueSuffix, entryToHandle.getValue());
   }
 
   private void reportMissedSubjects(Context context, String root) {
