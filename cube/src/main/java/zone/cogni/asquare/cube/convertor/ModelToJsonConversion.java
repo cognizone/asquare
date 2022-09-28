@@ -227,7 +227,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
                                                     });
 
 
-    return Stream.concat(map1.entrySet().stream(), map2FilteredStream).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    return Stream.concat(map1.entrySet().stream(), map2FilteredStream)
+                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   }
 
