@@ -185,10 +185,15 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     if (!modelContainsRoot(model, subject))
       throw new RuntimeException("subject '" + root + "' not found in model");
 
-    processContext(context, model);
+    try {
+      processContext(context, model);
 
-    ObjectNode data = context.jsonRoot.putObject("data");
-    processInstance(model, context, subject, data);
+      ObjectNode data = context.jsonRoot.putObject("data");
+      processInstance(model, context, subject, data);
+    }
+    catch (RuntimeException e) {
+      throw new RuntimeException(("[" + getRootUri(context) + "] ") + e.getMessage(), e);
+    }
 
     if (configuration.logIssues) {
       reportMissedSubjects(context, root);
@@ -455,9 +460,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       Set<String> languages = new HashSet<>();
       // assume language nodes!
       values.forEach(languageRdfNode -> {
-        Preconditions.checkState(languageRdfNode.isLiteral(), "Node is not a literal: " + attribute.getAttributeId());
-        Preconditions.checkState(languageRdfNode.asLiteral().getDatatype()
-                                                .equals(RDFLangString.rdfLangString), "Node is not a lang literal: " + attribute.getAttributeId());
+        if (!languageRdfNode.isLiteral())
+          throw new RuntimeException("Node is not a literal: " + attribute.getAttributeId());
+        if (!RDFLangString.rdfLangString.equals(languageRdfNode.asLiteral().getDatatype()))
+          throw new RuntimeException("Node is not a lang literal: " + attribute.getAttributeId());
 
         // check for duplicates !
         String language = languageRdfNode.asLiteral().getLanguage();
@@ -701,8 +707,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       return;
 
     if (type == null) {
-      throw new RuntimeException("cannot find type for instance '" + instance.getURI() + "'" +
-                                 ": found types '" + context.subjectTypeMap.get(instance) + "'.");
+      throw new RuntimeException(("cannot find type for instance '" + instance.getURI() + "'" +
+                                  ": found types '" + context.subjectTypeMap.get(instance) + "'."));
     }
 
     if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
@@ -711,6 +717,18 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
 
     throw new RuntimeException("should never get here");
+  }
+
+  private String getRootUri(Context context) {
+    if (context.jsonRoot == null) return "jsonRoot is 'null'";
+
+    JsonNode data = ((JsonNode) context.jsonRoot).get("data");
+    if (data == null) return "data node is 'null'";
+
+    JsonNode uri = data.get("uri");
+    if (uri == null) return "uri node is 'null'";
+
+    return uri.textValue();
   }
 
   private ObjectNode getOrCreateObjectNode(ObjectNode instanceRoot, String name) {
