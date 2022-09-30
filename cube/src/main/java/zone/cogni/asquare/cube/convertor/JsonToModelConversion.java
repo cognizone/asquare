@@ -115,6 +115,8 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
           String attributeName = attributeNames.getKey();
 
           ConversionProfile.Attribute attribute = type.getByAttributeId(attributeName);
+          if (attribute == null)
+            throw new RuntimeException("Type '" + type.getRootClassId() + "' is missing attribute '" + attributeName + "'.");
           addAttribute(model, attribute, uri, attributeNames.getValue());
         });
   }

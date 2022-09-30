@@ -17,6 +17,7 @@ import org.apache.jena.rdf.model.RDFReader;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -583,6 +584,55 @@ public class JenaUtils {
 //  public static Literal createDateTimeLiteral(Model model, Date date) {
 //    return date != null ? model.createTypedLiteral(RdfUtils.format(date), XSD.dateTime.getURI()) : null;
 //  }
+
+
+  public static Model difference(Model a, Model b) {
+    Model result = a.difference(b);
+    Model actualResult = ModelFactory.createDefaultModel();
+
+    result.listStatements()
+          .forEach(statement -> {
+            RDFNode object = statement.getObject();
+
+            if (!object.isLiteral()) {
+              actualResult.add(statement);
+            }
+
+            Literal literal = object.asLiteral();
+            if (literal.getDatatype() == null) {
+              actualResult.add(statement);
+            }
+
+            if (!hasMatchingObject(b, statement)) {
+              actualResult.add(statement);
+            }
+          });
+
+    return actualResult;
+  }
+
+  private static boolean hasMatchingObject(Model b, Statement original) {
+    Literal originalObject = original.getObject().asLiteral();
+
+    StmtIterator candidateStatements = b.listStatements(original.getSubject(), original.getPredicate(), (RDFNode) null);
+    while (candidateStatements.hasNext()) {
+      Statement candidateStatement = candidateStatements.nextStatement();
+
+      RDFNode candidateObject = candidateStatement.getObject();
+      boolean isDatatypeObject = candidateObject.isLiteral()
+                                 && candidateObject.asLiteral().getDatatype() != null;
+
+      if (isDatatypeObject) {
+        boolean hasSameValue = Objects.equals(candidateObject.asLiteral().getLexicalForm(),
+                                              originalObject.getLexicalForm());
+        boolean hasSameDatatype = Objects.equals(candidateObject.asLiteral().getDatatypeURI(),
+                                                 originalObject.getDatatypeURI());
+
+        if (hasSameValue && hasSameDatatype) return true;
+      }
+    }
+    return false;
+  }
 
 }
 
