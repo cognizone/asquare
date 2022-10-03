@@ -604,11 +604,13 @@ public class JenaUtils {
 
                       if (!object.isLiteral()) {
                         actualResult.add(statement);
+                        return;
                       }
 
                       Literal literal = object.asLiteral();
                       if (literal.getDatatype() == null) {
                         actualResult.add(statement);
+                        return;
                       }
 
                       // so statements with datatype literals
@@ -616,7 +618,6 @@ public class JenaUtils {
                       if (!hasMatchingObject(b, statement)) {
                         actualResult.add(statement);
                       }
-
                     });
 
     return actualResult;
