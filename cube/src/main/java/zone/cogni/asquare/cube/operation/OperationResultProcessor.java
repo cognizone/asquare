@@ -8,10 +8,12 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import zone.cogni.asquare.cube.operation.OperationResultProcessor.OperationValidationContext.OperationValidationInputBuilder;
 import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.cube.util.TimingUtil;
 import zone.cogni.asquare.triplestore.RdfStoreService;
@@ -179,26 +181,6 @@ public class OperationResultProcessor {
                .collect(Collectors.toList());
   }
 
-  public SingleGroupResult validate(Supplier<Set<String>> permissionsSupplier,
-                                    Supplier<Model> modelSupplier,
-                                    String uri,
-                                    String operationGroupId) {
-    Context context = Context.create(permissionsSupplier, modelSupplier);
-
-    try {
-      if (operationRoot.isSingleFile()) {
-        return processSingleFileCase(context, uri, operationGroupId);
-      }
-      else {
-        return processMergedFilesCase(context, uri, operationGroupId);
-      }
-    }
-    finally {
-      log.debug("(validate) {}", context.monitor);
-    }
-  }
-
-
   public SingleGroupResult validate(Set<String> permissions,
                                     Model model,
                                     String uri,
@@ -206,8 +188,35 @@ public class OperationResultProcessor {
     return validate(() -> permissions, () -> model, uri, operationGroupId);
   }
 
-  private SingleGroupResult processSingleFileCase(Context context, String uri, String operationGroupId) {
-    OperationGroup operationGroup = operationRoot.getByPathId(operationGroupId);
+  public SingleGroupResult validate(Supplier<Set<String>> permissionsSupplier,
+                                    Supplier<Model> modelSupplier,
+                                    String uri,
+                                    String operationGroupId) {
+    OperationValidationContext context = new OperationValidationInputBuilder()
+            .withPermissionSupplier(permissionsSupplier)
+            .withModelSupplier(modelSupplier)
+            .withOperationGroupId(operationGroupId)
+            .build();
+
+    return validate(context, uri);
+  }
+
+  public SingleGroupResult validate(OperationValidationContext context, String uri) {
+    try {
+      if (operationRoot.isSingleFile()) {
+        return processSingleFileCase(context, uri);
+      }
+      else {
+        return processMergedFilesCase(context, uri);
+      }
+    }
+    finally {
+      log.debug("(validate) {}", context.monitor);
+    }
+  }
+
+  private SingleGroupResult processSingleFileCase(OperationValidationContext context, String uri) {
+    OperationGroup operationGroup = operationRoot.getByPathId(context.operationGroupId);
 
     SingleGroupResult result = new SingleGroupResult(operationGroup, uri, null);
     processGroup(context, result);
@@ -215,15 +224,15 @@ public class OperationResultProcessor {
     return result;
   }
 
-  private SingleGroupResult processMergedFilesCase(Context context, String uri, String operationGroupId) {
+  private SingleGroupResult processMergedFilesCase(OperationValidationContext context, String uri) {
     OperationGroup rootGroup = operationRoot.getByPathId("root");
     SingleGroupResult rootGroupResult = new SingleGroupResult(rootGroup, uri, null);
 
-    OperationGroup operationGroup = getMergedGroup(operationGroupId);
+    OperationGroup operationGroup = getMergedGroup(context.operationGroupId);
     processChildGroup(context, rootGroupResult, operationGroup);
 
     if (log.isDebugEnabled()) log.debug("root group result: \n{}", rootGroupResult);
-    return rootGroupResult.getGroupResult(operationGroupId);
+    return rootGroupResult.getGroupResult(context.operationGroupId);
   }
 
   private OperationGroup getMergedGroup(String operationGroupId) {
@@ -236,19 +245,19 @@ public class OperationResultProcessor {
     return rootGroup.getOperationGroup(operationGroupId);
   }
 
-  private void processGroup(Context context, SingleGroupResult rootGroup) {
+  private void processGroup(OperationValidationContext context, SingleGroupResult rootGroup) {
     processChildGroups(context, rootGroup);
     processOperations(context, rootGroup);
   }
 
-  private void processChildGroups(Context context, SingleGroupResult rootGroup) {
+  private void processChildGroups(OperationValidationContext context, SingleGroupResult rootGroup) {
     if (!rootGroup.operationGroup.hasOperationGroups()) return;
 
     List<OperationGroup> childGroups = rootGroup.operationGroup.getOperationGroups();
     childGroups.forEach(childGroup -> processChildGroup(context, rootGroup, childGroup));
   }
 
-  private void processChildGroup(Context context,
+  private void processChildGroup(OperationValidationContext context,
                                  SingleGroupResult rootGroup,
                                  OperationGroup childGroup) {
     String contextUri = rootGroup.getContextUri();
@@ -272,14 +281,14 @@ public class OperationResultProcessor {
     }
   }
 
-  private void createAndProcessGroup(Context context, SingleGroupResult rootGroup, OperationGroup childGroup, String childContextUri) {
+  private void createAndProcessGroup(OperationValidationContext context, SingleGroupResult rootGroup, OperationGroup childGroup, String childContextUri) {
     SingleGroupResult singleGroupResult = new SingleGroupResult(childGroup, childContextUri, rootGroup);
     rootGroup.addSingleGroup(singleGroupResult);
 
     processGroup(context, singleGroupResult);
   }
 
-  private void processOperations(Context context, SingleGroupResult groupResult) {
+  private void processOperations(OperationValidationContext context, SingleGroupResult groupResult) {
     if (!groupResult.operationGroup.hasOperations()) return;
 
     List<Operation> operations = groupResult.operationGroup.getOperations();
@@ -288,7 +297,7 @@ public class OperationResultProcessor {
     });
   }
 
-  private boolean calculateEnabled(Context context, SingleGroupResult groupResult, OperationResult operationResult) {
+  private boolean calculateEnabled(OperationValidationContext context, SingleGroupResult groupResult, OperationResult operationResult) {
     Operation operation = operationResult.getOperation();
     if (operation.hasTemplate()) {
       return isTemplateEnabled(context, operationResult);
@@ -309,19 +318,19 @@ public class OperationResultProcessor {
                                " problem with " + operation.getPathId());
   }
 
-  private boolean isRequiresEnabled(Context context, SingleGroupResult groupResult, Operation operation) {
+  private boolean isRequiresEnabled(OperationValidationContext context, SingleGroupResult groupResult, Operation operation) {
     return operation.getRequires()
                     .stream()
                     .allMatch(currentOperation -> isEnabled(context, groupResult, currentOperation));
   }
 
-  private boolean isOptionalEnabled(Context context, SingleGroupResult groupResult, Operation operation) {
+  private boolean isOptionalEnabled(OperationValidationContext context, SingleGroupResult groupResult, Operation operation) {
     return operation.getOptional()
                     .stream()
                     .anyMatch(currentOperation -> isEnabled(context, groupResult, currentOperation));
   }
 
-  private boolean isEnabled(Context context, SingleGroupResult groupResult, List<String> path) {
+  private boolean isEnabled(OperationValidationContext context, SingleGroupResult groupResult, List<String> path) {
 
     // TODO lookup others if referenced!
     List<SingleGroupResult> currentGroups = getSingleGroupResults(context, groupResult, path);
@@ -337,7 +346,7 @@ public class OperationResultProcessor {
     return result;
   }
 
-  private List<SingleGroupResult> getSingleGroupResults(Context context, SingleGroupResult groupResult, List<String> requiresList) {
+  private List<SingleGroupResult> getSingleGroupResults(OperationValidationContext context, SingleGroupResult groupResult, List<String> requiresList) {
     List<SingleGroupResult> result = new ArrayList<>();
     result.add(groupResult);
     List<String> path = requiresList.subList(0, requiresList.size() - 1);
@@ -345,7 +354,7 @@ public class OperationResultProcessor {
     return getSingleGroupResults(context, result, path);
   }
 
-  private List<SingleGroupResult> getSingleGroupResults(Context context, List<SingleGroupResult> rootResults, List<String> path) {
+  private List<SingleGroupResult> getSingleGroupResults(OperationValidationContext context, List<SingleGroupResult> rootResults, List<String> path) {
     if (path.isEmpty()) return rootResults;
 
     String id = path.get(0);
@@ -391,7 +400,7 @@ public class OperationResultProcessor {
     return getSingleGroupResults(context, result, path.subList(1, path.size()));
   }
 
-  private List<SingleGroupResult> getOrCreateOperationGroupResult(Context context, SingleGroupResult group, String groupId) {
+  private List<SingleGroupResult> getOrCreateOperationGroupResult(OperationValidationContext context, SingleGroupResult group, String groupId) {
     if (!group.hasGroupResult(groupId)) {
       // TODO single result always null context; but what if we have multiple results? how do we know "empty" list
       OperationGroup operationGroup = group.getOperationGroup().getOperationGroup(groupId);
@@ -401,7 +410,7 @@ public class OperationResultProcessor {
     return group.getGroupResults(groupId);
   }
 
-  private OperationResult getOrCreateOperationResult(Context context, SingleGroupResult group, String operationId) {
+  private OperationResult getOrCreateOperationResult(OperationValidationContext context, SingleGroupResult group, String operationId) {
     if (!group.hasOperationResult(operationId)) {
       Operation operation = group.getOperationGroup().getOperation(operationId);
       processOperation(context, group, operation);
@@ -410,7 +419,7 @@ public class OperationResultProcessor {
     return group.getOperationResult(operationId);
   }
 
-  private void processOperation(Context context, SingleGroupResult groupResult, Operation operation) {
+  private void processOperation(OperationValidationContext context, SingleGroupResult groupResult, Operation operation) {
     OperationResult operationResult = new OperationResult(operation, groupResult.getContextUri());
 
     boolean isOperationWithUri = operationResult.getUri() != null;
@@ -437,7 +446,7 @@ public class OperationResultProcessor {
                                         : StringUtils.removeStart(operation.getPathId(), "root/");
   }
 
-  private boolean isTemplateEnabled(Context context, OperationResult operationResult) {
+  private boolean isTemplateEnabled(OperationValidationContext context, OperationResult operationResult) {
     Operation operation = operationResult.getOperation();
 
     Operation.TemplateType templateType = operation.getTemplateType();
@@ -449,8 +458,8 @@ public class OperationResultProcessor {
     if (templateType == Operation.TemplateType.ask_query) {
       long start = System.nanoTime();
       try {
-        boolean result = FAST_QUERIES ? askFast(context.rdfStore, operationResult, operation)
-                                      : askSlow(context.rdfStore, operationResult, operation);
+        boolean result = FAST_QUERIES ? askFast(context, operationResult, operation)
+                                      : askSlow(context, operationResult, operation);
         return operation.isNegate() != result;
       }
       finally {
@@ -461,25 +470,28 @@ public class OperationResultProcessor {
     throw new RuntimeException("unexpected template type " + templateType + " for operation " + operation);
   }
 
-  private boolean askFast(RdfStoreService rdfStore, OperationResult operationResult, Operation operation) {
+  private boolean askFast(OperationValidationContext ctxt, OperationResult operationResult, Operation operation) {
     Query askQuery = operation.getContextQuery();
-    if (askQuery == null) return askSlow(rdfStore, operationResult, operation);
+    //not a great way to figure out it requires additional context, as a # can also be confused with a sparql comment
+    if (askQuery == null || askQuery.toString().contains("#{[")) return askSlow(ctxt, operationResult, operation);
 
     QuerySolutionMap bindings = new QuerySolutionMap();
     bindings.add("contextUri", ResourceFactory.createResource(operationResult.getUri()));
-    return rdfStore.executeAskQuery(askQuery, bindings);
+    return ctxt.rdfStore.executeAskQuery(askQuery, bindings);
   }
 
-  private boolean askSlow(RdfStoreService rdfStore, OperationResult operationResult, Operation operation) {
+  private boolean askSlow(OperationValidationContext ctxt, OperationResult operationResult, Operation operation) {
     String template = operationRoot.getPrefixQuery() + operation.getFullTemplate();
     context.put("uri", operationResult.getUri());
+    if(ctxt.extraContext.containsKey("uri")) throw new RuntimeException("Please do not use param 'uri' in the additional context, this comes from the group selectorQuery");
+    context.putAll(ctxt.extraContext);
     String sparql = spelService.processTemplate(template, context);
 
-    return rdfStore.executeAskQuery(sparql);
+    return ctxt.rdfStore.executeAskQuery(sparql);
   }
 
 
-  private List<String> getOperationGroupUris(Context context, OperationGroup operationGroup, String uri) {
+  private List<String> getOperationGroupUris(OperationValidationContext context, OperationGroup operationGroup, String uri) {
     if (!operationGroup.hasSelectorQuery()) return Collections.singletonList(uri);
 
     long start = System.nanoTime();
@@ -696,26 +708,67 @@ public class OperationResultProcessor {
     }
   }
 
-  private static class Context {
+  public static class OperationValidationContext {
 
-    private static Context create(Supplier<Set<String>> permissionsSupplier, Supplier<Model> modelSupplier) {
-      return new Context(new Monitor(),
-                         permissionsSupplier.get(),
-                         getRdfStore(modelSupplier.get()));
-    }
-
-    private static RdfStoreService getRdfStore(Model model) {
-      return new InternalRdfStoreService(model);
-    }
-
-    private final Monitor monitor;
     private final Set<String> permissions;
     private final RdfStoreService rdfStore;
+    private final String operationGroupId;
+    private final Map<String, String> extraContext;
+    private final Monitor monitor;
 
-    private Context(Monitor monitor, Set<String> permissions, RdfStoreService rdfStore) {
-      this.monitor = monitor;
-      this.permissions = permissions;
-      this.rdfStore = rdfStore;
+
+    private OperationValidationContext(OperationValidationInputBuilder builder) {
+      this.permissions = builder.permissions;
+      this.rdfStore = new InternalRdfStoreService(builder.model);
+      this.operationGroupId = builder.operationGroupId;
+      this.extraContext = builder.extraContext;
+      this.monitor = new Monitor();
+    }
+
+    public static class OperationValidationInputBuilder {
+
+      private Set<String> permissions;
+      private Model model = ModelFactory.createDefaultModel();
+      private String operationGroupId;
+      private Map<String, String> extraContext = new HashMap<>();
+
+      public OperationValidationInputBuilder() {
+      }
+
+      public OperationValidationInputBuilder withPermissionSupplier(Supplier<Set<String>> permissionSupplier) {
+        this.permissions = permissionSupplier.get();
+        return this;
+      }
+
+      public OperationValidationInputBuilder withPermissions(Set<String> permissions) {
+        this.permissions = permissions;
+        return this;
+      }
+
+      public OperationValidationInputBuilder withModelSupplier(Supplier<Model> modelSupplier) {
+        this.model = modelSupplier.get();
+        return this;
+      }
+
+      public OperationValidationInputBuilder withModel(Model model) {
+        this.model = model;
+        return this;
+      }
+
+      public OperationValidationInputBuilder withOperationGroupId(String operationGroupId) {
+        this.operationGroupId = operationGroupId;
+        return this;
+      }
+
+      public OperationValidationInputBuilder withExtraContext(Map<String, String> extraContext) {
+        this.extraContext = extraContext;
+        return this;
+      }
+
+      public OperationValidationContext build() {
+        return new OperationValidationContext(this);
+      }
+
     }
   }
 }
