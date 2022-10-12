@@ -7,14 +7,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import zone.cogni.asquare.cube.operation.OperationResultProcessor.OperationValidationContext;
 import zone.cogni.asquare.cube.operation.OperationResultProcessor.SingleGroupResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class OperationResultJsonConversion {
 
@@ -42,6 +42,16 @@ public class OperationResultJsonConversion {
     return arrayNode;
   }
 
+  public JsonNode createStandaloneJson(OperationValidationContext context,
+                                       List<String> uris) {
+    ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
+
+    List<SingleGroupResult> results = uris.stream().map(uri-> operationResultProcessor.validate(context, uri)).collect(Collectors.toList());
+    results.forEach(result -> arrayNode.add(createGroupJson(result)));
+
+    return arrayNode;
+  }
+
   public ObjectNode createStandaloneJson(Supplier<Set<String>> permissionsSupplier,
                                          String operationGroupId) {
     Model model = ModelFactory.createDefaultModel();
@@ -50,11 +60,21 @@ public class OperationResultJsonConversion {
     return createStandaloneJson(permissionsSupplier, () -> model, uri, operationGroupId);
   }
 
+  public ObjectNode createStandaloneJson(OperationValidationContext context) {
+    String uri = StringUtils.EMPTY;
+
+    return createStandaloneJson(context, uri);
+  }
+
   public ObjectNode createStandaloneJson(Supplier<Set<String>> permissions,
                                          Supplier<Model> model,
                                          String uri,
                                          String operationGroupId) {
     return createStandaloneJson(permissions.get(), model.get(), uri, operationGroupId);
+  }
+
+  public ObjectNode createStandaloneJson(OperationValidationContext context, String uri) {
+    return createGroupJson(operationResultProcessor.validate(context, uri));
   }
 
   /**
