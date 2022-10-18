@@ -1,0 +1,8 @@
+@base           <http://demo.com/data#>
+@prefix person: <http://demo.com/person/model#>
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<#homer>
+    a               person:Person ;
+    person:hasDate "2016-01-01T00:00:00Z"^^xsd:dateTime , "2021-02-11T08:19:21.489344Z"^^xsd:dateTime , "2022-08-08T08:08:08.888+02:00"^^xsd:dateTime
+.

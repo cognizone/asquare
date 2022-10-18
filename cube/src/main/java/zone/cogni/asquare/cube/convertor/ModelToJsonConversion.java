@@ -767,8 +767,11 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
    * @return dateTime string as is but after format validation
    */
   private String literalToDateTime(Literal literal) {
-    ZonedDateTime zonedDateTime = ZonedDateTime.parse(literal.getLexicalForm());
-    return zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    String stringValue = literal.getLexicalForm();
+    // we do not do anything with this, it just validates that the dateTime value is in a parsable format
+    ZonedDateTime.parse(stringValue);
+    // the actual value should stay unmodified, in the format that it came in
+    return stringValue;
   }
 
   private TextNode getTextNode(String value) {
