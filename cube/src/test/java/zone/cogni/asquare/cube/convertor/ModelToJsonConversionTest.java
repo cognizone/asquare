@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configuration.JsonType;
@@ -289,6 +290,32 @@ public class ModelToJsonConversionTest {
 
     assertThat(navigate(json, "data", "references", "person:spouse")).isNotNull();
     assertThat(navigate(json, "data", "attributes", "person:name")).isNotNull();
+  }
+
+  @Test
+  public void datetime_parse_ok() {
+    // given
+    Model homerModel = JenaUtils.read(new ClassPathResource("convertor/person-data-homer-datetime-parse.ttl"));
+    ModelToJsonConversion conversion = getContextPersonConversion(getContextConfiguration());
+
+    // when
+    ObjectNode json = conversion.apply(homerModel, "http://demo.com/data#homer");
+
+    System.out.println(json.toPrettyString());
+
+    // then
+    assertThat(navigate(json, "data", "attributes", "person:hasDate", "xsd:dateTime")).hasSize(3);
+  }
+
+  @Test
+  public void datetime_parse_not_ok() {
+    // given
+    Model homerModel = JenaUtils.read(new ClassPathResource("convertor/person-data-homer-datetime-parse-bad-format.ttl"));
+    ModelToJsonConversion conversion = getContextPersonConversion(getContextConfiguration());
+
+    // when
+    // then
+    assertThatExceptionOfType(RuntimeException.class).isThrownBy(()-> conversion.apply(homerModel, "http://demo.com/data#homer"));
   }
 
   private JsonNode navigate(ObjectNode json, String... path) {
