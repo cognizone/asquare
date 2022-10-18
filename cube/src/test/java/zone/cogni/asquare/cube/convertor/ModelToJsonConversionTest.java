@@ -315,7 +315,9 @@ public class ModelToJsonConversionTest {
 
     // when
     // then
-    assertThatExceptionOfType(RuntimeException.class).isThrownBy(()-> conversion.apply(homerModel, "http://demo.com/data#homer"));
+    assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(()-> conversion.apply(homerModel, "http://demo.com/data#homer"))
+            .withMessageContaining("could not be parsed");
   }
 
   private JsonNode navigate(ObjectNode json, String... path) {
