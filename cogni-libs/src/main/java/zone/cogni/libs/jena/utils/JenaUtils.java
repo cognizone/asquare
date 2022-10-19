@@ -646,5 +646,19 @@ public class JenaUtils {
     return false;
   }
 
+  /**
+   * This method is an alternative to doing a.isIsomorphicWith(b),
+   * which seems to compare exact values. For example in the case of a dateTime value,
+   * the method a.difference(b), which is essentially used here,
+   * is able to compare the actual dateTime even if it is represented in another format
+   *
+   * @param a first model
+   * @param b second model
+   * @return boolean checking that both difference models are empty
+   */
+  public static boolean isomorphic(Model a, Model b){
+    return difference(a,b).isEmpty() && difference(b,a).isEmpty();
+  }
+
 }
 
