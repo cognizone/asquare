@@ -6,7 +6,7 @@ buildscript {
     apachePoiVersion = '5.2.2'
     commonsCodecVersion = '1.15'
     commonsIoVersion = '2.7'
-    elasticsearchVersion = '7.17.2'
+    elasticsearchVersion = '7.5.2'
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
     jenaVersion = '3.17.0'
