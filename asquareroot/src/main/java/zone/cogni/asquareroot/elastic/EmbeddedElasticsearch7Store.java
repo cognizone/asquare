@@ -15,9 +15,9 @@ import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.support.replication.ReplicatedWriteRequest;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.discovery.DiscoveryModule;
 import org.elasticsearch.env.NodeEnvironment;
 import org.elasticsearch.node.MockNode;
@@ -108,7 +108,7 @@ public class EmbeddedElasticsearch7Store implements Elasticsearch7Store {
   @Override
   public void createIndex(String indexName, ObjectNode settings) {
     IndexRequest request = new IndexRequest(indexName);
-    request.source(settings, XContentType.JSON);
+    request.source(settings, Requests.INDEX_CONTENT_TYPE);
     ActionFuture<IndexResponse> futureResponse = client.index(request);
     IndexResponse response = futureResponse.actionGet();
 
