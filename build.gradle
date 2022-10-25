@@ -12,6 +12,7 @@ buildscript {
     httpComponentsVersion = '4.5.13'
     jenaVersion = '3.17.0'
     springBootVersion = '2.6.6'
+    springSecurityVersion = '5.6.2'
   }
 }
 
@@ -111,8 +112,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = "1.8"
+  targetCompatibility = "1.8"
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -369,8 +370,7 @@ project('cube') {
     api('org.apache.jena:jena-core')
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-json')
-    api('org.springframework.boot:spring-boot-starter-security')
+    implementation("org.springframework.security:spring-security-core:$springSecurityVersion")
 
     // test
     testImplementation project(':cogni-libs')
