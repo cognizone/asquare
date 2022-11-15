@@ -12,7 +12,7 @@ public class Configuration {
 
   private Map<Set<String>, String> typeTranslations = new HashMap<>();
 
-  private Set<String> prioritisedClasses = new HashSet<>();
+  private Set<String> prioritisedNamespaces = new HashSet<>();
 
   public Configuration() {
   }
@@ -55,15 +55,15 @@ public class Configuration {
     typeTranslations.put(types, type);
   }
 
-  public Set<String> getPrioritisedClasses() {
-    return prioritisedClasses;
+  public Set<String> getPrioritisedNamespaces() {
+    return prioritisedNamespaces;
   }
 
-  public void setPrioritisedClasses(Set<String> prioritisedClasses) {
-    this.prioritisedClasses = prioritisedClasses;
+  public void setPrioritisedNamespaces(Set<String> prioritisedNamespaces) {
+    this.prioritisedNamespaces = prioritisedNamespaces;
   }
 
-  public boolean isPrioritised(String classIri) {
-    return prioritisedClasses.contains(classIri);
+  public boolean isPrioritised(String namespaceIri) {
+    return prioritisedNamespaces.contains(namespaceIri);
   }
 }
