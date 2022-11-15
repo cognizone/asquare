@@ -2,13 +2,7 @@ package zone.cogni.asquare.cube.convertor.data2shacl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,16 +110,31 @@ public class ShaclGenerator {
   }
 
   private void addTypes(Configuration configuration, RdfStoreService rdfStoreService, Model shacl) {
-    List<String> types = getTypes(rdfStoreService);
+    List<String> types = getTypes(configuration, rdfStoreService);
     log.debug("(addTypes) found {} types", types.size());
     types.forEach(type -> addType(configuration, rdfStoreService, shacl, type));
   }
 
-  private List<String> getTypes(RdfStoreService rdfStoreService) {
+  private List<String> getTypes(Configuration configuration, RdfStoreService rdfStoreService) {
     List<Map<String, RDFNode>> rows = getRows(rdfStoreService, "select-types.sparql");
     List<String> types = paginatedQuery.convertSingleColumnUriToStringList(rows);
-    Collections.sort(types);
-    return types;
+
+    Stream<String> prioritisedTypes = types.stream()
+                                    .filter(type -> configuration.isPrioritised(getNamespaceIri(type)));
+    Stream<String> unPrioritisedTypes = types.stream().filter(type -> !configuration.isPrioritised(getNamespaceIri(type)));
+
+    return Stream.concat(
+            prioritisedTypes.sorted(),
+            unPrioritisedTypes.sorted()
+          ).collect(Collectors.toList());
+  }
+
+  private String getNamespaceIri(String type) {
+    if(type.contains("#")) {
+      return type.substring(0, type.lastIndexOf('#') + 1);
+    } else {
+      return type.substring(0, type.lastIndexOf('/') + 1);
+    }
   }
 
   private void addType(@Nonnull Configuration configuration,

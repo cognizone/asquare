@@ -3,12 +3,7 @@ package zone.cogni.asquare.cube.convertor.data2shacl;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Configuration {
   private String shapesNamespace;
@@ -16,6 +11,8 @@ public class Configuration {
   private List<String> ignoredClasses = new ArrayList<>();
 
   private Map<Set<String>, String> typeTranslations = new HashMap<>();
+
+  private Set<String> prioritisedClasses = new HashSet<>();
 
   public Configuration() {
   }
@@ -56,5 +53,17 @@ public class Configuration {
 
   public void addTypeTranslation(Set<String> types, String type) {
     typeTranslations.put(types, type);
+  }
+
+  public Set<String> getPrioritisedClasses() {
+    return prioritisedClasses;
+  }
+
+  public void setPrioritisedClasses(Set<String> prioritisedClasses) {
+    this.prioritisedClasses = prioritisedClasses;
+  }
+
+  public boolean isPrioritised(String classIri) {
+    return prioritisedClasses.contains(classIri);
   }
 }
