@@ -492,9 +492,9 @@ public class ShaclGenerator {
   }
 
   private @Nonnull
-  List<String> getProperties(@Nonnull RdfStoreService rdfStoreService,
-                             @Nonnull Resource targetClass,
-                             @Nonnull Configuration configuration) {
+  List<String> getProperties(@Nonnull Configuration configuration,
+                             @Nonnull RdfStoreService rdfStoreService,
+                             @Nonnull Resource targetClass) {
     String query = spelService.processTemplate(getResource("select-properties.sparql.spel"),
                                                Map.of("type", targetClass.getURI()));
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
