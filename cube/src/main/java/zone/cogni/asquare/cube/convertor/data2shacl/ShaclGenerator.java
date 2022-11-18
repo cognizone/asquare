@@ -24,7 +24,7 @@ import zone.cogni.core.spring.ResourceHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -131,14 +131,26 @@ public class ShaclGenerator {
     List<Map<String, RDFNode>> rows = getRows(rdfStoreService, "select-types.sparql");
     List<String> types = paginatedQuery.convertSingleColumnUriToStringList(rows);
 
-    Stream<String> prioritisedTypes = types.stream()
-                                    .filter(type -> configuration.isPrioritised(getNamespaceIri(type)));
-    Stream<String> unPrioritisedTypes = types.stream().filter(type -> !configuration.isPrioritised(getNamespaceIri(type)));
+    types.sort(getIriComparator(configuration));
 
-    return Stream.concat(
-            prioritisedTypes.sorted(),
-            unPrioritisedTypes.sorted()
-          ).collect(Collectors.toList());
+    return types;
+  }
+
+  private Comparator<String> getIriComparator(Configuration configuration) {
+    return (t1, t2) -> {
+      int priorityT1 = configuration.getPriorityIndex(getNamespaceIri(t1));
+      int priorityT2 = configuration.getPriorityIndex(getNamespaceIri(t2));
+
+      if (priorityT1 >= 0 && priorityT2 >= 0) {
+        return priorityT1 == priorityT2 ? t1.compareToIgnoreCase(t2) : Integer.compare(priorityT1, priorityT2);
+      } else if (priorityT1 >= 0 && priorityT2 == -1) {
+        return -1;
+      } else if (priorityT1 == -1 && priorityT2 >= 0) {
+        return 1;
+      } else {
+        return t1.compareToIgnoreCase(t2);
+      }
+    };
   }
 
   private String getNamespaceIri(String type) {
@@ -212,7 +224,7 @@ public class ShaclGenerator {
                              Model shacl,
                              Resource typeShape,
                              Resource targetClass) {
-    List<String> properties = getProperties(rdfStoreService, targetClass);
+    List<String> properties = getProperties(rdfStoreService, targetClass, configuration);
     if (log.isDebugEnabled())
       log.debug("(addProperties) shape '{}' has {} properties", typeShape.getLocalName(), properties.size());
 
@@ -481,12 +493,13 @@ public class ShaclGenerator {
 
   private @Nonnull
   List<String> getProperties(@Nonnull RdfStoreService rdfStoreService,
-                             @Nonnull Resource targetClass) {
+                             @Nonnull Resource targetClass,
+                             @Nonnull Configuration configuration) {
     String query = spelService.processTemplate(getResource("select-properties.sparql.spel"),
                                                Map.of("type", targetClass.getURI()));
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
     List<String> properties = paginatedQuery.convertSingleColumnUriToStringList(rows);
-    Collections.sort(properties);
+    properties.sort(getIriComparator(configuration));
     return properties;
   }
 
