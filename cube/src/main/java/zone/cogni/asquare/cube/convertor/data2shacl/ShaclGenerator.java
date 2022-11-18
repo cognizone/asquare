@@ -224,7 +224,7 @@ public class ShaclGenerator {
                              Model shacl,
                              Resource typeShape,
                              Resource targetClass) {
-    List<String> properties = getProperties(rdfStoreService, targetClass, configuration);
+    List<String> properties = getProperties(configuration, rdfStoreService, targetClass);
     if (log.isDebugEnabled())
       log.debug("(addProperties) shape '{}' has {} properties", typeShape.getLocalName(), properties.size());
 
