@@ -5,7 +5,6 @@ import org.apache.commons.collections4.MapUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,7 +17,7 @@ public class Configuration {
 
   private Map<Set<String>, String> typeTranslations = new HashMap<>();
 
-  private Set<String> prioritisedNamespaces = new HashSet<>();
+  private List<String> prioritisedNamespaces = new ArrayList<>();
 
   public Configuration() {
   }
@@ -61,15 +60,15 @@ public class Configuration {
     typeTranslations.put(types, type);
   }
 
-  public Set<String> getPrioritisedNamespaces() {
+  public List<String> getPrioritisedNamespaces() {
     return prioritisedNamespaces;
   }
 
-  public void setPrioritisedNamespaces(Set<String> prioritisedNamespaces) {
+  public void setPrioritisedNamespaces(List<String> prioritisedNamespaces) {
     this.prioritisedNamespaces = prioritisedNamespaces;
   }
 
-  public boolean isPrioritised(String namespaceIri) {
-    return prioritisedNamespaces.contains(namespaceIri);
+  public int getPriorityIndex(String namespaceIri) {
+    return prioritisedNamespaces.indexOf(namespaceIri);
   }
 }
