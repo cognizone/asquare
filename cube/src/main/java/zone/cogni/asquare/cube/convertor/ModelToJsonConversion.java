@@ -50,7 +50,6 @@ import static zone.cogni.asquare.cube.convertor.ModelToJsonConversion.Configurat
 public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNode> {
 
   private static final Logger log = LoggerFactory.getLogger(ModelToJsonConversion.class);
-  private Context context;
 
   public static class Configuration {
     /**
@@ -164,6 +163,27 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
   }
 
+  public static class ConversionReport {
+    private ObjectNode result;
+    private Model missedTriples;
+
+    public ObjectNode getResult() {
+      return result;
+    }
+
+    public void setResult(ObjectNode result) {
+      this.result = result;
+    }
+
+    public Model getMissedTriples() {
+      return missedTriples;
+    }
+
+    public void setMissedTriples(Model missedTriples) {
+      this.missedTriples = missedTriples;
+    }
+  }
+
   private final Configuration configuration;
   private final ConversionProfile conversionProfile;
 
@@ -178,27 +198,50 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     this(configuration, new ApplicationProfileToConversionProfile().apply(applicationProfile));
   }
 
+  public ConversionReport applyAndReport(Model model, String root) {
+    Context context = createContext(model);
+    ObjectNode conversionResult = apply(context, root);
+    return createConversionReport(context, conversionResult);
+  }
+
+  private ConversionReport createConversionReport(Context context, ObjectNode conversionResult) {
+    ConversionReport result = new ConversionReport();
+    result.setResult(conversionResult);
+
+    Model missedTriples = JenaUtils.difference(context.model, context.alreadyProcessedModel);
+    result.setMissedTriples(missedTriples);
+
+    return result;
+  }
+
   @Override
   public ObjectNode apply(Model model, String root) {
-    context = new Context(this, model);
+    return apply(createContext(model), root);
+  }
+
+  private Context createContext(Model model) {
+    return new Context(this, model);
+  }
+
+  private ObjectNode apply(Context context, String root) {
     Resource subject = ResourceFactory.createResource(root);
 
-    if (!modelContainsRoot(model, subject))
+    if (!modelContainsRoot(context.model, subject))
       throw new RuntimeException("subject '" + root + "' not found in model");
 
     try {
-      processContext(model);
+      processContext(context);
 
       ObjectNode data = context.jsonRoot.putObject("data");
-      processInstance(model, subject, data);
+      processInstance(context.model, context, subject, data);
     }
     catch (RuntimeException e) {
       throw new RuntimeException(("[" + getRootUri(context) + "] ") + e.getMessage(), e);
     }
 
     if (configuration.logIssues) {
-      reportMissedSubjects(root);
-      reportUnprocessedTriples(root);
+      reportMissedSubjects(context, root);
+      reportUnprocessedTriples(context, root);
     }
 
     return context.jsonRoot;
@@ -208,12 +251,12 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return model.contains(subject, null, (RDFNode) null);
   }
 
-  private void processContext(Model model) {
+  private void processContext(Context context) {
     if (!configuration.isContextEnabled()) return;
 
     Map<String, String> prefixes = mergePrefixMaps(
             conversionProfile.getContext().getPrefixes(),
-            model.getNsPrefixMap()
+            context.model.getNsPrefixMap()
     );
     if (MapUtils.isEmpty(prefixes)) return;
 
@@ -224,12 +267,12 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
   private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
     Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
-                                                    .filter(e -> !map1.containsValue(e.getValue()))
-                                                    .map(e -> newKeyEntry(map1, e));
+            .filter(e -> !map1.containsValue(e.getValue()))
+            .map(e -> newKeyEntry(map1, e));
 
 
     return Stream.concat(map1.entrySet().stream(), map2FilteredStream)
-                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   }
 
@@ -243,45 +286,42 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return Map.entry(key+uniqueSuffix, entryToHandle.getValue());
   }
 
-  private void reportMissedSubjects(String root) {
+  private void reportMissedSubjects(Context context, String root) {
     Set<Resource> missedSubjects = new HashSet<>(context.subjectTypeMap.keySet());
     missedSubjects.removeAll(context.alreadyProcessedResources);
 
     if (!missedSubjects.isEmpty()) {
       log.warn("<{}> missed {} subjects out of {}. missed subjects: {}",
-               root,
-               missedSubjects.size(),
-               context.subjectTypeMap.size(),
-               missedSubjects);
+              root,
+              missedSubjects.size(),
+              context.subjectTypeMap.size(),
+              missedSubjects);
     }
   }
 
-  private void reportUnprocessedTriples(String root) {
+  private void reportUnprocessedTriples(Context context, String root) {
     if (!log.isWarnEnabled()) return;
 
-    Model remainingModel = getMissedTriples();
+    Model remainingModel = context.model.difference(context.alreadyProcessedModel);
 
     if (!remainingModel.isEmpty()) {
       log.warn("<{}> missed {} triples \n{}",
-               root,
-               remainingModel.size(),
-               JenaUtils.toString(remainingModel, "ttl"));
+              root,
+              remainingModel.size(),
+              JenaUtils.toString(remainingModel, "ttl"));
     }
-  }
-
-  public Model getMissedTriples() {
-    if (context.alreadyProcessedModel == null) throw new RuntimeException("Can't fetch missed triples: model to json hasn't run yet");
-    return context.model.difference(context.alreadyProcessedModel);
   }
 
   /**
    * Processes a single subject with all its properties and values.
    *
    * @param model        being converted
+   * @param context      of processing
    * @param subject      currently being added in JSON
    * @param instanceRoot current root where JSON is going to be manipulated
    */
   private void processInstance(@Nonnull Model model,
+                               @Nonnull Context context,
                                @Nonnull Resource subject,
                                @Nonnull ObjectNode instanceRoot) {
     // only process once, at most
@@ -290,8 +330,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     // process instance fields
     ConversionProfile.Type type = context.subjectTypeMap.get(subject);
     setInstanceUri(subject, instanceRoot);
-    setInstanceType( model, instanceRoot, subject, type);
-    setInstanceRootType(model, instanceRoot, subject, type);
+    setInstanceType(context, model, instanceRoot, subject, type);
+    setInstanceRootType(context, model, instanceRoot, subject, type);
 
     // bookkeeping -> must be before processing attributes !
     context.alreadyProcessedResources.add(subject);
@@ -300,40 +340,42 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
     // process attributes
     type.getAttributes().forEach(attribute -> {
-      processAttribute(model, subject, type, instanceRoot, attribute);
+      processAttribute(model, context, subject, type, instanceRoot, attribute);
     });
   }
 
   private Stream<Statement> getTypeStatements(Resource subject, ConversionProfile.Type type) {
     return type.getRdfTypes()
-               .stream()
-               .map(ResourceFactory::createResource)
-               .map(typeResource -> ResourceFactory.createStatement(subject, RDF.type, typeResource));
+            .stream()
+            .map(ResourceFactory::createResource)
+            .map(typeResource -> ResourceFactory.createStatement(subject, RDF.type, typeResource));
   }
 
   /**
    * Process a single attribute of a subject with all its values.
    *
    * @param model        being converted
+   * @param context      of processing
    * @param subject      currently being added in JSON
    * @param type         of subject
    * @param instanceRoot current root where JSON is going to be manipulated
    * @param attribute    currently being added in JSON
    */
   private void processAttribute(@Nonnull Model model,
+                                @Nonnull Context context,
                                 @Nonnull Resource subject,
                                 @Nonnull ConversionProfile.Type type,
                                 @Nonnull ObjectNode instanceRoot,
                                 @Nonnull ConversionProfile.Attribute attribute) {
     // if no values then return
-    List<RDFNode> values = getValues(subject, attribute);
+    List<RDFNode> values = getValues(context, subject, attribute);
     if (values.isEmpty()) return;
 
     // log issue if we find inverses and inverse support is disabled!
     if (attribute.isInverse() && !configuration.inverseAttributesSupported) {
       String valuesAsString = values.stream().map(RDFNode::toString).collect(Collectors.joining(", "));
       log.error("inverse properties disabled and uri '{}' has inverse attribute '{}' with values: {}",
-                subject.getURI(), attribute.getAttributeId(), valuesAsString);
+              subject.getURI(), attribute.getAttributeId(), valuesAsString);
       return;
     }
 
@@ -343,7 +385,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     // add includes to JSON (here or in setJsonAttribute?)
     if (attribute.isReference()) {
       values.forEach(value -> {
-        createAndIncludeInstance(model, type, attribute, value);
+        createAndIncludeInstance(model, context, type, attribute, value);
       });
     }
   }
@@ -352,15 +394,17 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
    * Returns list of <code>RDFNode</code> which are values of <code>subject</code> and <code>attribute</code>.
    * Takes into account whether attribute is <code>inverse</code> or not.
    *
+   * @param context   of processing
    * @param subject   currently being added in JSON
    * @param attribute currently being added in JSON
    * @return list of <code>RDFNode</code> which are values of <code>subject</code> and <code>attribute</code>
    */
-  private List<RDFNode> getValues(Resource subject,
+  private List<RDFNode> getValues(Context context,
+                                  Resource subject,
                                   ConversionProfile.Attribute attribute) {
     StmtIterator iterator = context.model.listStatements(attribute.isInverse() ? null : subject,
-                                                         attribute.getProperty(),
-                                                         attribute.isInverse() ? subject : null);
+            attribute.getProperty(),
+            attribute.isInverse() ? subject : null);
 
     List<RDFNode> result = new ArrayList<>();
     while (iterator.hasNext()) {
@@ -396,7 +440,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     }
 
     throw new RuntimeException("should not be able to get here:" +
-                               " type " + type.getRootClassId() + " and property " + attribute.getAttributeId());
+            " type " + type.getRootClassId() + " and property " + attribute.getAttributeId());
   }
 
   /**
@@ -626,20 +670,21 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
    * Recursively
    *
    * @param model   being converted
+   * @param context of processing
    * @param value   to add to <code>included</code> JSON part
    */
-  private void createAndIncludeInstance(Model model,
+  private void createAndIncludeInstance(Model model, Context context,
                                         ConversionProfile.Type type,
                                         ConversionProfile.Attribute attribute,
                                         RDFNode value) {
     if (!value.isResource()) {
       log.error("Type '{}' and attribute '{}' must contain a resource, found '{}'",
-                type.getRootClassId(), attribute.getAttributeId(), value);
+              type.getRootClassId(), attribute.getAttributeId(), value);
     }
 
     if (!context.subjectTypeMap.containsKey(value.asResource())) {
       log.error("Type '{}' and attribute '{}' must contain a typed resource, found a plain resource '{}'",
-                type.getRootClassId(), attribute.getAttributeId(), value);
+              type.getRootClassId(), attribute.getAttributeId(), value);
     }
 
     // already processed
@@ -647,7 +692,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
     // process and add as included
     ObjectNode linkedInstance = JsonNodeFactory.instance.objectNode();
-    processInstance(model, value.asResource(), linkedInstance);
+    processInstance(model, context, value.asResource(), linkedInstance);
     addToArrayNode(context.jsonRoot, "included", linkedInstance);
   }
 
@@ -655,7 +700,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     instanceRoot.put("uri", subject.getURI());
   }
 
-  private void setInstanceType(@Nonnull Model model,
+  private void setInstanceType(@Nonnull Context context,
+                               @Nonnull Model model,
                                @Nonnull ObjectNode instanceRoot,
                                @Nonnull Resource instance,
                                ConversionProfile.Type type) {
@@ -664,7 +710,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
     if (type == null) {
       throw new RuntimeException("cannot find type for instance '" + instance.getURI() + "'" +
-                                 ": found types '" + context.subjectTypeMap.get(instance) + "'.");
+              ": found types '" + context.subjectTypeMap.get(instance) + "'.");
     }
 
     if (configuration.isJsonType(JsonType.ROOT)) {
@@ -696,7 +742,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return model.shortForm(string);
   }
 
-  private void setInstanceRootType(@Nonnull Model model,
+  private void setInstanceRootType(@Nonnull Context context,
+                                   @Nonnull Model model,
                                    @Nonnull ObjectNode instanceRoot,
                                    @Nonnull Resource instance,
                                    ConversionProfile.Type type) {
@@ -705,7 +752,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
     if (type == null) {
       throw new RuntimeException(("cannot find type for instance '" + instance.getURI() + "'" +
-                                  ": found types '" + context.subjectTypeMap.get(instance) + "'."));
+              ": found types '" + context.subjectTypeMap.get(instance) + "'."));
     }
 
     if (configuration.isJsonRootType(JsonRootType.ENABLED)) {
@@ -828,15 +875,15 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       Map<Resource, Set<String>> subjectTypeMap = new HashMap<>();
 
       model.listStatements(null, RDF.type, (RDFNode) null)
-           .forEachRemaining(statement -> {
-             Resource subject = statement.getSubject();
-             if (!subjectTypeMap.containsKey(subject)) {
-               subjectTypeMap.put(subject, new HashSet<>());
-             }
+              .forEachRemaining(statement -> {
+                Resource subject = statement.getSubject();
+                if (!subjectTypeMap.containsKey(subject)) {
+                  subjectTypeMap.put(subject, new HashSet<>());
+                }
 
-             String type = statement.getObject().asResource().getURI();
-             subjectTypeMap.get(subject).add(type);
-           });
+                String type = statement.getObject().asResource().getURI();
+                subjectTypeMap.get(subject).add(type);
+              });
 
       return subjectTypeMap;
     }
