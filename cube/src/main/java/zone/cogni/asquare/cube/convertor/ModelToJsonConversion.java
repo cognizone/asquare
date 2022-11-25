@@ -32,7 +32,6 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -266,10 +265,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   }
 
   private Map<String, String> mergePrefixMaps(Map<String, String> map1, Map<String, String> map2) {
-    Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
-            .filter(e -> !map1.containsValue(e.getValue()))
-            .map(e -> newKeyEntry(map1, e));
 
+    Stream<Map.Entry<String, String>> map2FilteredStream = map2.entrySet().stream()
+                                                               .filter(e -> !map1.containsValue(e.getValue()))
+                                                               .map(e -> newKeyEntry(map1, e));
 
     return Stream.concat(map1.entrySet().stream(), map2FilteredStream)
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
