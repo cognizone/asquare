@@ -3,8 +3,11 @@ package zone.cogni.asquare.cube.sort;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.XSD;
 
 /**
@@ -47,6 +50,40 @@ public class StringRdfVisitor implements RDFVisitor {
     }
 
     throw new RuntimeException("how can this be possible? literal " + literal);
+  }
+
+  @Override
+  public String visitStmt(Resource r, Statement statement) {
+    String result = "";
+
+    Resource subject = statement.getSubject();
+    Property predicate = statement.getPredicate();
+    RDFNode object = statement.getObject();
+
+    // visit subject
+    if (subject.isAnon()) {
+      result += visitBlank(subject, subject.getId());
+    } else {
+      result += visitURI(subject, subject.getURI());
+    }
+    result += " ";
+
+    // visit predicate
+    result += visitURI(predicate, predicate.getURI()) + " ";
+
+    // visit object
+    if (object.isAnon()) {
+      result += visitBlank(object.asResource(), object.asResource().getId());
+    }
+    else if (object.isLiteral()) {
+      result += visitLiteral(object.asLiteral());
+    }
+    else {
+      result += visitURI(object.asResource(), object.asResource().getURI());
+    }
+    result += ".";
+
+    return result;
   }
 
   private String getQuotedLiteralString(String literalString) {
