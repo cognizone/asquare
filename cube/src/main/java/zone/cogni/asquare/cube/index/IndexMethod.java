@@ -209,8 +209,11 @@ public class IndexMethod {
 
   private ObjectNode addFacets(Model draftModel, ObjectNode objectNode, String uri) {
     long start = System.nanoTime();
-
-    Map<String, RDFNode> bindings = ImmutableMap.of("uri", ResourceFactory.createResource(uri));
+    String hash = getHash(draftModel);
+    Map<String, RDFNode> bindings = ImmutableMap.of(
+            "uri", ResourceFactory.createResource(uri),
+            "hash", ResourceFactory.createPlainLiteral(hash)
+            );
 
     ObjectNode facetNode = sparqlSelectToJson.convert(draftModel, bindings);
     facetNode.put("hash", getHash(draftModel));
