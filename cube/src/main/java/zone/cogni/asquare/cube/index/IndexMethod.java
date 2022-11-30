@@ -2,6 +2,7 @@ package zone.cogni.asquare.cube.index;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.access.Params;
 import zone.cogni.asquare.cube.convertor.ModelToJsonConversion;
+import zone.cogni.asquare.cube.hash.ModelHasher;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.SparqlSelectToJson;
 import zone.cogni.asquare.cube.util.TimingUtil;
@@ -211,11 +213,18 @@ public class IndexMethod {
     Map<String, RDFNode> bindings = ImmutableMap.of("uri", ResourceFactory.createResource(uri));
 
     ObjectNode facetNode = sparqlSelectToJson.convert(draftModel, bindings);
+    facetNode.put("hash", getHash(draftModel));
     if (!facetNode.isEmpty()) {
       objectNode.set("facets", facetNode);
       log.info("(addFacets) took {} ms", TimingUtil.millisSinceStart(start, 1));
     }
 
     return objectNode;
+  }
+
+  private String getHash(Model model) {
+    ModelHasher modelHasher = new ModelHasher();
+    byte[] hash = modelHasher.apply(model);
+    return Hex.encodeHexString(hash);
   }
 }
