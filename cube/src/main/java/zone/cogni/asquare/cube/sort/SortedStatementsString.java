@@ -114,7 +114,7 @@ public class SortedStatementsString implements Function<Model, String> {
     addNamespaces(result);
     statementMapToString(result, getStatementMap(statements));
 
-    return result.toString();
+    return result.toString().trim();
   }
 
   private void addBase(StringBuilder result) {
@@ -124,6 +124,7 @@ public class SortedStatementsString implements Function<Model, String> {
   }
 
   private void addNamespaces(StringBuilder result) {
+    if (namespaces.isEmpty()) return;
 
     namespaces.forEach((key, value) -> {
       result.append("@prefix ")

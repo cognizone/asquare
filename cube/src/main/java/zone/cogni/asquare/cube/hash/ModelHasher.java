@@ -34,7 +34,7 @@ public class ModelHasher implements Function<Model, byte[]> {
 
         try {
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-            byte[] bytes = sortedString.trim().getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = sortedString.getBytes(StandardCharsets.UTF_8);
 
             return sha256.digest(bytes);
         } catch (NoSuchAlgorithmException e) {
