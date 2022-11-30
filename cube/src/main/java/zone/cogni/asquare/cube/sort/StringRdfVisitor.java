@@ -61,27 +61,13 @@ public class StringRdfVisitor implements RDFVisitor {
     RDFNode object = statement.getObject();
 
     // visit subject
-    if (subject.isAnon()) {
-      result += visitBlank(subject, subject.getId());
-    } else {
-      result += visitURI(subject, subject.getURI());
-    }
-    result += " ";
+    result += subject.visitWith(StringRdfVisitor.instance) + " ";
 
     // visit predicate
-    result += visitURI(predicate, predicate.getURI()) + " ";
+    result += predicate.visitWith(StringRdfVisitor.instance) + " ";
 
     // visit object
-    if (object.isAnon()) {
-      result += visitBlank(object.asResource(), object.asResource().getId());
-    }
-    else if (object.isLiteral()) {
-      result += visitLiteral(object.asLiteral());
-    }
-    else {
-      result += visitURI(object.asResource(), object.asResource().getURI());
-    }
-    result += ".";
+    result += object.visitWith(StringRdfVisitor.instance) + ".";
 
     return result;
   }
