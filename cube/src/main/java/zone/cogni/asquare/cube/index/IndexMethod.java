@@ -211,12 +211,10 @@ public class IndexMethod {
     long start = System.nanoTime();
     String hash = getHash(draftModel);
     Map<String, RDFNode> bindings = ImmutableMap.of(
-            "uri", ResourceFactory.createResource(uri),
-            "hash", ResourceFactory.createPlainLiteral(hash)
+            "uri", ResourceFactory.createResource(uri)
             );
 
     ObjectNode facetNode = sparqlSelectToJson.convert(draftModel, bindings);
-    facetNode.put("hash", getHash(draftModel));
     if (!facetNode.isEmpty()) {
       objectNode.set("facets", facetNode);
       log.info("(addFacets) took {} ms", TimingUtil.millisSinceStart(start, 1));
