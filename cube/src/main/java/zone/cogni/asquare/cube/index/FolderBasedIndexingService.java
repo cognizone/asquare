@@ -78,4 +78,10 @@ public interface FolderBasedIndexingService {
                  @Nonnull String collection,
                  @Nonnull List<String> uris);
 
+  /**
+   *
+   *
+   */
+  void ensureIndexExists(@Nonnull String index);
+
 }

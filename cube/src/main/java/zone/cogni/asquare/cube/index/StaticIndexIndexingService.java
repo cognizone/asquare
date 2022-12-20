@@ -19,14 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCallableForUri;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCollectionUris;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexFolder;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexMethodForUri;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexableUris;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUrisFromQuery;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidCollectionFolderNames;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSynchronously;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.*;
 
 /**
  * Here is an expected folder structure for indexing:
@@ -52,8 +45,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSy
  * </pre>
  */
 public class StaticIndexIndexingService
-        extends IndexingServiceContext
-        implements FolderBasedIndexingService {
+        extends IndexingServiceContext {
 
   private static final Logger log = LoggerFactory.getLogger(StaticIndexIndexingService.class);
 
@@ -155,7 +147,7 @@ public class StaticIndexIndexingService
     log.info("(clearIndex) '{}' started", indexFolder.getName());
 
     deleteIndex(indexFolder);
-    createIndex(indexFolder);
+    ensureIndexExists(indexFolder.getName());
     log.info("(clearIndex) '{}' done", indexFolder.getName());
   }
 
@@ -173,17 +165,6 @@ public class StaticIndexIndexingService
       log.warn(".. delete index '{}' failed", indexFolder.getName(), e);
       throw e;
     }
-  }
-
-  /**
-   * Creates index in <code>elasticStore</code>.
-   * Also takes <code>elastic-settings.json</code> in <code>index</code> folder to configure the index.
-   *
-   * @param indexFolder of index
-   */
-  private void createIndex(@Nonnull IndexFolder indexFolder) {
-    elasticStore.createIndex(indexFolder.getName(),
-                             indexFolder.getSettingsJson());
   }
 
   @Override
@@ -348,4 +329,5 @@ public class StaticIndexIndexingService
   protected Map<String, String> getQueryTemplateParameters() {
     return queryTemplateParameters;
   }
+
 }

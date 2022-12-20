@@ -26,8 +26,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUris
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidCollectionFolderNames;
 
 public class AliasedCollectionIndexingService
-        extends IndexingServiceContext
-        implements FolderBasedIndexingService {
+        extends IndexingServiceContext {
 
   private static final Logger log = LoggerFactory.getLogger(AliasedCollectionIndexingService.class);
 
@@ -247,4 +246,5 @@ public class AliasedCollectionIndexingService
   protected Map<String, String> getQueryTemplateParameters() {
     return queryTemplateParameters;
   }
+
 }

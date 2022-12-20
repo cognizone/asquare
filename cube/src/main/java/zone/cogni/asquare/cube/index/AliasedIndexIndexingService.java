@@ -30,8 +30,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getVali
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSynchronously;
 
 public class AliasedIndexIndexingService
-        extends IndexingServiceContext
-        implements FolderBasedIndexingService {
+        extends IndexingServiceContext {
 
   private static final Logger log = LoggerFactory.getLogger(AliasedIndexIndexingService.class);
 
