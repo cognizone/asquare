@@ -9,6 +9,8 @@ import zone.cogni.asquare.cube.index.swap.IndexSwapState;
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataService;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
@@ -47,6 +49,8 @@ public class AliasedCollectionIndexingService
   private final IndexFolderService indexFolderService;
   private final IndexSwapService indexSwapService;
 
+  private final ElasticsearchMetadataService elasticsearchMetadataService;
+
   public AliasedCollectionIndexingService(@Nonnull SpelService spelService,
                                           @Nonnull PaginatedQuery paginatedQuery,
                                           @Nonnull MonitoredPool indexMonitoredPool,
@@ -65,6 +69,7 @@ public class AliasedCollectionIndexingService
     this.queryTemplateParameters = queryTemplateParameters;
     this.indexFolderService = indexFolderService;
     this.indexSwapService = indexSwapService;
+    this.elasticsearchMetadataService = new ElasticsearchMetadataService(new ElasticsearchMetadata.Configuration());
   }
 
   @Override
@@ -213,6 +218,11 @@ public class AliasedCollectionIndexingService
   }
 
   @Override
+  public void ensureIndexExists(@Nonnull String index) {
+    InternalIndexingServiceUtils.ensureIndexExists(this, index);
+  }
+
+  @Override
   protected SpelService getSpelService() {
     return spelService;
   }
@@ -245,6 +255,11 @@ public class AliasedCollectionIndexingService
   @Override
   protected Map<String, String> getQueryTemplateParameters() {
     return queryTemplateParameters;
+  }
+
+  @Override
+  protected ElasticsearchMetadataService getElasticsearchMetadataService() {
+    return elasticsearchMetadataService;
   }
 
 }

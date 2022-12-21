@@ -8,6 +8,8 @@ import zone.cogni.asquare.cube.index.IndexFolderUriReport.CollectionFolderUriRep
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataService;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
@@ -61,6 +63,8 @@ public class StaticIndexIndexingService
   private final Elasticsearch7Store elasticStore;
   private final ModelToJsonConversion modelToJsonConversion;
 
+  private final ElasticsearchMetadataService elasticsearchMetadataService;
+
   /**
    * Common parameters used in queries, like sparql endpoint urls etc...
    */
@@ -97,6 +101,7 @@ public class StaticIndexIndexingService
     this.paginatedQuery = paginatedQuery;
     this.rdfStore = rdfStore;
     this.modelToJsonConversion = modelToJsonConversion;
+    this.elasticsearchMetadataService = new ElasticsearchMetadataService(new ElasticsearchMetadata.Configuration());
   }
 
   @Override
@@ -296,6 +301,11 @@ public class StaticIndexIndexingService
   }
 
   @Override
+  public void ensureIndexExists(@Nonnull String index) {
+    InternalIndexingServiceUtils.ensureIndexExists(this, index);
+  }
+
+  @Override
   protected SpelService getSpelService() {
     return spelService;
   }
@@ -328,6 +338,11 @@ public class StaticIndexIndexingService
   @Override
   protected Map<String, String> getQueryTemplateParameters() {
     return queryTemplateParameters;
+  }
+
+  @Override
+  protected ElasticsearchMetadataService getElasticsearchMetadataService() {
+    return elasticsearchMetadataService;
   }
 
 }
