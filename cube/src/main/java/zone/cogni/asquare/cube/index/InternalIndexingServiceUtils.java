@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.SparqlSelectToJson;
 import zone.cogni.asquare.cube.spel.SpelService;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
 import javax.annotation.Nonnull;
@@ -211,6 +212,35 @@ class InternalIndexingServiceUtils {
                           .map(uri -> "<" + uri + ">")
                           .collect(Collectors.joining(","));
     return "\n\t filter ( ?uri in ( " + inClause + " ) )";
+  }
+
+  public static void ensureIndexExists(@Nonnull IndexingServiceContext context, @Nonnull String index) {
+    if (existsIndex(context, index)) {
+      return;
+    }
+
+    List<IndexFolder> indexFolder = context.getIndexFolderService().getIndexFolders()
+                                           .stream()
+                                           .filter(folder -> folder.getName().equals(index))
+                                           .collect(Collectors.toList());
+
+    if (indexFolder.isEmpty()) {
+      throw new RuntimeException("No index folder found for index " + index);
+    }
+
+    if(indexFolder.size() > 1) {
+      log.warn("Multiple index folders found for index {}: {}. Using the first one", index, indexFolder);
+    }
+
+    context.getElasticStore().createIndex(index, indexFolder.get(0).getSettingsJson());
+  }
+
+  private static boolean existsIndex(IndexingServiceContext context, String index) {
+    ElasticsearchMetadata metadata = context.getElasticsearchMetadataService().getElasticsearchMetadata(context.getElasticStore());
+    return metadata.getIndexes()
+                   .stream()
+                   .map(ElasticsearchMetadata.Index::getName)
+                   .anyMatch(index::equals);
   }
 
   private InternalIndexingServiceUtils() {
