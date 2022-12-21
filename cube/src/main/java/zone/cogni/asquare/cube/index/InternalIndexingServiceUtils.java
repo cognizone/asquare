@@ -219,20 +219,9 @@ class InternalIndexingServiceUtils {
       return;
     }
 
-    List<IndexFolder> indexFolder = context.getIndexFolderService().getIndexFolders()
-                                           .stream()
-                                           .filter(folder -> folder.getName().equals(index))
-                                           .collect(Collectors.toList());
+    IndexFolder indexFolder = getIndexFolder(context, index);
 
-    if (indexFolder.isEmpty()) {
-      throw new RuntimeException("No index folder found for index " + index);
-    }
-
-    if(indexFolder.size() > 1) {
-      log.warn("Multiple index folders found for index {}: {}. Using the first one", index, indexFolder);
-    }
-
-    context.getElasticStore().createIndex(index, indexFolder.get(0).getSettingsJson());
+    context.getElasticStore().createIndex(index, indexFolder.getSettingsJson());
   }
 
   private static boolean existsIndex(IndexingServiceContext context, String index) {
