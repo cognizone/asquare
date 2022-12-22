@@ -2,6 +2,8 @@ package zone.cogni.asquare.service.elasticsearch.info;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ElasticsearchMetadata {
+  private static Logger log = LoggerFactory.getLogger(ElasticsearchMetadata.class);
 
   private final Info_stats stats;
   private final Info_clusterState clusterState;
@@ -23,8 +26,12 @@ public class ElasticsearchMetadata {
     List<String> clusterStateIndexNames = clusterState.getIndexNames();
 
     Collection<String> disjunction = CollectionUtils.disjunction(statsIndexNames, clusterStateIndexNames);
+    Collection<String> disjunctionNonMetadata = disjunction.stream().filter(name -> !name.startsWith(".")).collect(Collectors.toSet());
+    if (!disjunctionNonMetadata.isEmpty())
+      throw new RuntimeException("some indexes not found in different metadata sets: " + disjunctionNonMetadata);
+
     if (!disjunction.isEmpty())
-      throw new RuntimeException("some indexes not found in different metadata sets: " + disjunction);
+      log.warn("some metadata indexes not found in metadata sets: {}", disjunction);
 
     return statsIndexNames
             .stream()
