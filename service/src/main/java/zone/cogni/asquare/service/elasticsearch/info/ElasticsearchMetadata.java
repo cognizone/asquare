@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ElasticsearchMetadata {
-  private static Logger log = LoggerFactory.getLogger(ElasticsearchMetadata.class);
+  private static final Logger log = LoggerFactory.getLogger(ElasticsearchMetadata.class);
 
   private final Info_stats stats;
   private final Info_clusterState clusterState;
@@ -31,7 +31,7 @@ public class ElasticsearchMetadata {
       throw new RuntimeException("some indexes not found in different metadata sets: " + disjunctionNonMetadata);
 
     if (!disjunction.isEmpty())
-      log.warn("some metadata indexes not found in metadata sets: {}", disjunction);
+      log.info("some metadata indexes not found in metadata sets: {}", disjunction);
 
     return statsIndexNames
             .stream()
