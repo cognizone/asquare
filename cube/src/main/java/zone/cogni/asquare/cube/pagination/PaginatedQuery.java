@@ -3,7 +3,6 @@ package zone.cogni.asquare.cube.pagination;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import joptsimple.internal.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -81,6 +80,12 @@ public class PaginatedQuery {
     return model;
   }
 
+  public static void main(String[] args) {
+    List<String> graphUris = Lists.newArrayList("one", "two", "three");
+    graphUris.stream()
+             .collect(Collectors.joining(",", "<", ">"));
+  }
+
   /**
    * Build a select query for fetching all triples in a set of graphs.
    * We are using <code>select</code> queries because in Virtuoso construct query pagination is unreliable.
@@ -90,8 +95,8 @@ public class PaginatedQuery {
    */
   @Nonnull
   private String getGraphsSelectQuery(@Nonnull List<String> graphs) {
-    String inPart = Strings.join(graphs.stream().map(s -> "<" + s + ">").collect(Collectors.toList()),
-                                 ", ");
+    String inPart = graphs.stream()
+                          .collect(Collectors.joining(",", "<", ">"));
 
     return "select ?g ?s ?p ?o " +
            "where {" +
