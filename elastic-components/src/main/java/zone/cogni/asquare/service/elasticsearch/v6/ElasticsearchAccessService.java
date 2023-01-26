@@ -17,12 +17,12 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
+import zone.cogni.asquare.access.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.access.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
@@ -35,7 +35,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static io.vavr.API.*;
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
 import static io.vavr.Predicates.instanceOf;
 
 public class ElasticsearchAccessService implements ElasticAccessService {
@@ -107,8 +109,8 @@ public class ElasticsearchAccessService implements ElasticAccessService {
   @Override
   public List<? extends TypedResource> findAll(ApplicationProfile.Type type) {
     SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-      .query(QueryBuilders.termQuery("data.type.keyword", type.getClassId()))
-      .fetchSource(true);
+            .query(QueryBuilders.termQuery("data.type.keyword", type.getClassId()))
+            .fetchSource(true);
 
     ObjectNode searchRequestBody = toObjectNode(searchSourceBuilder);
     ObjectNode searchResponseBody = elasticStore.search(indexName, searchRequestBody);
@@ -153,12 +155,12 @@ public class ElasticsearchAccessService implements ElasticAccessService {
 
   private ObjectNode handleFail(Throwable e) {
     return Match(e).of(
-      Case($(instanceOf(RuntimeException.class)), () -> {
-        throw (RuntimeException) e;
-      }),
-      Case($(), () -> {
-        throw new IllegalStateException(e);
-      })
+            Case($(instanceOf(RuntimeException.class)), () -> {
+              throw (RuntimeException) e;
+            }),
+            Case($(), () -> {
+              throw new IllegalStateException(e);
+            })
     );
   }
 
@@ -231,9 +233,9 @@ public class ElasticsearchAccessService implements ElasticAccessService {
   private ObjectNode getTypeQuery(ApplicationProfile.Type type) {
     ObjectNode objectNode = new ObjectMapper().createObjectNode();
     objectNode
-      .putObject("query")
-      .putObject("match")
-      .put("data.type.keyword", type.getClassId());
+            .putObject("query")
+            .putObject("match")
+            .put("data.type.keyword", type.getClassId());
     return objectNode;
   }
 
@@ -249,7 +251,8 @@ public class ElasticsearchAccessService implements ElasticAccessService {
     log.info("  loading data for index '{}' ...", indexName);
 
     List<? extends TypedResource> typedResources = types.stream()
-                                                        .flatMap(type -> sourceView.getRepository().findAll(type).stream())
+                                                        .flatMap(type -> sourceView.getRepository().findAll(type)
+                                                                                   .stream())
                                                         .collect(Collectors.toList());
 
     resetIndex(indexSettings);
@@ -306,10 +309,10 @@ public class ElasticsearchAccessService implements ElasticAccessService {
     List<TypedResource> results = new ArrayList<>();
 
     Function<JsonNode, List<? extends TypedResource>> conversionFunction = json ->
-      jsonConversion.getJsonToUpdatableResource()
-                    .withApplicationView(new ApplicationView(this, applicationProfile))
-                    .withJsonRoot((ObjectNode) json)
-                    .get();
+            jsonConversion.getJsonToUpdatableResource()
+                          .withApplicationView(new ApplicationView(this, applicationProfile))
+                          .withJsonRoot((ObjectNode) json)
+                          .get();
 
     hits.forEach(hit -> results.addAll(conversionFunction.apply(hit.get("_source"))));
     return results;
