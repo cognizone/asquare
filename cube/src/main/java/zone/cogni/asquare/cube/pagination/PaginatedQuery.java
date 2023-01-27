@@ -80,12 +80,6 @@ public class PaginatedQuery {
     return model;
   }
 
-  public static void main(String[] args) {
-    List<String> graphUris = Lists.newArrayList("one", "two", "three");
-    graphUris.stream()
-             .collect(Collectors.joining(",", "<", ">"));
-  }
-
   /**
    * Build a select query for fetching all triples in a set of graphs.
    * We are using <code>select</code> queries because in Virtuoso construct query pagination is unreliable.
@@ -96,7 +90,8 @@ public class PaginatedQuery {
   @Nonnull
   private String getGraphsSelectQuery(@Nonnull List<String> graphs) {
     String inPart = graphs.stream()
-                          .collect(Collectors.joining(",", "<", ">"));
+                          .map(uri -> "<" + uri + ">")
+                          .collect(Collectors.joining(","));
 
     return "select ?g ?s ?p ?o " +
            "where {" +
