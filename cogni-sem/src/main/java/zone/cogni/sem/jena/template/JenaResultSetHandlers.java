@@ -9,7 +9,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,9 +18,14 @@ import java.util.function.Function;
 public final class JenaResultSetHandlers {
 
   public static final JenaResultSetHandler<String> asJson = resultSet -> {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    ResultSetFormatter.outputAsJSON(out, resultSet);
-    return out.toString(StandardCharsets.UTF_8);
+    try {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ResultSetFormatter.outputAsJSON(out, resultSet);
+      return out.toString("UTF-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   };
 
   public static final JenaResultSetHandler<ResultSet> inMemoryResultSetResolver = ResultSetFactory::copyResults;

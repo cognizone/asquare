@@ -66,7 +66,7 @@ class CollectionFolder {
   private static List<String> getQueries(List<Resource> queryResources) {
     return queryResources.stream()
                          .map(ResourceHelper::toString)
-                         .collect(Collectors.toUnmodifiableList());
+                         .collect(Collectors.toList());
   }
 
   public boolean isValid() {

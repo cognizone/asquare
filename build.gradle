@@ -87,7 +87,6 @@ subprojects {
       dependency("org.apache.poi:poi:$apachePoiVersion")
       dependency("org.apache.poi:poi-ooxml:$apachePoiVersion")
       dependency("org.elasticsearch:elasticsearch:$elasticsearchVersion")
-      dependency("org.elasticsearch.client:transport:$elasticsearchVersion")
       dependency('org.apache.commons:commons-pool2:2.11.1')
       dependency('cglib:cglib:3.3.0')
 
@@ -274,6 +273,7 @@ project('application-profile-shacl') {
   }
 }
 
+// IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
 project('asquareroot') {
   dependencies {
     // projects
@@ -378,6 +378,18 @@ project('cube') {
   }
 }
 
+// IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
+project('elastic-components') {
+  dependencies {
+    // projects
+    api project(':service')
+
+    // libs
+    api('org.elasticsearch:elasticsearch')
+  }
+}
+
+// IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
 project('elasticproxy') {
   dependencyManagement {
     dependencies {
@@ -456,7 +468,6 @@ project('service') {
     api('org.apache.jena:jena-core')
     api('org.apache.poi:poi')
     api('org.apache.poi:poi-ooxml')
-    api('org.elasticsearch:elasticsearch')
 
     // spring
     api('org.springframework.boot:spring-boot-starter-aop')

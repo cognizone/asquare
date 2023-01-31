@@ -1,5 +1,7 @@
 package zone.cogni.asquare.cube.convertor.data2shacl;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
@@ -59,7 +61,7 @@ public class ShaclGenerator {
 
   private List<String> getGraphsOfType(RdfStoreService rdfStoreService, String typeUri) {
     String query = spelService.processTemplate(getResource("type-graphs/select-type-graphs.sparql.spel"),
-                                               Map.of("type", typeUri));
+                                               ImmutableMap.of("type", typeUri));
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
     return paginatedQuery.convertSingleColumnUriToStringList(rows);
   }
@@ -143,20 +145,24 @@ public class ShaclGenerator {
 
       if (priorityT1 >= 0 && priorityT2 >= 0) {
         return priorityT1 == priorityT2 ? t1.compareToIgnoreCase(t2) : Integer.compare(priorityT1, priorityT2);
-      } else if (priorityT1 >= 0 && priorityT2 == -1) {
+      }
+      else if (priorityT1 >= 0 && priorityT2 == -1) {
         return -1;
-      } else if (priorityT1 == -1 && priorityT2 >= 0) {
+      }
+      else if (priorityT1 == -1 && priorityT2 >= 0) {
         return 1;
-      } else {
+      }
+      else {
         return t1.compareToIgnoreCase(t2);
       }
     };
   }
 
   private String getNamespaceIri(String type) {
-    if(type.contains("#")) {
+    if (type.contains("#")) {
       return type.substring(0, type.lastIndexOf('#') + 1);
-    } else {
+    }
+    else {
       return type.substring(0, type.lastIndexOf('/') + 1);
     }
   }
@@ -212,9 +218,9 @@ public class ShaclGenerator {
   private int getAvailableNamespaceIndex(Model shacl) {
 
     Optional<Integer> maxValue = shacl.getNsPrefixMap().keySet().stream()
-            .filter(key-> key.matches("^ns[0123456789]+$"))
-            .map(key-> Integer.parseInt(key.substring(2)))
-            .max(Integer::compare);
+                                      .filter(key -> key.matches("^ns[0123456789]+$"))
+                                      .map(key -> Integer.parseInt(key.substring(2)))
+                                      .max(Integer::compare);
 
     return maxValue.map(integer -> integer + 1).orElse(0);
   }
@@ -338,7 +344,7 @@ public class ShaclGenerator {
     List<String> datatypes = selectUris(rdfStore, "select-datatype.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
     if (datatypes.isEmpty()) {
       log.warn("type '{}' and property '{}' does not have at least one datatype",
-                     shortenUri(shacl, targetClass), shortenUri(shacl, path));
+               shortenUri(shacl, targetClass), shortenUri(shacl, path));
       return;
     }
 
@@ -456,14 +462,14 @@ public class ShaclGenerator {
     // try to translate lots of types to 1
     Set<String> classSet = new HashSet<>(classes);
     String translation = configuration.getTypeTranslation(classSet);
-    if (translation != null) return List.of(translation);
+    if (translation != null) return ImmutableList.of(translation);
 
     // cleanup unused types
-    classSet.removeAll(configuration.getIgnoredClasses());
+    configuration.getIgnoredClasses().forEach(classSet::remove);
 
     // again, try to translate lots of types to 1
     String translationRetry = configuration.getTypeTranslation(classSet);
-    if (translationRetry != null) return List.of(translationRetry);
+    if (translationRetry != null) return ImmutableList.of(translationRetry);
 
     // we tried, return as what's left
     return new ArrayList<>(classes);
@@ -475,8 +481,8 @@ public class ShaclGenerator {
   }
 
   private Map<String, String> getTypeAndPropertyParameters(Resource type, Resource property) {
-    return Map.of("type", type.getURI(),
-                  "property", property.getURI());
+    return ImmutableMap.of("type", type.getURI(),
+                           "property", property.getURI());
   }
 
   private List<Map<String, RDFNode>> getRows(@Nonnull RdfStoreService rdfStore,
@@ -496,7 +502,7 @@ public class ShaclGenerator {
                              @Nonnull RdfStoreService rdfStoreService,
                              @Nonnull Resource targetClass) {
     String query = spelService.processTemplate(getResource("select-properties.sparql.spel"),
-                                               Map.of("type", targetClass.getURI()));
+                                               ImmutableMap.of("type", targetClass.getURI()));
     List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStoreService, query);
     List<String> properties = paginatedQuery.convertSingleColumnUriToStringList(rows);
     properties.sort(getIriComparator(configuration));

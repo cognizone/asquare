@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Preconditions;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.keyvalue.DefaultMapEntry;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.RDFLangString;
@@ -282,7 +283,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     int uniqueSuffix = 0;
     while (refMap.containsKey(key+uniqueSuffix)) uniqueSuffix++;
 
-    return Map.entry(key+uniqueSuffix, entryToHandle.getValue());
+    return new DefaultMapEntry<>(key + uniqueSuffix, entryToHandle.getValue());
   }
 
   private void reportMissedSubjects(Context context, String root) {

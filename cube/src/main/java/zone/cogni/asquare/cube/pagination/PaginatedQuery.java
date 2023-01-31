@@ -3,7 +3,6 @@ package zone.cogni.asquare.cube.pagination;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import joptsimple.internal.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -90,8 +89,9 @@ public class PaginatedQuery {
    */
   @Nonnull
   private String getGraphsSelectQuery(@Nonnull List<String> graphs) {
-    String inPart = Strings.join(graphs.stream().map(s -> "<" + s + ">").collect(Collectors.toList()),
-                                 ", ");
+    String inPart = graphs.stream()
+                          .map(uri -> "<" + uri + ">")
+                          .collect(Collectors.joining(","));
 
     return "select ?g ?s ?p ?o " +
            "where {" +

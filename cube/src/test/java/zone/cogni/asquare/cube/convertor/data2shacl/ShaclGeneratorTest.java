@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.convertor.data2shacl;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -16,7 +17,6 @@ import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class ShaclGeneratorTest {
 
@@ -49,11 +49,11 @@ public class ShaclGeneratorTest {
   private Configuration getConfiguration() {
     Configuration configuration = new Configuration();
     configuration.setShapesNamespace("http://demo.com/shacl/");
-    configuration.setIgnoredClasses(List.of("http://www.w3.org/2004/02/skos/core#Concept",
-                                            "http://data.legilux.public.lu/resource/ontology/jolux#Work",
-                                            "http://data.legilux.public.lu/resource/ontology/jolux#WorkAtOj",
-                                            "http://publications.europa.eu/resource/authority/language",
-                                            "http://data.europa.eu/eli/ontology#Language"));
+    configuration.setIgnoredClasses(ImmutableList.of("http://www.w3.org/2004/02/skos/core#Concept",
+                                                     "http://data.legilux.public.lu/resource/ontology/jolux#Work",
+                                                     "http://data.legilux.public.lu/resource/ontology/jolux#WorkAtOj",
+                                                     "http://publications.europa.eu/resource/authority/language",
+                                                     "http://data.europa.eu/eli/ontology#Language"));
     return configuration;
   }
 
