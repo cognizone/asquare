@@ -21,11 +21,11 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCallableForUri;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCollectionUris;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexFolder;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexMethodForUri;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getPartitionUris;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUrisFromQuery;
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidCollectionFolderNames;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidPartitionNames;
 
 public class AliasedCollectionIndexingService
         extends IndexingServiceContext {
@@ -96,17 +96,17 @@ public class AliasedCollectionIndexingService
 
   @Override
   public void indexByName(@Nonnull String index, boolean clear) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
+    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
 
     if (clear) log.info("(indexByName) no clear needed, will swap later");
-    indexByCollection(index, getValidCollectionFolderNames(indexFolder));
+    indexByCollection(index, getValidPartitionNames(partitionedIndexConfiguration));
   }
 
   @Override
   @Nonnull
   public List<String> getCollectionNames(@Nonnull String index) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
-    return getValidCollectionFolderNames(indexFolder);
+    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    return getValidPartitionNames(partitionedIndexConfiguration);
   }
 
   @Override
@@ -118,20 +118,20 @@ public class AliasedCollectionIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
-    indexByCollection(indexFolder, collection);
+    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    indexByCollection(partitionedIndexConfiguration, collection);
   }
 
   /**
-   * @param indexFolder
-   * @param collectionName is index prefix name where all documents of a collection will be stored
+   * @param partitionedIndexConfiguration
+   * @param collectionName                is index prefix name where all documents of a collection will be stored
    */
-  private void indexByCollection(@Nonnull IndexFolder indexFolder,
+  private void indexByCollection(@Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration,
                                  @Nonnull String collectionName) {
-    log.info("(indexByCollection) index '{}' and collection: {}", indexFolder.getName(), collectionName);
+    log.info("(indexByCollection) index '{}' and collection: {}", partitionedIndexConfiguration.getName(), collectionName);
 
     // get swap state information: input for indexing of collection
-    String aliasName = indexFolder.getName();
+    String aliasName = partitionedIndexConfiguration.getName();
     IndexSwapState indexSwapState = indexSwapService.getState(aliasName, collectionName);
 
     // log missing index
@@ -141,11 +141,11 @@ public class AliasedCollectionIndexingService
 
     // create new index
     elasticStore.createIndex(indexSwapState.getNewIndexName(),
-                             indexFolder.getSettingsJson());
+                             partitionedIndexConfiguration.getSettingsJson());
 
     // get callables to run
-    CollectionFolder collectionFolder = indexFolder.getValidCollectionFolder(collectionName);
-    List<Callable<String>> callables = getCallables(indexSwapState.getNewIndexName(), collectionFolder);
+    PartitionConfiguration partitionConfiguration = partitionedIndexConfiguration.getValidPartition(collectionName);
+    List<Callable<String>> callables = getCallables(indexSwapState.getNewIndexName(), partitionConfiguration);
 
     // run
     log.info("(indexByCollection) {} uris found", callables.size());
@@ -156,18 +156,18 @@ public class AliasedCollectionIndexingService
   }
 
   /**
-   * @param indexToFill        name of index to fill
-   * @param collectionFolder of object uris being loaded in index
+   * @param indexToFill            name of index to fill
+   * @param partitionConfiguration of object uris being loaded in index
    * @return stream of <code>Callable</code>s for a single collection in an index
    */
   @Nonnull
   private List<Callable<String>> getCallables(@Nonnull String indexToFill,
-                                              @Nonnull CollectionFolder collectionFolder) {
-    log.info("(getCallables) for index '{}' and collection '{}'", indexToFill, collectionFolder.getName());
-    List<String> collectionConstructQueries = collectionFolder.getConstructQueries();
-    List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
+                                              @Nonnull PartitionConfiguration partitionConfiguration) {
+    log.info("(getCallables) for index '{}' and collection '{}'", indexToFill, partitionConfiguration.getName());
+    List<String> collectionConstructQueries = partitionConfiguration.getConstructQueries();
+    List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
 
-    return getCollectionUris(this, collectionFolder)
+    return getPartitionUris(this, partitionConfiguration)
             .stream()
             .map(uri -> getCallable(getIndexMethodForUri(this, indexToFill, facetQueryResources, uri),
                                     collectionConstructQueries,
@@ -198,20 +198,20 @@ public class AliasedCollectionIndexingService
 
   @Override
   public void indexUrisFromQuery(@Nonnull String index,
-                                 @Nonnull String collection,
+                                 @Nonnull String partition,
                                  @Nonnull String query) {
     log.info("(indexUrisFromQuery) started");
 
     List<String> uris = getUrisFromQuery(this, query);
     log.info("(indexUrisFromQuery) {} uris found", uris.size());
 
-    indexUris(index, collection, uris);
+    indexUris(index, partition, uris);
     log.info("(indexUrisFromQuery) done");
   }
 
   @Override
   public void indexUris(@Nonnull String index,
-                        @Nonnull String collection,
+                        @Nonnull String partition,
                         @Nonnull List<String> uris) {
     // TODO aliases cannot be used when indexing
     //

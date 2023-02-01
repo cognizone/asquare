@@ -10,15 +10,15 @@ import java.util.List;
  */
 class IndexFolderUriReport {
 
-  private final IndexFolder indexFolder;
+  private final PartitionedIndexConfiguration partitionedIndexConfiguration;
   private final List<CollectionFolderUriReport> collectionFolderUriReports = new ArrayList<>();
 
-  public IndexFolderUriReport(IndexFolder indexFolder) {
-    this.indexFolder = indexFolder;
+  public IndexFolderUriReport(PartitionedIndexConfiguration partitionedIndexConfiguration) {
+    this.partitionedIndexConfiguration = partitionedIndexConfiguration;
   }
 
-  public IndexFolder getIndexFolder() {
-    return indexFolder;
+  public PartitionedIndexConfiguration getIndexFolder() {
+    return partitionedIndexConfiguration;
   }
 
   public boolean isEmpty() {
@@ -35,9 +35,9 @@ class IndexFolderUriReport {
     return Collections.unmodifiableList(collectionFolderUriReports);
   }
 
-  public void addCollection(CollectionFolder collectionFolder, List<String> collectionUris) {
+  public void addCollection(PartitionConfiguration partitionConfiguration, List<String> collectionUris) {
     collectionFolderUriReports.add(
-            new CollectionFolderUriReport(this, collectionFolder, collectionUris)
+            new CollectionFolderUriReport(this, partitionConfiguration, collectionUris)
     );
   }
 
@@ -54,7 +54,7 @@ class IndexFolderUriReport {
     if (isEmpty())
       throw new RuntimeException("please check for emptiness before invoking this method");
 
-    IndexFolderUriReport extractedSubset = new IndexFolderUriReport(indexFolder);
+    IndexFolderUriReport extractedSubset = new IndexFolderUriReport(partitionedIndexConfiguration);
 
     extractSubset(extractedSubset, size);
 
@@ -75,12 +75,12 @@ class IndexFolderUriReport {
       List<String> remainingUris = new ArrayList<>(currentCollectionReport.uris.subList(sizeToGrow, currentCollectionSize));
 
       // add extracted uris to subset
-      extractedSubset.addCollection(currentCollectionReport.collectionFolder, extractedUris);
+      extractedSubset.addCollection(currentCollectionReport.partitionConfiguration, extractedUris);
 
       // create new CollectionFolderUriReport with remaining uris to replace existing instance
       collectionFolderUriReports.set(
               lastIndex,
-              new CollectionFolderUriReport(this, currentCollectionReport.collectionFolder, remainingUris)
+              new CollectionFolderUriReport(this, currentCollectionReport.partitionConfiguration, remainingUris)
       );
 
       return;
@@ -98,14 +98,14 @@ class IndexFolderUriReport {
   static class CollectionFolderUriReport {
 
     private final IndexFolderUriReport indexFolderUriReport;
-    private final CollectionFolder collectionFolder;
+    private final PartitionConfiguration partitionConfiguration;
     private final List<String> uris;
 
     public CollectionFolderUriReport(IndexFolderUriReport indexFolderUriReport,
-                                     CollectionFolder collectionFolder,
+                                     PartitionConfiguration partitionConfiguration,
                                      List<String> uris) {
       this.indexFolderUriReport = indexFolderUriReport;
-      this.collectionFolder = collectionFolder;
+      this.partitionConfiguration = partitionConfiguration;
       this.uris = uris;
     }
 
@@ -113,8 +113,8 @@ class IndexFolderUriReport {
       return indexFolderUriReport;
     }
 
-    public CollectionFolder getCollectionFolder() {
-      return collectionFolder;
+    public PartitionConfiguration getCollectionFolder() {
+      return partitionConfiguration;
     }
 
     public List<String> getUris() {

@@ -6,7 +6,7 @@ import zone.cogni.core.spring.ResourceHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class CollectionFolder {
+public class PartitionConfiguration {
 
   private String name;
   private List<Resource> selectQueryResources;

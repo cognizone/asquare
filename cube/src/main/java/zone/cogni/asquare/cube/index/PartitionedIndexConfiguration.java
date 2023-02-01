@@ -8,11 +8,11 @@ import org.springframework.core.io.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class IndexFolder {
+public class PartitionedIndexConfiguration {
 
   private String name;
   private Resource settingsResource;
-  private List<CollectionFolder> collectionFolders;
+  private List<PartitionConfiguration> partitions;
 
   public String getName() {
     return name;
@@ -45,32 +45,32 @@ class IndexFolder {
     return settingsResource != null && settingsResource.exists();
   }
 
-  public List<CollectionFolder> getCollectionFolders() {
-    return collectionFolders;
+  public List<PartitionConfiguration> getPartitions() {
+    return partitions;
   }
 
-  public List<CollectionFolder> getValidCollectionFolders() {
-    return collectionFolders.stream()
-                            .filter(CollectionFolder::isValid)
-                            .collect(Collectors.toList());
+  public void setPartitions(List<PartitionConfiguration> partitionConfigurations) {
+    this.partitions = partitionConfigurations;
   }
 
-  public CollectionFolder getValidCollectionFolder(String name) {
-    return collectionFolders.stream()
-                            .filter(CollectionFolder::isValid)
-                            .filter(collection -> collection.getName().equals(name))
-                            .findFirst()
-                            .orElseThrow(() -> new RuntimeException("cannot find collection with name '" + name + "'"
-                                                                    + " in index '" + name + "'"));
+  public List<PartitionConfiguration> getValidPartitions() {
+    return partitions.stream()
+                     .filter(PartitionConfiguration::isValid)
+                     .collect(Collectors.toList());
   }
 
-  public void setCollectionFolders(List<CollectionFolder> collectionFolders) {
-    this.collectionFolders = collectionFolders;
+  public PartitionConfiguration getValidPartition(String name) {
+    return partitions.stream()
+                     .filter(PartitionConfiguration::isValid)
+                     .filter(partition -> partition.getName().equals(name))
+                     .findFirst()
+                     .orElseThrow(() -> new RuntimeException("cannot find partition with name '" + name + "'"
+                                                             + " in index '" + name + "'"));
   }
 
   public boolean isValid() {
     return isValidSettingsResource()
-           && collectionFolders.stream().anyMatch(CollectionFolder::isValid);
+           && partitions.stream().anyMatch(PartitionConfiguration::isValid);
   }
 
 }
