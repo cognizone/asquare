@@ -99,7 +99,7 @@ public class AliasedCollectionIndexingService
     PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
 
     if (clear) log.info("(indexByName) no clear needed, will swap later");
-    indexByCollection(index, getValidPartitionNames(partitionedIndexConfiguration));
+    indexByPartition(index, getValidPartitionNames(partitionedIndexConfiguration));
   }
 
   @Override
@@ -112,7 +112,7 @@ public class AliasedCollectionIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull List<String> collections) {
-    collections.forEach(collection -> indexByCollection(index, collection));
+    collections.forEach(collection -> indexByPartition(index, collection));
   }
 
   @Override

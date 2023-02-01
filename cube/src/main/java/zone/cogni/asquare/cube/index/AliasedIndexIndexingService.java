@@ -149,7 +149,7 @@ public class AliasedIndexIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    indexByCollection(index, Collections.singletonList(collection));
+    indexByPartition(index, Collections.singletonList(collection));
   }
 
   @Override

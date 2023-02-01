@@ -137,7 +137,7 @@ public class StaticIndexIndexingService
     PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
 
     clearIndex(partitionedIndexConfiguration, clear);
-    indexByCollection(index, getValidPartitionNames(partitionedIndexConfiguration));
+    indexByPartition(index, getValidPartitionNames(partitionedIndexConfiguration));
   }
 
   @Nonnull
@@ -182,7 +182,7 @@ public class StaticIndexIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    indexByCollection(index, Collections.singletonList(collection));
+    indexByPartition(index, Collections.singletonList(collection));
   }
 
   @Override
