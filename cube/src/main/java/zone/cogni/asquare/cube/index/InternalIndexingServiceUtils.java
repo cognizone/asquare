@@ -27,18 +27,18 @@ class InternalIndexingServiceUtils {
   private static final Logger log = LoggerFactory.getLogger(InternalIndexingServiceUtils.class);
 
   @Nonnull
-  static List<String> getValidPartitionNames(@Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration) {
-    return partitionedIndexConfiguration.getValidPartitions()
-                                        .stream()
-                                        .map(PartitionConfiguration::getName)
-                                        .collect(Collectors.toList());
+  static List<String> getValidPartitionNames(@Nonnull IndexingConfiguration.Index indexConfiguration) {
+    return indexConfiguration.getValidPartitions()
+                             .stream()
+                             .map(IndexingConfiguration.Partition::getName)
+                             .collect(Collectors.toList());
   }
 
   @Nonnull
-  static PartitionedIndexConfiguration getIndexFolder(@Nonnull IndexingServiceContext context,
-                                                      @Nonnull String index) {
+  static IndexingConfiguration.Index getIndexFolder(@Nonnull IndexingServiceContext context,
+                                                    @Nonnull String index) {
     return context.getIndexFolderService()
-                  .getPartitionedIndexConfigurations()
+                  .getIndexConfigurations()
                   .stream()
                   .filter(indexFolder -> indexFolder.getName().equals(index))
                   .findFirst()
@@ -47,7 +47,7 @@ class InternalIndexingServiceUtils {
 
   @Nonnull
   static List<String> getPartitionUris(@Nonnull IndexingServiceContext context,
-                                       @Nonnull PartitionConfiguration partitionConfiguration) {
+                                       @Nonnull IndexingConfiguration.Partition partitionConfiguration) {
     SpelService spelService = context.getSpelService();
     PaginatedQuery paginatedQuery = context.getPaginatedQuery();
     RdfStoreService rdfStore = context.getRdfStore();
@@ -62,7 +62,7 @@ class InternalIndexingServiceUtils {
   }
 
   static void indexSynchronously(@Nonnull IndexingServiceContext indexingServiceContext,
-                                 @Nonnull PartitionConfiguration partitionConfiguration,
+                                 @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                  @Nonnull String indexToFill,
                                  @Nonnull List<String> uris) {
     List<String> constructQueryResources = partitionConfiguration.getConstructQueries();
@@ -157,7 +157,7 @@ class InternalIndexingServiceUtils {
    * @return list of uris which will be indexed
    */
   static List<String> getIndexableUris(IndexingServiceContext context,
-                                       PartitionConfiguration partitionConfiguration,
+                                       IndexingConfiguration.Partition partitionConfiguration,
                                        List<String> uris) {
     if (!shouldCheckForIndexableUris(partitionConfiguration))
       return uris;
@@ -177,14 +177,14 @@ class InternalIndexingServiceUtils {
     return indexableUris;
   }
 
-  private static boolean shouldCheckForIndexableUris(@Nonnull PartitionConfiguration partitionConfiguration) {
+  private static boolean shouldCheckForIndexableUris(@Nonnull IndexingConfiguration.Partition partitionConfiguration) {
     return partitionConfiguration.getSelectQueries()
                                  .stream()
                                  .anyMatch(query -> query.contains("#{[uriFilter]}"));
   }
 
   private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
-                                                  @Nonnull PartitionConfiguration partitionConfiguration,
+                                                  @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                                   @Nonnull List<String> uris) {
     return partitionConfiguration.getSelectQueries()
                                  .stream()
@@ -219,9 +219,9 @@ class InternalIndexingServiceUtils {
       return;
     }
 
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(context, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(context, index);
 
-    context.getElasticStore().createIndex(index, partitionedIndexConfiguration.getSettingsJson());
+    context.getElasticStore().createIndex(index, indexConfiguration.getSettingsJson());
   }
 
   private static boolean existsIndex(IndexingServiceContext context, String index) {

@@ -46,7 +46,7 @@ public class AliasedCollectionIndexingService
    */
   private final Map<String, String> queryTemplateParameters;
 
-  private final IndexFolderService indexFolderService;
+  private final IndexingConfiguration indexingConfiguration;
   private final IndexSwapService indexSwapService;
 
   private final ElasticsearchMetadataService elasticsearchMetadataService;
@@ -58,7 +58,7 @@ public class AliasedCollectionIndexingService
                                           @Nonnull Elasticsearch7Store elasticStore,
                                           @Nonnull ModelToJsonConversion modelToJsonConversion,
                                           @Nonnull Map<String, String> queryTemplateParameters,
-                                          @Nonnull IndexFolderService indexFolderService,
+                                          @Nonnull IndexingConfiguration indexingConfiguration,
                                           @Nonnull IndexSwapService indexSwapService) {
     this.spelService = spelService;
     this.paginatedQuery = paginatedQuery;
@@ -67,7 +67,7 @@ public class AliasedCollectionIndexingService
     this.elasticStore = elasticStore;
     this.modelToJsonConversion = modelToJsonConversion;
     this.queryTemplateParameters = queryTemplateParameters;
-    this.indexFolderService = indexFolderService;
+    this.indexingConfiguration = indexingConfiguration;
     this.indexSwapService = indexSwapService;
     this.elasticsearchMetadataService = new ElasticsearchMetadataService(new ElasticsearchMetadata.Configuration());
   }
@@ -80,7 +80,7 @@ public class AliasedCollectionIndexingService
   @Override
   @Nonnull
   public List<String> getIndexNames() {
-    return indexFolderService.getValidIndexNames();
+    return indexingConfiguration.getValidIndexNames();
   }
 
   @Override
@@ -96,17 +96,17 @@ public class AliasedCollectionIndexingService
 
   @Override
   public void indexByName(@Nonnull String index, boolean clear) {
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
 
     if (clear) log.info("(indexByName) no clear needed, will swap later");
-    indexByPartition(index, getValidPartitionNames(partitionedIndexConfiguration));
+    indexByPartition(index, getValidPartitionNames(indexConfiguration));
   }
 
   @Override
   @Nonnull
   public List<String> getCollectionNames(@Nonnull String index) {
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
-    return getValidPartitionNames(partitionedIndexConfiguration);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    return getValidPartitionNames(indexConfiguration);
   }
 
   @Override
@@ -118,20 +118,20 @@ public class AliasedCollectionIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
-    indexByCollection(partitionedIndexConfiguration, collection);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    indexByCollection(indexConfiguration, collection);
   }
 
   /**
-   * @param partitionedIndexConfiguration
-   * @param collectionName                is index prefix name where all documents of a collection will be stored
+   * @param indexConfiguration
+   * @param collectionName     is index prefix name where all documents of a collection will be stored
    */
-  private void indexByCollection(@Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration,
+  private void indexByCollection(@Nonnull IndexingConfiguration.Index indexConfiguration,
                                  @Nonnull String collectionName) {
-    log.info("(indexByCollection) index '{}' and collection: {}", partitionedIndexConfiguration.getName(), collectionName);
+    log.info("(indexByCollection) index '{}' and collection: {}", indexConfiguration.getName(), collectionName);
 
     // get swap state information: input for indexing of collection
-    String aliasName = partitionedIndexConfiguration.getName();
+    String aliasName = indexConfiguration.getName();
     IndexSwapState indexSwapState = indexSwapService.getState(aliasName, collectionName);
 
     // log missing index
@@ -141,10 +141,10 @@ public class AliasedCollectionIndexingService
 
     // create new index
     elasticStore.createIndex(indexSwapState.getNewIndexName(),
-                             partitionedIndexConfiguration.getSettingsJson());
+                             indexConfiguration.getSettingsJson());
 
     // get callables to run
-    PartitionConfiguration partitionConfiguration = partitionedIndexConfiguration.getValidPartition(collectionName);
+    IndexingConfiguration.Partition partitionConfiguration = indexConfiguration.getValidPartition(collectionName);
     List<Callable<String>> callables = getCallables(indexSwapState.getNewIndexName(), partitionConfiguration);
 
     // run
@@ -162,7 +162,7 @@ public class AliasedCollectionIndexingService
    */
   @Nonnull
   private List<Callable<String>> getCallables(@Nonnull String indexToFill,
-                                              @Nonnull PartitionConfiguration partitionConfiguration) {
+                                              @Nonnull IndexingConfiguration.Partition partitionConfiguration) {
     log.info("(getCallables) for index '{}' and collection '{}'", indexToFill, partitionConfiguration.getName());
     List<String> collectionConstructQueries = partitionConfiguration.getConstructQueries();
     List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
@@ -233,8 +233,8 @@ public class AliasedCollectionIndexingService
   }
 
   @Override
-  protected IndexFolderService getIndexFolderService() {
-    return indexFolderService;
+  protected IndexingConfiguration getIndexFolderService() {
+    return indexingConfiguration;
   }
 
   @Override

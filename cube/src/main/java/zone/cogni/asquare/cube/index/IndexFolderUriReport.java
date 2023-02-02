@@ -10,15 +10,15 @@ import java.util.List;
  */
 class IndexFolderUriReport {
 
-  private final PartitionedIndexConfiguration partitionedIndexConfiguration;
+  private final IndexingConfiguration.Index indexConfiguration;
   private final List<CollectionFolderUriReport> collectionFolderUriReports = new ArrayList<>();
 
-  public IndexFolderUriReport(PartitionedIndexConfiguration partitionedIndexConfiguration) {
-    this.partitionedIndexConfiguration = partitionedIndexConfiguration;
+  public IndexFolderUriReport(IndexingConfiguration.Index indexConfiguration) {
+    this.indexConfiguration = indexConfiguration;
   }
 
-  public PartitionedIndexConfiguration getIndexFolder() {
-    return partitionedIndexConfiguration;
+  public IndexingConfiguration.Index getIndexFolder() {
+    return indexConfiguration;
   }
 
   public boolean isEmpty() {
@@ -35,7 +35,7 @@ class IndexFolderUriReport {
     return Collections.unmodifiableList(collectionFolderUriReports);
   }
 
-  public void addCollection(PartitionConfiguration partitionConfiguration, List<String> collectionUris) {
+  public void addCollection(IndexingConfiguration.Partition partitionConfiguration, List<String> collectionUris) {
     collectionFolderUriReports.add(
             new CollectionFolderUriReport(this, partitionConfiguration, collectionUris)
     );
@@ -54,7 +54,7 @@ class IndexFolderUriReport {
     if (isEmpty())
       throw new RuntimeException("please check for emptiness before invoking this method");
 
-    IndexFolderUriReport extractedSubset = new IndexFolderUriReport(partitionedIndexConfiguration);
+    IndexFolderUriReport extractedSubset = new IndexFolderUriReport(indexConfiguration);
 
     extractSubset(extractedSubset, size);
 
@@ -98,11 +98,11 @@ class IndexFolderUriReport {
   static class CollectionFolderUriReport {
 
     private final IndexFolderUriReport indexFolderUriReport;
-    private final PartitionConfiguration partitionConfiguration;
+    private final IndexingConfiguration.Partition partitionConfiguration;
     private final List<String> uris;
 
     public CollectionFolderUriReport(IndexFolderUriReport indexFolderUriReport,
-                                     PartitionConfiguration partitionConfiguration,
+                                     IndexingConfiguration.Partition partitionConfiguration,
                                      List<String> uris) {
       this.indexFolderUriReport = indexFolderUriReport;
       this.partitionConfiguration = partitionConfiguration;
@@ -113,7 +113,7 @@ class IndexFolderUriReport {
       return indexFolderUriReport;
     }
 
-    public PartitionConfiguration getCollectionFolder() {
+    public IndexingConfiguration.Partition getCollectionFolder() {
       return partitionConfiguration;
     }
 

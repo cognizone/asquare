@@ -35,7 +35,7 @@ public class AliasedIndexIndexingService
 
   private static final Logger log = LoggerFactory.getLogger(AliasedIndexIndexingService.class);
 
-  private final IndexFolderService indexFolderService;
+  private final IndexingConfiguration indexingConfiguration;
 
   private final SpelService spelService;
   private final PaginatedQuery paginatedQuery;
@@ -54,7 +54,7 @@ public class AliasedIndexIndexingService
 
   private final ElasticsearchMetadataService elasticsearchMetadataService;
 
-  public AliasedIndexIndexingService(@Nonnull IndexFolderService indexFolderService,
+  public AliasedIndexIndexingService(@Nonnull IndexingConfiguration indexingConfiguration,
                                      @Nonnull SpelService spelService,
                                      @Nonnull PaginatedQuery paginatedQuery,
                                      @Nonnull MonitoredPool indexMonitoredPool,
@@ -63,7 +63,7 @@ public class AliasedIndexIndexingService
                                      @Nonnull ModelToJsonConversion modelToJsonConversion,
                                      @Nonnull Map<String, String> queryTemplateParameters,
                                      @Nonnull IndexSwapService indexSwapService) {
-    this.indexFolderService = indexFolderService;
+    this.indexingConfiguration = indexingConfiguration;
     this.spelService = spelService;
     this.paginatedQuery = paginatedQuery;
     this.indexMonitoredPool = indexMonitoredPool;
@@ -83,7 +83,7 @@ public class AliasedIndexIndexingService
   @Override
   @Nonnull
   public List<String> getIndexNames() {
-    return indexFolderService.getValidIndexNames();
+    return indexingConfiguration.getValidIndexNames();
   }
 
   @Override
@@ -101,10 +101,10 @@ public class AliasedIndexIndexingService
   public void indexByName(@Nonnull String index, boolean clear) {
     if (clear) log.info("(indexByName) '{}' no clear needed, will swap later", index);
 
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
 
     // get swap state information
-    String aliasName = partitionedIndexConfiguration.getName();
+    String aliasName = indexConfiguration.getName();
     IndexSwapState indexSwapState = indexSwapService.getState(aliasName, aliasName);
 
     // log missing index
@@ -115,10 +115,10 @@ public class AliasedIndexIndexingService
     // create new index
     String indexToFill = indexSwapState.getNewIndexName();
     elasticStore.createIndex(indexToFill,
-                             partitionedIndexConfiguration.getSettingsJson());
+                             indexConfiguration.getSettingsJson());
 
     // TODO improve -> think about how to use state
-    indexByCollection(indexToFill, partitionedIndexConfiguration, getValidPartitionNames(partitionedIndexConfiguration));
+    indexByCollection(indexToFill, indexConfiguration, getValidPartitionNames(indexConfiguration));
 
     // swap and delete old index
     indexSwapService.swap(indexSwapState);
@@ -142,8 +142,8 @@ public class AliasedIndexIndexingService
   @Nonnull
   @Override
   public List<String> getCollectionNames(@Nonnull String index) {
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
-    return getValidPartitionNames(partitionedIndexConfiguration);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    return getValidPartitionNames(indexConfiguration);
   }
 
   @Override
@@ -155,21 +155,21 @@ public class AliasedIndexIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull List<String> collections) {
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
 
-    ElasticsearchMetadata.Index actualIndex = indexSwapService.getIndexForAlias(partitionedIndexConfiguration.getName());
+    ElasticsearchMetadata.Index actualIndex = indexSwapService.getIndexForAlias(indexConfiguration.getName());
     String indexToFill = actualIndex.getName();
-    indexByCollection(indexToFill, partitionedIndexConfiguration, collections);
+    indexByCollection(indexToFill, indexConfiguration, collections);
   }
 
   private void indexByCollection(@Nonnull String indexToFill,
-                                 @Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration,
+                                 @Nonnull IndexingConfiguration.Index indexConfiguration,
                                  @Nonnull List<String> collections) {
     log.info(
             "(indexByCollection) index '{}' (alias {}) and collections: {}",
-            indexToFill, partitionedIndexConfiguration.getName(), String.join(", ", collections)
+            indexToFill, indexConfiguration.getName(), String.join(", ", collections)
     );
-    List<Callable<String>> callables = getCallables(indexToFill, partitionedIndexConfiguration, collections).collect(Collectors.toList());
+    List<Callable<String>> callables = getCallables(indexToFill, indexConfiguration, collections).collect(Collectors.toList());
 
     log.info("(indexByCollection) {} uris found", callables.size());
     indexMonitoredPool.invoke(callables);
@@ -178,35 +178,35 @@ public class AliasedIndexIndexingService
   /**
    * Returns a stream of <code>Callable</code>s for a set of collections in an index.
    *
-   * @param indexToFill                   index being filled, can be active index (in case of collection update) or a new index
-   * @param partitionedIndexConfiguration of index
-   * @param collections                   set of collections, each of them being a collection object urisgeing loaded in index
+   * @param indexToFill        index being filled, can be active index (in case of collection update) or a new index
+   * @param indexConfiguration of index
+   * @param collections        set of collections, each of them being a collection object urisgeing loaded in index
    * @return stream of <code>Callable</code>s for a set of collections in an index
    */
   @Nonnull
   private Stream<Callable<String>> getCallables(@Nonnull String indexToFill,
-                                                @Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration,
+                                                @Nonnull IndexingConfiguration.Index indexConfiguration,
                                                 @Nonnull List<String> collections) {
     return collections.stream()
-                      .map(partitionedIndexConfiguration::getValidPartition)
-                      .flatMap(collectionFolder -> getCallables(indexToFill, partitionedIndexConfiguration, collectionFolder));
+                      .map(indexConfiguration::getValidPartition)
+                      .flatMap(collectionFolder -> getCallables(indexToFill, indexConfiguration, collectionFolder));
   }
 
   /**
    * Returns stream of <code>Callable</code>s for a single collection in an index.
    *
    * @param indexToFill                   index being filled, can be active index (in case of collection update) or a new index
-   * @param partitionedIndexConfiguration for the knowing alias, which is identical to <code>name</code> (only used in logging)
+   * @param indexConfiguration for the knowing alias, which is identical to <code>name</code> (only used in logging)
    * @param partitionConfiguration        of object uris being loaded in index
    * @return stream of <code>Callable</code>s for a single collection in an index
    */
   @Nonnull
   private Stream<Callable<String>> getCallables(@Nonnull String indexToFill,
-                                                @Nonnull PartitionedIndexConfiguration partitionedIndexConfiguration,
-                                                @Nonnull PartitionConfiguration partitionConfiguration) {
+                                                @Nonnull IndexingConfiguration.Index indexConfiguration,
+                                                @Nonnull IndexingConfiguration.Partition partitionConfiguration) {
     log.info(
             "(getCallables) for index '{}' (alias {}) and collection '{}'",
-            indexToFill, partitionedIndexConfiguration.getName(), partitionConfiguration.getName()
+            indexToFill, indexConfiguration.getName(), partitionConfiguration.getName()
     );
 
     List<String> constructQueries = partitionConfiguration.getConstructQueries();
@@ -256,10 +256,10 @@ public class AliasedIndexIndexingService
     }
 
     // get index configuration
-    PartitionedIndexConfiguration partitionedIndexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
 
     // get swap state information
-    String aliasName = partitionedIndexConfiguration.getName();
+    String aliasName = indexConfiguration.getName();
 
     // swap information
     // TODO this is not going to be fast enough... as a proof of concept it should work
@@ -271,7 +271,7 @@ public class AliasedIndexIndexingService
       throw new RuntimeException("no active index found for alias '" + indexSwapState.getAliasName() + "'");
 
     // do index
-    PartitionConfiguration partitionConfiguration = partitionedIndexConfiguration.getValidPartition(partition);
+    IndexingConfiguration.Partition partitionConfiguration = indexConfiguration.getValidPartition(partition);
     String activeIndex = indexSwapState.getIndexMatchingAliasAndPrefix().getName();
     indexSynchronously(this, partitionConfiguration, activeIndex, uris);
   }
@@ -292,8 +292,8 @@ public class AliasedIndexIndexingService
   }
 
   @Override
-  protected IndexFolderService getIndexFolderService() {
-    return indexFolderService;
+  protected IndexingConfiguration getIndexFolderService() {
+    return indexingConfiguration;
   }
 
   @Override

@@ -15,7 +15,7 @@ abstract class IndexingServiceContext implements FolderBasedIndexingService {
 
   protected abstract PaginatedQuery getPaginatedQuery();
 
-  protected abstract IndexFolderService getIndexFolderService();
+  protected abstract IndexingConfiguration getIndexFolderService();
 
   protected abstract RdfStoreService getRdfStore();
 
