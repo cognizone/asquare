@@ -11,6 +11,8 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
@@ -22,6 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SparqlSelectToJson {
+
+  private static final Logger log = LoggerFactory.getLogger(SparqlSelectToJson.class);
 
   private final List<Query> queries;
 
@@ -53,10 +57,16 @@ public class SparqlSelectToJson {
   }
 
   private void addQueryData(ObjectNode facetNode, RdfStoreService rdfStore, Query query, QuerySolutionMap querySolutionMap) {
-    List<QuerySolution> results = // ????
-      rdfStore.executeSelectQuery(query, querySolutionMap, resultSet -> Streams.stream(resultSet)
-                                                                               .collect(Collectors.toList()));
-    if (results.isEmpty()) return;
+    List<QuerySolution> results = null;
+    try {
+      results = rdfStore.executeSelectQuery(query, querySolutionMap, resultSet -> Streams.stream(resultSet)
+                                                                                         .collect(Collectors.toList()));
+    }
+    catch (Exception e) {
+      log.warn("Error executing facet query, more information in debug log. Continuing with next query.");
+    }
+
+    if (results == null || results.isEmpty()) return;
 
     List<String> queryVariableNames = query.getResultVars();
     if (queryVariableNames.size() <= 1)
