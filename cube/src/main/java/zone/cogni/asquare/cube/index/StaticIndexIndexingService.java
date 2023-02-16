@@ -21,7 +21,14 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.*;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getCallableForUri;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexFolder;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexMethodForUri;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getIndexableUris;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getPartitionUris;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUrisFromQuery;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidPartitionNames;
+import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSynchronously;
 
 /**
  * Here is an expected folder structure for indexing:
@@ -53,7 +60,7 @@ public class StaticIndexIndexingService
 
   private final int indexBlockSize;
 
-  private final IndexFolderService indexFolderService;
+  private final IndexingConfiguration indexingConfiguration;
 
   private final SpelService spelService;
   private final PaginatedQuery paginatedQuery;
@@ -76,11 +83,11 @@ public class StaticIndexIndexingService
                                     @Nonnull RdfStoreService rdfStore,
                                     @Nonnull Elasticsearch7Store elasticStore,
                                     @Nonnull ModelToJsonConversion modelToJsonConversion,
-                                    @Nonnull IndexFolderService indexFolderService,
+                                    @Nonnull IndexingConfiguration indexingConfiguration,
                                     @Nonnull Map<String, String> queryTemplateParameters) {
     this(20000,
          spelService, paginatedQuery, indexMonitoredPool, rdfStore, elasticStore,
-         modelToJsonConversion, indexFolderService, queryTemplateParameters);
+         modelToJsonConversion, indexingConfiguration, queryTemplateParameters);
   }
 
   public StaticIndexIndexingService(int indexBlockSize,
@@ -90,10 +97,10 @@ public class StaticIndexIndexingService
                                     @Nonnull RdfStoreService rdfStore,
                                     @Nonnull Elasticsearch7Store elasticStore,
                                     @Nonnull ModelToJsonConversion modelToJsonConversion,
-                                    @Nonnull IndexFolderService indexFolderService,
+                                    @Nonnull IndexingConfiguration indexingConfiguration,
                                     @Nonnull Map<String, String> queryTemplateParameters) {
     this.indexBlockSize = indexBlockSize;
-    this.indexFolderService = indexFolderService;
+    this.indexingConfiguration = indexingConfiguration;
     this.queryTemplateParameters = queryTemplateParameters;
     this.spelService = spelService;
     this.indexMonitoredPool = indexMonitoredPool;
@@ -112,7 +119,7 @@ public class StaticIndexIndexingService
   @Override
   @Nonnull
   public List<String> getIndexNames() {
-    return indexFolderService.getValidIndexNames();
+    return indexingConfiguration.getValidIndexNames();
   }
 
   @Override
@@ -127,47 +134,47 @@ public class StaticIndexIndexingService
 
   @Override
   public void indexByName(@Nonnull String index, boolean clear) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
 
-    clearIndex(indexFolder, clear);
-    indexByCollection(index, getValidCollectionFolderNames(indexFolder));
+    clearIndex(indexConfiguration, clear);
+    indexByPartition(index, getValidPartitionNames(indexConfiguration));
   }
 
   @Nonnull
   @Override
   public List<String> getCollectionNames(@Nonnull String index) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
-    return getValidCollectionFolderNames(indexFolder);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    return getValidPartitionNames(indexConfiguration);
   }
 
   /**
    * Deletes and recreates <code>index</code> if <code>clear</code> is <code>true</code>.
    *
-   * @param indexFolder of index to be deleted and created
-   * @param clear       if <code>false</code> this method does nothing
+   * @param indexConfiguration of index to be deleted and created
+   * @param clear              if <code>false</code> this method does nothing
    */
-  private void clearIndex(@Nonnull IndexFolder indexFolder, boolean clear) {
+  private void clearIndex(@Nonnull IndexingConfiguration.Index indexConfiguration, boolean clear) {
     if (!clear) return;
 
-    log.info("(clearIndex) '{}' started", indexFolder.getName());
+    log.info("(clearIndex) '{}' started", indexConfiguration.getName());
 
-    deleteIndex(indexFolder);
-    ensureIndexExists(indexFolder.getName());
-    log.info("(clearIndex) '{}' done", indexFolder.getName());
+    deleteIndex(indexConfiguration);
+    ensureIndexExists(indexConfiguration.getName());
+    log.info("(clearIndex) '{}' done", indexConfiguration.getName());
   }
 
   /**
    * Deletes index in <code>elasticStore</code>.
    *
-   * @param indexFolder of index
+   * @param indexConfiguration of index
    */
-  private void deleteIndex(@Nonnull IndexFolder indexFolder) {
+  private void deleteIndex(@Nonnull IndexingConfiguration.Index indexConfiguration) {
     try {
-      elasticStore.deleteIndex(indexFolder.getName());
+      elasticStore.deleteIndex(indexConfiguration.getName());
     }
     catch (RuntimeException e) {
       // missing index?
-      log.warn(".. delete index '{}' failed", indexFolder.getName(), e);
+      log.warn(".. delete index '{}' failed", indexConfiguration.getName(), e);
       throw e;
     }
   }
@@ -175,21 +182,21 @@ public class StaticIndexIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    indexByCollection(index, Collections.singletonList(collection));
+    indexByPartition(index, Collections.singletonList(collection));
   }
 
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull List<String> collections) {
-    IndexFolder indexFolder = getIndexFolder(this, index);
-    indexByCollection(indexFolder, collections);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    indexByCollection(indexConfiguration, collections);
   }
 
-  private void indexByCollection(@Nonnull IndexFolder indexFolder,
+  private void indexByCollection(@Nonnull IndexingConfiguration.Index indexConfiguration,
                                  @Nonnull List<String> collections) {
-    log.info("(indexByCollection) index '{}' and collections: {}", indexFolder.getName(), String.join(", ", collections));
+    log.info("(indexByCollection) index '{}' and collections: {}", indexConfiguration.getName(), String.join(", ", collections));
 
-    IndexFolderUriReport uriReport = loadUriReport(indexFolder, collections);
+    IndexFolderUriReport uriReport = loadUriReport(indexConfiguration, collections);
     int originalUriReportSize = uriReport.getSize();
     log.info("(indexByCollection) loaded uri report, found {} uris", originalUriReportSize);
 
@@ -207,15 +214,15 @@ public class StaticIndexIndexingService
   }
 
   @Nonnull
-  private IndexFolderUriReport loadUriReport(@Nonnull IndexFolder indexFolder,
+  private IndexFolderUriReport loadUriReport(@Nonnull IndexingConfiguration.Index indexConfiguration,
                                              @Nonnull List<String> collections) {
-    IndexFolderUriReport result = new IndexFolderUriReport(indexFolder);
+    IndexFolderUriReport result = new IndexFolderUriReport(indexConfiguration);
 
     collections.stream()
-               .map(indexFolder::getValidCollectionFolder)
+               .map(indexConfiguration::getValidPartition)
                .forEach(collectionFolder -> {
                  result.addCollection(collectionFolder,
-                                      getCollectionUris(this, collectionFolder));
+                                      getPartitionUris(this, collectionFolder));
                });
 
     return result;
@@ -238,26 +245,27 @@ public class StaticIndexIndexingService
    */
   @Nonnull
   private Stream<Callable<String>> getCallables(@Nonnull CollectionFolderUriReport collectionFolderUriReport) {
-    IndexFolder indexFolder = collectionFolderUriReport.getIndexFolderUriReport().getIndexFolder();
-    CollectionFolder collectionFolder = collectionFolderUriReport.getCollectionFolder();
+    IndexingConfiguration.Index indexConfiguration = collectionFolderUriReport.getIndexFolderUriReport()
+                                                                              .getIndexFolder();
+    IndexingConfiguration.Partition partitionConfiguration = collectionFolderUriReport.getCollectionFolder();
 
-    log.info("(getCallables) for index '{}' and collection '{}'", indexFolder.getName(), collectionFolder.getName());
+    log.info("(getCallables) for index '{}' and collection '{}'", indexConfiguration.getName(), partitionConfiguration.getName());
 
-    List<String> collectionConstructQueries = collectionFolder.getConstructQueries();
-    List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
+    List<String> collectionConstructQueries = partitionConfiguration.getConstructQueries();
+    List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
     return collectionFolderUriReport
             .getUris()
             .stream()
-            .map(uri -> getCallable(getIndexMethod(indexFolder, facetQueryResources, uri),
+            .map(uri -> getCallable(getIndexMethod(indexConfiguration, facetQueryResources, uri),
                                     collectionConstructQueries,
                                     uri));
   }
 
   @Nonnull
-  private IndexMethod getIndexMethod(@Nonnull IndexFolder indexFolder,
+  private IndexMethod getIndexMethod(@Nonnull IndexingConfiguration.Index indexConfiguration,
                                      @Nonnull List<Resource> facetQueryResources,
                                      @Nonnull String uri) {
-    return getIndexMethodForUri(this, indexFolder.getName(), facetQueryResources, uri);
+    return getIndexMethodForUri(this, indexConfiguration.getName(), facetQueryResources, uri);
   }
 
   @Nonnull
@@ -269,26 +277,26 @@ public class StaticIndexIndexingService
 
   @Override
   public void indexUrisFromQuery(@Nonnull String index,
-                                 @Nonnull String collection,
+                                 @Nonnull String partition,
                                  @Nonnull String query) {
     log.info("(indexUrisFromQuery) started");
 
     List<String> uris = getUrisFromQuery(this, query);
     log.info("(indexUrisFromQuery) {} uris found", uris.size());
 
-    indexUris(index, collection, uris);
+    indexUris(index, partition, uris);
     log.info("(indexUrisFromQuery) done");
   }
 
   @Override
   public void indexUris(@Nonnull String index,
-                        @Nonnull String collection,
+                        @Nonnull String partition,
                         @Nonnull List<String> uris) {
     // get index and collection folder
-    IndexFolder indexFolder = getIndexFolder(this, index);
-    CollectionFolder collectionFolder = indexFolder.getValidCollectionFolder(collection);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Partition partitionConfiguration = indexConfiguration.getValidPartition(partition);
 
-    List<String> indexableUris = getIndexableUris(this, collectionFolder, uris);
+    List<String> indexableUris = getIndexableUris(this, partitionConfiguration, uris);
 
     if (indexableUris.size() > 10) {
       log.warn("Method should probably not be used when passing in too many uris." +
@@ -297,7 +305,7 @@ public class StaticIndexIndexingService
     }
 
     // index uris
-    indexSynchronously(this, collectionFolder, indexFolder.getName(), indexableUris);
+    indexSynchronously(this, partitionConfiguration, indexConfiguration.getName(), indexableUris);
   }
 
   @Override
@@ -316,8 +324,8 @@ public class StaticIndexIndexingService
   }
 
   @Override
-  protected IndexFolderService getIndexFolderService() {
-    return indexFolderService;
+  protected IndexingConfiguration getIndexFolderService() {
+    return indexingConfiguration;
   }
 
   @Override

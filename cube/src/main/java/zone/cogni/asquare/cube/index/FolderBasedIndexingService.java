@@ -47,39 +47,53 @@ public interface FolderBasedIndexingService {
   @Nonnull
   List<String> getCollectionNames(@Nonnull String index);
 
+  default List<String> getPartitionNames(@Nonnull String index) {
+    return getCollectionNames(index);
+  }
+
+  @Deprecated
   void indexByCollection(@Nonnull String index,
                          @Nonnull List<String> collections);
 
+  default void indexByPartition(@Nonnull String index,
+                                @Nonnull List<String> partitions) {
+    indexByCollection(index, partitions);
+  }
+
+  @Deprecated
   void indexByCollection(@Nonnull String index,
                          @Nonnull String collection);
+
+  default void indexByPartition(@Nonnull String index,
+                                @Nonnull String partition) {
+    indexByCollection(index, partition);
+  }
 
   /**
    * Currently not optimized for big lists of uris.
    * All uris are processed synchronously and one by one.
    *
-   * @param index      being loaded
-   * @param collection of object uris being loaded in index
-   * @param query      to run, returns uris which much be indexed
+   * @param index     being loaded
+   * @param partition of object uris being loaded in index
+   * @param query     to run, returns uris which much be indexed
    */
-
   void indexUrisFromQuery(@Nonnull String index,
-                          @Nonnull String collection,
+                          @Nonnull String partition,
                           @Nonnull String query);
 
   /**
    * Currently not optimized for big lists of uris.
    * All uris are processed synchronously and one by one.
    *
-   * @param index      being loaded
-   * @param collection of object uris being loaded in index
-   * @param uris       being indexed
+   * @param index     being loaded
+   * @param partition of object uris being loaded in index
+   * @param uris      being indexed
    */
   void indexUris(@Nonnull String index,
-                 @Nonnull String collection,
+                 @Nonnull String partition,
                  @Nonnull List<String> uris);
 
   /**
-   *
    *
    */
   void ensureIndexExists(@Nonnull String index);

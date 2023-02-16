@@ -27,18 +27,18 @@ class InternalIndexingServiceUtils {
   private static final Logger log = LoggerFactory.getLogger(InternalIndexingServiceUtils.class);
 
   @Nonnull
-  static List<String> getValidCollectionFolderNames(@Nonnull IndexFolder indexFolder) {
-    return indexFolder.getValidCollectionFolders()
-                      .stream()
-                      .map(CollectionFolder::getName)
-                      .collect(Collectors.toList());
+  static List<String> getValidPartitionNames(@Nonnull IndexingConfiguration.Index indexConfiguration) {
+    return indexConfiguration.getValidPartitions()
+                             .stream()
+                             .map(IndexingConfiguration.Partition::getName)
+                             .collect(Collectors.toList());
   }
 
   @Nonnull
-  static IndexFolder getIndexFolder(@Nonnull IndexingServiceContext context,
-                                    @Nonnull String index) {
+  static IndexingConfiguration.Index getIndexFolder(@Nonnull IndexingServiceContext context,
+                                                    @Nonnull String index) {
     return context.getIndexFolderService()
-                  .getIndexFolders()
+                  .getIndexConfigurations()
                   .stream()
                   .filter(indexFolder -> indexFolder.getName().equals(index))
                   .findFirst()
@@ -46,13 +46,13 @@ class InternalIndexingServiceUtils {
   }
 
   @Nonnull
-  static List<String> getCollectionUris(@Nonnull IndexingServiceContext context,
-                                        @Nonnull CollectionFolder collectionFolder) {
+  static List<String> getPartitionUris(@Nonnull IndexingServiceContext context,
+                                       @Nonnull IndexingConfiguration.Partition partitionConfiguration) {
     SpelService spelService = context.getSpelService();
     PaginatedQuery paginatedQuery = context.getPaginatedQuery();
     RdfStoreService rdfStore = context.getRdfStore();
 
-    return collectionFolder
+    return partitionConfiguration
             .getSelectQueries()
             .stream()
             .map(query -> spelService.processTemplate(query, context.getQueryTemplateParameters()))
@@ -62,11 +62,11 @@ class InternalIndexingServiceUtils {
   }
 
   static void indexSynchronously(@Nonnull IndexingServiceContext indexingServiceContext,
-                                 @Nonnull CollectionFolder collectionFolder,
+                                 @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                  @Nonnull String indexToFill,
                                  @Nonnull List<String> uris) {
-    List<String> constructQueryResources = collectionFolder.getConstructQueries();
-    List<Resource> facetQueryResources = collectionFolder.getFacetQueryResources();
+    List<String> constructQueryResources = partitionConfiguration.getConstructQueries();
+    List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
     for (String uri : uris) {
       IndexMethod indexMethod = getIndexMethodForUri(indexingServiceContext, indexToFill, facetQueryResources, uri);
       Supplier<Model> modelSupplier = getModelSupplier(indexingServiceContext, constructQueryResources, uri);
@@ -75,11 +75,11 @@ class InternalIndexingServiceUtils {
   }
 
   /**
-   * Returns <code>IndexMethod</code> instance for selected <code>index</code> and <code>collection</code>
+   * Returns <code>IndexMethod</code> instance for selected <code>index</code> and <code>partition</code>
    *
    * @param context             service which needs an IndexMethod instance
    * @param indexToFill         index being filled
-   * @param facetQueryResources of collection
+   * @param facetQueryResources of partition being indexed
    * @param uri                 of instance being indexed
    * @return <code>IndexMethod</code> instance
    */
@@ -108,20 +108,20 @@ class InternalIndexingServiceUtils {
   @Nonnull
   static Callable<String> getCallableForUri(@Nonnull IndexingServiceContext context,
                                             @Nonnull IndexMethod indexMethod,
-                                            @Nonnull List<String> collectionConstructQueries,
+                                            @Nonnull List<String> partitionConstructQueries,
                                             @Nonnull String uri) {
-    Supplier<Model> modelSupplier = getModelSupplier(context, collectionConstructQueries, uri);
+    Supplier<Model> modelSupplier = getModelSupplier(context, partitionConstructQueries, uri);
     return indexMethod.indexOneCallable(modelSupplier, uri);
   }
 
   @Nonnull
   static Supplier<Model> getModelSupplier(@Nonnull IndexingServiceContext context,
-                                          @Nonnull List<String> collectionConstructQueries,
+                                          @Nonnull List<String> partitionConstructQueries,
                                           @Nonnull String uri) {
     return () -> {
       Map<String, String> createModelMap = getTemplateParameterMap(context, uri);
 
-      return collectionConstructQueries
+      return partitionConstructQueries
               .stream()
               .map(query -> context.getSpelService().processTemplate(query, createModelMap))
               .map(query -> context.getPaginatedQuery().getModel(context.getRdfStore(), query))
@@ -151,22 +151,22 @@ class InternalIndexingServiceUtils {
    * Indexable URIs are URIs which can be indexed.
    * In case URIs are passed which might not need to be indexed this method can filter them out.
    *
-   * @param context          service which needs an IndexMethod instance
-   * @param collectionFolder of collection (in index)
-   * @param uris             candidate uris which might or might not be indexed
+   * @param context                service which needs an IndexMethod instance
+   * @param partitionConfiguration of partition (in index)
+   * @param uris                   candidate uris which might or might not be indexed
    * @return list of uris which will be indexed
    */
   static List<String> getIndexableUris(IndexingServiceContext context,
-                                       CollectionFolder collectionFolder,
+                                       IndexingConfiguration.Partition partitionConfiguration,
                                        List<String> uris) {
-    if (!shouldCheckForIndexableUris(collectionFolder))
+    if (!shouldCheckForIndexableUris(partitionConfiguration))
       return uris;
 
 
     List<List<String>> uriSubLists = Lists.partition(uris, 20);
     List<String> indexableUris =
             uriSubLists.stream()
-                       .map(uriSubList -> selectIndexableUris(context, collectionFolder, uriSubList))
+                       .map(uriSubList -> selectIndexableUris(context, partitionConfiguration, uriSubList))
                        .flatMap(Collection::stream)
                        .collect(Collectors.toList());
 
@@ -177,21 +177,21 @@ class InternalIndexingServiceUtils {
     return indexableUris;
   }
 
-  private static boolean shouldCheckForIndexableUris(@Nonnull CollectionFolder collectionFolder) {
-    return collectionFolder.getSelectQueries()
-                           .stream()
-                           .anyMatch(query -> query.contains("#{[uriFilter]}"));
+  private static boolean shouldCheckForIndexableUris(@Nonnull IndexingConfiguration.Partition partitionConfiguration) {
+    return partitionConfiguration.getSelectQueries()
+                                 .stream()
+                                 .anyMatch(query -> query.contains("#{[uriFilter]}"));
   }
 
   private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
-                                                  @Nonnull CollectionFolder collectionFolder,
+                                                  @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                                   @Nonnull List<String> uris) {
-    return collectionFolder.getSelectQueries()
-                           .stream()
-                           .map(query -> selectIndexableUris(context, query, uris))
-                           .flatMap(Collection::stream)
-                           .distinct()
-                           .collect(Collectors.toList());
+    return partitionConfiguration.getSelectQueries()
+                                 .stream()
+                                 .map(query -> selectIndexableUris(context, query, uris))
+                                 .flatMap(Collection::stream)
+                                 .distinct()
+                                 .collect(Collectors.toList());
   }
 
   private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
@@ -219,13 +219,14 @@ class InternalIndexingServiceUtils {
       return;
     }
 
-    IndexFolder indexFolder = getIndexFolder(context, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(context, index);
 
-    context.getElasticStore().createIndex(index, indexFolder.getSettingsJson());
+    context.getElasticStore().createIndex(index, indexConfiguration.getSettingsJson());
   }
 
   private static boolean existsIndex(IndexingServiceContext context, String index) {
-    ElasticsearchMetadata metadata = context.getElasticsearchMetadataService().getElasticsearchMetadata(context.getElasticStore());
+    ElasticsearchMetadata metadata = context.getElasticsearchMetadataService()
+                                            .getElasticsearchMetadata(context.getElasticStore());
     return metadata.getIndexes()
                    .stream()
                    .map(ElasticsearchMetadata.Index::getName)
