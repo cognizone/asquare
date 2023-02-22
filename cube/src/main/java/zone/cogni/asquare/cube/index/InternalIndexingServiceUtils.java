@@ -7,10 +7,13 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import zone.cogni.asquare.cube.convertor.ModelToJsonConversion;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.SparqlSelectToJson;
 import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
+import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataService;
+import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
 import javax.annotation.Nonnull;
@@ -35,41 +38,49 @@ class InternalIndexingServiceUtils {
   }
 
   @Nonnull
-  static IndexingConfiguration.Index getIndexFolder(@Nonnull IndexingServiceContext context,
+  static IndexingConfiguration.Index getIndexFolder(@Nonnull IndexingConfiguration indexingConfiguration,
                                                     @Nonnull String index) {
-    return context.getIndexFolderService()
-                  .getIndexConfigurations()
-                  .stream()
-                  .filter(indexFolder -> indexFolder.getName().equals(index))
-                  .findFirst()
-                  .orElseThrow(() -> new RuntimeException("cannot find index with name '" + index + "'"));
+    return indexingConfiguration
+            .getIndexConfigurations()
+            .stream()
+            .filter(indexFolder -> indexFolder.getName().equals(index))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("cannot find index with name '" + index + "'"));
   }
 
   @Nonnull
-  static List<String> getPartitionUris(@Nonnull IndexingServiceContext context,
+  static List<String> getPartitionUris(@Nonnull SpelService spelService,
+                                       @Nonnull PaginatedQuery paginatedQuery,
+                                       @Nonnull RdfStoreService rdfStore,
+                                       @Nonnull Map<String, String> queryTemplateParameters,
                                        @Nonnull IndexingConfiguration.Partition partitionConfiguration) {
-    SpelService spelService = context.getSpelService();
-    PaginatedQuery paginatedQuery = context.getPaginatedQuery();
-    RdfStoreService rdfStore = context.getRdfStore();
 
     return partitionConfiguration
             .getSelectQueries()
             .stream()
-            .map(query -> spelService.processTemplate(query, context.getQueryTemplateParameters()))
+            .map(query -> spelService.processTemplate(query, queryTemplateParameters))
             .map(query -> paginatedQuery.select(rdfStore, query))
             .flatMap(queryResult -> paginatedQuery.convertSingleColumnUriToStringList(queryResult).stream())
             .collect(Collectors.toList());
   }
 
-  static void indexSynchronously(@Nonnull IndexingServiceContext indexingServiceContext,
+  static void indexSynchronously(@Nonnull SpelService spelService,
+                                 @Nonnull PaginatedQuery paginatedQuery,
+                                 @Nonnull RdfStoreService rdfStore,
+                                 @Nonnull Elasticsearch7Store elasticStore,
+                                 @Nonnull ModelToJsonConversion modelToJsonConversion,
+                                 @Nonnull Map<String, String> queryTemplateParameters,
                                  @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                  @Nonnull String indexToFill,
                                  @Nonnull List<String> uris) {
     List<String> constructQueryResources = partitionConfiguration.getConstructQueries();
     List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
     for (String uri : uris) {
-      IndexMethod indexMethod = getIndexMethodForUri(indexingServiceContext, indexToFill, facetQueryResources, uri);
-      Supplier<Model> modelSupplier = getModelSupplier(indexingServiceContext, constructQueryResources, uri);
+      IndexMethod indexMethod = getIndexMethodForUri(spelService, paginatedQuery, rdfStore,
+                                                     elasticStore, modelToJsonConversion, queryTemplateParameters,
+                                                     indexToFill, facetQueryResources, uri);
+      Supplier<Model> modelSupplier = getModelSupplier(spelService, paginatedQuery, rdfStore, queryTemplateParameters,
+                                                       constructQueryResources, uri);
       indexMethod.indexOne(modelSupplier, uri, IndexMethod.Configuration.SyncElasticsearch);
     }
   }
@@ -77,27 +88,37 @@ class InternalIndexingServiceUtils {
   /**
    * Returns <code>IndexMethod</code> instance for selected <code>index</code> and <code>partition</code>
    *
-   * @param context             service which needs an IndexMethod instance
-   * @param indexToFill         index being filled
-   * @param facetQueryResources of partition being indexed
-   * @param uri                 of instance being indexed
+   * @param spelService             to be used
+   * @param paginatedQuery          to be used
+   * @param rdfStore                to be used
+   * @param elasticStore            to be used
+   * @param modelToJsonConversion   to be used
+   * @param queryTemplateParameters to be used
+   * @param indexToFill             index being filled
+   * @param facetQueryResources     of partition being indexed
+   * @param uri                     of instance being indexed
    * @return <code>IndexMethod</code> instance
    */
   @Nonnull
-  static IndexMethod getIndexMethodForUri(@Nonnull IndexingServiceContext context,
+  static IndexMethod getIndexMethodForUri(@Nonnull SpelService spelService,
+                                          @Nonnull PaginatedQuery paginatedQuery,
+                                          @Nonnull RdfStoreService rdfStore,
+                                          @Nonnull Elasticsearch7Store elasticStore,
+                                          @Nonnull ModelToJsonConversion modelToJsonConversion,
+                                          @Nonnull Map<String, String> queryTemplateParameters,
                                           @Nonnull String indexToFill,
                                           @Nonnull List<Resource> facetQueryResources,
                                           @Nonnull String uri) {
     // TODO note use of a new instance of SparqlSelectToJson per URI is causing a huge memory usage
     Resource[] queryResources = facetQueryResources.toArray(new Resource[0]);
     SparqlSelectToJson sparqlSelectToJson = new SparqlSelectToJson(queryResources,
-                                                                   context.getSpelService(),
-                                                                   getTemplateParameterMap(context, uri));
-    return new IndexMethod(context.getPaginatedQuery(),
-                           context.getRdfStore(),
-                           context.getModelToJsonConversion(),
+                                                                   spelService,
+                                                                   getTemplateParameterMap(queryTemplateParameters, uri));
+    return new IndexMethod(paginatedQuery,
+                           rdfStore,
+                           modelToJsonConversion,
                            indexToFill,
-                           context.getElasticStore(),
+                           elasticStore,
                            sparqlSelectToJson);
   }
 
@@ -106,44 +127,49 @@ class InternalIndexingServiceUtils {
    * @return Callable instance based on uri
    */
   @Nonnull
-  static Callable<String> getCallableForUri(@Nonnull IndexingServiceContext context,
+  static Callable<String> getCallableForUri(@Nonnull SpelService spelService,
+                                            @Nonnull PaginatedQuery paginatedQuery,
+                                            @Nonnull RdfStoreService rdfStore,
+                                            @Nonnull Map<String, String> queryTemplateParameters,
                                             @Nonnull IndexMethod indexMethod,
                                             @Nonnull List<String> partitionConstructQueries,
                                             @Nonnull String uri) {
-    Supplier<Model> modelSupplier = getModelSupplier(context, partitionConstructQueries, uri);
+    Supplier<Model> modelSupplier = getModelSupplier(spelService, paginatedQuery, rdfStore, queryTemplateParameters,
+                                                     partitionConstructQueries, uri);
     return indexMethod.indexOneCallable(modelSupplier, uri);
   }
 
   @Nonnull
-  static Supplier<Model> getModelSupplier(@Nonnull IndexingServiceContext context,
+  static Supplier<Model> getModelSupplier(@Nonnull SpelService spelService,
+                                          @Nonnull PaginatedQuery paginatedQuery,
+                                          @Nonnull RdfStoreService rdfStore,
+                                          @Nonnull Map<String, String> queryTemplateParameters,
                                           @Nonnull List<String> partitionConstructQueries,
                                           @Nonnull String uri) {
     return () -> {
-      Map<String, String> createModelMap = getTemplateParameterMap(context, uri);
+      Map<String, String> createModelMap = getTemplateParameterMap(queryTemplateParameters, uri);
 
       return partitionConstructQueries
               .stream()
-              .map(query -> context.getSpelService().processTemplate(query, createModelMap))
-              .map(query -> context.getPaginatedQuery().getModel(context.getRdfStore(), query))
+              .map(query -> spelService.processTemplate(query, createModelMap))
+              .map(query -> paginatedQuery.getModel(rdfStore, query))
               .reduce(ModelFactory.createDefaultModel(), Model::add);
     };
   }
 
   @Nonnull
-  static Map<String, String> getTemplateParameterMap(@Nonnull IndexingServiceContext indexingServiceContext,
+  static Map<String, String> getTemplateParameterMap(@Nonnull Map<String, String> queryTemplateParameters,
                                                      @Nonnull String uri) {
-    Map<String, String> queryTemplateParameters = indexingServiceContext.getQueryTemplateParameters();
     Map<String, String> result = new HashMap<>(queryTemplateParameters);
     result.put("uri", uri);
     return result;
   }
 
   @Nonnull
-  static List<String> getUrisFromQuery(@Nonnull IndexingServiceContext context,
+  static List<String> getUrisFromQuery(@Nonnull PaginatedQuery paginatedQuery,
+                                       @Nonnull RdfStoreService rdfStore,
                                        @Nonnull String query) {
-    PaginatedQuery paginatedQuery = context.getPaginatedQuery();
-
-    List<Map<String, RDFNode>> results = paginatedQuery.select(context.getRdfStore(), query);
+    List<Map<String, RDFNode>> results = paginatedQuery.select(rdfStore, query);
     return paginatedQuery.convertSingleColumnUriToStringList(results);
   }
 
@@ -151,12 +177,18 @@ class InternalIndexingServiceUtils {
    * Indexable URIs are URIs which can be indexed.
    * In case URIs are passed which might not need to be indexed this method can filter them out.
    *
-   * @param context                service which needs an IndexMethod instance
-   * @param partitionConfiguration of partition (in index)
-   * @param uris                   candidate uris which might or might not be indexed
+   * @param spelService             to be used
+   * @param paginatedQuery          to be used
+   * @param rdfStore                to be used
+   * @param queryTemplateParameters to be used
+   * @param partitionConfiguration  of partition (in index)
+   * @param uris                    candidate uris which might or might not be indexed
    * @return list of uris which will be indexed
    */
-  static List<String> getIndexableUris(IndexingServiceContext context,
+  static List<String> getIndexableUris(@Nonnull SpelService spelService,
+                                       @Nonnull PaginatedQuery paginatedQuery,
+                                       @Nonnull RdfStoreService rdfStore,
+                                       @Nonnull Map<String, String> queryTemplateParameters,
                                        IndexingConfiguration.Partition partitionConfiguration,
                                        List<String> uris) {
     if (!shouldCheckForIndexableUris(partitionConfiguration))
@@ -166,7 +198,7 @@ class InternalIndexingServiceUtils {
     List<List<String>> uriSubLists = Lists.partition(uris, 20);
     List<String> indexableUris =
             uriSubLists.stream()
-                       .map(uriSubList -> selectIndexableUris(context, partitionConfiguration, uriSubList))
+                       .map(uriSubList -> selectIndexableUris(spelService, paginatedQuery, rdfStore, queryTemplateParameters, partitionConfiguration, uriSubList))
                        .flatMap(Collection::stream)
                        .collect(Collectors.toList());
 
@@ -183,28 +215,34 @@ class InternalIndexingServiceUtils {
                                  .anyMatch(query -> query.contains("#{[uriFilter]}"));
   }
 
-  private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
+  private static List<String> selectIndexableUris(@Nonnull SpelService spelService,
+                                                  @Nonnull PaginatedQuery paginatedQuery,
+                                                  @Nonnull RdfStoreService rdfStore,
+                                                  @Nonnull Map<String, String> queryTemplateParameters,
                                                   @Nonnull IndexingConfiguration.Partition partitionConfiguration,
                                                   @Nonnull List<String> uris) {
     return partitionConfiguration.getSelectQueries()
                                  .stream()
-                                 .map(query -> selectIndexableUris(context, query, uris))
+                                 .map(query -> selectIndexableUris(spelService, paginatedQuery, rdfStore, queryTemplateParameters, query, uris))
                                  .flatMap(Collection::stream)
                                  .distinct()
                                  .collect(Collectors.toList());
   }
 
-  private static List<String> selectIndexableUris(@Nonnull IndexingServiceContext context,
+  private static List<String> selectIndexableUris(@Nonnull SpelService spelService,
+                                                  @Nonnull PaginatedQuery paginatedQuery,
+                                                  @Nonnull RdfStoreService rdfStore,
+                                                  @Nonnull Map<String, String> queryTemplateParameters,
                                                   @Nonnull String templateQuery,
                                                   @Nonnull List<String> uris) {
     // add uriFilter parameter
-    Map<String, String> templateParameterMap = new HashMap<>(context.getQueryTemplateParameters());
+    Map<String, String> templateParameterMap = new HashMap<>(queryTemplateParameters);
     templateParameterMap.put("uriFilter", getUriFilter(uris));
 
     // run query with filter
-    String query = context.getSpelService().processTemplate(templateQuery, templateParameterMap);
-    List<Map<String, RDFNode>> rows = context.getPaginatedQuery().select(context.getRdfStore(), query);
-    return context.getPaginatedQuery().convertSingleColumnUriToStringList(rows);
+    String query = spelService.processTemplate(templateQuery, templateParameterMap);
+    List<Map<String, RDFNode>> rows = paginatedQuery.select(rdfStore, query);
+    return paginatedQuery.convertSingleColumnUriToStringList(rows);
   }
 
   private static String getUriFilter(List<String> uris) {
@@ -214,19 +252,21 @@ class InternalIndexingServiceUtils {
     return "\n\t filter ( ?uri in ( " + inClause + " ) )";
   }
 
-  public static void ensureIndexExists(@Nonnull IndexingServiceContext context, @Nonnull String index) {
-    if (existsIndex(context, index)) {
-      return;
-    }
+  public static void ensureIndexExists(@Nonnull IndexingConfiguration indexingConfiguration,
+                                       @Nonnull ElasticsearchMetadataService elasticsearchMetadataService,
+                                       @Nonnull Elasticsearch7Store elasticStore,
+                                       @Nonnull String index) {
+    if (existsIndex(elasticsearchMetadataService, elasticStore, index)) return;
 
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(context, index);
-
-    context.getElasticStore().createIndex(index, indexConfiguration.getSettingsJson());
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
+    elasticStore.createIndex(index, indexConfiguration.getSettingsJson());
   }
 
-  private static boolean existsIndex(IndexingServiceContext context, String index) {
-    ElasticsearchMetadata metadata = context.getElasticsearchMetadataService()
-                                            .getElasticsearchMetadata(context.getElasticStore());
+  private static boolean existsIndex(@Nonnull ElasticsearchMetadataService elasticsearchMetadataService,
+                                     @Nonnull Elasticsearch7Store elasticStore,
+                                     @Nonnull String index) {
+    ElasticsearchMetadata metadata = elasticsearchMetadataService
+            .getElasticsearchMetadata(elasticStore);
     return metadata.getIndexes()
                    .stream()
                    .map(ElasticsearchMetadata.Index::getName)

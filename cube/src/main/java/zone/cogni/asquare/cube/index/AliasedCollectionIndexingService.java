@@ -27,8 +27,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getPart
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getUrisFromQuery;
 import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.getValidPartitionNames;
 
-public class AliasedCollectionIndexingService
-        extends IndexingServiceContext {
+public class AliasedCollectionIndexingService implements FolderBasedIndexingService {
 
   private static final Logger log = LoggerFactory.getLogger(AliasedCollectionIndexingService.class);
 
@@ -96,7 +95,7 @@ public class AliasedCollectionIndexingService
 
   @Override
   public void indexByName(@Nonnull String index, boolean clear) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
 
     if (clear) log.info("(indexByName) no clear needed, will swap later");
     indexByPartition(index, getValidPartitionNames(indexConfiguration));
@@ -105,7 +104,7 @@ public class AliasedCollectionIndexingService
   @Override
   @Nonnull
   public List<String> getCollectionNames(@Nonnull String index) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
     return getValidPartitionNames(indexConfiguration);
   }
 
@@ -118,7 +117,7 @@ public class AliasedCollectionIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull String collection) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
     indexByCollection(indexConfiguration, collection);
   }
 
@@ -167,11 +166,16 @@ public class AliasedCollectionIndexingService
     List<String> collectionConstructQueries = partitionConfiguration.getConstructQueries();
     List<Resource> facetQueryResources = partitionConfiguration.getFacetQueryResources();
 
-    return getPartitionUris(this, partitionConfiguration)
+    return getPartitionUris(spelService, paginatedQuery, rdfStore, queryTemplateParameters, partitionConfiguration)
             .stream()
-            .map(uri -> getCallable(getIndexMethodForUri(this, indexToFill, facetQueryResources, uri),
-                                    collectionConstructQueries,
-                                    uri))
+            .map(uri -> getCallable(
+                    getIndexMethodForUri(
+                            spelService, paginatedQuery, rdfStore, elasticStore,
+                            modelToJsonConversion, queryTemplateParameters,
+                            indexToFill, facetQueryResources, uri
+                    ),
+                    collectionConstructQueries,
+                    uri))
             .collect(Collectors.toList());
   }
 
@@ -179,7 +183,8 @@ public class AliasedCollectionIndexingService
   private Callable<String> getCallable(@Nonnull IndexMethod indexMethod,
                                        @Nonnull List<String> collectionConstructQueries,
                                        @Nonnull String uri) {
-    return getCallableForUri(this, indexMethod, collectionConstructQueries, uri);
+    return getCallableForUri(spelService, paginatedQuery, rdfStore, queryTemplateParameters,
+                             indexMethod, collectionConstructQueries, uri);
   }
 
   private void deleteIndex(@Nonnull IndexSwapState indexSwapState) {
@@ -202,7 +207,7 @@ public class AliasedCollectionIndexingService
                                  @Nonnull String query) {
     log.info("(indexUrisFromQuery) started");
 
-    List<String> uris = getUrisFromQuery(this, query);
+    List<String> uris = getUrisFromQuery(paginatedQuery, rdfStore, query);
     log.info("(indexUrisFromQuery) {} uris found", uris.size());
 
     indexUris(index, partition, uris);
@@ -219,47 +224,7 @@ public class AliasedCollectionIndexingService
 
   @Override
   public void ensureIndexExists(@Nonnull String index) {
-    InternalIndexingServiceUtils.ensureIndexExists(this, index);
-  }
-
-  @Override
-  protected SpelService getSpelService() {
-    return spelService;
-  }
-
-  @Override
-  protected PaginatedQuery getPaginatedQuery() {
-    return paginatedQuery;
-  }
-
-  @Override
-  protected IndexingConfiguration getIndexFolderService() {
-    return indexingConfiguration;
-  }
-
-  @Override
-  protected RdfStoreService getRdfStore() {
-    return rdfStore;
-  }
-
-  @Override
-  protected Elasticsearch7Store getElasticStore() {
-    return elasticStore;
-  }
-
-  @Override
-  protected ModelToJsonConversion getModelToJsonConversion() {
-    return modelToJsonConversion;
-  }
-
-  @Override
-  protected Map<String, String> getQueryTemplateParameters() {
-    return queryTemplateParameters;
-  }
-
-  @Override
-  protected ElasticsearchMetadataService getElasticsearchMetadataService() {
-    return elasticsearchMetadataService;
+    InternalIndexingServiceUtils.ensureIndexExists(indexingConfiguration, elasticsearchMetadataService, elasticStore, index);
   }
 
 }
