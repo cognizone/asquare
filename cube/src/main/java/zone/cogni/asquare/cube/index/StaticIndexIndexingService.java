@@ -53,8 +53,7 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSy
  *         ...
  * </pre>
  */
-public class StaticIndexIndexingService
-        extends IndexingServiceContext {
+public class StaticIndexIndexingService implements FolderBasedIndexingService {
 
   private static final Logger log = LoggerFactory.getLogger(StaticIndexIndexingService.class);
 
@@ -134,7 +133,7 @@ public class StaticIndexIndexingService
 
   @Override
   public void indexByName(@Nonnull String index, boolean clear) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
 
     clearIndex(indexConfiguration, clear);
     indexByPartition(index, getValidPartitionNames(indexConfiguration));
@@ -143,7 +142,7 @@ public class StaticIndexIndexingService
   @Nonnull
   @Override
   public List<String> getCollectionNames(@Nonnull String index) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
     return getValidPartitionNames(indexConfiguration);
   }
 
@@ -188,7 +187,7 @@ public class StaticIndexIndexingService
   @Override
   public void indexByCollection(@Nonnull String index,
                                 @Nonnull List<String> collections) {
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
     indexByCollection(indexConfiguration, collections);
   }
 
@@ -221,8 +220,9 @@ public class StaticIndexIndexingService
     collections.stream()
                .map(indexConfiguration::getValidPartition)
                .forEach(collectionFolder -> {
-                 result.addCollection(collectionFolder,
-                                      getPartitionUris(this, collectionFolder));
+                 List<String> partitionUris = getPartitionUris(spelService, paginatedQuery, rdfStore,
+                                                               queryTemplateParameters, collectionFolder);
+                 result.addCollection(collectionFolder, partitionUris);
                });
 
     return result;
@@ -265,14 +265,16 @@ public class StaticIndexIndexingService
   private IndexMethod getIndexMethod(@Nonnull IndexingConfiguration.Index indexConfiguration,
                                      @Nonnull List<Resource> facetQueryResources,
                                      @Nonnull String uri) {
-    return getIndexMethodForUri(this, indexConfiguration.getName(), facetQueryResources, uri);
+    return getIndexMethodForUri(spelService, paginatedQuery, rdfStore, elasticStore, modelToJsonConversion, queryTemplateParameters,
+                                indexConfiguration.getName(), facetQueryResources, uri);
   }
 
   @Nonnull
   private Callable<String> getCallable(@Nonnull IndexMethod indexMethod,
                                        @Nonnull List<String> collectionConstructQueries,
                                        @Nonnull String uri) {
-    return getCallableForUri(this, indexMethod, collectionConstructQueries, uri);
+    return getCallableForUri(spelService, paginatedQuery, rdfStore, queryTemplateParameters,
+                             indexMethod, collectionConstructQueries, uri);
   }
 
   @Override
@@ -281,7 +283,7 @@ public class StaticIndexIndexingService
                                  @Nonnull String query) {
     log.info("(indexUrisFromQuery) started");
 
-    List<String> uris = getUrisFromQuery(this, query);
+    List<String> uris = getUrisFromQuery(paginatedQuery, rdfStore, query);
     log.info("(indexUrisFromQuery) {} uris found", uris.size());
 
     indexUris(index, partition, uris);
@@ -293,10 +295,10 @@ public class StaticIndexIndexingService
                         @Nonnull String partition,
                         @Nonnull List<String> uris) {
     // get index and collection folder
-    IndexingConfiguration.Index indexConfiguration = getIndexFolder(this, index);
+    IndexingConfiguration.Index indexConfiguration = getIndexFolder(indexingConfiguration, index);
     IndexingConfiguration.Partition partitionConfiguration = indexConfiguration.getValidPartition(partition);
 
-    List<String> indexableUris = getIndexableUris(this, partitionConfiguration, uris);
+    List<String> indexableUris = getIndexableUris(spelService, paginatedQuery, rdfStore, queryTemplateParameters, partitionConfiguration, uris);
 
     if (indexableUris.size() > 10) {
       log.warn("Method should probably not be used when passing in too many uris." +
@@ -305,52 +307,13 @@ public class StaticIndexIndexingService
     }
 
     // index uris
-    indexSynchronously(this, partitionConfiguration, indexConfiguration.getName(), indexableUris);
+    indexSynchronously(spelService, paginatedQuery, rdfStore, elasticStore, modelToJsonConversion, queryTemplateParameters,
+                       partitionConfiguration, indexConfiguration.getName(), indexableUris);
   }
 
   @Override
   public void ensureIndexExists(@Nonnull String index) {
-    InternalIndexingServiceUtils.ensureIndexExists(this, index);
-  }
-
-  @Override
-  protected SpelService getSpelService() {
-    return spelService;
-  }
-
-  @Override
-  protected PaginatedQuery getPaginatedQuery() {
-    return paginatedQuery;
-  }
-
-  @Override
-  protected IndexingConfiguration getIndexFolderService() {
-    return indexingConfiguration;
-  }
-
-  @Override
-  protected RdfStoreService getRdfStore() {
-    return rdfStore;
-  }
-
-  @Override
-  protected Elasticsearch7Store getElasticStore() {
-    return elasticStore;
-  }
-
-  @Override
-  protected ModelToJsonConversion getModelToJsonConversion() {
-    return modelToJsonConversion;
-  }
-
-  @Override
-  protected Map<String, String> getQueryTemplateParameters() {
-    return queryTemplateParameters;
-  }
-
-  @Override
-  protected ElasticsearchMetadataService getElasticsearchMetadataService() {
-    return elasticsearchMetadataService;
+    InternalIndexingServiceUtils.ensureIndexExists(indexingConfiguration, elasticsearchMetadataService, elasticStore, index);
   }
 
 }
