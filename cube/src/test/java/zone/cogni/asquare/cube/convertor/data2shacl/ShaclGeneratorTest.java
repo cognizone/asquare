@@ -6,12 +6,12 @@ import org.apache.jena.rdf.model.RDFList;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.XSD;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.cube.convertor.json.CollapsedImportsCompactConversionProfile;
 import zone.cogni.asquare.cube.convertor.json.CompactConversionProfile;
 import zone.cogni.asquare.cube.convertor.json.CompactConversionProfileToConversionProfile;
@@ -60,19 +60,19 @@ public class ShaclGeneratorTest {
     // then
     // check if there is a property with sh:or
     Resource talksProp = ResourceFactory.createResource("http://demo.com/shacl/Person/talks");
-    List<RDFNode> shOr = shacl.listObjectsOfProperty(talksProp, Shacl.or).toList();
+    List<RDFNode> shOr = shacl.listObjectsOfProperty(talksProp, SHACLM.or).toList();
     assertThat(shOr.size()).isEqualTo(1);
 
     // check if the sh:or has 2 values
-    RDFList rdfList = shacl.listObjectsOfProperty(talksProp, Shacl.or).next().as(RDFList.class);
+    RDFList rdfList = shacl.listObjectsOfProperty(talksProp, SHACLM.or).next().as(RDFList.class);
 
     Resource booleanTalks = ResourceFactory.createResource("http://demo.com/shacl/Person/talks/boolean");
     Resource stringTalks = ResourceFactory.createResource("http://demo.com/shacl/Person/talks/string");
     assertThat(rdfList.asJavaList()).containsExactlyInAnyOrder(booleanTalks, stringTalks);
 
     // check booleanTalks
-    assertThat(shacl.contains(booleanTalks, RDF.type, Shacl.PropertyShape)).isTrue();
-    assertThat(shacl.contains(booleanTalks, Shacl.datatype, XSD.xboolean)).isTrue();
+    assertThat(shacl.contains(booleanTalks, RDF.type, SHACLM.PropertyShape)).isTrue();
+    assertThat(shacl.contains(booleanTalks, SHACLM.datatype, XSD.xboolean)).isTrue();
 
     shacl.write(System.out, "ttl");
   }
@@ -87,7 +87,7 @@ public class ShaclGeneratorTest {
     Model shacl = shaclGenerator.generate(configuration, getPrefixes(), rdfStore);
 
     // then
-    List<Resource> nodeShapes = shacl.listSubjectsWithProperty(RDF.type, Shacl.NodeShape).toList();
+    List<Resource> nodeShapes = shacl.listSubjectsWithProperty(RDF.type, SHACLM.NodeShape).toList();
     Resource conceptNodeShape = ResourceFactory.createResource("http://demo.com/shacl/Concept");
     assertThat(nodeShapes).containsExactlyInAnyOrder(conceptNodeShape);
   }
@@ -104,17 +104,17 @@ public class ShaclGeneratorTest {
 
     // then
     // check shapes
-    assertThat(shacl.listSubjectsWithProperty(RDF.type, Shacl.NodeShape).toList().size()).isEqualTo(1);
-    assertThat(shacl.listSubjectsWithProperty(RDF.type, Shacl.PropertyShape).toList().size()).isEqualTo(1);
+    assertThat(shacl.listSubjectsWithProperty(RDF.type, SHACLM.NodeShape).toList().size()).isEqualTo(1);
+    assertThat(shacl.listSubjectsWithProperty(RDF.type, SHACLM.PropertyShape).toList().size()).isEqualTo(1);
 
     // check datatype, minCount, uniqueLang
     Resource prefLabel = ResourceFactory.createResource("http://demo.com/shacl/Concept/prefLabel");
-    assertThat(shacl.contains(prefLabel, Shacl.datatype, RDF.langString)).isTrue();
-    assertThat(shacl.contains(prefLabel, Shacl.minCount, createTypedLiteral(1))).isTrue();
-    assertThat(shacl.contains(prefLabel, Shacl.uniqueLang, createTypedLiteral(true))).isTrue();
+    assertThat(shacl.contains(prefLabel, SHACLM.datatype, RDF.langString)).isTrue();
+    assertThat(shacl.contains(prefLabel, SHACLM.minCount, createTypedLiteral(1))).isTrue();
+    assertThat(shacl.contains(prefLabel, SHACLM.uniqueLang, createTypedLiteral(true))).isTrue();
 
     // check languageIn
-    RDFList rdfList = shacl.listObjectsOfProperty(prefLabel, Shacl.languageIn).next().as(RDFList.class);
+    RDFList rdfList = shacl.listObjectsOfProperty(prefLabel, SHACLM.languageIn).next().as(RDFList.class);
     assertThat(rdfList.asJavaList()).containsExactlyInAnyOrder(
             ResourceFactory.createPlainLiteral("en"),
             ResourceFactory.createPlainLiteral("nl"),
@@ -135,7 +135,7 @@ public class ShaclGeneratorTest {
     // then
     // check uniqueLang does not exist!
     Resource prefLabel = ResourceFactory.createResource("http://demo.com/shacl/Concept/prefLabel");
-    assertThat(shacl.contains(prefLabel, Shacl.uniqueLang, (RDFNode) null)).isFalse();
+    assertThat(shacl.contains(prefLabel, SHACLM.uniqueLang, (RDFNode) null)).isFalse();
   }
 
   private RdfStoreService getDataModel(String file) {
@@ -147,7 +147,7 @@ public class ShaclGeneratorTest {
 
   private HashMap<String, String> getPrefixes() {
     HashMap<String, String> result = new HashMap<>();
-    result.put("sh", Shacl.NS);
+    result.put("sh", SHACLM.NS);
     return result;
   }
 

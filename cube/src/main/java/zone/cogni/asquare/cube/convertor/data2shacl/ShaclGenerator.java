@@ -13,12 +13,12 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.core.io.ClassPathResource;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
@@ -115,8 +115,8 @@ public class ShaclGenerator {
 
   private Stream<Statement> getShapes(@Nonnull Model shacl) {
     return Stream.concat(
-            shacl.listStatements(null, RDF.type, Shacl.NodeShape).toList().stream(),
-            shacl.listStatements(null, RDF.type, Shacl.PropertyShape).toList().stream()
+            shacl.listStatements(null, RDF.type, SHACLM.NodeShape).toList().stream(),
+            shacl.listStatements(null, RDF.type, SHACLM.PropertyShape).toList().stream()
     );
   }
 
@@ -181,8 +181,8 @@ public class ShaclGenerator {
     Resource targetClass = ResourceFactory.createResource(typeUri);
     Resource typeShape = calculateShapeBasedOnResource(configuration, shacl, null, targetClass);
 
-    shacl.add(typeShape, RDF.type, Shacl.NodeShape);
-    shacl.add(typeShape, Shacl.targetClass, targetClass);
+    shacl.add(typeShape, RDF.type, SHACLM.NodeShape);
+    shacl.add(typeShape, SHACLM.targetClass, targetClass);
 
     if (log.isDebugEnabled())
       log.debug("(addType) shape name '{}' for targetClass '{}'", typeShape.getURI(), targetClass.getURI());
@@ -257,10 +257,10 @@ public class ShaclGenerator {
     if (log.isDebugEnabled())
       log.debug("(addProperty) shape '{}' gets '{}'", typeShape.getLocalName(), propertyShape.getLocalName());
 
-    shacl.add(typeShape, Shacl.property, propertyShape);
-    shacl.add(propertyShape, RDF.type, Shacl.PropertyShape);
+    shacl.add(typeShape, SHACLM.property, propertyShape);
+    shacl.add(propertyShape, RDF.type, SHACLM.PropertyShape);
 
-    shacl.add(propertyShape, Shacl.path, path);
+    shacl.add(propertyShape, SHACLM.path, path);
 
     setMinCount(rdfStoreService, shacl, targetClass, path, propertyShape);
     setMaxCount(rdfStoreService, shacl, targetClass, path, propertyShape);
@@ -277,7 +277,7 @@ public class ShaclGenerator {
 
     boolean hasInstanceWithoutProperty = askQuery(rdfStore, "has-instance-without-property.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
     if (!hasInstanceWithoutProperty) {
-      shacl.add(propertyShape, Shacl.minCount, getOneAsInteger());
+      shacl.add(propertyShape, SHACLM.minCount, getOneAsInteger());
     }
   }
 
@@ -290,7 +290,7 @@ public class ShaclGenerator {
 
     boolean hasInstanceWithTwoProperties = askQuery(rdfStore, "has-instance-with-two-properties.sparql.spel", getTypeAndPropertyParameters(targetClass, path));
     if (!hasInstanceWithTwoProperties) {
-      shacl.add(propertyShape, Shacl.maxCount, getOneAsInteger());
+      shacl.add(propertyShape, SHACLM.maxCount, getOneAsInteger());
     }
   }
 
@@ -313,28 +313,28 @@ public class ShaclGenerator {
 
     Resource nodeKindValue = calculateNodeKind(hasIri, hasBlank, hasLiteral);
     if (nodeKindValue != null) {
-      shacl.add(propertyShape, Shacl.nodeKind, nodeKindValue);
+      shacl.add(propertyShape, SHACLM.nodeKind, nodeKindValue);
     }
     else {
       log.warn("No sh:nodeKind could be derived for '{}'", propertyShape.getURI());
     }
 
-    if (nodeKindValue == Shacl.NodeKind.Literal) {
+    if (nodeKindValue == SHACLM.Literal) {
       setShaclDatatype(rdfStore, shacl, targetClass, path, propertyShape);
     }
-    else if (nodeKindValue == Shacl.NodeKind.IRI) {
+    else if (nodeKindValue == SHACLM.IRI) {
       setShaclClass(configuration, rdfStore, shacl, targetClass, path, propertyShape);
     }
   }
 
   @SuppressWarnings("ConstantConditions")
   private Resource calculateNodeKind(boolean hasIri, boolean hasBlank, boolean hasLiteral) {
-    if (hasIri && !hasBlank && !hasLiteral) return Shacl.NodeKind.IRI;
-    if (!hasIri && hasBlank && !hasLiteral) return Shacl.NodeKind.BlankNode;
-    if (!hasIri && !hasBlank && hasLiteral) return Shacl.NodeKind.Literal;
-    if (hasIri && hasBlank && !hasLiteral) return Shacl.NodeKind.BlankNodeOrIRI;
-    if (hasIri && !hasBlank && hasLiteral) return Shacl.NodeKind.IRIOrLiteral;
-    if (!hasIri && hasBlank && hasLiteral) return Shacl.NodeKind.BlankNodeOrLiteral;
+    if (hasIri && !hasBlank && !hasLiteral) return SHACLM.IRI;
+    if (!hasIri && hasBlank && !hasLiteral) return SHACLM.BlankNode;
+    if (!hasIri && !hasBlank && hasLiteral) return SHACLM.Literal;
+    if (hasIri && hasBlank && !hasLiteral) return SHACLM.BlankNodeOrIRI;
+    if (hasIri && !hasBlank && hasLiteral) return SHACLM.IRIOrLiteral;
+    if (!hasIri && hasBlank && hasLiteral) return SHACLM.BlankNodeOrLiteral;
     return null;
   }
 
@@ -372,8 +372,8 @@ public class ShaclGenerator {
       Resource orDatatypeInstance = tuple._1;
       Resource orDatatype = tuple._2;
 
-      shacl.add(orDatatypeInstance, RDF.type, Shacl.PropertyShape);
-      shacl.add(orDatatypeInstance, Shacl.datatype, orDatatype);
+      shacl.add(orDatatypeInstance, RDF.type, SHACLM.PropertyShape);
+      shacl.add(orDatatypeInstance, SHACLM.datatype, orDatatype);
 
       if (orDatatype.equals(RDF.langString)) {
         setLanguageIn(rdfStore, shacl, targetClass, path, orDatatypeInstance);
@@ -386,7 +386,7 @@ public class ShaclGenerator {
                                                   .map(Tuple2::_1)
                                                   .collect(Collectors.toList());
     RDFList orInstancesList = shacl.createList(orInstances.iterator());
-    shacl.add(propertyShape, Shacl.or, orInstancesList);
+    shacl.add(propertyShape, SHACLM.or, orInstancesList);
   }
 
   private List<Tuple2<Resource, Resource>> getOrDatatypeTuples(@Nonnull Resource propertyShape,
@@ -408,7 +408,8 @@ public class ShaclGenerator {
 
   private void setSingleShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
     Resource datatypeValue = ResourceFactory.createResource(datatypes.get(0));
-    shacl.add(propertyShape, Shacl.datatype, datatypeValue);
+    shacl.add(propertyShape, SHACLM.datatype, datatypeValue);
+
 
     if (RDF.langString.equals(datatypeValue)) {
       setUniqueLang(rdfStore, shacl, targetClass, path, propertyShape);
@@ -426,7 +427,7 @@ public class ShaclGenerator {
                                        getTypeAndPropertyParameters(targetClass, path));
     if (isNotUniqueLang) return;
 
-    shacl.add(propertyShape, Shacl.uniqueLang, ResourceFactory.createTypedLiteral(true));
+    shacl.add(propertyShape, SHACLM.uniqueLang, ResourceFactory.createTypedLiteral(true));
   }
 
 
@@ -442,7 +443,7 @@ public class ShaclGenerator {
     List<Literal> languages = paginatedQuery.convertSingleColumnToList(rows, RDFNode::asLiteral);
     RDFList languagesList = shacl.createList(languages.iterator());
 
-    shacl.add(propertyShape, Shacl.languageIn, languagesList);
+    shacl.add(propertyShape, SHACLM.languageIn, languagesList);
   }
 
   @Nonnull
@@ -494,7 +495,7 @@ public class ShaclGenerator {
     }
 
     Resource classValue = ResourceFactory.createResource(classes.get(0));
-    shacl.add(propertyShape, Shacl.classP, classValue);
+    shacl.add(propertyShape, SHACLM.class_, classValue);
   }
 
   private List<String> calculateClasses(@Nonnull Configuration configuration,
