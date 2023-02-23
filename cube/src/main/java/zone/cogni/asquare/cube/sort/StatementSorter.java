@@ -166,6 +166,9 @@ public class StatementSorter implements Function<Model, List<Statement>> {
         if (comparison != 0) return comparison;
       }
 
+      if(one.equals(two)) {
+        return 0;
+      }
       throw new RuntimeException("missed a case");
     };
   }

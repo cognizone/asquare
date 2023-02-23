@@ -73,7 +73,7 @@ public class IndexingConfiguration {
 
     indexConfigurations.forEach(this::validateIndexConfiguration);
 
-    if (initializationFailure)
+    if (initializationFailure != null && initializationFailure)
       throw new RuntimeException("initialization failed: see logs for problems");
   }
 
