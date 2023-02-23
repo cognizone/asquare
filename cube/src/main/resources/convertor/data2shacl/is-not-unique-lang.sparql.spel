@@ -1,0 +1,9 @@
+ask {
+  ?uri a <#{[type]}> .
+  ?uri <#{[property]}>
+           ?x, ?y.
+
+  filter (lang(?x) = lang(?y))
+  filter (?x != ?y)
+
+}

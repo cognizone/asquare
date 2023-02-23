@@ -7,6 +7,10 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
+/**
+ * @deprecated use {@link org.apache.jena.shacl.vocabulary.SHACLM} instead
+ */
+@Deprecated
 public interface Shacl {
 
   String NS = "http://www.w3.org/ns/shacl#";
@@ -52,6 +56,7 @@ public interface Shacl {
   Property resultSeverity = createProperty(NS + "resultSeverity");
   Property sourceConstraintComponent = createProperty(NS + "sourceConstraintComponent");
   Property targetClass = createProperty(NS + "targetClass");
+  Property uniqueLang = createProperty(NS + "uniqueLang");
   Property value = createProperty(NS + "value");
 
   interface NodeKind {
