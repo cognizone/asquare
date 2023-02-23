@@ -2,11 +2,13 @@ package zone.cogni.asquare.cube.convertor.data2shacl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import io.vavr.Tuple2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFList;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -356,22 +358,52 @@ public class ShaclGenerator {
     }
   }
 
-  private void setOrShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
-    datatypes.forEach(datatype -> {
-      Resource datatypeValue = ResourceFactory.createResource(datatype);
+  private void setOrShaclDatatype(RdfStoreService rdfStore,
+                                  Model shacl,
+                                  Resource targetClass,
+                                  Resource path,
+                                  Resource propertyShape,
+                                  List<String> datatypes) {
 
-      // TODO not supporting same local name in different namespaces yet
-      String orInstanceName = datatypeValue.getLocalName().toLowerCase();
-      Resource singleOrInstance = ResourceFactory.createResource(propertyShape.getURI() + "/" + orInstanceName);
+    List<Tuple2<Resource, Resource>> datatypeInstances = getOrDatatypeTuples(propertyShape, datatypes);
 
-      shacl.add(propertyShape, Shacl.or, singleOrInstance);
-      shacl.add(singleOrInstance, RDF.type, Shacl.PropertyShape);
-      shacl.add(singleOrInstance, Shacl.datatype, datatypeValue);
+    // add sh:or datatype instances to shacl model
+    datatypeInstances.forEach(tuple -> {
+      Resource orDatatypeInstance = tuple._1;
+      Resource orDatatype = tuple._2;
 
-      if (datatypeValue.equals(RDF.langString)) {
-        setLanguageIn(rdfStore, shacl, targetClass, path, singleOrInstance);
+      shacl.add(orDatatypeInstance, RDF.type, Shacl.PropertyShape);
+      shacl.add(orDatatypeInstance, Shacl.datatype, orDatatype);
+
+      if (orDatatype.equals(RDF.langString)) {
+        setLanguageIn(rdfStore, shacl, targetClass, path, orDatatypeInstance);
       }
     });
+
+    // add sh:or list to property shape:
+    //    first create RDF list and then add it to property shape
+    List<Resource> orInstances = datatypeInstances.stream()
+                                                  .map(Tuple2::_1)
+                                                  .collect(Collectors.toList());
+    RDFList orInstancesList = shacl.createList(orInstances.iterator());
+    shacl.add(propertyShape, Shacl.or, orInstancesList);
+  }
+
+  private List<Tuple2<Resource, Resource>> getOrDatatypeTuples(@Nonnull Resource propertyShape,
+                                                               @Nonnull List<String> datatypes) {
+    return datatypes.stream()
+                    .map(datatype -> getOrDatatypeTuple(propertyShape, datatype))
+                    .collect(Collectors.toList());
+  }
+
+  private Tuple2<Resource, Resource> getOrDatatypeTuple(@Nonnull Resource propertyShape,
+                                                        @Nonnull String datatype) {
+    Resource datatypeValue = ResourceFactory.createResource(datatype);
+
+    // TODO not supporting same local name in different namespaces yet
+    String orInstanceName = datatypeValue.getLocalName().toLowerCase();
+    Resource orInstance = ResourceFactory.createResource(propertyShape.getURI() + "/" + orInstanceName);
+    return new Tuple2<>(orInstance, datatypeValue);
   }
 
   private void setSingleShaclDatatype(RdfStoreService rdfStore, Model shacl, Resource targetClass, Resource path, Resource propertyShape, List<String> datatypes) {
@@ -379,24 +411,38 @@ public class ShaclGenerator {
     shacl.add(propertyShape, Shacl.datatype, datatypeValue);
 
     if (RDF.langString.equals(datatypeValue)) {
+      setUniqueLang(rdfStore, shacl, targetClass, path, propertyShape);
       setLanguageIn(rdfStore, shacl, targetClass, path, propertyShape);
     }
   }
+
+  private void setUniqueLang(@Nonnull RdfStoreService rdfStore,
+                             @Nonnull Model shacl,
+                             @Nonnull Resource targetClass,
+                             @Nonnull Resource path,
+                             @Nonnull Resource propertyShape) {
+    boolean isNotUniqueLang = askQuery(rdfStore,
+                                       "is-not-unique-lang.sparql.spel",
+                                       getTypeAndPropertyParameters(targetClass, path));
+    if (isNotUniqueLang) return;
+
+    shacl.add(propertyShape, Shacl.uniqueLang, ResourceFactory.createTypedLiteral(true));
+  }
+
 
   private void setLanguageIn(@Nonnull RdfStoreService rdfStore,
                              @Nonnull Model shacl,
                              @Nonnull Resource targetClass,
                              @Nonnull Resource path,
                              @Nonnull Resource propertyShape) {
-
     List<Map<String, RDFNode>> rows = getRows(rdfStore,
                                               "select-languages.sparql.spel",
                                               getTypeAndPropertyParameters(targetClass, path));
-    List<String> languages = paginatedQuery.convertSingleColumnToList(rows,
-                                                                      input -> input.asLiteral().getString());
-    languages.forEach(language -> {
-      shacl.add(propertyShape, Shacl.languageIn, language);
-    });
+
+    List<Literal> languages = paginatedQuery.convertSingleColumnToList(rows, RDFNode::asLiteral);
+    RDFList languagesList = shacl.createList(languages.iterator());
+
+    shacl.add(propertyShape, Shacl.languageIn, languagesList);
   }
 
   @Nonnull

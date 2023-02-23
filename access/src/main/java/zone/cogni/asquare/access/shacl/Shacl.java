@@ -52,6 +52,7 @@ public interface Shacl {
   Property resultSeverity = createProperty(NS + "resultSeverity");
   Property sourceConstraintComponent = createProperty(NS + "sourceConstraintComponent");
   Property targetClass = createProperty(NS + "targetClass");
+  Property uniqueLang = createProperty(NS + "uniqueLang");
   Property value = createProperty(NS + "value");
 
   interface NodeKind {

@@ -1,0 +1,14 @@
+@base <http://demo.com/data#>.
+@prefix person: <http://demo.com/person/model#>.
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#>.
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<#c1>
+    a              skos:Concept ;
+    skos:prefLabel "cat"@en, "chat"@fr ;
+.
+
+<#c2>
+    a              skos:Concept ;
+    skos:prefLabel "dog"@en, "hond"@nl ;
+.
