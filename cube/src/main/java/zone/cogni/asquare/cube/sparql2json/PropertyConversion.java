@@ -31,6 +31,10 @@ public class PropertyConversion implements Function<Model, JsonNode> {
       conversion = asInteger();
       key = strip(key, "Integer");
     }
+    else if (key.endsWith("Decimal")) {
+      conversion = asDecimal();
+      key= strip(key, "Decimal");
+    }
     else if (key.endsWith("String")) {
       conversion = asString();
       key = strip(key, "String");
@@ -59,7 +63,7 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     return new Function<RDFNode, JsonNode>() {
       @Override
       public JsonNode apply(RDFNode rdfNode) {
-        if (!rdfNode.isLiteral()) throw new RuntimeException("Node " + rdfNode.toString() + " is not a literal.");
+        if (!rdfNode.isLiteral()) throw new RuntimeException("Node " + rdfNode + " is not a literal.");
 
         Literal literal = rdfNode.asLiteral();
 
@@ -70,7 +74,7 @@ public class PropertyConversion implements Function<Model, JsonNode> {
           return JsonNodeFactory.instance.booleanNode(literal.getInt() == 1);
         }
 
-        throw new RuntimeException("Node " + rdfNode.toString() + " is of correct type.");
+        throw new RuntimeException("Node " + rdfNode + " is of correct type.");
       }
 
       public String toString() {
@@ -84,7 +88,7 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     return new Function<RDFNode, JsonNode>() {
       @Override
       public JsonNode apply(RDFNode rdfNode) {
-        if (!rdfNode.isLiteral()) throw new RuntimeException("Node " + rdfNode.toString() + " is not a literal.");
+        if (!rdfNode.isLiteral()) throw new RuntimeException("Node " + rdfNode + " is not a literal.");
 
         long number = rdfNode.asLiteral().getLong();
         return JsonNodeFactory.instance.numberNode(number);
@@ -96,12 +100,28 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     };
   }
 
+  public static Function<RDFNode, JsonNode> asDecimal() {
+    return new Function<RDFNode, JsonNode>() {
+      @Override
+      public JsonNode apply(RDFNode rdfNode) {
+        if (!rdfNode.isLiteral()) throw new RuntimeException("Node " + rdfNode + " is not a literal.");
+
+        double number = rdfNode.asLiteral().getDouble();
+        return JsonNodeFactory.instance.numberNode(number);
+      }
+
+      public String toString() {
+        return "asDecimal";
+      }
+    };
+  }
+
   public static Function<RDFNode, JsonNode> asString() {
     return new Function<RDFNode, JsonNode>() {
       @Override
       public JsonNode apply(RDFNode rdfNode) {
         if (rdfNode == null) return null;
-        if (rdfNode.isAnon()) throw new RuntimeException("Node " + rdfNode.toString() + " is a blank node.");
+        if (rdfNode.isAnon()) throw new RuntimeException("Node " + rdfNode + " is a blank node.");
 
         if (rdfNode.isURIResource()) {
           String uri = rdfNode.asResource().getURI();
