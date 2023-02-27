@@ -19,7 +19,7 @@ class SortedStatementsStringTest {
   @Test
   public void blank_root_blocks() {
     // given
-    Model model = loadModel("digest/blank-root-blocks.ttl");
+    Model model = loadModel("digest/mix-test.ttl");
 
     // when
     List<Statement> statements = new StatementSorter().apply(model);
@@ -33,7 +33,7 @@ class SortedStatementsStringTest {
   @Test
   public void nested_blocks() {
     // given
-    Model model = loadModel("digest/nested-blocks.ttl");
+    Model model = loadModel("digest/mix-test-2.ttl");
 
     // when
     List<Statement> statements = new StatementSorter().apply(model);

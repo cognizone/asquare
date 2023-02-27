@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.sort;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Sorts all statements in a model in a predictable fashion.
@@ -34,7 +36,6 @@ import java.util.function.Function;
  *   <li>For sorting of language literals we first sort on language, next on value</li>
  *   <li>For sorting of typed literals we first sort on datatype, next on value</li>
  * </ul>
- *
  */
 public class StatementSorter implements Function<Model, List<Statement>> {
 
@@ -42,13 +43,28 @@ public class StatementSorter implements Function<Model, List<Statement>> {
   public List<Statement> apply(Model model) {
     List<Statement> statements = getCanonicalStatements(model);
     statements.sort(getStatementComparator());
+    statements = removeDuplicateStatements(statements);
     return statements;
   }
 
   private List<Statement> getCanonicalStatements(Model model) {
     List<Statement> statements = new ArrayList<>();
-    SortedBlock root = new SortedBlock(model);
+    SortedBlock root = SortedBlock.create(model);
     processBlock(statements, null, root);
+    return statements;
+  }
+
+  private List<Statement> removeDuplicateStatements(List<Statement> statements) {
+    for (int i = 0; i < statements.size() - 1; i++) {
+      Statement statement = statements.get(i);
+      Statement nextStatement = statements.get(i + 1);
+      boolean isSame = getStatementComparator().compare(statement, nextStatement) == 0;
+      if (isSame) {
+        statements.remove(i + 1);
+        i -= 1;
+      }
+    }
+
     return statements;
   }
 
@@ -63,18 +79,51 @@ public class StatementSorter implements Function<Model, List<Statement>> {
   private Statement convertStatement(SortedBlock parentBlock, SortedBlock currentBlock) {
     Statement statement = currentBlock.getStatement();
 
-    Resource subject = statement.getSubject().isAnon() ? getDigestBlankNode(parentBlock)
-                                                       : statement.getSubject();
-    RDFNode object = statement.getObject().isAnon() ? getDigestBlankNode(currentBlock)
-                                                    : statement.getObject();
-    return ResourceFactory.createStatement(subject,
-                                           statement.getPredicate(),
-                                           object);
+    Resource subject = getConvertedSubject(parentBlock, statement);
+    RDFNode object = getConvertedObject(currentBlock, statement);
+    return ResourceFactory.createStatement(subject, statement.getPredicate(), object);
   }
 
-  private ResourceImpl getDigestBlankNode(SortedBlock block) {
+  private Resource getConvertedSubject(SortedBlock parentBlock, Statement statement) {
+    boolean isSubjectRootBlankNode = parentBlock.getStatement() == null && statement.getSubject().isAnon();
+    boolean isSubjectNormalBlankNode = parentBlock.getStatement() != null && statement.getSubject().isAnon();
+    if (isSubjectRootBlankNode) {
+      return getRootBlankNode(parentBlock);
+    }
+    else if (isSubjectNormalBlankNode) {
+      return getNormalBlankNode(parentBlock, statement.getSubject().asResource().getId());
+    }
+    else {
+      return statement.getSubject();
+    }
+  }
+
+  private RDFNode getConvertedObject(SortedBlock currentBlock, Statement statement) {
+    return statement.getObject().isAnon()
+           ? getNormalBlankNode(currentBlock, statement.getObject().asResource().getId())
+           : statement.getObject();
+  }
+
+  private Resource getRootBlankNode(SortedBlock block) {
     AnonId anonId = new AnonId(block.getDigest());
     return new ResourceImpl(anonId);
+  }
+
+  private Resource getNormalBlankNode(SortedBlock block, AnonId anonId) {
+    String digestString = block.getNestedBlocks()
+                               .stream()
+                               .filter(nested -> isMatchingAnonId(nested, anonId))
+                               .map(SortedBlock::getDigest)
+                               .collect(Collectors.joining());
+
+    String id = DigestUtils.sha256Hex(digestString);
+    return new ResourceImpl(new AnonId(id));
+  }
+
+  private boolean isMatchingAnonId(SortedBlock nested, AnonId anonId) {
+    Resource subject = nested.getStatement().getSubject();
+    return subject.isAnon()
+           && subject.asResource().getId().getLabelString().equals(anonId.getLabelString());
   }
 
   private Comparator<? super Statement> getStatementComparator() {
@@ -166,10 +215,11 @@ public class StatementSorter implements Function<Model, List<Statement>> {
         if (comparison != 0) return comparison;
       }
 
-      if(one.equals(two)) {
+      if (one.equals(two)) {
         return 0;
       }
-      throw new RuntimeException("missed a case");
+
+      throw new RuntimeException("missed a case: " + one + " " + two + "");
     };
   }
 }

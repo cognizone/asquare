@@ -6,3 +6,4 @@ select distinct ?value {
   # only 'real' languages
   filter (bound(?value) && ?value != "")
 }
+order by ?value

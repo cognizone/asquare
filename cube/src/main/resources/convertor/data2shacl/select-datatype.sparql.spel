@@ -7,3 +7,4 @@ select distinct ?value {
   bind (datatype(?x) as ?datatypeValue)
   bind (coalesce(?datatypeValue, rdfs:langString) as ?value)
 }
+order by ?value
