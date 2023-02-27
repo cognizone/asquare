@@ -3,15 +3,10 @@ package zone.cogni.asquare.cube.digest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -22,32 +17,12 @@ import java.util.stream.Collectors;
 
 public class SortedBlock {
 
-  private static final Query illegalGraphQuery = getIllegalGraphQuery();
-
-  private static Query getIllegalGraphQuery() {
-    String query =
-            "  ask {" +
-            "    ?s ?p ?o." +
-            "    filter (isblank(?o))" +
-            "  }" +
-            "  group by ?o" +
-            "  having (count(?s) > 1)";
-    return QueryFactory.create(query);
-  }
-
   public static SortedBlock create(Model model) {
-    if (isIllegalGraph(model)) throw new RuntimeException("blank node is used more than once");
-
     List<SortedBlock> nestedBlocks = calculateRootBlocks(model);
     SortedBlock sortedBlock = new SortedBlock(nestedBlocks);
 
     sortedBlock.calculateDigest();
     return sortedBlock;
-  }
-
-  private static boolean isIllegalGraph(Model model) {
-    RdfStoreService rdfStore = new InternalRdfStoreService(model);
-    return rdfStore.executeAskQuery(illegalGraphQuery, new QuerySolutionMap());
   }
 
   private static List<SortedBlock> calculateRootBlocks(Model model) {
@@ -81,8 +56,6 @@ public class SortedBlock {
 
   @Deprecated
   public SortedBlock(Model model) {
-    if (isIllegalGraph(model)) throw new RuntimeException("blank node is used more than once");
-
     nestedBlocks = calculateRootBlocks(model);
     calculateDigest();
   }
