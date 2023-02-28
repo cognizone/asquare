@@ -4,22 +4,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import zone.cogni.sem.jena.JenaUtils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ModelDigestTest {
-  public static void main(String[] args) throws IOException {
-    File file = new File("/Users/natan/work/github/asquare/cube/src/test/resources/digest/skos.rdf");
-    Model read = JenaUtils.read(new FileSystemResource(file));
-    read.write(new FileWriter("/Users/natan/work/github/asquare/cube/src/test/resources/digest/skos.ttl"), "TURTLE");
-  }
 
   @Test
   public void correct_model() {
