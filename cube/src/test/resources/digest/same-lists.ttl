@@ -1,0 +1,13 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+
+<https://demo.app/Person/label>
+    a             sh:PropertyShape ;
+    sh:datatype   rdf:langString ;
+    sh:languageIn ( "de" "fr" ) .
+
+
+<https://demo.app/Law/label>
+    a             sh:PropertyShape ;
+    sh:datatype   rdf:langString ;
+    sh:languageIn ( "de" "fr" ) .

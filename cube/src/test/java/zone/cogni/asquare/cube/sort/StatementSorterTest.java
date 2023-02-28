@@ -3,25 +3,136 @@ package zone.cogni.asquare.cube.sort;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
-import zone.cogni.sem.jena.JenaUtils;
+import zone.cogni.asquare.cube.digest.SortedBlock;
+import zone.cogni.libs.jena.utils.JenaUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.apache.jena.rdf.model.ResourceFactory.createStringLiteral;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StatementSorterTest {
 
+
   @Test
-  public void blank_root_blocks() {
+  public void blank_node_one_triple() {
     // given
-    Model model = loadModel("digest/blank-root-blocks.ttl");
+    Model model = loadModel("digest/blank-node-one-triple.ttl");
 
     // when
-    List<Statement> statements = new StatementSorter().apply(model);
-    print(statements);
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(1);
+    assertRowHasSubjectId(statements, 0, "f0e61495a5dedf729117501bcfdf757f2c6101d23d62863905f4c0acc1ac16ea");
+  }
+
+
+  @Test
+  public void same_blanks_node_one_triple() {
+    // given
+    Model model = loadModel("digest/same-blank-nodes-one-triple.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(1);
+    assertRowHasSubjectId(statements, 0, "f0e61495a5dedf729117501bcfdf757f2c6101d23d62863905f4c0acc1ac16ea");
+  }
+
+  @Test
+  public void blank_node_two_triples() {
+    // given
+    Model model = loadModel("digest/blank-node-two-triples.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(2);
+    assertRowHasSubjectId(statements, 0, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+    assertRowHasSubjectId(statements, 1, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+  }
+
+  @Test
+  public void same_blank_nodes_two_triples() {
+    // given
+    Model model = loadModel("digest/same-blank-nodes-two-triples.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(2);
+    assertRowHasSubjectId(statements, 0, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+    assertRowHasSubjectId(statements, 1, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+  }
+
+  @Test
+  public void blank_node_with_nested_blank_node_with_two_triples() {
+    // given
+    Model model = loadModel("digest/blank-node-with-nested-blank-node-with-two-triples.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(3);
+    assertRowHasSubjectId(statements, 0, "548056f0698a0e410152cdeec9d9a8c9242dfe2b13f813658e40bfec1979856f");
+    assertRowHasSubjectId(statements, 1, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+    assertRowHasSubjectId(statements, 2, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+  }
+
+  @Test
+  public void same_blank_node_with_nested_blank_node_with_two_triples() {
+    // given
+    Model model = loadModel("digest/same-blank-node-with-nested-blank-node-with-two-triples.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(3);
+    assertRowHasSubjectId(statements, 0, "548056f0698a0e410152cdeec9d9a8c9242dfe2b13f813658e40bfec1979856f");
+    assertRowHasSubjectId(statements, 1, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+    assertRowHasSubjectId(statements, 2, "a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a");
+  }
+
+  @Test
+  public void same_list_test() {
+    // given
+    Model model = loadModel("digest/same-lists.ttl");
+    model.write(System.out, "N-TRIPLE");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
+
+    // then
+    assertThat(statements.size()).isEqualTo(10);
+
+    List<Statement> fr = getFilteredStatements(statements, null, RDF.first, createStringLiteral("fr"));
+    assertThat(fr).size().isEqualTo(1);
+
+    List<Statement> de = getFilteredStatements(statements, null, RDF.first, createStringLiteral("de"));
+    assertThat(fr).size().isEqualTo(1);
+  }
+
+  @Test
+  public void mix_test() {
+    // given
+    Model model = loadModel("digest/mix-test.ttl");
+
+    // when
+    List<Statement> statements = getSortedStatements(model);
 
     // then
     assertThat(statements.size()).isEqualTo(4);
@@ -30,42 +141,27 @@ class StatementSorterTest {
     assertRowHasSubjectId(statements, 3, "cdc14bedd0be3c4227202577c59344500a2e110bc50b010d600d004ba4f67ebe");
   }
 
-  @Test
-  public void nested_blocks() {
-    // given
-    Model model = loadModel("digest/nested-blocks.ttl");
+  private List<Statement> getSortedStatements(Model model) {
+    // for printing the sorted blocks
+    SortedBlock sortedBlock = SortedBlock.create(model);
+    System.out.println(sortedBlock);
 
-    // when
+    // sort the statements
     List<Statement> statements = new StatementSorter().apply(model);
     print(statements);
 
-    // then
-    assertThat(statements.size()).isEqualTo(8);
-    assertRowHasSubjectId(statements, 3, "6ce86f5d0f83dcd7dc47e05c2f34384450532646425bbf3313ed2fe49c5dd602");
-    assertRowHasSubjectId(statements, 4, "9a6c2de7af7d96fa54d101f5280f1ca152546df474d215c661bcb8dd2b11da50");
-    assertRowHasSubjectId(statements, 5, "9a6c2de7af7d96fa54d101f5280f1ca152546df474d215c661bcb8dd2b11da50");
-    assertRowHasSubjectId(statements, 6, "a9cdeda412f7adcbab10e8fdc60d2117bb4d8b0764f2340c7ff2a9ac3924a775");
-    assertRowHasSubjectId(statements, 7, "a9cdeda412f7adcbab10e8fdc60d2117bb4d8b0764f2340c7ff2a9ac3924a775");
+    return statements;
   }
 
-  @Test
-  public void skos() {
-    // given
-    Model rdfXml = loadModel("digest/skos.rdf");
-
-    // when
-    List<Statement> statements = new StatementSorter().apply(rdfXml);
-    print(statements);
-
-    // then
-    assertThat(statements.size()).isEqualTo(252);
-
-    assertRowHasSubjectId(statements, 246, "6b7545da78e90a4b18b6aca7816f8d353b33eb7b0d5c8d90e6c9d835f1236e45");
-    assertRowHasSubjectId(statements, 247, "6b7545da78e90a4b18b6aca7816f8d353b33eb7b0d5c8d90e6c9d835f1236e45");
-    assertRowHasSubjectId(statements, 248, "7ddcc4c507b0986b8055c0c09c04cfbd7c75fe475a133e398810397f6ada922e");
-    assertRowHasSubjectId(statements, 249, "7ddcc4c507b0986b8055c0c09c04cfbd7c75fe475a133e398810397f6ada922e");
-    assertRowHasSubjectId(statements, 250, "8ecc67a2719e5c6479298355099d29b1a2efd70c9e84da5502b140369e03f137");
-    assertRowHasSubjectId(statements, 251, "8ecc67a2719e5c6479298355099d29b1a2efd70c9e84da5502b140369e03f137");
+  private List<Statement> getFilteredStatements(List<Statement> statements,
+                                                Resource subject, Property predicate, RDFNode object) {
+    return statements.stream()
+                     .filter(statement -> {
+                       if (subject != null && !statement.getSubject().equals(subject)) return false;
+                       if (predicate != null && !statement.getPredicate().equals(predicate)) return false;
+                       if (object != null && !statement.getObject().equals(object)) return false;
+                       return true;
+                     }).collect(Collectors.toList());
   }
 
   private void assertRowHasSubjectId(List<Statement> statements, int row, String id) {

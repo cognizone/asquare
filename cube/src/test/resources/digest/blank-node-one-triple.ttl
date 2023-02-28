@@ -1,0 +1,3 @@
+# f0e61495a5dedf729117501bcfdf757f2c6101d23d62863905f4c0acc1ac16ea
+_:blank_3
+    <http://demo.com/model/property-1> <http://demo.com/data/3> .

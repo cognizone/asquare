@@ -45,7 +45,7 @@ class ModelDigestTest {
     Model model = loadModel("digest/root-block.ttl");
 
     // when (note: internal method is tested here)
-    SortedBlock rootBlock = new SortedBlock(model);
+    SortedBlock rootBlock = SortedBlock.create(model);
 
     // then
     assertThat(rootBlock.getNestedBlocks()).size().isEqualTo(3);
@@ -111,10 +111,10 @@ class ModelDigestTest {
   @Test
   public void nested_blocks() {
     // given
-    Model model = loadModel("digest/nested-blocks.ttl");
+    Model model = loadModel("digest/mix-test-2.ttl");
 
     // when
-    SortedBlock rootBlock = new SortedBlock(model);
+    SortedBlock rootBlock = SortedBlock.create(model);
 
     // then
     assertThat(rootBlock.getNestedBlocks().size()).isEqualTo(3);
@@ -161,10 +161,10 @@ class ModelDigestTest {
   @Test
   public void blank_root_blocks() {
     // given
-    Model model = loadModel("digest/blank-root-blocks.ttl");
+    Model model = loadModel("digest/mix-test.ttl");
 
     // when
-    SortedBlock rootBlock = new SortedBlock(model);
+    SortedBlock rootBlock = SortedBlock.create(model);
 
     // then
     assertThat(rootBlock.getNestedBlocks().size()).isEqualTo(3);
@@ -177,8 +177,8 @@ class ModelDigestTest {
     Model turtle = loadModel("digest/skos.ttl");
 
     // when
-    String rdfXmlDigest = new SortedBlock(rdfXml).getDigest();
-    String turtleDigest = new SortedBlock(turtle).getDigest();
+    String rdfXmlDigest = SortedBlock.create(rdfXml).getDigest();
+    String turtleDigest = SortedBlock.create(turtle).getDigest();
 
     // then
     assertThat(rdfXmlDigest).as("rdfXmlDigest")

@@ -1,0 +1,13 @@
+# a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a
+_:blank_3
+    <http://demo.com/model/property-1> <http://demo.com/data/3> .
+
+_:blank_3
+    <http://demo.com/model/property-2> <http://demo.com/data/4> .
+
+
+_:blank_4
+    <http://demo.com/model/property-1> <http://demo.com/data/3> .
+
+_:blank_4
+    <http://demo.com/model/property-2> <http://demo.com/data/4> .

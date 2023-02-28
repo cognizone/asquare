@@ -1,11 +1,6 @@
 package zone.cogni.asquare.cube.digest;
 
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
-import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
 import java.util.function.Function;
 
@@ -84,7 +79,7 @@ public class ModelDigest implements Function<Model, String> {
 
   @Override
   public String apply(Model model) {
-    return new SortedBlock(model).getDigest();
+    return SortedBlock.create(model).getDigest();
   }
 
 }
