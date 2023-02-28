@@ -4,13 +4,22 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import zone.cogni.sem.jena.JenaUtils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ModelDigestTest {
+  public static void main(String[] args) throws IOException {
+    File file = new File("/Users/natan/work/github/asquare/cube/src/test/resources/digest/skos.rdf");
+    Model read = JenaUtils.read(new FileSystemResource(file));
+    read.write(new FileWriter("/Users/natan/work/github/asquare/cube/src/test/resources/digest/skos.ttl"), "TURTLE");
+  }
 
   @Test
   public void correct_model() {
@@ -162,12 +171,17 @@ class ModelDigestTest {
     Model turtle = loadModel("digest/skos.ttl");
 
     // when
-    String rdfXmlDigest = SortedBlock.create(rdfXml).getDigest();
-    String turtleDigest = SortedBlock.create(turtle).getDigest();
+    SortedBlock rdfXmlBlock = SortedBlock.create(rdfXml);
+    SortedBlock ttlBlock = SortedBlock.create(turtle);
+
+    System.out.println(rdfXmlBlock);
+    System.out.println(ttlBlock);
 
     // then
-    assertThat(rdfXmlDigest).as("rdfXmlDigest")
-                            .isEqualTo(turtleDigest).as("turtleDigest");
+    assertThat(rdfXmlBlock.getDigest())
+            .as("rdfXmlDigest")
+            .isEqualTo(ttlBlock.getDigest())
+            .as("turtleDigest");
   }
 
   private Model loadModel(String path) {
