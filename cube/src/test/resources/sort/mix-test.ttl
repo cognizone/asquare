@@ -1,0 +1,15 @@
+# block 1
+<http://demo.com/data/1>
+    <http://demo.com/model/property> <http://demo.com/data/5> .
+
+# block 2
+_:blank_2
+    <http://demo.com/model/property> <http://demo.com/model/blank-type> .
+
+# block 3
+_:blank_3
+    a <http://demo.com/model/other-blank-type> .
+
+_:blank_3
+    <http://demo.com/model/property> <http://demo.com/model/blank-type> .
+

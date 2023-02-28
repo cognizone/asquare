@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import zone.cogni.sem.jena.JenaUtils;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
@@ -19,7 +20,7 @@ class SortedStatementsStringTest {
   @Test
   public void blank_root_blocks() {
     // given
-    Model model = loadModel("digest/mix-test.ttl");
+    Model model = loadModel("sort/mix-test.ttl");
 
     // when
     List<Statement> statements = new StatementSorter().apply(model);
@@ -33,7 +34,7 @@ class SortedStatementsStringTest {
   @Test
   public void nested_blocks() {
     // given
-    Model model = loadModel("digest/mix-test-2.ttl");
+    Model model = loadModel("sort/mix-test-2.ttl");
 
     // when
     List<Statement> statements = new StatementSorter().apply(model);
@@ -47,7 +48,7 @@ class SortedStatementsStringTest {
   @Test
   public void skos() {
     // given
-    Model rdfXml = loadModel("digest/skos.rdf");
+    Model rdfXml = loadModel("sort/skos.rdf");
 
     // when
     List<Statement> statements = new StatementSorter().apply(rdfXml);
@@ -61,7 +62,7 @@ class SortedStatementsStringTest {
   @Test
   public void skos_with_base() {
     // given
-    Model rdfXml = loadModel("digest/skos.rdf");
+    Model rdfXml = loadModel("sort/skos.rdf");
 
     // when
     String rdf = SortedStatementsString.newBuilder()
@@ -73,6 +74,29 @@ class SortedStatementsStringTest {
     // then
     Model newModel = getModelFromString(rdf);
     assertThat(newModel.size()).isEqualTo(252);
+  }
+
+  @Test
+  void skos_rdf_and_ttl() throws IOException {
+    // given
+    Model rdfXml = loadModel("sort/skos.rdf");
+    Model ttl = loadModel("sort/skos.ttl");
+
+    // when
+    String rdfString = SortedStatementsString.newBuilder()
+                                             .withBase("http://www.w3.org/2004/02/skos/core#")
+                                             .withIndent(8)
+                                             .build()
+                                             .apply(rdfXml);
+
+    String ttlString = SortedStatementsString.newBuilder()
+                                             .withBase("http://www.w3.org/2004/02/skos/core#")
+                                             .withIndent(8)
+                                             .build()
+                                             .apply(ttl);
+
+    // then
+    assertThat(rdfString).isEqualTo(ttlString);
   }
 
   private Model getModelFromString(String rdf) {

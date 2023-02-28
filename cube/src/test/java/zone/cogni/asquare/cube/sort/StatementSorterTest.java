@@ -25,7 +25,7 @@ class StatementSorterTest {
   @Test
   public void blank_node_one_triple() {
     // given
-    Model model = loadModel("digest/blank-node-one-triple.ttl");
+    Model model = loadModel("sort/blank-node-one-triple.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -39,7 +39,7 @@ class StatementSorterTest {
   @Test
   public void same_blanks_node_one_triple() {
     // given
-    Model model = loadModel("digest/same-blank-nodes-one-triple.ttl");
+    Model model = loadModel("sort/same-blank-nodes-one-triple.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -52,7 +52,7 @@ class StatementSorterTest {
   @Test
   public void blank_node_two_triples() {
     // given
-    Model model = loadModel("digest/blank-node-two-triples.ttl");
+    Model model = loadModel("sort/blank-node-two-triples.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -66,7 +66,7 @@ class StatementSorterTest {
   @Test
   public void same_blank_nodes_two_triples() {
     // given
-    Model model = loadModel("digest/same-blank-nodes-two-triples.ttl");
+    Model model = loadModel("sort/same-blank-nodes-two-triples.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -80,7 +80,7 @@ class StatementSorterTest {
   @Test
   public void blank_node_with_nested_blank_node_with_two_triples() {
     // given
-    Model model = loadModel("digest/blank-node-with-nested-blank-node-with-two-triples.ttl");
+    Model model = loadModel("sort/blank-node-with-nested-blank-node-with-two-triples.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -95,7 +95,7 @@ class StatementSorterTest {
   @Test
   public void same_blank_node_with_nested_blank_node_with_two_triples() {
     // given
-    Model model = loadModel("digest/same-blank-node-with-nested-blank-node-with-two-triples.ttl");
+    Model model = loadModel("sort/same-blank-node-with-nested-blank-node-with-two-triples.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
@@ -110,7 +110,7 @@ class StatementSorterTest {
   @Test
   public void same_list_test() {
     // given
-    Model model = loadModel("digest/same-lists.ttl");
+    Model model = loadModel("sort/same-lists.ttl");
     model.write(System.out, "N-TRIPLE");
 
     // when
@@ -129,7 +129,7 @@ class StatementSorterTest {
   @Test
   public void mix_test() {
     // given
-    Model model = loadModel("digest/mix-test.ttl");
+    Model model = loadModel("sort/mix-test.ttl");
 
     // when
     List<Statement> statements = getSortedStatements(model);
