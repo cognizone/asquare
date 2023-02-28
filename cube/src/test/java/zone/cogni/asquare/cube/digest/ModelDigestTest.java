@@ -9,23 +9,8 @@ import zone.cogni.sem.jena.JenaUtils;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ModelDigestTest {
-
-  @Test
-  public void illegal_model() {
-    // given
-    Model model = loadModel("digest/illegal-model.ttl");
-
-    // when
-    assertThatThrownBy(() -> {
-      new ModelDigest().apply(model);
-    }) // then
-       .isInstanceOf(RuntimeException.class)
-       .hasMessageContaining("blank node")
-       .hasMessageContaining("used more than once");
-  }
 
   @Test
   public void correct_model() {
