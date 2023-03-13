@@ -112,8 +112,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = "1.8"
-  targetCompatibility = "1.8"
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -299,6 +299,22 @@ project('asquareroot') {
   }
 }
 
+// IMPORTANT: might be hard to port to after Java 8!
+project('async-indexing') {
+  dependencies {
+    // projects
+    api project(':service')
+
+    // spring
+    api('org.springframework.boot:spring-boot-starter')
+    api('org.springframework.boot:spring-boot-starter-aop')
+
+    // test
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+  }
+}
+
+
 project('cogni-core') {
   dependencies {
     // libs
@@ -472,7 +488,6 @@ project('service') {
     api('org.apache.poi:poi-ooxml')
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-aop')
     api('org.springframework.boot:spring-boot-starter-json')
 
     // test
