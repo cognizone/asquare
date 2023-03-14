@@ -90,7 +90,8 @@ public class GraphComposerService {
 
   protected Map<String, Map<String, TypedResource>> processAttributes(Map<String, List<GraphComposerSubject>> graphsSubjects,
                                                                       Map<String, Set<String>> graphByEntityUri,
-                                                                      Map<String, String> context) {
+                                                                      Map<String, String> context,
+                                                                      Model inputModel) {
     Map<String, Map<String, TypedResource>> resourcesByGraph = new HashMap<>();
     for (String graphUri : graphsSubjects.keySet()) {
       resourcesByGraph.computeIfAbsent(graphUri, m -> new HashMap<>());
@@ -100,7 +101,7 @@ public class GraphComposerService {
 
       Set<String> defaultGraphByEntityUri = subjects.stream().map(GraphComposerSubject::getUri).collect(Collectors.toSet());
       GraphApplicationView view = graphViewService.multi(graphUri, uri -> findGraphForUri(uri, graphUri, graphByEntityUri, defaultGraphByEntityUri));
-      resourcesByGraph.get(graphUri).putAll(graphComposerProcessor.assignAttributesToGraphEntities(view, subjects, context));
+      resourcesByGraph.get(graphUri).putAll(graphComposerProcessor.assignAttributesToGraphEntities(view, subjects, context, inputModel));
       log.info("GraphComposer has finished creating attributes for subjects in graph {}", graphUri);
     }
     return resourcesByGraph;
@@ -118,7 +119,7 @@ public class GraphComposerService {
       log.info("GraphComposer has found following graphs {} in model {}", graphsList, graphComposerModel);
     }
     Map<String, Set<String>> graphByEntityUri = processSubjects(graphsSubjects, context);
-    Map<String, Map<String, TypedResource>> graphsSubjectsWithAttributes = processAttributes(graphsSubjects, graphByEntityUri, context);
+    Map<String, Map<String, TypedResource>> graphsSubjectsWithAttributes = processAttributes(graphsSubjects, graphByEntityUri, context, rdf);
 
     if (rdf != null && StringUtils.isNotBlank(defaultGraph)) {
 

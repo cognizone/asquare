@@ -5,6 +5,7 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +84,14 @@ public class GraphComposerProcessor {
     }
   }
 
+  private void removeAllExisting(DeltaResource resource, String predicate, String subjectUri) {
+    log.info("GraphComposer is removing all existing relations for attribute {} -> {}", subjectUri, predicate);
+    for (RdfValue value : resource.getValues(predicate)) {
+      resource.removeValue(predicate, value);
+      log.info("GraphComposer has removed existing relation {} -> {} -> {}", subjectUri, predicate, value);
+    }
+  }
+
   private void addResourceAttribute(DeltaResource resource,
                                     String subjectUri,
                                     String predicate,
@@ -126,7 +135,8 @@ public class GraphComposerProcessor {
   @CachedDeltaResource
   public Map<String, TypedResource> assignAttributesToGraphEntities(ApplicationView view,
                                                                     List<GraphComposerSubject> subjects,
-                                                                    Map<String, String> context) {
+                                                                    Map<String, String> context,
+                                                                    Model inputModel) {
     Map<String, TypedResource> resourcesByUri = new HashMap<>();
 
     for (GraphComposerSubject subject : subjects) {
@@ -146,13 +156,18 @@ public class GraphComposerProcessor {
             String object = attribute.getObject(context);
             String predicate = attribute.getPredicate(context);
             Boolean isUnique = attribute.getUnique(context);
+            boolean isReplace = attribute.isReplace();
+            if (isUnique && isReplace) throw new NonMaskableException("Configuration for " + resource.getType() + " " + predicate + " is both unique and replace");
 
             if (resource.hasValues(predicate)) {
-              List<RdfValue> values = resource.getValues(predicate);
+              List<RdfValue> values = resource.getValues(predicate);   // current values
               String strValues = values.stream().map(Object::toString).collect(Collectors.joining());
               log.info("GraphComposer has found existing relation {} -> {} -> {} and values {}", subjectUri, predicate, object, strValues);
               if (isUnique) {
                 removeExistingRelations(resource, predicate, subjectUri, object);
+              }
+              else if (isReplace) {
+                removeAllExisting(resource, predicate, subjectUri);
               }
               else if (attribute.hasVersionPredicate()) {
                 String versionPredicate = attribute.getVersionPredicate(context);
@@ -163,9 +178,9 @@ public class GraphComposerProcessor {
                                    values.stream().map(rdfValue -> {
                                      resource.addValue(versionPredicate, rdfValue);
                                      return Integer.parseInt(GraphComposerUtils
-                                                               .getContextByPattern(versionLoadPattern,
-                                                                                    rdfValue.getResource().getURI())
-                                                               .getOrDefault(versionParameter, "0"));
+                                                                     .getContextByPattern(versionLoadPattern,
+                                                                                          rdfValue.getResource().getURI())
+                                                                     .getOrDefault(versionParameter, "0"));
                                    }).max(Integer::compare).orElse(0);
 
                 context.put(versionParameter, sequence.toString());
@@ -178,7 +193,10 @@ public class GraphComposerProcessor {
               }
             }
 
-            if (StringUtils.isEmpty(objectType)) {
+            if (isReplace) {
+              addAllValues(resource, predicate, inputModel);
+            }
+            else if (StringUtils.isEmpty(objectType)) {
               addResourceAttribute(resource, subjectUri, predicate, object);
             }
             else if (GraphComposerUtils.compareUriNamespace(XSDDatatype.XSD, objectType)) {
@@ -194,6 +212,9 @@ public class GraphComposerProcessor {
           }
           log.info("GraphComposer has finished processing attributes for subject {}", subjectUri);
         }
+        catch (NonMaskableException ex) {
+          throw ex;
+        }
         catch (Exception ex) {
           log.error("Can not assign resource {} attributes", subjectUri, ex);
         }
@@ -202,5 +223,25 @@ public class GraphComposerProcessor {
     CachedDeltaResourceAspect.saveCache(view);
 
     return resourcesByUri;
+  }
+
+  private void addAllValues(DeltaResource resource, String predicate, Model inputModel) {
+    ApplicationProfile.Attribute attributeForPredicate = resource.getType().getAttribute(predicate);
+    if (null == attributeForPredicate) throw new NonMaskableException("Type " + resource.getType() + " does not contain attribute " + predicate);
+    String predicateUri = attributeForPredicate.getUri();
+    if (StringUtils.isBlank(predicateUri)) throw new NonMaskableException("No URI for attribute " + attributeForPredicate + " in type " + resource.getType());
+
+    log.info("Going to add input values: {} - {}", resource.getResource(), predicate);
+    inputModel.listObjectsOfProperty(resource.getResource(), inputModel.getProperty(predicateUri))
+              .forEach(node -> {
+                log.info("Adding input value {}", node);
+                resource.addValue(attributeForPredicate, node);
+              });
+  }
+
+  private static class NonMaskableException extends RuntimeException {
+    private NonMaskableException(String message) {
+      super(message);
+    }
   }
 }
