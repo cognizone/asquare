@@ -1,10 +1,12 @@
 package zone.cogni.asquare.access;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import zone.cogni.asquare.access.graph.GraphApplicationView;
 import zone.cogni.asquare.applicationprofile.json.ApplicationProfileSupplier;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile.Attribute;
@@ -24,6 +26,15 @@ public class ApplicationView {
 
   private AccessService accessService;
   private ApplicationProfile applicationProfile;
+  private static Function<ZonedDateTime, String> dateTimeLiteralProvider = dateTime -> dateTime.format(DateTimeFormatter.ISO_INSTANT);
+
+  /**
+   * Function to convert ZonedDateTime to String. Used to set created and modified dateTime literals. By default uses DateTimeFormatter.ISO_INSTANT
+   */
+  public static void setDateTimeLiteralProvider(Function<ZonedDateTime, String> dateTimeLiteralProvider) {
+    Preconditions.checkNotNull(dateTimeLiteralProvider, "dateTimeLiteralProvider is null");
+    ApplicationView.dateTimeLiteralProvider = dateTimeLiteralProvider;
+  }
 
   public ApplicationView() {
   }
@@ -87,10 +98,18 @@ public class ApplicationView {
   private void setCreatedAndModified(List<DeltaResource> typedResources) {
     Literal now = getNow();
 
+    //noinspection InstanceofThis,ClassReferencesSubclass
+    String graphUri = this instanceof GraphApplicationView ? ((GraphApplicationView) this).getGraphUri() : null;
+
     typedResources.forEach(typedResource -> {
 
       if (typedResource.isDeleted()) return;
       if (!typedResource.getDelta().hasChanges()) return;
+
+      //If we have a graph, then we only set the created and modified date on the main resource
+      if (StringUtils.isNotBlank(graphUri) && !graphUri.equals(typedResource.getResource().getURI() + "/graph")) {
+        return;
+      }
 
       String modifiedAttribute = "modified";
       if (typedResource.getType().hasAttribute(modifiedAttribute)) {
@@ -107,8 +126,7 @@ public class ApplicationView {
   }
 
   private Literal getNow() {
-    return ResourceFactory.createTypedLiteral(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT),
-                                              XSDDatatype.XSDdateTime);
+    return ResourceFactory.createTypedLiteral(dateTimeLiteralProvider.apply(ZonedDateTime.now()), XSDDatatype.XSDdateTime);
   }
 
   // moving this to ApplicationView ??!
