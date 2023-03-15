@@ -4,7 +4,6 @@ package zone.cogni.asquare.service.async;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.aop.Advisor;
@@ -45,7 +44,6 @@ public class AsyncUtilsTest {
   }
 
   @Test
-  @Disabled
   public void testRunnable() throws InterruptedException {
     for (int i = 0; i < 5; i++) {
       pool.submit(new Runnable() {
@@ -71,7 +69,6 @@ public class AsyncUtilsTest {
   }
 
   @Test
-  @Disabled
   public void testCallable() {
     for (int i = 0; i < 5; i++) {
       pool.submit(new Callable<String>() {
@@ -91,7 +88,6 @@ public class AsyncUtilsTest {
   }
 
   @Test
-  @Disabled
   public void testFindAsyncContextAnnotation() {
     Annotation a = Mockito.mock(Annotation.class);
     Annotation b = Mockito.mock(AsyncContext.class);
@@ -112,7 +108,6 @@ public class AsyncUtilsTest {
   }
 
   @Test
-  @Disabled
   public void testFindMethodInvocation() {
     TestFindMethodInvocationClass testObj = new TestFindMethodInvocationClass();
     testObj.methodInvocation = Mockito.mock(MethodInvocation.class);
@@ -130,7 +125,6 @@ public class AsyncUtilsTest {
   }
 
   @Test
-  @Disabled
   public void testAsyncWithMapForSpringProxy() {
     AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
     ctx.register(CustomAsyncAnnotationConfig.class, TestService.class);
