@@ -185,6 +185,7 @@ project('access') {
     api('org.apache.commons:commons-lang3')
     api('org.apache.httpcomponents:httpclient')
     api('org.apache.jena:jena-arq')
+    api('org.apache.jena:jena-shacl')
 
     // spring
     api('org.springframework.boot:spring-boot-starter-aop')

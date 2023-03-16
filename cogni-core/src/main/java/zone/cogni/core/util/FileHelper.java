@@ -284,6 +284,10 @@ public class FileHelper {
     }
   }
 
+  /**
+   * @deprecated use {@link #writeStringToFile(File, String, Charset)} instead
+   */
+  @Deprecated
   public static void writeStringToFile(File file, String data) {
     try {
       FileUtils.writeStringToFile(file, data);

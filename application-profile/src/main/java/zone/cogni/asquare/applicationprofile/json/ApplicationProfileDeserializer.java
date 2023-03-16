@@ -370,7 +370,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
 
 
   private <T extends Rule> T createInstance(Class<T> type) {
-    T rule = Try.of(type::newInstance)
+    T rule = Try.of(() -> type.getDeclaredConstructor().newInstance())
                 .getOrElseThrow(() -> new RuntimeException("cannot instantiate class '" + type.getName() + "'"));
     if (Arrays.asList(RdfType.class, Datatype.class).contains(type)) prefixRules.add((SingleValueRule<String>) rule);
     return rule;

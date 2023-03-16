@@ -2,7 +2,7 @@ package zone.cogni.asquare.access.simplerdf.snippet;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.jena.rdf.model.RDFNode;
 import zone.cogni.asquare.applicationprofile.rules.Snippet;
 import zone.cogni.asquare.edit.delta.SparqlVisitor;
@@ -71,7 +71,7 @@ public class SnippetQuery implements Supplier<String> {
 
     parameters.keySet()
               .forEach(key -> {
-                snippetWrapper[0] = StringUtils.replaceAll(snippetWrapper[0], "\\$" + key, "?" + key);
+                snippetWrapper[0] = RegExUtils.replaceAll(snippetWrapper[0], "\\$" + key, "?" + key);
               });
 
     return snippetWrapper[0];

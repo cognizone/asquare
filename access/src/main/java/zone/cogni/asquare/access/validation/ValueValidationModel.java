@@ -7,12 +7,10 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SKOS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.access.util.PropertyPathUriMapper;
 import zone.cogni.asquare.access.util.RdfParserUtils;
 import zone.cogni.asquare.applicationprofile.model.Rule;
@@ -126,7 +124,7 @@ public class ValueValidationModel {
 
         validationResult = new ValidationResultBuilder()
                 .withMessage(message)
-                .withSourceConstraintComponent(Shacl.NodeConstraintComponent).get();
+                .withSourceConstraintComponent(SHACLM.NodeConstraintComponent).get();
       }
       else {
         Option<Constraints> constraints = type.getRule(Constraints.class);
@@ -159,7 +157,7 @@ public class ValueValidationModel {
       validationResult = new ValidationResultBuilder()
               .withMessage(message)
               .withDetails(classValidationResult)
-              .withSourceConstraintComponent(Shacl.NodeConstraintComponent).get();
+              .withSourceConstraintComponent(SHACLM.NodeConstraintComponent).get();
     }
     return validationResult;
   }
@@ -177,7 +175,7 @@ public class ValueValidationModel {
         String message = "RdfType rule violated. " +
                          "Literal value '" + getValueAsString() + "' is not a resource having rdf:type '" + rdfType.getValue() + "'";
 
-        return failure(message, Shacl.ClassConstraintComponent);
+        return failure(message, SHACLM.ClassConstraintComponent);
       }
 
       if (Objects.equals(rdfType.getValue(), RDFS.Resource.getURI())) return new RdfStatements();
@@ -187,7 +185,7 @@ public class ValueValidationModel {
       String message = "RdfType rule violated. " +
                        "Expected resource having rdf:type '" + rdfType.getValue() + "'. Resource '" + getValueAsString() + "' does not have the expected rdf:type.";
 
-      return failure(message, Shacl.ClassConstraintComponent);
+      return failure(message, SHACLM.ClassConstraintComponent);
     };
   }
 
@@ -210,7 +208,7 @@ public class ValueValidationModel {
 
       return new ValidationResultBuilder()
               .withMessage(message)
-              .withSourceConstraintComponent(Shacl.OrConstraintComponent)
+              .withSourceConstraintComponent(SHACLM.OrConstraintComponent)
               .withDetails(failedMathes).get();
     };
   }
@@ -233,7 +231,7 @@ public class ValueValidationModel {
       if (!validationResult.isEmpty()) return new RdfStatements();
 
       // todo add details
-      return failure("Not rule violated for '" + getValueAsString() + "'.", Shacl.NotConstraintComponent);
+      return failure("Not rule violated for '" + getValueAsString() + "'.", SHACLM.NotConstraintComponent);
     };
   }
 
@@ -252,7 +250,7 @@ public class ValueValidationModel {
 
       return new ValidationResultBuilder()
               .withMessage(message)
-              .withSourceConstraintComponent(Shacl.AndConstraintComponent)
+              .withSourceConstraintComponent(SHACLM.AndConstraintComponent)
               .withDetails(problems)
               .get();
     };
@@ -277,7 +275,7 @@ public class ValueValidationModel {
         String message = "InScheme rule violated. " +
                          "Literal value '" + getValueAsString() + "' is not a resource having skos:inScheme property '" + inScheme.getValue() + "'";
 
-        return failure(message, Shacl.PropertyShapeComponent);
+        return failure(message, SHACLM.NodeKindConstraintComponent);
       }
 
       if (model.contains(node.asResource(), SKOS.inScheme, model.createResource(inScheme.getValue()))) return new RdfStatements();
@@ -285,7 +283,7 @@ public class ValueValidationModel {
       String message = "InScheme rule violated. " +
                        "Expected resource having skos:inScheme property '" + inScheme.getValue() + "'. Resource '" + getValueAsString() + "' does not have the expected skos:inScheme property.";
 
-      return failure(message, Shacl.PropertyShapeComponent);
+      return failure(message, SHACLM.NodeKindConstraintComponent);
     };
   }
 
@@ -300,7 +298,7 @@ public class ValueValidationModel {
         String message = "MemberOf rule violated. " +
                          "Literal value '" + getValueAsString() + "' is not a resource targeted by a skos:member property from '" + memberOf.getValue() + "'";
 
-        return failure(message, Shacl.PropertyShapeComponent);
+        return failure(message, SHACLM.NodeKindConstraintComponent);
       }
 
       Resource object = node.asResource().isURIResource() ? model.createResource(node.asResource().getURI()) : model.createResource(node.asResource().getId());
@@ -309,7 +307,7 @@ public class ValueValidationModel {
       String message = "MemberOf rule violated. " +
                        "Expected resource targeted by a skos:member property from '" + memberOf.getValue() + "'. Resource '" + getValueAsString() + "' is not the target of the expected skos:member property.";
 
-      return failure(message, Shacl.PropertyShapeComponent);
+      return failure(message, SHACLM.NodeKindConstraintComponent);
     };
   }
 
@@ -322,7 +320,7 @@ public class ValueValidationModel {
       if (!isLiteral) {
         String message = "Value check violated. " +
                          "Expected literal value '" + literalValue.getValue() + "' but type was '" + value.getClass().getSimpleName() + "'.";
-        return failure(message, Shacl.HasValueConstraintComponent);
+        return failure(message, SHACLM.HasValueConstraintComponent);
       }
 
       Literal literal = (Literal) value;
@@ -333,7 +331,7 @@ public class ValueValidationModel {
       String message = "Value check violated. " +
                        "Expected literal value '" + expectedLiteral + "' but actual value is '" + literal.toString() + "'.";
 
-      return failure(message, Shacl.HasValueConstraintComponent);
+      return failure(message, SHACLM.HasValueConstraintComponent);
     };
   }
 
@@ -348,7 +346,7 @@ public class ValueValidationModel {
         String message = "PropertyPath rule violated. " +
                          "Literal value '" + getValueAsString() + "' is not a resource with property path '" + propertyPath.getPath() + "'";
 
-        return failure(message, Shacl.PropertyShapeComponent);
+        return failure(message, SHACLM.NodeKindConstraintComponent);
       }
 
       Resource resource = node.asResource().isURIResource() ? model.createResource(node.asResource().getURI()) : model.createResource(node.asResource().getId());
@@ -358,7 +356,7 @@ public class ValueValidationModel {
       String message = "PropertyPath rule violated. " +
                        "Expected resource having property path '" + propertyPath.getPath() + "' with value '" + propertyPath.getValue() + "'. Resource '" + getValueAsString() + "' is missing expected property path value.";
 
-      return failure(message, Shacl.PropertyShapeComponent);
+      return failure(message, SHACLM.NodeKindConstraintComponent);
     };
   }
 
@@ -371,7 +369,7 @@ public class ValueValidationModel {
       if (!isResource) {
         String message = "Value check violated. " +
                          "Expected value resource with uri '" + resourceReference.getValue() + "' but type was '" + value.getClass().getSimpleName() + "'.";
-        return failure(message, Shacl.HasValueConstraintComponent);
+        return failure(message, SHACLM.HasValueConstraintComponent);
       }
 
       Resource resource = (Resource) value;
@@ -381,7 +379,7 @@ public class ValueValidationModel {
       String message = "Value check violated. " +
                        "Expected value resource with uri '" + resourceReference.getValue() + "' but actual uri is '" + resource.getURI() + "'.";
 
-      return failure(message, Shacl.HasValueConstraintComponent);
+      return failure(message, SHACLM.HasValueConstraintComponent);
     };
   }
 
@@ -395,7 +393,7 @@ public class ValueValidationModel {
         String subMessage = isLiteral ? "Expected a language literal, but type is " + value.getClass().getSimpleName()
                                       : "Expected a language literal, but literal is typed.";
         String message = "Value check violated. " + subMessage;
-        return failure(message, Shacl.LanguageInConstraintComponent);
+        return failure(message, SHACLM.LanguageInConstraintComponent);
       }
 
       String language = ((Literal) value).getLanguage();
@@ -403,7 +401,7 @@ public class ValueValidationModel {
 
       String message = "Value check violated. " +
                        "Expected value to have language in " + languageIn.getValue() + " but actual language is " + language;
-      return failure(message, Shacl.LanguageInConstraintComponent);
+      return failure(message, SHACLM.LanguageInConstraintComponent);
     };
   }
 
@@ -460,7 +458,7 @@ public class ValueValidationModel {
       if (!(value instanceof Literal)) {
         String message = "Datatype check violated. Expected a literal but type is " + value.getClass().getSimpleName() + ".";
 
-        return failure(message, Shacl.DatatypeConstraintComponent);
+        return failure(message, SHACLM.DatatypeConstraintComponent);
       }
 
       if (Objects.equals(datatype.getValue(), RDFS.Literal.getURI())) return new RdfStatements();
@@ -472,7 +470,7 @@ public class ValueValidationModel {
         String message = "Datatype check violated. " +
                          "Expected literal '" + literal.getLexicalForm() + "' to be of datatype '" + datatype.getValue() + "' but found datatype '" + literalDatatype.getURI() + ".";
 
-        return failure(message, Shacl.DatatypeConstraintComponent);
+        return failure(message, SHACLM.DatatypeConstraintComponent);
       }
 
       return new RdfStatements();

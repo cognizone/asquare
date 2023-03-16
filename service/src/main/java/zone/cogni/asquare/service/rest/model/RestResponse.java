@@ -44,10 +44,7 @@ public class RestResponse<T> {
   }
 
   public String getCode() {
-    if (StringUtils.isEmpty(code)) {
-      return "";
-    }
-    return code;
+    return StringUtils.hasText(code) ? code : "";
   }
 
   public T getData() {
