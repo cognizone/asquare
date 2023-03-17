@@ -12,6 +12,7 @@ public class GraphComposerAttribute {
   private String predicate;
   private String object;
   private String unique;
+  private String replace;
 
   private String versionParameter;
   private String versionPredicate;
@@ -103,6 +104,18 @@ public class GraphComposerAttribute {
 
   public Boolean getUnique(Map<String, String> context) {
     return StringUtils.equalsIgnoreCase(GraphComposerUtils.replace(unique, context), "true");
+  }
+
+  public void setReplace(String replace) {
+    this.replace = replace;
+  }
+
+  public String getReplace() {
+    return replace;
+  }
+
+  public boolean isReplace() {
+    return Boolean.parseBoolean(replace);
   }
 
   public String toString() {
