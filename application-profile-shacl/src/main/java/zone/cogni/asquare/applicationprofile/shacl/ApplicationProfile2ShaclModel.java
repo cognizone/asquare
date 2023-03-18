@@ -8,10 +8,10 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.applicationprofile.model.Rule;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.rules.And;
@@ -63,7 +63,7 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
 
   private RdfStatements getTypeShacl(ApplicationProfile.Type type) {
     return new RdfStatements()
-            .add(ResourceFactory.createResource(getShapeTypeUri(type)), RDF.type, Shacl.NodeShape);
+            .add(ResourceFactory.createResource(getShapeTypeUri(type)), RDF.type, SHACLM.NodeShape);
   }
 
   private String getShapeTypeUri(ApplicationProfile.Type type) {
@@ -88,7 +88,7 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
       RdfType rdfType = (RdfType) constraintsRule;
       return new RdfStatements()
               .add(ResourceFactory.createResource(getShapeTypeUri(type)),
-                   Shacl.targetClass,
+                   SHACLM.targetClass,
                    ResourceFactory.createResource(rdfType.getValue()));
     }
 
@@ -110,10 +110,10 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
 
   private RdfStatements getAttributeShacl(ApplicationProfile.Type type, ApplicationProfile.Attribute attribute, Resource attributeNode) {
     return new RdfStatements()
-            .add(ResourceFactory.createResource(getShapeTypeUri(type)), Shacl.property, attributeNode)
-            .add(attributeNode, RDF.type, Shacl.PropertyShape)
-            .add(attributeNode, Shacl.name, ResourceFactory.createTypedLiteral(attribute.getAttributeId()))
-            .add(attributeNode, Shacl.path, ResourceFactory.createResource(attribute.getUri()));
+            .add(ResourceFactory.createResource(getShapeTypeUri(type)), SHACLM.property, attributeNode)
+            .add(attributeNode, RDF.type, SHACLM.PropertyShape)
+            .add(attributeNode, SHACLM.name, ResourceFactory.createTypedLiteral(attribute.getAttributeId()))
+            .add(attributeNode, SHACLM.path, ResourceFactory.createResource(attribute.getUri()));
   }
 
   private RdfStatements getAttributeRulesShacl(ApplicationProfile.Type type, ApplicationProfile.Attribute attribute, Resource attributeNode) {
@@ -139,12 +139,12 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
 
   private RdfStatements getMinCount(Resource attributeNode, MinCardinality minCardinality) {
     return new RdfStatements()
-            .add(attributeNode, Shacl.minCount, ResourceFactory.createTypedLiteral(minCardinality.getValue()));
+            .add(attributeNode, SHACLM.minCount, ResourceFactory.createTypedLiteral(minCardinality.getValue()));
   }
 
   private RdfStatements getMaxCount(Resource attributeNode, MaxCardinality maxCardinality) {
     return new RdfStatements()
-            .add(attributeNode, Shacl.maxCount, ResourceFactory.createTypedLiteral(maxCardinality.getValue()));
+            .add(attributeNode, SHACLM.maxCount, ResourceFactory.createTypedLiteral(maxCardinality.getValue()));
   }
 
   private RdfStatements getRange(ApplicationProfile.Type type, ApplicationProfile.Attribute attribute, Resource attributeNode, Range range) {
@@ -170,14 +170,14 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
     Resource notNode = ResourceFactory.createResource();
 
     return getRangeValue(type, attribute, notNode, not.getValue())
-            .add(attributeNode, Shacl.not, notNode);
+            .add(attributeNode, SHACLM.not, notNode);
   }
 
   private RdfStatements getAnd(ApplicationProfile.Type type, ApplicationProfile.Attribute attribute, Resource attributeNode, And and) {
     Resource andNode = ResourceFactory.createResource();
 
     RdfStatements result = new RdfStatements()
-            .add(attributeNode, Shacl.and, andNode);
+            .add(attributeNode, SHACLM.and, andNode);
 
     List<RdfStatements> andList = and.getValue().stream()
             .map(rule -> getRangeValue(type, attribute, andNode, rule))
@@ -245,7 +245,7 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
     Resource orNode = ResourceFactory.createResource();
 
     RdfStatements result = new RdfStatements()
-            .add(attributeNode, Shacl.or, orNode);
+            .add(attributeNode, SHACLM.or, orNode);
 
     List<RdfStatements> orList = or.getValue().stream()
             .map(rule -> getRangeValue(type, attribute, orNode, rule))
@@ -263,7 +263,7 @@ public class ApplicationProfile2ShaclModel implements Function<ApplicationProfil
 
   private RdfStatements getDatatype(ApplicationProfile.Type type, Resource attributeNode, Datatype datatype) {
     return new RdfStatements()
-            .add(attributeNode, Shacl.datatype, ResourceFactory.createResource(datatype.getValue()));
+            .add(attributeNode, SHACLM.datatype, ResourceFactory.createResource(datatype.getValue()));
   }
 
   private RdfStatements getClassId(ApplicationProfile.Type type, Resource resourceInContext, ClassId classId) {

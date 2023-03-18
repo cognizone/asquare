@@ -4,8 +4,8 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.sem.jena.RdfStatements;
 
 import javax.annotation.Nonnull;
@@ -23,12 +23,12 @@ public class ValidationResultBuilder implements Supplier<RdfStatements> {
 
   public static Stream<Resource> filterRootValidationResults(List<Statement> details) {
     return details.stream()
-            .filter(statement -> Objects.equals(statement.getPredicate(), RDF.type))
-            .filter(statement -> Objects.equals(statement.getObject(), Shacl.ValidationResult))
-            .filter(statement -> !(details.stream().filter(st -> Objects.equals(st.getPredicate(), Shacl.details))
-                    .anyMatch(st -> Objects.equals(st.getObject(), statement.getSubject())))
-            )
-            .map(Statement::getSubject);
+                  .filter(statement -> Objects.equals(statement.getPredicate(), RDF.type))
+                  .filter(statement -> Objects.equals(statement.getObject(), SHACLM.ValidationResult))
+                  .filter(statement -> !(details.stream().filter(st -> Objects.equals(st.getPredicate(), SHACLM.detail))
+                                                .anyMatch(st -> Objects.equals(st.getObject(), statement.getSubject())))
+                  )
+                  .map(Statement::getSubject);
   }
 
   private final List<Statement> details = new ArrayList<>();
@@ -78,17 +78,17 @@ public class ValidationResultBuilder implements Supplier<RdfStatements> {
     RdfStatements statements = new RdfStatements();
 
     Resource result = ResourceFactory.createResource("http://shacl.org/report/result/" + UUID.randomUUID());
-    statements.add(result, RDF.type, Shacl.ValidationResult);
-    statements.add(result, Shacl.resultSeverity, Shacl.Severity.Violation);
-    statements.add(result, Shacl.sourceConstraintComponent, sourceConstraintComponent);
-    statements.add(result, Shacl.resultMessage, createLangLiteral(message, "en"));
+    statements.add(result, RDF.type, SHACLM.ValidationResult);
+    statements.add(result, SHACLM.resultSeverity, SHACLM.Violation);
+    statements.add(result, SHACLM.sourceConstraintComponent, sourceConstraintComponent);
+    statements.add(result, SHACLM.resultMessage, createLangLiteral(message, "en"));
 
     if (resultPath != null)
-      statements.add(result, Shacl.resultPath, resultPath);
+      statements.add(result, SHACLM.resultPath, resultPath);
     if (focusNode != null)
-      statements.add(result, Shacl.focusNode, focusNode);
+      statements.add(result, SHACLM.focusNode, focusNode);
     if (value != null)
-      statements.add(result, Shacl.value, value);
+      statements.add(result, SHACLM.value, value);
 
     addDetails(statements, result);
 
@@ -96,7 +96,7 @@ public class ValidationResultBuilder implements Supplier<RdfStatements> {
   }
 
   private void addDetails(RdfStatements statements, Resource root) {
-    filterRootValidationResults(details).forEach(nestedResult -> statements.add(root, Shacl.details, nestedResult));
+    filterRootValidationResults(details).forEach(nestedResult -> statements.add(root, SHACLM.detail, nestedResult));
     statements.add(details);
   }
 

@@ -1,6 +1,7 @@
 package zone.cogni.asquare.service.rest.model;
 
-import org.springframework.util.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
@@ -44,10 +45,7 @@ public class RestResponse<T> {
   }
 
   public String getCode() {
-    if (StringUtils.isEmpty(code)) {
-      return "";
-    }
-    return code;
+    return StringUtils.isNotBlank(code) ? code : "";
   }
 
   public T getData() {

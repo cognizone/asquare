@@ -2,7 +2,7 @@ package zone.cogni.asquare.access.validation;
 
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ResourceFactory;
-import zone.cogni.asquare.access.shacl.Shacl;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import zone.cogni.asquare.applicationprofile.model.Rule;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.rules.MaxCardinality;
@@ -55,7 +55,7 @@ public class ValuesValidation {
               .withResultPath(attribute.getUri())
               .withFocusNode(focusNode.getResource())
               .withValue(ResourceFactory.createTypedLiteral(values.size()))
-              .withSourceConstraintComponent(Shacl.MinCountConstraintComponent).get();
+              .withSourceConstraintComponent(SHACLM.MinCountConstraintComponent).get();
     };
   }
 
@@ -74,7 +74,7 @@ public class ValuesValidation {
               .withResultPath(attribute.getUri())
               .withFocusNode(focusNode.getResource())
               .withValue(ResourceFactory.createTypedLiteral(values.size()))
-              .withSourceConstraintComponent(Shacl.MaxCountConstraintComponent).get();
+              .withSourceConstraintComponent(SHACLM.MaxCountConstraintComponent).get();
     };
   }
 
