@@ -1,4 +1,4 @@
-package zone.cogni.asquare.service.index;
+package zone.cogni.asquare.triplestore.jenamemory;
 
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;

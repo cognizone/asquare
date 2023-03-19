@@ -28,7 +28,7 @@ import org.elasticsearch.test.MockHttpTransport;
 import org.elasticsearch.transport.nio.MockNioTransportPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.service.elasticsearch.v7.GenericElastic7Configuration;
 

@@ -2,7 +2,7 @@ package zone.cogni.asquare.service.elasticsearch.v7;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 
 import java.util.List;
 
