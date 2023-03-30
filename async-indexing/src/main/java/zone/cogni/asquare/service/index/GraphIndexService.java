@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import zone.cogni.asquare.access.ApplicationView;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.graph.GraphApplicationViewFactory;
 import zone.cogni.asquare.access.graph.GraphViewService;
 import zone.cogni.asquare.access.graph.SaveUtilities;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 @Service

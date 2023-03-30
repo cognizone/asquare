@@ -17,9 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.async.AsyncTaskManager;
 import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.asquare.triplestore.jenamemory.DatasetRdfStoreService;
 import zone.cogni.sem.jena.model.ResultSetDto;
 
 import java.io.IOException;

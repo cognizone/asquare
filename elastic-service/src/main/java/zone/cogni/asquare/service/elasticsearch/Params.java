@@ -1,4 +1,4 @@
-package zone.cogni.asquare.access;
+package zone.cogni.asquare.service.elasticsearch;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.LinkedMultiValueMap;
