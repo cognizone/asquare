@@ -7,9 +7,9 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shacl.vocabulary.SHACLM;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import zone.cogni.asquare.access.shacl.Shacl;
 import zone.cogni.asquare.cube.convertor.json.CompactConversionProfile;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   private List<CompactConversionProfile.Type> calculateTypes(@Nonnull CompactConversionProfile profile,
                                                              @Nonnull Model shacl) {
     // TODO add a check for ShapesGraph
-    return shacl.listStatements(null, RDF.type, Shacl.NodeShape)
+    return shacl.listStatements(null, RDF.type, SHACLM.NodeShape)
                 .toList()
                 .stream()
                 .map(Statement::getSubject)
@@ -59,7 +59,7 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   @Nonnull
   private String calculateTargetClassId(@Nonnull CompactConversionProfile profile,
                                         @Nonnull Resource shape) {
-    Resource resource = shape.getPropertyResourceValue(Shacl.targetClass);
+    Resource resource = shape.getPropertyResourceValue(SHACLM.targetClass);
     return convertResourceToId(profile, resource);
   }
 
@@ -85,7 +85,7 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
 
   @Nonnull
   private String calculateRdfType(@Nonnull Resource nodeShape) {
-    return nodeShape.getPropertyResourceValue(Shacl.targetClass).getURI();
+    return nodeShape.getPropertyResourceValue(SHACLM.targetClass).getURI();
   }
 
   @Nonnull
@@ -113,7 +113,7 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   private List<CompactConversionProfile.Attribute> calculateAttributes(@Nonnull CompactConversionProfile profile,
                                                                        @Nonnull Model shacl,
                                                                        @Nonnull Resource nodeShape) {
-    return nodeShape.listProperties(Shacl.property)
+    return nodeShape.listProperties(SHACLM.property)
                     .toList()
                     .stream()
                     .map(statement -> statement.getObject().asResource())
@@ -137,8 +137,8 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   }
 
   private boolean isInversePropertyShape(Resource propertyShape) {
-    boolean hasPath = propertyShape.hasProperty(Shacl.path);
-    boolean hasInversePath = propertyShape.hasProperty(Shacl.inversePath);
+    boolean hasPath = propertyShape.hasProperty(SHACLM.path);
+    boolean hasInversePath = propertyShape.hasProperty(SHACLM.inversePath);
 
     if (hasPath && hasInversePath)
       throw new RuntimeException("both 'path' or 'inversePath' on property '" + propertyShape.getURI() + "'");
@@ -162,16 +162,16 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   }
 
   private Resource getPathOrInversePathResource(Resource propertyShape) {
-    Property pathProperty = isInversePropertyShape(propertyShape) ? Shacl.inversePath : Shacl.path;
+    Property pathProperty = isInversePropertyShape(propertyShape) ? SHACLM.inversePath : SHACLM.path;
     return propertyShape.getPropertyResourceValue(pathProperty);
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
   private boolean calculateSingle(Resource propertyShape) {
-    if (!propertyShape.hasProperty(Shacl.maxCount))
+    if (!propertyShape.hasProperty(SHACLM.maxCount))
       return false;
 
-    List<Long> maxCounts = propertyShape.listProperties(Shacl.maxCount)
+    List<Long> maxCounts = propertyShape.listProperties(SHACLM.maxCount)
                                         .toList()
                                         .stream()
                                         .map(Statement::getObject)
@@ -187,21 +187,21 @@ public class ShaclToConversionProfile implements Function<Model, CompactConversi
   }
 
   private CompactConversionProfile.Attribute.Type calculateAttributeType(Resource propertyShape) {
-    if (propertyShape.hasProperty(Shacl.nodeKind)) {
-      Resource nodeKind = propertyShape.getPropertyResourceValue(Shacl.nodeKind);
+    if (propertyShape.hasProperty(SHACLM.nodeKind)) {
+      Resource nodeKind = propertyShape.getPropertyResourceValue(SHACLM.nodeKind);
 
-      if (nodeKind.equals(Shacl.NodeKind.Literal))
+      if (nodeKind.equals(SHACLM.Literal))
         return CompactConversionProfile.Attribute.Type.datatype;
-      else if (nodeKind.equals(Shacl.NodeKind.IRI) && !propertyShape.hasProperty(Shacl.classP))
+      else if (nodeKind.equals(SHACLM.IRI) && !propertyShape.hasProperty(SHACLM.class_))
         return CompactConversionProfile.Attribute.Type.datatype;
-      else if (nodeKind.equals(Shacl.NodeKind.IRI))
+      else if (nodeKind.equals(SHACLM.IRI))
         return CompactConversionProfile.Attribute.Type.object;
     }
 
-    if (propertyShape.hasProperty(Shacl.datatype)) {
+    if (propertyShape.hasProperty(SHACLM.datatype)) {
       return CompactConversionProfile.Attribute.Type.datatype;
     }
-    else if (propertyShape.hasProperty(Shacl.classP)) {
+    else if (propertyShape.hasProperty(SHACLM.class_)) {
       return CompactConversionProfile.Attribute.Type.object;
     }
 

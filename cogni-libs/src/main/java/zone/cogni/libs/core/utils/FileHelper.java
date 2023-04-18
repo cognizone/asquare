@@ -294,6 +294,10 @@ public class FileHelper {
     }
   }
 
+  /**
+   * @deprecated use {@link #writeStringToFile(File, String, Charset)} instead
+   */
+  @Deprecated
   public static void writeStringToFile(File file, String data) {
     try {
       FileUtils.writeStringToFile(file, data);
@@ -340,14 +344,16 @@ public class FileHelper {
   }
 
   public static String getContentType(String filePath) {
-    if (StringUtils.endsWithIgnoreCase(filePath, ".jpg") || StringUtils.endsWithIgnoreCase(filePath, ".jpeg")) return "image/jpeg";
+    if (StringUtils.endsWithIgnoreCase(filePath, ".jpg") || StringUtils.endsWithIgnoreCase(filePath, ".jpeg"))
+      return "image/jpeg";
     if (StringUtils.endsWithIgnoreCase(filePath, ".xml")) return "application/xml";
     if (StringUtils.endsWithIgnoreCase(filePath, ".png")) return "image/png";
     if (StringUtils.endsWithIgnoreCase(filePath, ".pdf")) return "application/pdf";
     if (StringUtils.endsWithIgnoreCase(filePath, ".zip")) return "application/zip";
     if (StringUtils.endsWithIgnoreCase(filePath, ".csv")) return "text/csv";
     if (StringUtils.endsWithIgnoreCase(filePath, ".rdf")) return "application/rdf+xml";
-    if (StringUtils.endsWithIgnoreCase(filePath, ".pptx") || StringUtils.endsWithIgnoreCase(filePath, ".ppt")) return "application/vnd.ms-powerpoint";
+    if (StringUtils.endsWithIgnoreCase(filePath, ".pptx") || StringUtils.endsWithIgnoreCase(filePath, ".ppt"))
+      return "application/vnd.ms-powerpoint";
     if (StringUtils.endsWithIgnoreCase(filePath, ".xls")) return "application/vnd.ms-excel";
     return "application/octet-stream";
   }

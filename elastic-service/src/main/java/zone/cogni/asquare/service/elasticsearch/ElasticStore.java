@@ -1,7 +1,6 @@
 package zone.cogni.asquare.service.elasticsearch;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import zone.cogni.asquare.access.Params;
 
 import java.util.Collection;
 import java.util.Collections;

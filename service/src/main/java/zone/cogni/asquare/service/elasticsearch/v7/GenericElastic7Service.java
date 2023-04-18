@@ -9,7 +9,7 @@ import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.service.elasticsearch.ElasticService;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 
 import java.util.List;
 import java.util.stream.Collectors;
