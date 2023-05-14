@@ -32,6 +32,7 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -813,7 +814,12 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   private String literalToDateTime(Literal literal) {
     String stringValue = literal.getLexicalForm();
     // we do not do anything with this, it just validates that the dateTime value is in a parsable format
-    ZonedDateTime.parse(stringValue);
+    try {
+      ZonedDateTime.parse(stringValue);
+    }
+    catch (Exception e) {
+      LocalDateTime.parse(stringValue); //let's allow values without a timezone
+    }
     // the actual value should stay unmodified, in the format that it came in
     return stringValue;
   }
