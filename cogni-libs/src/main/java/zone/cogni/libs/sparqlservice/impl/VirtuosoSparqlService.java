@@ -183,7 +183,7 @@ public class VirtuosoSparqlService implements SparqlService {
     });
 
     StringWriter writer = new StringWriter();
-    model.write(writer, "ttl");
+    VirtuosoHelper.patchModel(model).write(writer, "ttl");
     try {
       String url = StringUtils.substringBeforeLast(this.endpointUrl, "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
                    (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));

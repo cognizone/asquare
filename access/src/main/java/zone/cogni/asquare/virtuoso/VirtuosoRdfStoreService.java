@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   private void addData(Model model, String graphUri, boolean replace) {
     //If this method fails, check what is done in treaties (upload in batches with insert queries)
     StringWriter writer = new StringWriter();
-    model.write(writer, "ttl");
+    VirtuosoHelper.patchModel(model).write(writer, "ttl");
     byte[] data = writer.toString().getBytes(StandardCharsets.UTF_8);
 
 
