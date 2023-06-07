@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -15,6 +16,7 @@ import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.template.JenaQueryUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
+import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -102,16 +104,41 @@ public class PaginatedQuery {
            "}";
   }
 
+  /**
+   * Same as {@code getGraph(rdfStore, graphUri, false)}
+   */
   @Nonnull
   public Model getGraph(@Nonnull RdfStoreService rdfStore, @Nonnull String graphUri) {
-    String constructGraph = "construct { ?s ?p ?o }" +
-                            " where {" +
-                            "   graph <" + graphUri + "> {" +
-                            "     ?s ?p ?o" +
-                            "   }" +
-                            " } ";
+    return getGraph(rdfStore, graphUri, false);
+  }
 
-    return getModelFromQuery(rdfStore, constructGraph);
+  /**
+   * <p>
+   * Loads all triples from a graph in a Jena model.
+   * </p>
+   *
+   * @param rdfStore      RDF store to use when querying
+   * @param graphUri      The uri of the graph to load
+   * @param validateCount If true, a select count will be done on the store and compared to the result model.
+   * @return Jena model containing all triples of given graph
+   */
+  @Nonnull
+  public Model getGraph(@Nonnull RdfStoreService rdfStore, @Nonnull String graphUri, boolean validateCount) {
+    String wherePart = " where {" +
+                       "   graph <" + graphUri + "> {" +
+                       "     ?s ?p ?o" +
+                       "   }" +
+                       " } ";
+    String constructGraph = "construct { ?s ?p ?o }" + wherePart;
+    Model modelFromQuery = getModelFromQuery(rdfStore, constructGraph);
+    if (validateCount) {
+      int count = rdfStore.executeSelectQuery("select (count(*) as ?cnt) " + wherePart, JenaResultSetHandlers.firstResultOptional)
+                          .map(RDFNode::asLiteral)
+                          .map(Literal::getInt)
+                          .orElseThrow(() -> new RuntimeException("Count query didn't give any results? graphUri: " + graphUri));
+      if (modelFromQuery.size() != count) throw new RuntimeException("Model count " + modelFromQuery.size() + " different from count query " + count + " for " + graphUri);
+    }
+    return modelFromQuery;
   }
 
   private Model getModelFromQuery(RdfStoreService rdfStore, String constructGraph) {
