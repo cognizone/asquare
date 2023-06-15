@@ -79,6 +79,7 @@ public class MonitoredPool {
   }
 
   public <V> Collection<V> invoke(Collection<Callable<V>> callables, List<Consumer<InvocationContext<V>>> afterCodeBlocks) {
+    log.info("Invoking {} callables", callables.size());
     if (isActive()) throw new RuntimeException("cannot be invoked, another process is running");
 
 
