@@ -22,15 +22,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SparqlSelectToJson {
 
-  private static final Logger log = LoggerFactory.getLogger(SparqlSelectToJson.class);
+  public enum ListExceptionHandling {
+    fail, takeFirstSorted, takeFirstInput, concatAll
+  }
 
+  private static final Logger log = LoggerFactory.getLogger(SparqlSelectToJson.class);
+  private static final String listConcatSeparator = " - ";
   private final List<Query> queries;
+  private final ListExceptionHandling listExceptionHandling;
 
   public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
+    this(queryResources, templateService, context, ListExceptionHandling.fail);
+  }
+
+  public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context, ListExceptionHandling listExceptionHandling) {
     this.queries = asQueries(queryResources, templateService, context);
+    this.listExceptionHandling = listExceptionHandling;
   }
 
   private List<Query> asQueries(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
@@ -125,7 +136,7 @@ public class SparqlSelectToJson {
       array.add(convertedValue);
     }
     else if (isPresent && !propertyConversion.isList()) {
-      throw new RuntimeException("multiple results found for " + propertyConversion.getPropertyName());
+      handleListException(current, lastLevel, convertedValue, propertyConversion);
     }
     else if (!isPresent && propertyConversion.isList()) {
       ArrayNode array = JsonNodeFactory.instance.arrayNode();
@@ -134,6 +145,29 @@ public class SparqlSelectToJson {
     }
     else {
       current.set(lastLevel, convertedValue);
+    }
+  }
+
+  private void handleListException(ObjectNode current, String lastLevel, JsonNode convertedValue, PropertyConversion propertyConversion) {
+    switch(listExceptionHandling) {
+      case fail:
+        throw new RuntimeException("multiple results found for " + propertyConversion.getPropertyName());
+      case takeFirstSorted:
+        log.debug("ListExceptionHandling takeFirstSorted: comparing result to previous results.");
+        String oldValue = current.get(lastLevel).textValue();
+        if (convertedValue.asText().compareTo(oldValue) < 0) current.put(lastLevel, convertedValue);
+        break;
+      case takeFirstInput:
+        log.debug("ListExceptionHandling takeFirstInput: ignoring other results");
+        break;
+      case concatAll:
+        log.debug("ListExceptionHandling concatAll: concatenating results.");
+        String currentValue = current.get(lastLevel).textValue();
+        String newValue = Stream.concat(Stream.of(currentValue.split(listConcatSeparator)), Stream.of(convertedValue.asText()))
+                                .sorted()
+                                .collect(Collectors.joining(listConcatSeparator));
+        current.put(lastLevel, newValue);
+        break;
     }
   }
 
