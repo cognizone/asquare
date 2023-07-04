@@ -1,5 +1,6 @@
 package zone.cogni.libs.sparqlservice.impl;
 
+import io.vavr.control.Try;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -120,10 +121,14 @@ public class VirtuosoSparqlService implements SparqlService {
     conn.getOutputStream().write(data);
 
     int responseCode = conn.getResponseCode();
+    Try<String> errorBody = Try.of(() -> IOUtils.toString(conn.getErrorStream(), StandardCharsets.UTF_8));
 
     conn.disconnect();
 
     if ((responseCode / 100) != 2) {
+      errorBody.onFailure(ex -> log.error("Failed to read response body", ex))
+               .onSuccess(log::error);
+
       throw new RuntimeException("Not 2xx as answer: " + conn.getResponseCode() + " " + conn.getResponseMessage());
     }
   }
