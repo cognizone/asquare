@@ -1,5 +1,6 @@
 package zone.cogni.asquare.virtuoso;
 
+import io.vavr.control.Try;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -106,10 +107,13 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
       HttpResponse response = client.execute(request);
       int responseCode = response.getStatusLine().getStatusCode();
       String reason = response.getStatusLine().getReasonPhrase();
+      String responseBody = Try.of(() -> IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8))
+              .onFailure(ex -> log.error("Failed to read response body", ex))
+              .getOrElse(StringUtils.EMPTY);
       EntityUtils.consume(response.getEntity());
       if (!HttpStatus.valueOf(responseCode).is2xxSuccessful()) {
-        log.error("Virtuoso server send response with status code {}, with message {}", responseCode, reason);
-        throw new VirtuosoOperationException("Virtuoso server send response with status code " + responseCode + ", with message " + reason);
+        log.error("Virtuoso server sent response with status code {}, with message {} and body {}", responseCode, reason, responseBody);
+        throw new VirtuosoOperationException("Virtuoso server sent response with status code " + responseCode + ", with message " + reason, responseBody);
       }
     }
     catch (IOException ex) {
