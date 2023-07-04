@@ -324,6 +324,7 @@ project('cogni-libs') {
     api('org.apache.httpcomponents:fluent-hc')
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
+    api('io.vavr:vavr')
 
     // spring
     api('org.springframework.boot:spring-boot-starter-web')
