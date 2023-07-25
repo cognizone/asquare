@@ -21,6 +21,7 @@ import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,15 +41,36 @@ public class SparqlSelectToJson {
   }
 
   public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context, ListExceptionHandling listExceptionHandling) {
-    this.queries = asQueries(queryResources, templateService, context);
-    this.listExceptionHandling = listExceptionHandling;
+    this(asQueries(templateService, queryResources, context), listExceptionHandling);
   }
 
-  private List<Query> asQueries(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
-    return Arrays.stream(queryResources)
-            .map(resource -> templateService.processTemplate(resource, context))
-            .map(QueryFactory::create)
-            .collect(Collectors.toList());
+  private static List<Query> asQueries(TemplateService templateService, Resource[] queryResources, Map<String, String> context) {
+    Stream<Supplier<String>> templateSuppliers = Arrays.stream(queryResources).map(TemplateService::fromResource);
+    return getQueries(templateService, context, templateSuppliers);
+  }
+
+  private static List<Query> getQueries(TemplateService templateService, Map<String, String> context, Stream<Supplier<String>> templateSuppliers) {
+    return templateService.processTemplates(templateSuppliers, context)
+                          .map(QueryFactory::create)
+                          .collect(Collectors.toList());
+  }
+
+  public SparqlSelectToJson(List<String> queries, TemplateService templateService, Map<String, String> context) {
+    this(queries, templateService, context, ListExceptionHandling.fail);
+  }
+
+  public SparqlSelectToJson(List<String> queries, TemplateService templateService, Map<String, String> context, ListExceptionHandling listExceptionHandling) {
+    this(asQueries(templateService, queries, context), listExceptionHandling);
+  }
+
+  public static List<Query> asQueries(TemplateService templateService, List<String> templates, Map<String, String> context) {
+    Stream<Supplier<String>> templateSuppliers = templates.stream().map(string -> () -> string);
+    return getQueries(templateService, context, templateSuppliers);
+  }
+
+  public SparqlSelectToJson(List<Query> queries, ListExceptionHandling listExceptionHandling) {
+    this.queries = queries;
+    this.listExceptionHandling = listExceptionHandling;
   }
 
   public ObjectNode convert(Model model, Map<String, RDFNode> bindings) {
