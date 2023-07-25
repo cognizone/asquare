@@ -3,7 +3,13 @@ package zone.cogni.asquare.cube.spel;
 import org.springframework.core.io.Resource;
 import zone.cogni.core.spring.ResourceHelper;
 
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 public interface TemplateService {
+    static Supplier<String> fromResource(Resource templateResource) {
+        return () -> ResourceHelper.toString(templateResource);
+    }
 
     String processTemplate(String template, Object root);
 
@@ -20,7 +26,14 @@ public interface TemplateService {
     }
 
     default String processTemplate(Resource templateResource, Object root) {
-        String template = ResourceHelper.toString(templateResource);
-        return processTemplate(template, root);
+        return processTemplate(fromResource(templateResource), root);
+    }
+
+    default String processTemplate(Supplier<String> templateSupplier, Object root) {
+        return processTemplate(templateSupplier.get(), root);
+    }
+
+    default Stream<String> processTemplates(Stream<Supplier<String>> templateSuppliers, Object root) {
+        return templateSuppliers.map(supplier -> processTemplate(supplier, root));
     }
 }
