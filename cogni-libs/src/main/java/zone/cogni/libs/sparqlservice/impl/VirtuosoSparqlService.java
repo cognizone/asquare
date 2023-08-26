@@ -111,7 +111,7 @@ public class VirtuosoSparqlService implements SparqlService {
     conn.setDoOutput(true);
     conn.setInstanceFollowRedirects(true);
     conn.setRequestMethod(replace ? "PUT" : "POST");
-    conn.setRequestProperty("Content-Type", "application/x-turtle");
+    conn.setRequestProperty("Content-Type", "text/turtle;charset=utf-8");
     conn.setRequestProperty("charset", "utf-8");
     conn.setRequestProperty("Content-Length", Integer.toString(data.length));
     if(sparqlGraphCrudUseBasicAuth) {

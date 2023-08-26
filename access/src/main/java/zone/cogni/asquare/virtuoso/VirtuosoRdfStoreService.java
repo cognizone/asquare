@@ -98,7 +98,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
     log.info("Calling {} with basic auth: {}", url, graphCrudUseBasicAuth);
     HttpEntityEnclosingRequestBase request = replace ? new HttpPut(url) : new HttpPost(url);
     request.setEntity(new ByteArrayEntity(data));
-    request.setHeader("Content-Type", "application/x-turtle");
+    request.setHeader("Content-Type", "text/turtle;charset=utf-8");
     if (graphCrudUseBasicAuth) {
       request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((rdfStoreUser + ":" + rdfStorePassword).getBytes(StandardCharsets.UTF_8)));
     }
