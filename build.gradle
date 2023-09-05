@@ -193,6 +193,7 @@ subprojects {
           def releasesRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-releases"
           def snapshotsRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-snapshots"
           url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+          allowInsecureProtocol(true)
         }
       }
     }
