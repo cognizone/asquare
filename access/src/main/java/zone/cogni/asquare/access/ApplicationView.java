@@ -76,7 +76,7 @@ public class ApplicationView {
   }
 
   /**
-   * TODO original flow => some of it is probably still valid
+   * TODO original flow {@code =>} some of it is probably still valid
    * 1. process json
    * 2. create updatableResources
    * 3. collect all to be deleted statements and new statements

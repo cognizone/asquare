@@ -104,7 +104,6 @@ public class UriUtils {
    * @param encoding the encoding
    * @return the decoded value
    * @throws IllegalArgumentException     when the given source contains invalid encoded sequences
-   * @throws UnsupportedEncodingException when the given encoding parameter is not supported
    * @see java.net.URLDecoder#decode(String, String)
    */
   public static String decode(String source, String encoding) {
