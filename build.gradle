@@ -190,8 +190,8 @@ subprojects {
             username = System.properties['nexus.username']
             password = System.properties['nexus.password']
           }
-          def releasesRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-releases"
-          def snapshotsRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-snapshots"
+          def releasesRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-release"
+          def snapshotsRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-snapshot"
           url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
           allowInsecureProtocol(true)
         }
