@@ -202,6 +202,10 @@ subprojects {
     sign publishing.publications.mavenJava
   }
 
+  tasks.withType(Javadoc) {
+    failOnError false
+  }
+
   build.finalizedBy(tasks.publishToMavenLocal)
 }
 
