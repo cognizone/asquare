@@ -126,6 +126,17 @@ subprojects {
     useJUnitPlatform()
   }
 
+  jar {
+    from("${projectDir}") {
+      include 'LICENSE'
+      into '/'
+    }
+    from("${projectDir}") {
+      include 'LICENSE'
+      into 'META-INF'
+    }
+  }
+
   java {
     withJavadocJar()
     withSourcesJar()
