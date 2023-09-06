@@ -37,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,14 @@ import java.util.function.Supplier;
 
 public class JenaUtils {
   private static final Logger log = LoggerFactory.getLogger(JenaUtils.class);
+  private static final Map<String, String> extensionToLanguageMap = Collections.synchronizedMap(new HashMap<>());
+
+  static {
+    extensionToLanguageMap.put("nt", "N-TRIPLE");
+    extensionToLanguageMap.put("n3", "N3");
+    extensionToLanguageMap.put("ttl", "TURTLE");
+    extensionToLanguageMap.put("jsonld", "JSONLD");
+  }
 
   private JenaUtils() {
   }
@@ -237,26 +246,9 @@ public class JenaUtils {
 
   private static String getRdfSyntax(org.springframework.core.io.Resource resource) {
     String extension = StringUtils.lowerCase(StringUtils.substringAfterLast(resource.getFilename(), "."));
-    if ("owl".equals(extension) || "rdf".equals(extension)) {
-      // .rdf is extension for application/rdf+xml and is default syntax in Jena
-      // .owl is here for legacy reasons, but it is often RDF XML because it is the Protégé default
-      return null;
-    }
-    if ("nt".equals(extension)) {
-      // .nt is extension for application/n-triples
-      return "N-TRIPLE";
-    }
-    if ("n3".equals(extension)) {
-      // .n3 is extension for text/n3
-      return "N3";
-    }
-    if ("ttl".equals(extension)) {
-      // .ttl is extension for text/turtle
-      return "TURTLE";
-    }
 
-    // any other extension falls back to RDF XML
-    return null;
+    // when return value is null, fall back to RDF/XML
+    return extensionToLanguageMap.getOrDefault(extension, null);
   }
 
   public static void write(Model model, File file) {
