@@ -51,6 +51,15 @@ subprojects {
   apply plugin: 'project-report'
 
   repositories {
+    if (project.hasProperty('jenkins-ci')) {
+      maven {
+        url "${System.properties['nexus.url.repository']}"
+        credentials {
+          username = System.properties['nexus.username']
+          password = System.properties['nexus.password']
+        }
+      }
+    }
     mavenLocal()
     mavenCentral()
     maven { url "https://repo.spring.io/release" }
