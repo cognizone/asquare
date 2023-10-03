@@ -223,9 +223,13 @@ subprojects {
     }
   }
 
+
   signing {
-    sign publishing.publications.mavenJava
+    if (project.hasProperty("publishToMavenCentral")) {
+      sign publishing.publications.mavenJava
+    }
   }
+
 
   tasks.withType(Javadoc) {
     failOnError false
