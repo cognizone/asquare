@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class PaginatedQuery {
@@ -150,6 +152,39 @@ public class PaginatedQuery {
     String batchQuery = constructQuery + limit;
 
     return rdfStore.executeConstructQuery(batchQuery);
+  }
+
+  /**
+   * Run paginated select query and handle the result row by row by the caller. No intermediate object collections are created.
+   * @param rdfStore              RDF store to use when querying
+   * @param query                 Select query that will be called with pagination. If the query already contains a limit then just this query will be executed.
+   * @param querySolutionConsumer QuerySolution consumer, will be called on each result row.
+   */
+  public void select(RdfStoreService rdfStore, String query, Consumer<QuerySolution> querySolutionConsumer) {
+    if (hasLimitAtEnd(query)) {  //is this needed? if somebody sends something with limit here it deserves to fail
+      selectBatch(rdfStore, query, querySolutionConsumer);
+      return;
+    }
+    int offset = 0;
+    while (true) {
+      String limitQuery = query + " offset " + offset + " limit " + batchSize;
+      log.info("Running query offset {} and limit {}", offset, batchSize);
+      int queryReturnedSize = selectBatch(rdfStore, limitQuery, querySolutionConsumer);
+      log.info("Query offset {} and limit {} returned {} rows", offset, batchSize, queryReturnedSize);
+      if (queryReturnedSize < batchSize) return;
+      offset += batchSize;
+    }
+  }
+
+  private int selectBatch(RdfStoreService rdfStore, String query, Consumer<QuerySolution> querySolutionConsumer) {
+    return rdfStore.executeSelectQuery(query, resultSet -> {
+      int counter = 0;
+      while (resultSet.hasNext()) {
+        querySolutionConsumer.accept(resultSet.next());
+        counter++;
+      }
+      return counter;
+    });
   }
 
   public List<Map<String, RDFNode>> select(RdfStoreService rdfStore, String query) {
