@@ -134,8 +134,9 @@ public class ElasticsearchProxyTemplate {
     this.paramValuesValidator = paramValuesValidator;
   }
 
-  private String buildUrl(String path) {
-    return UriComponentsBuilder.fromPath(path).build(false).toUri().toString();
+  private String buildUrl(String path, MultiValueMap<String, String> params) {
+    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(path).queryParams(params);
+    return uriComponentsBuilder.build(false).toUriString();
   }
 
   private Map<String, Object> mergeParams(MultiValueMap<String, String> urlParams, Map<String, Object> bodyParams) {
@@ -177,19 +178,17 @@ public class ElasticsearchProxyTemplate {
   }
 
   public ResponseEntity<Resource> process(MultiValueMap<String, String> urlParams, Map<String, Object> bodyParams) throws IOException {
-    String requestUUID = UUID.randomUUID().toString();
+    return executeRequest(UUID.randomUUID().toString(), httpMethod, urlTemplate, urlParams, bodyParams);
+  }
 
+  private ResponseEntity<Resource> executeRequest(String requestUUID, HttpMethod httpMethod, String url, MultiValueMap<String, String> urlParams, Map<String, Object> bodyParams) throws IOException {
     Map<String, Object> params = mergeParams(urlParams, bodyParams);
 
     if (!validateParams(requestUUID, params)) {
       return ResponseEntity.badRequest().body(new InputStreamResource(IOUtils.toInputStream(requestUUID, StandardCharsets.UTF_8)));
     }
 
-    return executeRequest(requestUUID, httpMethod, urlTemplate, params);
-  }
-
-  private ResponseEntity<Resource> executeRequest(String requestUUID, HttpMethod httpMethod, String url, Map<String, Object> params) throws IOException {
-    Request request = new Request(httpMethod.name(), buildUrl(spel(url, params)));
+    Request request = new Request(httpMethod.name(), buildUrl(spel(url, params), urlParams));
 
     if (HttpMethod.POST.equals(httpMethod) || HttpMethod.PUT.equals(httpMethod)) {
       request.setJsonEntity(thymeleaf(getTemplateContent(), params));

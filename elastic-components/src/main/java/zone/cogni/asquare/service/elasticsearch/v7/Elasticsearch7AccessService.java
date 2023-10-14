@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
-import zone.cogni.asquare.access.Params;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.DeltaResource;

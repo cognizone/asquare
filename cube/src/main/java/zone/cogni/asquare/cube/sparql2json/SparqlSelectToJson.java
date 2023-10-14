@@ -21,23 +21,56 @@ import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SparqlSelectToJson {
 
-  private static final Logger log = LoggerFactory.getLogger(SparqlSelectToJson.class);
-
-  private final List<Query> queries;
-
-  public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
-    this.queries = asQueries(queryResources, templateService, context);
+  public enum ListExceptionHandling {
+    fail, takeFirstSorted, takeFirstInput, concatAll
   }
 
-  private List<Query> asQueries(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
-    return Arrays.stream(queryResources)
-            .map(resource -> templateService.processTemplate(resource, context))
-            .map(QueryFactory::create)
-            .collect(Collectors.toList());
+  private static final Logger log = LoggerFactory.getLogger(SparqlSelectToJson.class);
+  private static final String listConcatSeparator = " - ";
+  private final List<Query> queries;
+  private final ListExceptionHandling listExceptionHandling;
+
+  public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context) {
+    this(queryResources, templateService, context, ListExceptionHandling.fail);
+  }
+
+  public SparqlSelectToJson(Resource[] queryResources, TemplateService templateService, Map<String, String> context, ListExceptionHandling listExceptionHandling) {
+    this(asQueries(templateService, queryResources, context), listExceptionHandling);
+  }
+
+  private static List<Query> asQueries(TemplateService templateService, Resource[] queryResources, Map<String, String> context) {
+    Stream<Supplier<String>> templateSuppliers = Arrays.stream(queryResources).map(TemplateService::fromResource);
+    return getQueries(templateService, context, templateSuppliers);
+  }
+
+  private static List<Query> getQueries(TemplateService templateService, Map<String, String> context, Stream<Supplier<String>> templateSuppliers) {
+    return templateService.processTemplates(templateSuppliers, context)
+                          .map(QueryFactory::create)
+                          .collect(Collectors.toList());
+  }
+
+  public SparqlSelectToJson(List<String> queries, TemplateService templateService, Map<String, String> context) {
+    this(queries, templateService, context, ListExceptionHandling.fail);
+  }
+
+  public SparqlSelectToJson(List<String> queries, TemplateService templateService, Map<String, String> context, ListExceptionHandling listExceptionHandling) {
+    this(asQueries(templateService, queries, context), listExceptionHandling);
+  }
+
+  public static List<Query> asQueries(TemplateService templateService, List<String> templates, Map<String, String> context) {
+    Stream<Supplier<String>> templateSuppliers = templates.stream().map(string -> () -> string);
+    return getQueries(templateService, context, templateSuppliers);
+  }
+
+  public SparqlSelectToJson(List<Query> queries, ListExceptionHandling listExceptionHandling) {
+    this.queries = queries;
+    this.listExceptionHandling = listExceptionHandling;
   }
 
   public ObjectNode convert(Model model, Map<String, RDFNode> bindings) {
@@ -125,7 +158,7 @@ public class SparqlSelectToJson {
       array.add(convertedValue);
     }
     else if (isPresent && !propertyConversion.isList()) {
-      throw new RuntimeException("multiple results found for " + propertyConversion.getPropertyName());
+      handleListException(current, lastLevel, convertedValue, propertyConversion);
     }
     else if (!isPresent && propertyConversion.isList()) {
       ArrayNode array = JsonNodeFactory.instance.arrayNode();
@@ -134,6 +167,29 @@ public class SparqlSelectToJson {
     }
     else {
       current.set(lastLevel, convertedValue);
+    }
+  }
+
+  private void handleListException(ObjectNode current, String lastLevel, JsonNode convertedValue, PropertyConversion propertyConversion) {
+    switch(listExceptionHandling) {
+      case fail:
+        throw new RuntimeException("multiple results found for " + propertyConversion.getPropertyName());
+      case takeFirstSorted:
+        log.debug("ListExceptionHandling takeFirstSorted: comparing result to previous results.");
+        String oldValue = current.get(lastLevel).textValue();
+        if (convertedValue.asText().compareTo(oldValue) < 0) current.put(lastLevel, convertedValue);
+        break;
+      case takeFirstInput:
+        log.debug("ListExceptionHandling takeFirstInput: ignoring other results");
+        break;
+      case concatAll:
+        log.debug("ListExceptionHandling concatAll: concatenating results.");
+        String currentValue = current.get(lastLevel).textValue();
+        String newValue = Stream.concat(Stream.of(currentValue.split(listConcatSeparator)), Stream.of(convertedValue.asText()))
+                                .sorted()
+                                .collect(Collectors.joining(listConcatSeparator));
+        current.put(lastLevel, newValue);
+        break;
     }
   }
 

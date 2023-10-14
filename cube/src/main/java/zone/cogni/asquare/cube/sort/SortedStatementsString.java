@@ -142,7 +142,8 @@ public class SortedStatementsString implements Function<Model, String> {
       result.putIfAbsent(subject, new LinkedHashMap<>());
 
       Map<String, List<String>> predicateMap = result.get(subject);
-      String predicate = getStringValue(statement.getPredicate());
+      String predicate = statement.getPredicate().equals(RDF.type) ? "a"
+                                                                   : getStringValue(statement.getPredicate());
 
       predicateMap.putIfAbsent(predicate, new ArrayList<>());
       List<String> objects = predicateMap.get(predicate);
@@ -221,9 +222,6 @@ public class SortedStatementsString implements Function<Model, String> {
 
   private String getShortUri(String fullUri) {
     String shortResult = fullUri.substring(1, fullUri.length() - 1);
-
-    if (RDF.type.getURI().equals(shortResult))
-      return "a";
 
     if (base != null && shortResult.startsWith(base))
       return "<" + StringUtils.substringAfter(shortResult, base) + ">";

@@ -54,6 +54,7 @@ subprojects {
   apply plugin: "idea"
   apply plugin: "io.spring.dependency-management"
   apply plugin: 'maven-publish'
+  apply plugin: 'signing'
   apply plugin: 'project-report'
 
   repositories {
@@ -125,18 +126,26 @@ subprojects {
     useJUnitPlatform()
   }
 
-  task sourcesJar(type: Jar) {
-    description = 'Creates sources JAR.'
-    archiveClassifier = 'sources'
+  jar {
+    from("${projectDir}") {
+      include 'LICENSE'
+      into '/'
+    }
+    from("${projectDir}") {
+      include 'LICENSE'
+      into 'META-INF'
+    }
+  }
 
-    from sourceSets.main.allSource
+  java {
+    withJavadocJar()
+    withSourcesJar()
   }
 
   publishing {
     publications {
       mavenJava(MavenPublication) {
         from components.java
-        artifact sourcesJar
         versionMapping {
           usage('java-api') {
             fromResolutionOf('runtimeClasspath')
@@ -145,19 +154,87 @@ subprojects {
             fromResolutionResult()
           }
         }
+        pom {
+          name = 'asquare'
+          packaging = 'jar'
+          // optionally artifactId can be defined here
+          description = 'Library for Semantic Development'
+          url = 'https://github.com/cognizone/asquare'
+
+          scm {
+            connection = 'scm:git:git@github.com:cognizone/asquare.git'
+            developerConnection = 'scm:git:git@github.com:cognizone/asquare.git'
+            url = 'https://github.com/cognizone/asquare'
+          }
+
+          licenses {
+            license {
+              name = 'The Apache License, Version 2.0'
+              url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          developers {
+            developer {
+              id = 'cognizone'
+              name = 'Cognizone'
+              email = 'asquare-dev@cogni.zone'
+            }
+          }
+        }
       }
     }
     repositories {
-      maven {
-        credentials {
-          username = System.properties['archiva.user']
-          password = System.properties['archiva.password']
+      if (project.hasProperty("publishToCognizoneArchiva")) {
+        maven {
+          credentials {
+            username = System.properties['archiva.username']
+            password = System.properties['archiva.password']
+          }
+          name = 'public'
+          url = System.properties['archiva.url']
         }
-        name = 'public'
-        url = System.properties['archiva.url']
+      }
+      if (project.hasProperty("publishToCognizoneNexus")) {
+        maven {
+          credentials {
+            username = System.properties['nexus.username']
+            password = System.properties['nexus.password']
+          }
+          def releasesRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-release"
+          def snapshotsRepoUrl = "${System.properties['nexus.url']}/repository/cognizone-snapshot"
+          url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+          allowInsecureProtocol(true)
+        }
+      }
+      if (project.hasProperty("publishToMavenCentral")) {
+        maven {
+          credentials {
+            username = System.properties['ossrh.username']
+            password = System.properties['ossrh.password']
+          }
+          // We cannot directly release to Maven Central, we first need to publish on staging repo
+          // then manually release through the UI in https://s01.oss.sonatype.org/ (login with JIRA)
+          def stagingRepoUrl = "${System.properties['ossrh.url']}/service/local/staging/deploy/maven2"
+          def snapshotsRepoUrl = "${System.properties['ossrh.url']}/content/repositories/snapshots"
+          url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : stagingRepoUrl
+        }
       }
     }
   }
+
+
+  signing {
+    if (project.hasProperty("publishToMavenCentral")) {
+      sign publishing.publications.mavenJava
+    }
+  }
+
+
+  tasks.withType(Javadoc) {
+    failOnError false
+  }
+
   build.finalizedBy(tasks.publishToMavenLocal)
 }
 
@@ -174,6 +251,7 @@ project('access') {
     api project(':cogni-core')
     api project(':cogni-libs')
     api project(':cogni-sem')
+    api project(':elastic-service')
     api project(':triplestore')
     api project(':triplestore-jena-memory')
 
@@ -371,11 +449,25 @@ project('cogni-sem') {
 project('cube') {
   dependencies {
     // projects
-    api project(':access')
+    // - application-profile
+    //   - cogni-core
+    // - cogni-core (*)
+    // - cogni-libs
+    // - cogni-sem
+    //   - cogni-core (*)
+    // - elastic-service
+    //   - cogni-core (*)
+    // - triplestore
+    //   - cogni-sem (*)
+    // - triplestore-jena-memory (*)
+    //   - cogni-libs (*)
+    //   - cogni-sem (*)
+    //   - triplestore (*)
     api project(':application-profile')
     api project(':cogni-core')
+    api project(':cogni-libs')
     api project(':cogni-sem')
-    api project(':service')
+    api project(':elastic-service')
     api project(':triplestore')
     api project(':triplestore-jena-memory')
 
@@ -408,6 +500,21 @@ project('elastic-components') {
     api('org.elasticsearch:elasticsearch')
   }
 }
+
+project('elastic-service') {
+  dependencies {
+    // projects
+    api project(':cogni-core')
+
+    // libs
+    api('org.apache.commons:commons-collections4')
+    api('org.apache.commons:commons-lang3')
+
+    // spring
+    api('org.springframework.boot:spring-boot-starter-json')
+  }
+}
+
 
 // IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
 project('elasticproxy') {
@@ -474,6 +581,7 @@ project('service') {
     api project(':cogni-core')
     api project(':cogni-libs')
     api project(':cogni-sem')
+    api project(':elastic-service')
     api project(':triplestore')
     api project(':triplestore-jena-memory')
 
@@ -517,6 +625,7 @@ project('triplestore') {
 project('triplestore-jena-memory') {
   dependencies {
     // projects
+    api project(':cogni-libs')
     api project(':cogni-sem')
     api project(':triplestore')
 

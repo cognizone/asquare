@@ -52,8 +52,9 @@ import static io.vavr.API.Match;
 import static io.vavr.Predicates.anyOf;
 
 /**
- * @Deprecated use instead{@link ValueValidation}
+ * @deprecated use instead {@link ValueValidation}
  */
+@Deprecated
 public class ValueValidationModel {
 
   public static Function<Rule, ValidationResult> withoutReport(Model model,

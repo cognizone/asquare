@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * TODO implement AccessService or ElasticAccessService -> i think we need 2 implementations?
+ * TODO implement AccessService or ElasticAccessService {@code ->} i think we need 2 implementations?
  * RDFEditableAccesService and ElasticEditableAccessService (ElasticEditableAccessService might embed an RDFEditableAccesService)
  * <p>
  * TODO extract interface

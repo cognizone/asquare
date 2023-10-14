@@ -74,7 +74,7 @@ public class PropertyConversion implements Function<Model, JsonNode> {
           return JsonNodeFactory.instance.booleanNode(literal.getInt() == 1);
         }
 
-        throw new RuntimeException("Node " + rdfNode + " is of correct type.");
+        throw new RuntimeException("Node " + rdfNode + " is not of correct type.");
       }
 
       public String toString() {

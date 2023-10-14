@@ -3,7 +3,6 @@ package zone.cogni.asquare.cube.index.swap;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;

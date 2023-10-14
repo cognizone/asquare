@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.convertor.json;
 import com.google.common.base.Preconditions;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 /**
@@ -27,11 +28,16 @@ public class ApplicationProfileToConversionProfile implements Function<Applicati
 
 
   private ConversionProfile.Type convertType(ApplicationProfile.Type apType) {
+    Collection<String> rdfTypes = ProfileConversionUtils.getRdfTypes(apType);
+    String rootRdfType = ProfileConversionUtils.getRootRdfType(apType);
+
     ConversionProfile.Type type = new ConversionProfile.Type();
     type.setRootClassId(apType.getClassId());
     type.setClassIds(apType.getSuperClassIds());
-    type.setRdfTypes(ProfileConversionUtils.getRdfTypes(apType));
-    type.setRootRdfType(ProfileConversionUtils.getRootRdfType(apType));
+    type.setRdfTypes(rdfTypes);
+    type.setRootRdfType(rootRdfType);
+    type.setExpandedRdfTypes(rdfTypes);
+    type.setExpandedRootRdfType(rootRdfType);
 
     apType.getAttributes()
           .values()
@@ -46,6 +52,7 @@ public class ApplicationProfileToConversionProfile implements Function<Applicati
 
     attribute.setAttributeId(apAttribute.getAttributeId());
     attribute.setUri(apAttribute.getUri());
+    attribute.setExpandedUri(apAttribute.getUri());
     attribute.setSingle(ProfileConversionUtils.isSingle(apAttribute));
     attribute.setType(ProfileConversionUtils.getAttributeType(apAttribute));
 

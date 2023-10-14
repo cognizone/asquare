@@ -427,6 +427,7 @@ class LocalTdbRdfStoreServiceTest {
 
   @Test
   void testTimeoutQuery() {
+    // not sure why this keeps failing on my laptop
     final LocalTdbRdfStoreService timeoutStore = new LocalTdbRdfStoreService(
             tdbPath.toFile(), 1L, TimeUnit.NANOSECONDS, 1L, TimeUnit.NANOSECONDS
     );
