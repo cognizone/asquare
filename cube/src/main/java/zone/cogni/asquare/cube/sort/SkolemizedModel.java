@@ -14,11 +14,11 @@ import java.util.function.Function;
 
 public class SkolemizedModel implements Function<Model, Model> {
 
+  private final String skolemBaseUri;
+
   public SkolemizedModel(@Nonnull String skolemBaseUri) {
     this.skolemBaseUri = skolemBaseUri;
   }
-
-  private String skolemBaseUri;
 
   @Override
   public Model apply(Model model) {
