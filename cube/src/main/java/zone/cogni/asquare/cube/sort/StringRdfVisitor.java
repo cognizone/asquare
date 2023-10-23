@@ -18,12 +18,23 @@ public class StringRdfVisitor implements RDFVisitor {
 
   protected static final StringRdfVisitor instance = new StringRdfVisitor();
 
+  private String skolemBaseUri;
+
+  public StringRdfVisitor() {
+  }
+
+  public StringRdfVisitor(String skolemBaseUri) {
+    this.skolemBaseUri = skolemBaseUri;
+  }
+
   /**
    * @return blank node using _:id format with blank node label as id
    */
   @Override
   public String visitBlank(Resource r, AnonId id) {
-    return "_:" + id.getLabelString();
+    return skolemBaseUri == null
+           ? "_:" + id.getLabelString()
+           : "<" + StringUtils.appendIfMissing(skolemBaseUri, "/") + ".well-known/genid/" + id.getLabelString() + ">";
   }
 
   /**

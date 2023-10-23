@@ -25,11 +25,17 @@ public class SortedStatementsString implements Function<Model, String> {
 
   public static class Builder {
     private String base;
+    private String skolemBaseUri;
     private Map<String, String> namespaces;
     private int indent = 8;
 
     public Builder withBase(String base) {
       this.base = base;
+      return this;
+    }
+
+    public Builder withSkolemBaseUri(String skolemBaseUri) {
+      this.skolemBaseUri = skolemBaseUri;
       return this;
     }
 
@@ -51,6 +57,8 @@ public class SortedStatementsString implements Function<Model, String> {
       if (StringUtils.isNotBlank(base))
         result.setBase(base);
 
+      result.setSkolemBaseUri(skolemBaseUri);
+
       if (MapUtils.isNotEmpty(namespaces))
         result.setNamespaces(namespaces);
 
@@ -62,6 +70,7 @@ public class SortedStatementsString implements Function<Model, String> {
   }
 
   private String base;
+  private String skolemBaseUri;
   private final Map<String, String> namespaces = new TreeMap<>();
   private int indent;
 
@@ -74,6 +83,14 @@ public class SortedStatementsString implements Function<Model, String> {
 
   public void setBase(String base) {
     this.base = base;
+  }
+
+  public String getSkolemBaseUri() {
+    return skolemBaseUri;
+  }
+
+  public void setSkolemBaseUri(String skolemBaseUri) {
+    this.skolemBaseUri = skolemBaseUri;
   }
 
   public Map<String, String> getNamespaces() {
@@ -191,7 +208,8 @@ public class SortedStatementsString implements Function<Model, String> {
 
   @Nonnull
   private String getStringValue(RDFNode rdfNode) {
-    String result = (String) rdfNode.visitWith(StringRdfVisitor.instance);
+    StringRdfVisitor stringRdfVisitor = new StringRdfVisitor(skolemBaseUri);
+    String result = (String) rdfNode.visitWith(stringRdfVisitor);
 
     String shortUri = getShortString(result);
     return shortUri != null ? shortUri : result;

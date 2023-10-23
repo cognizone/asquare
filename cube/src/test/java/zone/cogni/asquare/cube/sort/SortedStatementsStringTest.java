@@ -46,6 +46,22 @@ class SortedStatementsStringTest {
   }
 
   @Test
+  public void blank_nodes_as_skolem_uris() {
+    // given
+    Model model = loadModel("sort/blank-node-with-nested-blank-node-with-two-triples.ttl");
+
+    // when
+    String rdfString = SortedStatementsString.newBuilder()
+                                             .withSkolemBaseUri("http://cogni.zone")
+                                             .build()
+                                             .apply(model);
+
+    // then
+    assertThat(rdfString).contains("<http://cogni.zone/.well-known/genid/548056f0698a0e410152cdeec9d9a8c9242dfe2b13f813658e40bfec1979856f>");
+    assertThat(rdfString).contains("<http://cogni.zone/.well-known/genid/a66dae80794f76cb551de9078eec8a5c5c12bcdc10023b9170016461e99e184a>");
+  }
+
+  @Test
   public void skos() {
     // given
     Model rdfXml = loadModel("sort/skos.rdf");
