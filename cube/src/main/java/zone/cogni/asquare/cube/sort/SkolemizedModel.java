@@ -12,9 +12,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * The SkolemizedModel class implements a function that transforms a given RDF model by replacing blank nodes with SKOLEM URIs.
+ * This class facilitates the skolemization process, where anonymous nodes are converted to globally unique SKOLEM URIs.
+ */
 public class SkolemizedModel implements Function<Model, Model> {
 
   private final String skolemBaseUri;
+
 
   public SkolemizedModel(@Nonnull String skolemBaseUri) {
     this.skolemBaseUri = skolemBaseUri;
@@ -40,9 +45,7 @@ public class SkolemizedModel implements Function<Model, Model> {
   }
 
   private Resource getSkolemUri(RDFNode blankNode) {
-    return ResourceFactory.createResource(
-            StringUtils.appendIfMissing(skolemBaseUri, "/")
-                    + ".well-known/genid/" + blankNode.asResource().getId().getLabelString()
-    );
+    String fullSkolemPrefix = StringUtils.appendIfMissing(skolemBaseUri, "/") + ".well-known/genid/";
+    return ResourceFactory.createResource(fullSkolemPrefix + blankNode.asResource().getId().getLabelString());
   }
 }
