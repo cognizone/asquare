@@ -23,11 +23,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.exceptions.TemplateEngineException;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -190,11 +194,12 @@ public class ElasticsearchProxyTemplate {
 
     Request request = new Request(httpMethod.name(), buildUrl(spel(url, params), urlParams));
 
-    if (HttpMethod.POST.equals(httpMethod) || HttpMethod.PUT.equals(httpMethod)) {
-      request.setJsonEntity(thymeleaf(getTemplateContent(), params));
-    }
+
 
     try {
+      if (HttpMethod.POST.equals(httpMethod) || HttpMethod.PUT.equals(httpMethod))
+        request.setJsonEntity(thymeleaf(getTemplateContent(), params));
+
       Response response = restClient.performRequest(request);
       HttpStatus status = HttpStatus.resolve(response.getStatusLine().getStatusCode());
 
@@ -212,6 +217,39 @@ public class ElasticsearchProxyTemplate {
                 response.getStatusLine());
       return ResponseEntity.badRequest().body(new InputStreamResource(IOUtils.toInputStream(requestUUID, StandardCharsets.UTF_8)));
     }
+    catch (TemplateEngineException e) {
+      String stringifiedParameters = stringifyParameters(params);
+      String errorMessage = "Processing of template '" + getName() + "' with parameters " + stringifiedParameters + " failed.";
+      log.error(errorMessage);
+      return ResponseEntity.status(500).body(new InputStreamResource(new ByteArrayInputStream(errorMessage.getBytes())));
+    }
+  }
+
+  private String stringifyParameters(Map<String, Object> params) {
+    return params.entrySet()
+                 .stream()
+                 .map(entry -> entry.getKey() + ": " + stringifyObject(entry.getValue()))
+                 .collect(Collectors.joining("\n", "{", "}"));
+  }
+
+  private String stringifyObject(Object obj) {
+    String result = null;
+
+    if (obj instanceof Collection) {
+      Collection<Object> objCollection = (Collection<Object>) obj;
+      result = objCollection.stream()
+                            .map(this::stringifyObject)
+                            .collect(Collectors.joining(", ", "[", "]"));
+    }
+
+    if (obj instanceof Object[]) {
+      result = Arrays.stream((Object[]) obj)
+                     .map(this::stringifyObject)
+                     .collect(Collectors.joining(", ", "[", "]"));
+    }
+
+    return result == null ? obj.toString()
+                          : result;
   }
 
   private String getTemplateContent() throws IOException {
@@ -228,6 +266,7 @@ public class ElasticsearchProxyTemplate {
   private String thymeleaf(String expression, Map<String, Object> map) {
     Context ctx = new Context();
     ctx.setVariables(map);
+
     return templateEngine.process(expression, ctx);
   }
 
