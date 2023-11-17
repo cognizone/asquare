@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -70,7 +71,7 @@ class DateFormatsTest {
     String newAfterPlus = StringUtils.substringAfterLast(newFormatter, "+");
 
     // then
-    assertTrue(oldBeforePlus.startsWith(newBeforePlus));
+    assertThat(oldBeforePlus).startsWith(newBeforePlus);
     assertEquals(oldAfterPlus, newAfterPlus);
   }
 
