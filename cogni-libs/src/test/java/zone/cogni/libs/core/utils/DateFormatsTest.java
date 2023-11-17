@@ -55,7 +55,7 @@ class DateFormatsTest {
   public void fixed_date_as_xsd_datetime_format() {
     // given
     LocalDateTime localDateTime = LocalDateTime.of(2015, Month.AUGUST, 20, 6, 30);
-    ZoneId cet = ZoneId.of("Europe/Paris");
+    ZoneId cet = ZoneId.systemDefault();
     ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, cet);
 
     Date date = Date.from(zonedDateTime.toInstant());
