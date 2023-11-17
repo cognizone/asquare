@@ -8,6 +8,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,10 +53,13 @@ class DateFormatsTest {
   }
 
   @Test
-  public void fixed_date_as_xsd_datetime_format() {
+  public void fixed_date_as_xsd_datetime_format_europe_paris() {
     // given
     LocalDateTime localDateTime = LocalDateTime.of(2015, Month.AUGUST, 20, 6, 30);
-    ZoneId cet = ZoneId.systemDefault();
+    ZoneId systemDefaultZone = ZoneId.systemDefault();
+    ZoneId cet = ZoneId.of("Europe/Paris");
+    TimeZone.setDefault(TimeZone.getTimeZone(cet));
+
     ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, cet);
 
     Date date = Date.from(zonedDateTime.toInstant());
@@ -70,9 +74,40 @@ class DateFormatsTest {
     String oldAfterPlus = StringUtils.substringAfterLast(oldFormatter, "+");
     String newAfterPlus = StringUtils.substringAfterLast(newFormatter, "+");
 
+    TimeZone.setDefault(TimeZone.getTimeZone(systemDefaultZone));
+
     // then
     assertThat(oldBeforePlus).startsWith(newBeforePlus);
-    assertEquals(oldAfterPlus, newAfterPlus);
+    assertEquals("02:00", oldAfterPlus);
+    assertEquals("02:00", newAfterPlus);
+  }
+
+  @Test
+  public void fixed_date_as_xsd_datetime_format_zulu() {
+    // given
+    LocalDateTime localDateTime = LocalDateTime.of(2015, Month.AUGUST, 20, 6, 30);
+    ZoneId systemDefaultZone = ZoneId.systemDefault();
+    ZoneId utc = ZoneId.of("UTC");
+    TimeZone.setDefault(TimeZone.getTimeZone(utc));
+
+    ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, utc);
+
+    Date date = Date.from(zonedDateTime.toInstant());
+
+    // when
+    String oldFormatter = DateFormats.formatXsdDateTimeFormatOld(date);
+    String newFormatter = DateFormats.formatXsdDateTimeFormat(date);
+
+    String oldBeforeZ = StringUtils.substringBefore(oldFormatter, "Z");
+    String newBeforeZ = StringUtils.substringBefore(newFormatter, "Z");
+
+    TimeZone.setDefault(TimeZone.getTimeZone(systemDefaultZone));
+
+    // then
+    assertThat(oldFormatter).endsWith("Z");
+    assertThat(newFormatter).endsWith("Z");
+
+    assertThat(oldBeforeZ).startsWith(newBeforeZ);
   }
 
   @Test
