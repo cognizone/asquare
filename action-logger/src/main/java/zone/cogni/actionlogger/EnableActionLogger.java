@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(LoggedActionAspect.class)
+@Import(LoggedActionConfiguration.class)
 @EnableAsync(mode = AdviceMode.PROXY)
 @EnableAspectJAutoProxy
 public @interface EnableActionLogger {

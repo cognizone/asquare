@@ -1,15 +1,14 @@
 package zone.cogni.actionlogger;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.EnumerationUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -21,7 +20,6 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,21 +33,15 @@ import static zone.cogni.actionlogger.LoggedActionModel.ReportKeys;
 import static zone.cogni.actionlogger.LoggedActionModel.getActionInfoThreadLocal;
 
 @Aspect
-@Component
+@RequiredArgsConstructor
+@Slf4j
 public class LoggedActionAspect {
-
-  private static final Logger log = LoggerFactory.getLogger(LoggedActionAspect.class);
 
   private static final ThreadLocal<Map<String, Object>> reportThreadLocal = new ThreadLocal<>();
 
   private final LoggedActionSaver loggedActionSaver;
   private final List<CreateReportInterceptor> createReportInterceptors;
-
-  public LoggedActionAspect(LoggedActionSaver loggedActionSaver,
-                            @Autowired(required = false) List<CreateReportInterceptor> createReportInterceptors) {
-    this.loggedActionSaver = loggedActionSaver;
-    this.createReportInterceptors = null == createReportInterceptors ? Collections.emptyList() : createReportInterceptors;
-  }
+  private final TaskExecutor taskExecutor;
 
   @Around("@annotation(zone.cogni.actionlogger.LoggedAction)")
   public Object logAction(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -106,12 +98,15 @@ public class LoggedActionAspect {
     }
 
     private void storeReport(Map<String, Object> report) {
-      try {
-        loggedActionSaver.save(report);
-      }
-      catch (Exception e) {
-        log.warn("Failed to save report", e);
-      }
+      taskExecutor.execute(() -> {
+        try {
+          loggedActionSaver.save(report);
+          log.info("Saved report {} - {}.{}", report.get(ReportKeys.name), report.get(ReportKeys.methodClass), report.get(ReportKeys.methodName));
+        }
+        catch (Exception e) {
+          log.warn("Failed to save report", e);
+        }
+      });
     }
 
     private void initReport() {
@@ -120,8 +115,8 @@ public class LoggedActionAspect {
       if (null != parentReport) report.put(ReportKeys.parentId, parentReport.get(ReportKeys.id));
 
       findParameterValue(method, LoggedActionRequestor.class)
-        .map(Objects::toString)
-        .ifPresent(value -> report.put(ReportKeys.requestorName, value));
+              .map(Objects::toString)
+              .ifPresent(value -> report.put(ReportKeys.requestorName, value));
 
       report.put(ReportKeys.name, loggedActionAnnotation.value());
       report.put(ReportKeys.methodName, method.getName());
@@ -163,10 +158,10 @@ public class LoggedActionAspect {
       report.put(ReportKeys.httpRequestURI, httpRequest.getRequestURI());
       report.put(ReportKeys.httpRequestURL, httpRequest.getRequestURL().toString());
       Map<String, List<String>> headerValues =
-        EnumerationUtils.toList(httpRequest.getHeaderNames()).stream()
-                        .collect(Collectors.toMap(headerName -> headerName,
-                                                  headerName -> EnumerationUtils.toList(httpRequest.getHeaders(headerName)))
-                        );
+              EnumerationUtils.toList(httpRequest.getHeaderNames()).stream()
+                              .collect(Collectors.toMap(headerName -> headerName,
+                                                        headerName -> EnumerationUtils.toList(httpRequest.getHeaders(headerName)))
+                              );
       report.put(ReportKeys.httpHeaders, headerValues);
       report.put(ReportKeys.httpMethod, httpRequest.getMethod());
       report.put(LegacyKeys.httpMethod, httpRequest.getMethod());
@@ -182,8 +177,8 @@ public class LoggedActionAspect {
         try {
           interceptor.intercept(httpRequest, report);
         }
-        catch(Exception ex) {
-          log.error("Logging report interceptor {} has thrown an exception: {}", interceptor, ex);
+        catch (Exception ex) {
+          log.error("Logging report interceptor {} has thrown an exception", interceptor, ex);
         }
       });
 
