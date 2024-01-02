@@ -155,7 +155,6 @@ subprojects {
     publications {
       mavenJava(MavenPublication) {
         from components.java
-        artifact sourcesJar
         versionMapping {
           usage('java-api') {
             fromResolutionOf('runtimeClasspath')
@@ -233,8 +232,11 @@ subprojects {
     }
   }
 
+
   signing {
-    sign publishing.publications.mavenJava
+    if (project.hasProperty("publishToMavenCentral")) {
+      sign publishing.publications.mavenJava
+    }
   }
 
   tasks.withType(Javadoc) {
