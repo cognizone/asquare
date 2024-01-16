@@ -1,6 +1,7 @@
 package zone.cogni.actionlogger;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ public class LoggedActionConfiguration {
   @Bean
   public LoggedActionAspect loggedActionAspect() {
     return new LoggedActionAspect(loggedActionSaver,
-                                  null == createReportInterceptors ? Collections.emptyList() : createReportInterceptors,
+                                  ListUtils.defaultIfNull(createReportInterceptors, Collections.emptyList()),
                                   loggedActionTaskExecutor());
   }
 
