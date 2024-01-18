@@ -7,7 +7,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
@@ -73,10 +72,10 @@ public class SparqlEndpointDatabase implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     Preconditions.checkNotNull(resource);
-
-    try (QueryEngineHTTP queryExecution = (QueryEngineHTTP) QueryExecutionFactory.sparqlService(resource, query)) {
-      if (modelContentType != null) queryExecution.setModelContentType(modelContentType);
-      queryExecution.setInitialBinding(bindings);
+    try (QueryExecution queryExecution = QueryExecution.service(resource).query(query).build()) {
+      //  TODO is it used?
+      //   if (modelContentType != null) queryExecution.setModelContentType(modelContentType);
+      if (!bindings.asMap().isEmpty()) queryExecution.setInitialBinding(bindings);
       return queryExecution.execConstruct();
     }
     catch (Exception e) {

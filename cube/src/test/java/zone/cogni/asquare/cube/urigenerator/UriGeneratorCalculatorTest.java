@@ -3,12 +3,11 @@ package zone.cogni.asquare.cube.urigenerator;
 import com.google.common.collect.ImmutableMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.Lang;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zone.cogni.sem.jena.JenaUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +25,7 @@ public class UriGeneratorCalculatorTest {
     //when
     Model converted = uriCalculator.convert(model, ImmutableMap.of("baseUri", "http://asquare.cogni.zone"));
     //then
+    converted.write(System.out, Lang.TURTLE.getName());
     assertThat(converted.containsResource(ResourceFactory.createResource("http://asquare.cogni.zone/5")));
     assertThat(converted.containsResource(ResourceFactory.createResource("http://asquare.cogni.zone/2021/0005")));
   }

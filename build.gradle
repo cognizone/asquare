@@ -10,7 +10,7 @@ buildscript {
     elasticsearchVersion = '7.5.2'
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
-    jenaVersion = '3.17.0'
+    jenaVersion = '4.10.0'
     springBootVersion = '2.6.6'
     springSecurityVersion = '5.6.2'
   }
@@ -113,8 +113,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version

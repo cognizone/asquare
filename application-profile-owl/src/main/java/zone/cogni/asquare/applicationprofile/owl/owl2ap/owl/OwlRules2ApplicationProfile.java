@@ -1,8 +1,8 @@
 package zone.cogni.asquare.applicationprofile.owl.owl2ap.owl;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import io.vavr.Tuple2;
-import org.apache.jena.ext.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.applicationprofile.Constants;

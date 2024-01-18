@@ -14,7 +14,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFErrorHandler;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.RDFReader;
+import org.apache.jena.rdf.model.RDFReaderI;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.XSD;
@@ -169,7 +169,7 @@ public class JenaUtils {
         inputstream = ResourceHelper.getInputStream(resource);
         InternalRdfErrorHandler errorHandler = new InternalRdfErrorHandler(resource.getDescription());
 
-        RDFReader rdfReader = getReader(model, resource, errorHandler, readerProperties);
+        RDFReaderI rdfReader = getReader(model, resource, errorHandler, readerProperties);
         rdfReader.read(model, inputstream, null);
 
         Preconditions.checkState(!errorHandler.isFailure(), errorHandler.getInfo());
@@ -199,7 +199,7 @@ public class JenaUtils {
       inputstream = resource.getInputStream();
       InternalRdfErrorHandler errorHandler = new InternalRdfErrorHandler("");
 
-      RDFReader rdfReader = getReader(model, errorHandler, readerProperties, language);
+      RDFReaderI rdfReader = getReader(model, errorHandler, readerProperties, language);
       rdfReader.read(model, inputstream, null);
 
       Preconditions.checkState(!errorHandler.isFailure(), errorHandler.getInfo());
@@ -225,7 +225,7 @@ public class JenaUtils {
       inputstream = ResourceHelper.getInputStream(resource);
       InternalRdfErrorHandler errorHandler = new InternalRdfErrorHandler(resource.getDescription());
 
-      RDFReader rdfReader = getReader(model, resource, errorHandler, readerProperties);
+      RDFReaderI rdfReader = getReader(model, resource, errorHandler, readerProperties);
       rdfReader.read(model, inputstream, null);
 
       Preconditions.checkState(errorHandler.isFailure(), errorHandler.getInfo());
@@ -235,12 +235,12 @@ public class JenaUtils {
     }
   }
 
-  private static RDFReader getReader(Model model, Resource resource, RDFErrorHandler rdfErrorHandler, Map<String, Object> readerProperties) {
+  private static RDFReaderI getReader(Model model, Resource resource, RDFErrorHandler rdfErrorHandler, Map<String, Object> readerProperties) {
     return getReader(model, rdfErrorHandler, readerProperties, getRdfSyntax(resource));
   }
 
-  private static RDFReader getReader(Model model, RDFErrorHandler rdfErrorHandler, Map<String, Object> readerProperties, String language) {
-    RDFReader rdfReader = getReaderByRdfSyntax(model, language);
+  private static RDFReaderI getReader(Model model, RDFErrorHandler rdfErrorHandler, Map<String, Object> readerProperties, String language) {
+    RDFReaderI rdfReader = getReaderByRdfSyntax(model, language);
     rdfReader.setErrorHandler(rdfErrorHandler);
     if (readerProperties == null) return rdfReader;
 
@@ -250,11 +250,11 @@ public class JenaUtils {
     return rdfReader;
   }
 
-  private static RDFReader getBasicReader(Model model, Resource resource) {
+  private static RDFReaderI getBasicReader(Model model, Resource resource) {
     return getReaderByRdfSyntax(model, getRdfSyntax(resource));
   }
 
-  private static RDFReader getReaderByRdfSyntax(Model model, String language) {
+  private static RDFReaderI getReaderByRdfSyntax(Model model, String language) {
     try {
       return model.getReader(language);
     }
@@ -393,7 +393,7 @@ public class JenaUtils {
 
   public static Model readInto(InputStream inputStream, String streamName, Model model, String lang) {
     try {
-      RDFReader reader = model.getReader(lang);
+      RDFReaderI reader = model.getReader(lang);
       InternalRdfErrorHandler errorHandler = new InternalRdfErrorHandler(streamName);
       reader.setErrorHandler(errorHandler);
       reader.read(model, inputStream, null);

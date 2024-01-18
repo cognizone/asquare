@@ -1,84 +1,76 @@
 package zone.cogni.libs.sparqlservice.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.ContentType;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.nio.charset.StandardCharsets;
+import java.util.function.Function;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.jena.utils.TripleSerializationFormat;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.function.Function;
-
-import static zone.cogni.libs.sparqlservice.impl.HttpHelper.createAuthenticationHttpContext;
-import static zone.cogni.libs.sparqlservice.impl.HttpHelper.executeAndConsume;
-
 public class StardogSparqlService implements SparqlService {
   private final String endpointUrl;
-  private final Header authHeader;
-  private final HttpClientContext authenticationHttpContext;
+  private final HttpClient httpClient;
+  private final QueryExecutionBuilder queryExecutionBuilder;
 
   public StardogSparqlService(Config config) {
     endpointUrl = config.getUrl();
-    if (StringUtils.isNoneBlank(config.getUser(), config.getPassword())) {
-      String authEncoded = Base64.getEncoder().encodeToString((config.getUser() + ":" + config.getPassword()).getBytes(StandardCharsets.UTF_8));
-      authHeader = new BasicHeader("Authorization", "Basic " + authEncoded);
-      authenticationHttpContext = createAuthenticationHttpContext(config.getUser(), config.getPassword());
-    }
-    else {
-      authHeader = null; //we're allowed to send null value to the "setHeader" method (whop whop)
-      authenticationHttpContext = null;
-    }
+    httpClient = Utils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
+    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(endpointUrl + "/query").httpClient(httpClient);
   }
 
   @Override
   public void uploadTtlFile(File file) {
-    Request request = Request.Post(endpointUrl)
-            .setHeader("Content-Type", "text/turtle;charset=utf-8")
-            .setHeader(authHeader)
-            .bodyFile(file, ContentType.create("text/turtle", StandardCharsets.UTF_8));
-    executeAndConsume(request);
+    final HttpRequest request;
+    try {
+      request = HttpRequest
+          .newBuilder(URI.create(endpointUrl))
+          .POST(HttpRequest.BodyPublishers.ofFile(file.toPath()))
+          .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString()+";charset=utf-8")
+          .build();
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    execute(request,httpClient);
   }
-
 
   @Override
   public Model queryForModel(String query) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", query, null, null, authenticationHttpContext)) {
-      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
-      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+      // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execConstruct();
     }
   }
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-    Request request = Request
-            .Post(endpointUrl + "/update")
-            .setHeader(authHeader)
-            .body(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("update", updateQuery)), StandardCharsets.UTF_8));
-    executeAndConsume(request);
+    final HttpRequest request = HttpRequest
+        .newBuilder(URI.create(endpointUrl + "/update"))
+        .POST(HttpRequest.BodyPublishers.ofString("update=" + updateQuery, StandardCharsets.UTF_8))
+        .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8")
+        .build();
+    execute(request, httpClient);
   }
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", askQuery, null, null, authenticationHttpContext)) {
-      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
-      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(askQuery).build()) {
+      // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execAsk();
     }
   }
@@ -101,19 +93,18 @@ public class StardogSparqlService implements SparqlService {
   private void upload(Model model, String graphUri, boolean replace) {
     String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
     byte[] body = JenaUtils.toByteArray(model, TripleSerializationFormat.turtle);
-    Request request = (replace ? Request.Put(graphStoreUrl) : Request.Post(graphStoreUrl))  //Put replaces the graph, Post adds data
-            .setHeader("Content-Type", "text/turtle;charset=utf-8")
-            .setHeader(authHeader)
-            .bodyByteArray(body, ContentType.create("text/turtle", StandardCharsets.UTF_8));
-    executeAndConsume(request);
+    final HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(graphStoreUrl))
+        .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8");
+    final BodyPublisher p = HttpRequest.BodyPublishers.ofByteArray(body);
+    final HttpRequest request = (replace ? builder.PUT(p) : builder.POST(p)).build();
+    execute(request, httpClient);
   }
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl + "/query", query, null, null, authenticationHttpContext)) {
-      //jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
-      ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+      // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
+      // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return resultHandler.apply(queryExecution.execSelect());
     }
   }

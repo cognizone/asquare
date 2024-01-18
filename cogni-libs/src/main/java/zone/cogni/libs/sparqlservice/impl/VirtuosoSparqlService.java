@@ -1,70 +1,57 @@
 package zone.cogni.libs.sparqlservice.impl;
 
-import io.vavr.control.Try;
-import org.apache.commons.codec.binary.Base64;
+import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static zone.cogni.libs.sparqlservice.impl.Utils.checkOK;
+import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.function.Function;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
-import java.io.File;
-import java.io.StringWriter;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
 public class VirtuosoSparqlService implements SparqlService {
   private static final Logger log = LoggerFactory.getLogger(VirtuosoSparqlService.class);
 
-  private final String endpointUrl;
-  private final String endpointUser;
-  private final String endpointPassword;
   private final boolean sparqlGraphCrudUseBasicAuth;
 
+  private final QueryExecutionBuilder queryExecutionBuilder;
+
+  private final Config config;
+
   public VirtuosoSparqlService(Config config) {
-    endpointUrl = config.getUrl();
-    endpointUser = config.getUser();
-    endpointPassword = config.getPassword();
+    this.config = config;
+    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(this.config.getUrl() + "/query").httpClient(buildHttpClient());
     sparqlGraphCrudUseBasicAuth = config.isGraphCrudUseBasicAuth();
   }
 
-  protected CloseableHttpClient buildHttpClient() {
-    HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-    httpClientBuilder.setConnectionManager(new PoolingHttpClientConnectionManager(60L, TimeUnit.SECONDS));
+  private HttpClient buildHttpClient() {
+    return httpClientBuilder(true).build();
+  }
 
-    if (StringUtils.isNoneBlank(endpointUser, endpointPassword)) {
-      CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-      credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(endpointUser, endpointPassword));
-      httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-    }
-    else {
-      log.warn("Virtuoso executor service {} is configured without credentials.", endpointUrl);
-    }
-    return httpClientBuilder.build();
+  private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
+    return Utils.createHttpClientBuilder(withAuthentication ? config.getUser() : null, config.getPassword()).connectTimeout(Duration.of(60, ChronoUnit.SECONDS));
   }
 
   @Deprecated
@@ -74,18 +61,12 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public void uploadTtlFile(File file) {
-    Authenticator.setDefault(new Authenticator() {
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(endpointUser, endpointPassword.toCharArray());
-      }
-    });
-
     int retry = 0;
     while (true) {
       try {
         String graphUri = StringUtils.removeEnd(file.getName(), ".ttl");
-        String url = StringUtils.substringBeforeLast(this.endpointUrl, "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
-                     (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));
+        String url = StringUtils.substringBeforeLast(config.getUrl(), "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
+            (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));
 
         loadIntoGraph_exception(file, url);
         break;
@@ -103,33 +84,26 @@ public class VirtuosoSparqlService implements SparqlService {
     }
   }
 
-  private void loadIntoGraph_exception(byte[] data, String updateUrl, boolean replace) throws Exception {
+  private void loadIntoGraph_exception(byte[] data, String updateUrl, boolean replace)
+      throws Exception {
     log.info("Run {} with basic auth: {}", updateUrl, sparqlGraphCrudUseBasicAuth);
-    URL url = new URL(updateUrl);
 
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setDoOutput(true);
-    conn.setInstanceFollowRedirects(true);
-    conn.setRequestMethod(replace ? "PUT" : "POST");
-    conn.setRequestProperty("Content-Type", "text/turtle;charset=utf-8");
-    conn.setRequestProperty("charset", "utf-8");
-    conn.setRequestProperty("Content-Length", Integer.toString(data.length));
-    if(sparqlGraphCrudUseBasicAuth) {
-      conn.setRequestProperty("Authorization", "Basic " + Base64.encodeBase64String((endpointUser + ":" + endpointPassword).getBytes(StandardCharsets.UTF_8)));
-    }
-    conn.setUseCaches(false);
-    conn.getOutputStream().write(data);
+    final HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(updateUrl))
+        .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8")
+        .header(CONTENT_LENGTH, Integer.toString(data.length));
+    final BodyPublisher p = HttpRequest.BodyPublishers.ofByteArray(data);
+    final HttpRequest request = (replace ? builder.PUT(p) : builder.POST(p)).build();
+    //  TODO  conn.setDoOutput(true);
+    //  TODO  conn.setRequestProperty("charset", "utf-8");
+    //  TODO  conn.setUseCaches(false);
 
-    int responseCode = conn.getResponseCode();
-    Try<String> errorBody = Try.of(() -> IOUtils.toString(conn.getErrorStream(), StandardCharsets.UTF_8));
-
-    conn.disconnect();
-
-    if ((responseCode / 100) != 2) {
-      errorBody.onFailure(ex -> log.error("Failed to read response body", ex))
-               .onSuccess(log::error);
-
-      throw new RuntimeException("Not 2xx as answer: " + conn.getResponseCode() + " " + conn.getResponseMessage());
+    try {
+      final HttpResponse<String> httpResponse = httpClientBuilder(sparqlGraphCrudUseBasicAuth)
+          .followRedirects(Redirect.ALWAYS)
+          .build().send(request, BodyHandlers.ofString());
+      checkOK(httpResponse);
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -141,8 +115,11 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public Model queryForModel(String query) {
-    try (CloseableHttpClient httpClient = buildHttpClient();
-         QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl, query, httpClient)) {
+    try (QueryExecution queryExecution = QueryExecutionHTTP
+        .service(config.getUrl())
+        .query(query)
+        .httpClient(buildHttpClient())
+        .build()) {
       return queryExecution.execConstruct();
     }
     catch (Exception e) {
@@ -153,26 +130,12 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-    try (CloseableHttpClient httpClient = buildHttpClient()) {
-      //HttpOp.setDefaultHttpClient(httpClient);
-      HttpPost httpPost = new HttpPost(endpointUrl);
-      httpPost.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("query", updateQuery)), StandardCharsets.UTF_8));
-      HttpResponse execute = httpClient.execute(httpPost);
-      StatusLine statusLine = execute.getStatusLine();
-      if (statusLine.getStatusCode() != 200) {
-        try {
-          String response = IOUtils.toString(execute.getEntity().getContent());
-          log.error(response);
-        }
-        catch (Exception ignore) {
-          log.error("failed to read response");
-        }
-        throw new RuntimeException("Update didn't answer 200 code: " + statusLine);
-      }
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    final HttpClient httpClient = buildHttpClient();
+    final HttpRequest request = HttpRequest
+        .newBuilder(URI.create(config.getUrl()))
+        .POST(HttpRequest.BodyPublishers.ofString("query=" + updateQuery))
+        .build();
+    execute(request, httpClient);
   }
 
   @Override
@@ -181,18 +144,11 @@ public class VirtuosoSparqlService implements SparqlService {
   }
 
   public void upload(Model model, String graphUri, boolean replace) {
-    Authenticator.setDefault(new Authenticator() {
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(endpointUser, endpointPassword.toCharArray());
-      }
-    });
-
-    StringWriter writer = new StringWriter();
+    final StringWriter writer = new StringWriter();
     VirtuosoHelper.patchModel(model).write(writer, "ttl");
     try {
-      String url = StringUtils.substringBeforeLast(this.endpointUrl, "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
-                   (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));
-
+      final String url = StringUtils.substringBeforeLast(config.getUrl(), "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
+          (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));
       loadIntoGraph_exception(writer.toString().getBytes(), url, replace);
     }
     catch (Exception e) {
@@ -202,8 +158,12 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    try (CloseableHttpClient httpClient = buildHttpClient();
-         QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl, query, httpClient)) {
+    try (
+        QueryExecution queryExecution = QueryExecutionHTTP
+            .service(config.getUrl())
+            .query(query)
+            .httpClient(buildHttpClient())
+            .build()) {
       return resultHandler.apply(queryExecution.execSelect());
     }
     catch (Exception ex) {
@@ -214,8 +174,12 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    try (CloseableHttpClient httpClient = buildHttpClient();
-         QueryExecution queryExecution = QueryExecutionFactory.sparqlService(endpointUrl, askQuery, httpClient)) {
+    try (
+        QueryExecution queryExecution = QueryExecutionHTTP
+            .service(config.getUrl())
+            .query(askQuery)
+            .httpClient(buildHttpClient())
+            .build()) {
       return queryExecution.execAsk();
     }
     catch (Exception ex) {
