@@ -19,6 +19,7 @@ import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
+import org.springframework.http.MediaType;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 public class FusekiSparqlService implements SparqlService {
@@ -65,11 +66,10 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-      final String sparqlUrl = config.getUpdateUrl();
       final HttpRequest request = HttpRequest
-          .newBuilder(URI.create(sparqlUrl))
+          .newBuilder(URI.create(config.getUpdateUrl()))
           .POST(BodyPublishers.ofString("update="+ updateQuery, StandardCharsets.UTF_8))
-          .header(CONTENT_TYPE, config.getTurtleMimeType() + ";charset=utf-8")
+          .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
           .build();
       execute(request, httpClient);
   }

@@ -25,10 +25,10 @@ import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 public class VirtuosoSparqlService implements SparqlService {
@@ -42,7 +42,7 @@ public class VirtuosoSparqlService implements SparqlService {
 
   public VirtuosoSparqlService(Config config) {
     this.config = config;
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(this.config.getUrl() + "/query").httpClient(buildHttpClient());
+    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(this.config.getUrl()).httpClient(buildHttpClient());
     sparqlGraphCrudUseBasicAuth = config.isGraphCrudUseBasicAuth();
   }
 
@@ -84,8 +84,7 @@ public class VirtuosoSparqlService implements SparqlService {
     }
   }
 
-  private void loadIntoGraph_exception(byte[] data, String updateUrl, boolean replace)
-      throws Exception {
+  private void loadIntoGraph_exception(byte[] data, String updateUrl, boolean replace) {
     log.info("Run {} with basic auth: {}", updateUrl, sparqlGraphCrudUseBasicAuth);
 
     final HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(updateUrl))
@@ -115,27 +114,19 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public Model queryForModel(String query) {
-    try (QueryExecution queryExecution = QueryExecutionHTTP
-        .service(config.getUrl())
-        .query(query)
-        .httpClient(buildHttpClient())
-        .build()) {
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
       return queryExecution.execConstruct();
-    }
-    catch (Exception e) {
-      log.error("get data failed", e);
-      throw new RuntimeException(e);
     }
   }
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-    final HttpClient httpClient = buildHttpClient();
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(config.getUrl()))
         .POST(HttpRequest.BodyPublishers.ofString("query=" + updateQuery))
+        .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
-    execute(request, httpClient);
+    execute(request, buildHttpClient());
   }
 
   @Override
@@ -158,33 +149,15 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    try (
-        QueryExecution queryExecution = QueryExecutionHTTP
-            .service(config.getUrl())
-            .query(query)
-            .httpClient(buildHttpClient())
-            .build()) {
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
       return resultHandler.apply(queryExecution.execSelect());
-    }
-    catch (Exception ex) {
-      log.error("Can not execute select query {}", query, ex);
-      throw new RuntimeException(ex);
     }
   }
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    try (
-        QueryExecution queryExecution = QueryExecutionHTTP
-            .service(config.getUrl())
-            .query(askQuery)
-            .httpClient(buildHttpClient())
-            .build()) {
+    try (QueryExecution queryExecution = queryExecutionBuilder.query(askQuery).build()) {
       return queryExecution.execAsk();
-    }
-    catch (Exception ex) {
-      log.error("Can not execute ask query {}", askQuery, ex);
-      throw new RuntimeException(ex);
     }
   }
 

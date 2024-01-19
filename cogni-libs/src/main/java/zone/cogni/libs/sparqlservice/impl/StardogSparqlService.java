@@ -17,6 +17,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
+import org.springframework.http.MediaType;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.jena.utils.TripleSerializationFormat;
 import zone.cogni.libs.sparqlservice.SparqlService;
@@ -61,7 +62,7 @@ public class StardogSparqlService implements SparqlService {
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(endpointUrl + "/update"))
         .POST(HttpRequest.BodyPublishers.ofString("update=" + updateQuery, StandardCharsets.UTF_8))
-        .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8")
+        .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
     execute(request, httpClient);
   }

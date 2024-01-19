@@ -105,6 +105,7 @@ subprojects {
       dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
       dependency("org.elasticsearch.test:framework:$elasticsearchVersion")
       dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+      dependency("org.apache.jena:jena-fuseki-main:$jenaVersion")
     }
   }
 
@@ -428,6 +429,7 @@ project('cogni-libs') {
 
     // test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("org.apache.jena:jena-fuseki-main")
   }
 }
 
