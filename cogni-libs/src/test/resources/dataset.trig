@@ -1,0 +1,10 @@
+@prefix : <https://example.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+{
+  :c1 rdfs:subClassOf :c2 .
+}
+
+:m {
+  :c1 rdfs:label "Class 1" .
+}

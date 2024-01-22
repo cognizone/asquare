@@ -14,7 +14,6 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
-import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionBuilder;
@@ -34,14 +33,10 @@ public class GraphDBSparqlService implements SparqlService {
 
   public GraphDBSparqlService(GraphDBConfig config) {
     this.config = config;
-  }
-
-  @PostConstruct
-  void init() {
     //  TODO check loading from systemproperties - e.g. proxy settings?
     //  HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
     httpClient = Utils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(config.getSparqlEndpoint() + "/query").httpClient(httpClient);
+    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(config.getSparqlEndpoint()).httpClient(httpClient);
   }
 
   @Override
