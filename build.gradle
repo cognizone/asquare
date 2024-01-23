@@ -11,8 +11,10 @@ buildscript {
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
     jenaVersion = '4.10.0'
-    springBootVersion = '2.6.6'
-    springSecurityVersion = '5.6.2'
+    springBootVersion = '2.7.18'
+    springSecurityVersion = '5.8.9'
+    springSecuritySaml2CoreVersion = '1.0.10.RELEASE'
+    set('snakeyaml.version','2.0')
   }
 }
 
@@ -101,7 +103,8 @@ subprojects {
       dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-      dependency("org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE")
+      dependency("org.springframework.security:spring-security-core:$springSecurityVersion")
+      dependency("org.springframework.security.extensions:spring-security-saml2-core:$springSecuritySaml2CoreVersion")
 
       // test
       dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
@@ -486,7 +489,7 @@ project('cube') {
     api('org.apache.jena:jena-shacl')
 
     // spring
-    implementation("org.springframework.security:spring-security-core:$springSecurityVersion")
+    implementation("org.springframework.security:spring-security-core")
 
     // test
     testImplementation project(':cogni-libs')
