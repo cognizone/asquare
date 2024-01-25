@@ -79,11 +79,7 @@ public class HttpClientUtils {
    * @param client HttpClient to use.
    */
   public static void execute(final HttpRequest request, final HttpClient client) {
-    try {
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
       checkOK(response);
-    } catch (IOException | InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 }
