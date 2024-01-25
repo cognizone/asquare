@@ -5,6 +5,7 @@ import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 import java.io.StringWriter;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
@@ -22,6 +23,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
@@ -115,8 +117,9 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   public void executeUpdateQuery(String updateQuery) {
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(rdfStoreUrl))
-        .POST(BodyPublishers.ofString("query=" + updateQuery, StandardCharsets.UTF_8))
-        .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString())
+        .POST(BodyPublishers.ofString("query=" + URLEncoder.encode(updateQuery,
+                StandardCharsets.UTF_8)))
+        .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
     execute(request, httpClient);
   }

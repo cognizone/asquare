@@ -6,9 +6,11 @@ import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.apache.jena.query.QueryExecution;
@@ -95,7 +97,7 @@ public class StardogSparqlService implements SparqlService {
   }
 
   private void upload(Model model, String graphUri, boolean replace) {
-    String graphStoreUrl = endpointUrl + "?graph=" + graphUri;
+    String graphStoreUrl = endpointUrl + "?graph=" + URLEncoder.encode(graphUri, StandardCharsets.UTF_8);
     byte[] body = JenaUtils.toByteArray(model, TripleSerializationFormat.turtle);
     final HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(graphStoreUrl))
         .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8");

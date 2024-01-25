@@ -78,7 +78,7 @@ public class GraphDBSparqlService implements SparqlService {
   public void executeUpdateQuery(String updateQuery) {
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(config.getSparqlUpdateEndpoint()))
-        .POST(HttpRequest.BodyPublishers.ofString("update=" + updateQuery, StandardCharsets.UTF_8))
+        .POST(HttpRequest.BodyPublishers.ofString("update=" + URLEncoder.encode(updateQuery, StandardCharsets.UTF_8), StandardCharsets.UTF_8))
         .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
     execute(request, httpClient);

@@ -6,7 +6,9 @@ import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
@@ -45,7 +47,7 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public void uploadTtlFile(File file) {
-    final String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + StringUtils.removeEnd(file.getName(), ".ttl");
+    final String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(StringUtils.removeEnd(file.getName(), ".ttl"), StandardCharsets.UTF_8);
     final HttpRequest request;
     try {
       request = HttpRequest
@@ -68,12 +70,14 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-      final HttpRequest request = HttpRequest
-          .newBuilder(URI.create(config.getUpdateUrl()))
-          .POST(BodyPublishers.ofString("update="+ updateQuery, StandardCharsets.UTF_8))
-          .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-          .build();
-      execute(request, httpClient);
+    final HttpRequest request = HttpRequest
+        .newBuilder(URI.create(config.getUpdateUrl()))
+        .POST(BodyPublishers.ofString("update=" + URLEncoder.encode(updateQuery,
+                StandardCharsets.UTF_8)))
+        .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        .build();
+    System.out.println(request);
+    execute(request, httpClient);
   }
 
   @Override
@@ -93,7 +97,8 @@ public class FusekiSparqlService implements SparqlService {
   }
 
   private void upload(Model model, String graphUri, boolean replace) {
-    String insertUrl = config.getGraphStoreUrl() + "?graph=" + graphUri;
+    String insertUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(graphUri,
+        StandardCharsets.UTF_8);
     StringWriter writer = new StringWriter();
     model.write(writer, "ttl");
     final BodyPublisher p = BodyPublishers.ofByteArray(writer.toString().getBytes());

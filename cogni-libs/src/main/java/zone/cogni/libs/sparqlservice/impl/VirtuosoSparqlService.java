@@ -9,12 +9,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
@@ -120,7 +123,8 @@ public class VirtuosoSparqlService implements SparqlService {
   public void executeUpdateQuery(String updateQuery) {
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(config.getUrl()))
-        .POST(HttpRequest.BodyPublishers.ofString("query=" + updateQuery))
+        .POST(HttpRequest.BodyPublishers.ofString("query=" + URLEncoder.encode(updateQuery,
+                    StandardCharsets.UTF_8)))
         .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
     execute(request, buildHttpClient());
@@ -136,7 +140,7 @@ public class VirtuosoSparqlService implements SparqlService {
     VirtuosoHelper.patchModel(model).write(writer, "ttl");
     try {
       final String url = StringUtils.substringBeforeLast(config.getUrl(), "/") + "/sparql-graph-crud-auth?" + // force Graph Update protocol
-          (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + graphUri));
+          (StringUtils.isBlank(graphUri) ? "default" : ("graph-uri=" + URLEncoder.encode(graphUri, StandardCharsets.UTF_8)));
       loadIntoGraph_exception(writer.toString().getBytes(), url, replace);
     }
     catch (Exception e) {
