@@ -47,13 +47,8 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
     this.rdfStorePassword = rdfStorePassword;
     this.graphCrudUseBasicAuth = graphCrudUseBasicAuth;
     //  TODO HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-    httpClient = HttpClientUtils.createHttpClientBuilder(rdfStoreUser, rdfStorePassword).connectTimeout(
-        Duration.ofMinutes(60)).build();
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(rdfStoreUrl).httpClient(buildHttpClient());
-  }
-
-  private HttpClient buildHttpClient() {
-    return httpClientBuilder(true).build();
+    httpClient = httpClientBuilder(true).build();
+    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(rdfStoreUrl).httpClient(httpClient);
   }
 
   private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
