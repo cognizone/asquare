@@ -34,11 +34,8 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   protected final String rdfStoreUser;
   protected final String rdfStorePassword;
   private final boolean graphCrudUseBasicAuth;
-  protected String modelContentType;
-
-  private HttpClient httpClient;
-
-  private QueryExecutionBuilder queryExecutionBuilder;
+  private final HttpClient httpClient;
+  private final QueryExecutionBuilder queryExecutionBuilder;
 
   public VirtuosoRdfStoreService(String rdfStoreUrl, String rdfStoreUser, String rdfStorePassword) {
     this(rdfStoreUrl, rdfStoreUser, rdfStorePassword, false);
@@ -112,7 +109,6 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     query = buildQuery(query, bindings);
     try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
-      // TODO if (modelContentType != null) { queryExecution.setModelContentType(modelContentType); }
       return queryExecution.execConstruct();
     }
   }
