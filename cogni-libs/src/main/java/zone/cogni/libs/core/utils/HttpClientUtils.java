@@ -1,4 +1,4 @@
-package zone.cogni.libs.sparqlservice.impl;
+package zone.cogni.libs.core.utils;
 
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.http.HttpClient;

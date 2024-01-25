@@ -1,7 +1,7 @@
 package zone.cogni.asquare.virtuoso;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
+import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 import java.io.StringWriter;
 import java.net.URI;
@@ -23,7 +23,7 @@ import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.libs.sparqlservice.impl.HttpClientUtils;
+import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 

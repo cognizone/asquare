@@ -2,8 +2,8 @@ package zone.cogni.libs.sparqlservice.impl;
 
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.checkOK;
-import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
+import static zone.cogni.libs.core.utils.HttpClientUtils.checkOK;
+import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +29,7 @@ import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 public class VirtuosoSparqlService implements SparqlService {

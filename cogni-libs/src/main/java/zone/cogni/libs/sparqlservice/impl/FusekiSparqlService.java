@@ -1,7 +1,7 @@
 package zone.cogni.libs.sparqlservice.impl;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
+import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +20,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.springframework.http.MediaType;
+import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 public class FusekiSparqlService implements SparqlService {

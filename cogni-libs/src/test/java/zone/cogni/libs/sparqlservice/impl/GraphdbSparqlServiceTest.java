@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.function.Function;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
+import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 @Disabled("No embedded version. To run it manually, set the GraphDBConfig below properly and run the tests.")
 public class GraphdbSparqlServiceTest extends AbstractSparqlServiceTest {
