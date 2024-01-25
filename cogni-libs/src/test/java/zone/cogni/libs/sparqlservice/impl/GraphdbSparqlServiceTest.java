@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 import java.util.function.Function;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
 
 @Disabled("No embedded version. To run it manually, set the GraphDBConfig below properly and run the tests.")
 public class GraphdbSparqlServiceTest extends AbstractSparqlServiceTest {
@@ -41,7 +41,7 @@ public class GraphdbSparqlServiceTest extends AbstractSparqlServiceTest {
             .header(CONTENT_TYPE, Lang.TRIG.getHeaderString())
             .uri(URI.create(config.getSparqlUpdateEndpoint()))
             .build();
-    final HttpClient httpClient = Utils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
+    final HttpClient httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
     execute(request, httpClient);
 
     sut = new GraphDBSparqlService(config);
