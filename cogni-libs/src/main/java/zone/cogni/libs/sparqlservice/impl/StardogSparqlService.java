@@ -25,12 +25,14 @@ import zone.cogni.libs.sparqlservice.SparqlService;
 public class StardogSparqlService implements SparqlService {
   private final String endpointUrl;
   private final HttpClient httpClient;
-  private final QueryExecutionBuilder queryExecutionBuilder;
 
   public StardogSparqlService(Config config) {
     endpointUrl = config.getUrl();
     httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(endpointUrl + "/query").httpClient(httpClient);
+  }
+
+  private QueryExecutionBuilder getQueryExecutionBuilder() {
+    return QueryExecutionHTTPBuilder.service(endpointUrl + "/query").httpClient(httpClient);
   }
 
   @Override
@@ -50,7 +52,7 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public Model queryForModel(String query) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
       // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execConstruct();
@@ -69,7 +71,7 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(askQuery).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(askQuery).build()) {
       // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
       // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return queryExecution.execAsk();
@@ -103,7 +105,7 @@ public class StardogSparqlService implements SparqlService {
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       // jena adds empty defaultGraph param to URL because defaultGraph is null but is a "value", stardog doesn't like that
       // TODO check with empty default graph ((QueryEngineHTTP) queryExecution).setDefaultGraphURIs(Collections.emptyList());
       return resultHandler.apply(queryExecution.execSelect());

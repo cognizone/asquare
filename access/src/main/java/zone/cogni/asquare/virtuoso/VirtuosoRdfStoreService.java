@@ -35,7 +35,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   protected final String rdfStorePassword;
   private final boolean graphCrudUseBasicAuth;
   private final HttpClient httpClient;
-  private final QueryExecutionBuilder queryExecutionBuilder;
+//  private final QueryExecutionBuilder queryExecutionBuilder;
 
   public VirtuosoRdfStoreService(String rdfStoreUrl, String rdfStoreUser, String rdfStorePassword) {
     this(rdfStoreUrl, rdfStoreUser, rdfStorePassword, false);
@@ -48,7 +48,10 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
     this.graphCrudUseBasicAuth = graphCrudUseBasicAuth;
     //  TODO HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
     httpClient = httpClientBuilder(true).build();
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(rdfStoreUrl).httpClient(httpClient);
+  }
+
+  private QueryExecutionBuilder getQueryExecutionBuilder() {
+    return QueryExecutionHTTPBuilder.service(rdfStoreUrl).httpClient(httpClient);
   }
 
   private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
@@ -87,7 +90,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
 
     query = buildQuery(query, bindings);
 
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return resultSetHandler.handle(queryExecution.execSelect());
     }
   }
@@ -95,7 +98,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     query = buildQuery(query, bindings);
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return queryExecution.execAsk();
     }
   }
@@ -103,7 +106,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     query = buildQuery(query, bindings);
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return queryExecution.execConstruct();
     }
   }

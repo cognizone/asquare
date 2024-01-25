@@ -36,14 +36,15 @@ public class VirtuosoSparqlService implements SparqlService {
 
   private final boolean sparqlGraphCrudUseBasicAuth;
 
-  private final QueryExecutionBuilder queryExecutionBuilder;
-
   private final Config config;
 
   public VirtuosoSparqlService(Config config) {
     this.config = config;
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(this.config.getUrl()).httpClient(buildHttpClient());
     sparqlGraphCrudUseBasicAuth = config.isGraphCrudUseBasicAuth();
+  }
+
+  private QueryExecutionBuilder getQueryExecutionBuilder() {
+    return QueryExecutionHTTPBuilder.service(this.config.getUrl()).httpClient(buildHttpClient());
   }
 
   private HttpClient buildHttpClient() {
@@ -52,11 +53,6 @@ public class VirtuosoSparqlService implements SparqlService {
 
   private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
     return HttpClientUtils.createHttpClientBuilder(withAuthentication ? config.getUser() : null, config.getPassword()).connectTimeout(Duration.of(60, ChronoUnit.SECONDS));
-  }
-
-  @Deprecated
-  private void init() {
-    log.warn("Method VirtuosoSparqlService::init is no longer supported.");
   }
 
   @Override
@@ -114,7 +110,7 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public Model queryForModel(String query) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return queryExecution.execConstruct();
     }
   }
@@ -149,14 +145,14 @@ public class VirtuosoSparqlService implements SparqlService {
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return resultHandler.apply(queryExecution.execSelect());
     }
   }
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(askQuery).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(askQuery).build()) {
       return queryExecution.execAsk();
     }
   }

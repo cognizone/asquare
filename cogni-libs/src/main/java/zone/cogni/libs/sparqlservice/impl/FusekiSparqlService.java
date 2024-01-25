@@ -28,8 +28,6 @@ public class FusekiSparqlService implements SparqlService {
 
   private final HttpClient httpClient;
 
-  private final QueryExecutionBuilder queryExecutionBuilder;
-
   @Deprecated
   public FusekiSparqlService(Config config) {
     this(FusekiConfig.from(config));
@@ -38,7 +36,10 @@ public class FusekiSparqlService implements SparqlService {
   public FusekiSparqlService(FusekiConfig config) {
     this.config = config;
     httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
-    queryExecutionBuilder = QueryExecutionHTTPBuilder.service(config.getQueryUrl()).httpClient(httpClient);
+  }
+
+  private QueryExecutionBuilder getQueryExecutionBuilder() {
+    return QueryExecutionHTTPBuilder.service(config.getQueryUrl()).httpClient(httpClient);
   }
 
   @Override
@@ -59,7 +60,7 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public Model queryForModel(String query) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return queryExecution.execConstruct();
     }
   }
@@ -105,14 +106,14 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(query).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return resultHandler.apply(queryExecution.execSelect());
     }
   }
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    try (QueryExecution queryExecution = queryExecutionBuilder.query(askQuery).build()) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(askQuery).build()) {
       return queryExecution.execAsk();
     }
   }
