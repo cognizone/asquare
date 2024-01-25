@@ -1,7 +1,7 @@
 package zone.cogni.libs.sparqlservice.impl;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +27,15 @@ import zone.cogni.libs.sparqlservice.SparqlService;
 public class GraphDBSparqlService implements SparqlService {
 
   private final GraphDBConfig config;
-  private HttpClient httpClient;
+  private final HttpClient httpClient;
 
-  private QueryExecutionBuilder queryExecutionBuilder;
+  private final QueryExecutionBuilder queryExecutionBuilder;
 
   public GraphDBSparqlService(GraphDBConfig config) {
     this.config = config;
     //  TODO check loading from systemproperties - e.g. proxy settings?
     //  HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-    httpClient = Utils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
+    httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
     queryExecutionBuilder = QueryExecutionHTTPBuilder.service(config.getSparqlEndpoint()).httpClient(httpClient);
   }
 
