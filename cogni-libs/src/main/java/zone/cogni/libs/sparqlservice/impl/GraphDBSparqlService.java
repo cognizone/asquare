@@ -11,7 +11,6 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.apache.commons.io.FileUtils;
@@ -61,7 +60,7 @@ public class GraphDBSparqlService implements SparqlService {
   private void uploadTtl(String graphUri, String ttl) {
     final HttpRequest request = HttpRequest
         .newBuilder()
-        .POST(BodyPublishers.ofString(ttl))
+        .POST(BodyPublishers.ofString(ttl, StandardCharsets.UTF_8))
         .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString())
         .uri(URI.create(config.getSparqlUpdateEndpoint()+"?context=" + URLEncoder.encode("<"+graphUri+">", StandardCharsets.UTF_8)))
         .build();
