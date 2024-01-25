@@ -63,7 +63,7 @@ public class GraphDBSparqlService implements SparqlService {
         .newBuilder()
         .POST(BodyPublishers.ofString(ttl))
         .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString())
-        .uri(URI.create(config.getSparqlUpdateEndpoint()+"?context=" + URLEncoder.encode("<"+graphUri+">", Charset.defaultCharset())))
+        .uri(URI.create(config.getSparqlUpdateEndpoint()+"?context=" + URLEncoder.encode("<"+graphUri+">", StandardCharsets.UTF_8)))
         .build();
     execute(request, httpClient);
   }
