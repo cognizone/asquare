@@ -1,7 +1,7 @@
 package zone.cogni.asquare.virtuoso;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
 
 import java.io.StringWriter;
 import java.net.URI;
@@ -23,7 +23,7 @@ import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
-import zone.cogni.libs.sparqlservice.impl.Utils;
+import zone.cogni.libs.sparqlservice.impl.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
@@ -50,7 +50,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
     this.rdfStorePassword = rdfStorePassword;
     this.graphCrudUseBasicAuth = graphCrudUseBasicAuth;
     //  TODO HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-    httpClient = Utils.createHttpClientBuilder(rdfStoreUser, rdfStorePassword).connectTimeout(
+    httpClient = HttpClientUtils.createHttpClientBuilder(rdfStoreUser, rdfStorePassword).connectTimeout(
         Duration.ofMinutes(60)).build();
     queryExecutionBuilder = QueryExecutionHTTPBuilder.service(rdfStoreUrl).httpClient(buildHttpClient());
   }
@@ -60,7 +60,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
   }
 
   private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
-    return Utils.createHttpClientBuilder(withAuthentication ? rdfStoreUser : null, rdfStorePassword).connectTimeout(Duration.ofSeconds(60));
+    return HttpClientUtils.createHttpClientBuilder(withAuthentication ? rdfStoreUser : null, rdfStorePassword).connectTimeout(Duration.ofSeconds(60));
   }
 
   @Override
@@ -85,7 +85,7 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
         .header(CONTENT_TYPE, Lang.TURTLE.getHeaderString() + ";charset=utf-8");
     final BodyPublisher p = HttpRequest.BodyPublishers.ofByteArray(data);
     final HttpRequest request = (replace ? builder.PUT(p) : builder.POST(p)).build();
-    Utils.execute(request, httpClientBuilder(graphCrudUseBasicAuth).build());
+    HttpClientUtils.execute(request, httpClientBuilder(graphCrudUseBasicAuth).build());
   }
 
   @Override

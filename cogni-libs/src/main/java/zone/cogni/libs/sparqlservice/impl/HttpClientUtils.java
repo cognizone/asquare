@@ -16,9 +16,9 @@ import java.net.http.HttpResponse;
 /**
  * Utility methods for JDK11 HttpClient.
  */
-public class Utils {
+public class HttpClientUtils {
 
-  private static final Logger log = LoggerFactory.getLogger(Utils.class);
+  private static final Logger log = LoggerFactory.getLogger(HttpClientUtils.class);
 
   /**
    * Creates a basic authenticator (username, password)

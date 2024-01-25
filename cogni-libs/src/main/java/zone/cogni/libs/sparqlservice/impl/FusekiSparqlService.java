@@ -1,7 +1,7 @@
 package zone.cogni.libs.sparqlservice.impl;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +37,7 @@ public class FusekiSparqlService implements SparqlService {
 
   public FusekiSparqlService(FusekiConfig config) {
     this.config = config;
-    httpClient = Utils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
+    httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
     queryExecutionBuilder = QueryExecutionHTTPBuilder.service(config.getQueryUrl()).httpClient(httpClient);
   }
 

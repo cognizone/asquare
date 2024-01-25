@@ -2,8 +2,8 @@ package zone.cogni.libs.sparqlservice.impl;
 
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static zone.cogni.libs.sparqlservice.impl.Utils.checkOK;
-import static zone.cogni.libs.sparqlservice.impl.Utils.execute;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.checkOK;
+import static zone.cogni.libs.sparqlservice.impl.HttpClientUtils.execute;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class VirtuosoSparqlService implements SparqlService {
   }
 
   private HttpClient.Builder httpClientBuilder(final boolean withAuthentication) {
-    return Utils.createHttpClientBuilder(withAuthentication ? config.getUser() : null, config.getPassword()).connectTimeout(Duration.of(60, ChronoUnit.SECONDS));
+    return HttpClientUtils.createHttpClientBuilder(withAuthentication ? config.getUser() : null, config.getPassword()).connectTimeout(Duration.of(60, ChronoUnit.SECONDS));
   }
 
   @Deprecated
