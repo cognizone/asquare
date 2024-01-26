@@ -6,7 +6,8 @@ public enum SparqlUtils {
   ;
 
   public static String escapeLiteral(String literal) {
-    return StringUtils.replace(literal, "'", "\\'");
+    return StringUtils.replace(literal, "'", "\\'")
+                      .replace("\n", "\\n");
 
   }
 }
