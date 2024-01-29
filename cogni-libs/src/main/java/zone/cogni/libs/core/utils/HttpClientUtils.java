@@ -20,24 +20,6 @@ public class HttpClientUtils {
   private static final Logger log = LoggerFactory.getLogger(HttpClientUtils.class);
 
   /**
-   * Creates a basic authenticator (username, password)
-   *
-   * @param username username
-   * @param password password (not null)
-   * @return authenticator
-   */
-  public static Authenticator createBasicAuthenticator(final String username,
-      final String password) {
-    Objects.requireNonNull(password);
-    return new Authenticator() {
-      @Override
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(username, password.toCharArray());
-      }
-    };
-  }
-
-  /**
    * Creates a new HttpClientBuilder. If both username and password is supplied, basic authentication header is generated.
    *
    * @param username username
@@ -49,7 +31,12 @@ public class HttpClientUtils {
     final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
 
     if (StringUtils.isNoneBlank(username, password)) {
-      httpClientBuilder.authenticator(createBasicAuthenticator(username, password));
+      httpClientBuilder.authenticator(new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+          return new PasswordAuthentication(username, password.toCharArray());
+        }
+      });
     } else {
       log.error("Endpoint credentials not properly configured");
     }
