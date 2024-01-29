@@ -443,6 +443,10 @@ project('cogni-sem') {
 
     // spring
     api('org.springframework.boot:spring-boot-starter')
+
+    // TESTING
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation project(':cogni-libs')
   }
 }
 
