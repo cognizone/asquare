@@ -10,7 +10,6 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
-import java.net.http.HttpRequest.BodyPublishers;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.apache.jena.query.QueryExecution;
@@ -66,7 +65,7 @@ public class StardogSparqlService implements SparqlService {
   public void executeUpdateQuery(String updateQuery) {
     final HttpRequest request = HttpRequest
         .newBuilder(URI.create(endpointUrl + "/update"))
-        .POST(HttpRequest.BodyPublishers.ofString("update=" + updateQuery, StandardCharsets.UTF_8))
+        .POST(HttpRequest.BodyPublishers.ofString("update=" + URLEncoder.encode(updateQuery, StandardCharsets.UTF_8), StandardCharsets.UTF_8))
         .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .build();
     execute(request, httpClient);
