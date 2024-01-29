@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import zone.cogni.libs.sparqlservice.impl.JenaModelSparqlService;
 
 public class SparqlUtilsTest {
-  private JenaModelSparqlService jenaModelSparqlService;
+  private final JenaModelSparqlService jenaModelSparqlService = new JenaModelSparqlService();
 
   @Test
   public void test() {
-    jenaModelSparqlService = new JenaModelSparqlService();
     initializeSource();
     confirmResult();
   }
