@@ -4,6 +4,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static zone.cogni.libs.sparqlservice.impl.VirtuosoHelper.getVirtuosoUpdateUrl;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,6 +13,7 @@ import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Objects;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -25,8 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.libs.core.utils.ApacheHttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.Config;
-import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
 
 @Disabled("An integration test dependent on a running Virtuoso instance. To run it manually, set the Config below properly and run the tests.")
 public class VirtuosoRdfStoreServiceTest {
@@ -34,11 +36,10 @@ public class VirtuosoRdfStoreServiceTest {
   private static VirtuosoRdfStoreService sut;
 
   @BeforeEach
-  public void init() throws IOException, URISyntaxException {
+  public void init() throws URISyntaxException {
     final Config config = new Config();
     config.setUrl("http://localhost:8890/sparql-auth");
     config.setUser("dba");
-//    config.setPassword("ZR2Lri9QMMggnFNDsKwg7xQefg2YkSpsHCNa3");
     config.setPassword("dba");
     config.setGraphCrudUseBasicAuth(false);
 
@@ -51,7 +52,11 @@ public class VirtuosoRdfStoreServiceTest {
       final String name = names.next();
       final StringWriter w = new StringWriter();
       RDFDataMgr.write(w, dataset.getNamedModel(name), Lang.TURTLE);
-      VirtuosoHelper.add(config, w.toString().getBytes(), name, true);
+
+      final String url = getVirtuosoUpdateUrl(config.getUrl(), name);
+      ApacheHttpClientUtils.executeAuthenticatedPostOrPut(url, config.getUser(), config.getPassword(),
+          config.isGraphCrudUseBasicAuth(), new ByteArrayEntity(w.toString().getBytes()), true,
+          "text/turtle;charset=utf-8");
     }
 
     sut = new VirtuosoRdfStoreService(config.getUrl(), config.getUser(), config.getPassword(),

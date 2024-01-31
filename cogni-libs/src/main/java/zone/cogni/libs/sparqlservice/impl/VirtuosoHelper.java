@@ -1,16 +1,13 @@
 package zone.cogni.libs.sparqlservice.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
-import zone.cogni.libs.core.utils.ApacheHttpClientUtils;
 
 public class VirtuosoHelper {
 
@@ -32,30 +29,13 @@ public class VirtuosoHelper {
     return model;
   }
 
-  private static String getSparqlGraphProtocolGraphParam(final String graphUri) {
-    return StringUtils.isBlank(graphUri) ? "default" : ("graph=" + graphUri);
-  }
-
-  private static String getVirtuosoUpdateUrl(final String sparqlEndpointUrl,
+  public static String getVirtuosoUpdateUrl(final String sparqlEndpointUrl,
       final String graphIri) {
-    return StringUtils.substringBeforeLast(sparqlEndpointUrl, "/") + "/sparql-graph-crud-auth?"
-        + getSparqlGraphProtocolGraphParam(graphIri);
+    return getVirtuosoGspFromSparql(sparqlEndpointUrl) + "?" + (StringUtils.isBlank(graphIri)
+        ? "default" : ("graph=" + graphIri));
   }
 
-  /**
-   * Loads turtle data into a Virtuoso named graph.
-   *
-   * @param config Virtuoso server configuration
-   * @param data turtle data
-   * @param graphUri named graph IRI (must not be null)
-   * @param put whether to put (replace) the data or post (update) them
-   * @throws IOException in case an error occurs during HTTP connection.
-   */
-  public static void add(Config config, byte[] data, String graphUri, boolean put)
-      throws IOException {
-    final String url = getVirtuosoUpdateUrl(config.getUrl(), graphUri);
-    ApacheHttpClientUtils.executeAuthenticatedPostOrPut(url, config.getUser(), config.getPassword(),
-        config.isGraphCrudUseBasicAuth(), new ByteArrayEntity(data), put,
-        "text/turtle;charset=utf-8");
+  public static String getVirtuosoGspFromSparql(final String sparqlEndpointUrl) {
+    return StringUtils.substringBeforeLast(sparqlEndpointUrl, "/") + "/sparql-graph-crud-auth";
   }
 }

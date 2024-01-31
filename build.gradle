@@ -87,6 +87,7 @@ subprojects {
       dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
       dependency("org.apache.jena:jena-arq:$jenaVersion")
       dependency("org.apache.jena:jena-core:$jenaVersion")
+      dependency("org.apache.jena:jena-rdfconnection:$jenaVersion")
       dependency("org.apache.jena:jena-shacl:$jenaVersion")
       dependency("org.apache.jena:jena-tdb:$jenaVersion")
       dependency("org.apache.jena:jena-tdb2:$jenaVersion")
@@ -427,6 +428,7 @@ project('cogni-libs') {
     api('org.apache.httpcomponents:fluent-hc')
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
+    api('org.apache.jena:jena-rdfconnection')
     api('io.vavr:vavr')
 
     // spring

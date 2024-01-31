@@ -1,6 +1,5 @@
 package zone.cogni.asquareroot.sparql;
 
-import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -52,11 +51,6 @@ public class InMemoryRdfStoreService extends VirtuosoRdfStoreService implements 
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     return jmss.executeConstructQuery(buildQuery(query, bindings).toString());
-  }
-
-  private Query buildQuery(Query query, QuerySolutionMap bindings) {
-    ParameterizedSparqlString string = new ParameterizedSparqlString(query.toString(), bindings);
-    return string.asQuery();
   }
 
   @Override
