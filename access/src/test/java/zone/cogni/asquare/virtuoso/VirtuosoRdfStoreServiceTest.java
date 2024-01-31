@@ -1,25 +1,66 @@
-package zone.cogni.libs.sparqlservice.impl;
+package zone.cogni.asquare.virtuoso;
 
-import java.util.function.Function;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.vocabulary.RDFS;
-import org.assertj.core.util.Files;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import zone.cogni.libs.sparqlservice.SparqlService;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Objects;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.vocabulary.RDFS;
+import org.assertj.core.util.Files;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.libs.sparqlservice.impl.Config;
+import zone.cogni.libs.sparqlservice.impl.VirtuosoHelper;
 
-import static org.apache.jena.rdf.model.ResourceFactory.createResource;
-import static org.junit.jupiter.api.Assertions.*;
+@Disabled("An integration test dependent on a running Virtuoso instance. To run it manually, set the Config below properly and run the tests.")
+public class VirtuosoRdfStoreServiceTest {
 
-public abstract class AbstractSparqlServiceTest {
+  private static VirtuosoRdfStoreService sut;
 
-  protected abstract SparqlService getSUT();
+  @BeforeEach
+  public void init() throws IOException, URISyntaxException {
+    final Config config = new Config();
+    config.setUrl("http://localhost:8890/sparql-auth");
+    config.setUser("dba");
+//    config.setPassword("ZR2Lri9QMMggnFNDsKwg7xQefg2YkSpsHCNa3");
+    config.setPassword("dba");
+    config.setGraphCrudUseBasicAuth(false);
+
+    final Dataset dataset = RDFDataMgr.loadDataset(
+        Objects.requireNonNull(getClass().getResource("/dataset.trig")).toURI()
+            .toString());
+
+    final Iterator<String> names = dataset.listNames();
+    while (names.hasNext()) {
+      final String name = names.next();
+      final StringWriter w = new StringWriter();
+      RDFDataMgr.write(w, dataset.getNamedModel(name), Lang.TURTLE);
+      VirtuosoHelper.add(config, w.toString().getBytes(), name, true);
+    }
+
+    sut = new VirtuosoRdfStoreService(config.getUrl(), config.getUser(), config.getPassword(),
+        config.isGraphCrudUseBasicAuth());
+  }
+
+  protected RdfStoreService getSUT() {
+    return sut;
+  }
 
 
   private static String r(final String localName) {
@@ -57,13 +98,18 @@ public abstract class AbstractSparqlServiceTest {
       model.add(createResource(r("c1")), RDFS.comment, "comment");
       model.write(new FileWriter(file), "TURTLE");
 
-      final String checkTripleExists = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ASK { GRAPH <"+ file.toURI() + "> { <https://example.org/c1> rdfs:comment 'comment' } }";
+      String graphIri = "urn:file:" + fileName;
+      getSUT().deleteGraph(graphIri);
+
+      final String checkTripleExists =
+          "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ASK { GRAPH <" + graphIri
+              + "> { <https://example.org/c1> rdfs:comment 'comment' } }";
 
       assertFalse(getSUT().executeAskQuery(checkTripleExists));
-      getSUT().uploadTtlFile(file);
+      getSUT().addData(RDFDataMgr.loadModel(file.toURI().toString()), graphIri);
       assertTrue(getSUT().executeAskQuery(checkTripleExists));
     } finally {
-      getSUT().dropGraph(file.toURI().toString());
+      getSUT().deleteGraph(file.toURI().toString());
       file.delete();
     }
   }
@@ -74,7 +120,7 @@ public abstract class AbstractSparqlServiceTest {
         () -> {
           final File file = File.createTempFile("fusekisparqlservicetest-", ".ttl");
           file.delete();
-          getSUT().uploadTtlFile(file);
+          getSUT().addData(RDFDataMgr.loadModel(file.toURI().toString()));
         });
   }
 
@@ -104,14 +150,15 @@ public abstract class AbstractSparqlServiceTest {
             + "> { <https://example.org/c1> rdfs:label 'Class 1 - label 2' . <https://example.org/c1> rdfs:label 'Class 1 - label 3' . <https://example.org/c1> rdfs:label 'Class 1' } }";
 
     assertFalse(getSUT().executeAskQuery(check));
-    getSUT().updateGraph(r("m2"), model);
+    getSUT().addData(model, r("m2"));
     assertTrue(getSUT().executeAskQuery(check));
   }
 
   @Test
   public void testSelectQueryReturnsResultsFromRespectiveGraphs() {
     final ResultSet result = getSUT().executeSelectQuery(
-        "SELECT * { GRAPH ?g { ?s ?p ?o } FILTER (?g in (<https://example.org/m1>, <https://example.org/m2>))}", Function.identity());
+        "SELECT * { GRAPH ?g { ?s ?p ?o } FILTER (?g in (<https://example.org/m1>, <https://example.org/m2>))}",
+        resultSet -> resultSet);
 
     while (result.hasNext()) {
       result.next();
@@ -121,7 +168,8 @@ public abstract class AbstractSparqlServiceTest {
 
   @Test
   public void testQueryForModelReturnsResultsFromRespectiveGraphs() {
-    final Model model = getSUT().queryForModel("CONSTRUCT { ?s ?p ?o } WHERE { GRAPH ?g { ?s ?p ?o } FILTER (?g in (<https://example.org/m1>, <https://example.org/m2>)) }");
+    final Model model = getSUT().executeConstructQuery(
+        "CONSTRUCT { ?s ?p ?o } WHERE { GRAPH ?g { ?s ?p ?o } FILTER (?g in (<https://example.org/m1>, <https://example.org/m2>)) }");
     Assertions.assertEquals(2, model.size());
   }
 }

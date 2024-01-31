@@ -1,16 +1,13 @@
 package zone.cogni.libs.sparqlservice.impl;
 
+import java.util.Objects;
 import org.apache.jena.fuseki.main.FusekiServer;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 import java.net.URISyntaxException;
-import java.util.function.Function;
 
 public class FusekiSparqlServiceTest extends AbstractSparqlServiceTest {
 
@@ -20,7 +17,11 @@ public class FusekiSparqlServiceTest extends AbstractSparqlServiceTest {
 
   @BeforeEach
   public void init() throws URISyntaxException {
-    server = FusekiServer.create().port(12345).add("/rdf", AbstractSparqlServiceTest.createDataset()).build();
+    server = FusekiServer.create().port(12345)
+        .add("/rdf", RDFDataMgr.loadDataset(
+            Objects.requireNonNull(AbstractSparqlServiceTest.class.getResource("/dataset.trig"))
+                .toURI()
+                .toString())).build();
     server.start();
     final FusekiConfig config = new FusekiConfig();
     config.setUrl("http://localhost:12345/rdf");
@@ -37,18 +38,4 @@ public class FusekiSparqlServiceTest extends AbstractSparqlServiceTest {
     server.stop();
   }
 
-  @Test
-  public void testSelectQueryReturnsResultsFromDefaultGraphOnly() {
-    final ResultSet result = getSUT().executeSelectQuery("SELECT * { ?s ?p ?o }", Function.identity());
-    while (result.hasNext()) {
-      result.next();
-    }
-    Assertions.assertEquals(1, result.getRowNumber());
-  }
-
-  @Test
-  public void testQueryForModelReturnsDefaultGraphOnly() {
-    final Model model = getSUT().queryForModel("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
-    Assertions.assertEquals(1, model.size());
-  }
 }

@@ -1,5 +1,6 @@
 package zone.cogni.libs.sparqlservice.impl;
 
+import java.util.Objects;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -22,7 +23,7 @@ import java.util.function.Function;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
-@Disabled("No embedded version. To run it manually, set the GraphDBConfig below properly and run the tests.")
+@Disabled("An integration test dependent on a running GraphDB instance. To run it manually, set the GraphDBConfig below properly and run the tests.")
 public class GraphdbSparqlServiceTest extends AbstractSparqlServiceTest {
 
   private static SparqlService sut;
@@ -30,12 +31,13 @@ public class GraphdbSparqlServiceTest extends AbstractSparqlServiceTest {
   @BeforeEach
   public void init() throws URISyntaxException, IOException {
     final GraphDBConfig config = new GraphDBConfig();
-    // config.setUrl("...");
-    // config.setRepository("...");
-    // config.setUser("...");
-    // config.setPassword("...");
+     config.setUrl("http://localhost:7200/");
+     config.setRepository("test");
+     config.setUser("test");
+     config.setPassword("test");
 
-    final String trig = IOUtils.toString(GraphdbSparqlServiceTest.class.getResource("/dataset.trig").toURI(),Charset.defaultCharset());
+    final String trig = IOUtils.toString(
+        Objects.requireNonNull(GraphdbSparqlServiceTest.class.getResource("/dataset.trig")).toURI(),Charset.defaultCharset());
     final HttpRequest request = HttpRequest
             .newBuilder()
             .PUT(HttpRequest.BodyPublishers.ofString(trig))

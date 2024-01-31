@@ -6,7 +6,6 @@ import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -15,7 +14,6 @@ import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.ResultSet;
@@ -25,6 +23,9 @@ import org.springframework.http.MediaType;
 import zone.cogni.libs.core.utils.HttpClientUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
+/**
+ * SparqlService implementation for Fuseki, backed by JDK11 HttpClient
+ */
 public class FusekiSparqlService implements SparqlService {
 
   private final FusekiConfig config;
@@ -47,7 +48,7 @@ public class FusekiSparqlService implements SparqlService {
 
   @Override
   public void uploadTtlFile(File file) {
-    final String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(StringUtils.removeEnd(file.getName(), ".ttl"), StandardCharsets.UTF_8);
+    final String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(file.toURI().toString(), StandardCharsets.UTF_8);
     final HttpRequest request;
     try {
       request = HttpRequest
