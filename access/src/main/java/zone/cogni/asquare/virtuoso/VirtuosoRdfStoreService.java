@@ -12,6 +12,10 @@ public class VirtuosoRdfStoreService implements RdfStoreService {
 
   private final SparqlRdfStoreService sparqlService;
 
+  public VirtuosoRdfStoreService(String rdfStoreUrl, String rdfStoreUser, String rdfStorePassword) {
+    this(rdfStoreUrl, rdfStoreUser, rdfStorePassword, false);
+  }
+
   public VirtuosoRdfStoreService(String rdfStoreUrl, String rdfStoreUser, String rdfStorePassword, boolean graphCrudUseBasicAuth) {
     final Config config = new Config();
     config.setUrl(rdfStoreUrl);
