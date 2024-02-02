@@ -24,16 +24,17 @@ import org.apache.jena.vocabulary.RDFS;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.libs.core.utils.ApacheHttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.Config;
 
-@Disabled("An integration test dependent on a running Virtuoso instance. To run it manually, set the Config below properly and run the tests.")
-public class VirtuosoRdfStoreServiceTest {
+public abstract class VirtuosoRdfStoreServiceTest {
 
   private static VirtuosoRdfStoreService sut;
+
+  protected abstract VirtuosoRdfStoreService getVirtuosoRdfStoreService(final String url,
+      final String user, final String password, final boolean useBasicAuth);
 
   @BeforeEach
   public void init() throws URISyntaxException {
@@ -54,12 +55,13 @@ public class VirtuosoRdfStoreServiceTest {
       RDFDataMgr.write(w, dataset.getNamedModel(name), Lang.TURTLE);
 
       final String url = getVirtuosoUpdateUrl(config.getUrl(), name);
-      ApacheHttpClientUtils.executeAuthenticatedPostOrPut(url, config.getUser(), config.getPassword(),
+      ApacheHttpClientUtils.executeAuthenticatedPostOrPut(url, config.getUser(),
+          config.getPassword(),
           config.isGraphCrudUseBasicAuth(), new ByteArrayEntity(w.toString().getBytes()), true,
           "text/turtle;charset=utf-8");
     }
 
-    sut = new VirtuosoRdfStoreService(config.getUrl(), config.getUser(), config.getPassword(),
+    sut = getVirtuosoRdfStoreService(config.getUrl(), config.getUser(), config.getPassword(),
         config.isGraphCrudUseBasicAuth());
   }
 
