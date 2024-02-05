@@ -12,7 +12,6 @@ import java.util.TimeZone;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DateFormatsTest {
 
@@ -126,8 +125,8 @@ class DateFormatsTest {
     String newAfterPlus = StringUtils.substringAfterLast(newFormatter, "+");
 
     // then
-    assertTrue(oldBeforePlus.startsWith(newBeforePlus));
-    assertEquals(oldAfterPlus, newAfterPlus);
+    assertThat(oldBeforePlus).startsWith(newBeforePlus);
+    assertThat(oldAfterPlus).isEqualTo(newAfterPlus);
   }
 
 }
