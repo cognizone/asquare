@@ -10,9 +10,11 @@ buildscript {
     elasticsearchVersion = '7.5.2'
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
-    jenaVersion = '3.17.0'
-    springBootVersion = '2.6.6'
-    springSecurityVersion = '5.6.2'
+    jenaVersion = '4.10.0'
+    springBootVersion = '2.7.18'
+    springSecurityVersion = '5.8.9'
+    springSecuritySaml2CoreVersion = '1.0.10.RELEASE'
+    set('snakeyaml.version','2.0')
   }
 }
 
@@ -23,6 +25,7 @@ plugins {
   id "org.springframework.boot" version "${springBootVersion}" apply false
   id "java"
   id "maven-publish"
+  id "org.owasp.dependencycheck" version "7.4.4" apply false
 }
 
 repositories {
@@ -56,6 +59,7 @@ subprojects {
   apply plugin: 'maven-publish'
   apply plugin: 'signing'
   apply plugin: 'project-report'
+  apply plugin: 'org.owasp.dependencycheck'
 
   repositories {
     mavenLocal()
@@ -83,6 +87,7 @@ subprojects {
       dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
       dependency("org.apache.jena:jena-arq:$jenaVersion")
       dependency("org.apache.jena:jena-core:$jenaVersion")
+      dependency("org.apache.jena:jena-rdfconnection:$jenaVersion")
       dependency("org.apache.jena:jena-shacl:$jenaVersion")
       dependency("org.apache.jena:jena-tdb:$jenaVersion")
       dependency("org.apache.jena:jena-tdb2:$jenaVersion")
@@ -99,12 +104,14 @@ subprojects {
       dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
       dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-      dependency("org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE")
+      dependency("org.springframework.security:spring-security-core:$springSecurityVersion")
+      dependency("org.springframework.security.extensions:spring-security-saml2-core:$springSecuritySaml2CoreVersion")
 
       // test
       dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
       dependency("org.elasticsearch.test:framework:$elasticsearchVersion")
       dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+      dependency("org.apache.jena:jena-fuseki-main:$jenaVersion")
     }
   }
 
@@ -113,8 +120,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -421,6 +428,7 @@ project('cogni-libs') {
     api('org.apache.httpcomponents:fluent-hc')
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
+    api('org.apache.jena:jena-rdfconnection')
     api('io.vavr:vavr')
 
     // spring
@@ -428,6 +436,7 @@ project('cogni-libs') {
 
     // test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("org.apache.jena:jena-fuseki-main")
   }
 }
 
@@ -482,7 +491,7 @@ project('cube') {
     api('org.apache.jena:jena-shacl')
 
     // spring
-    implementation("org.springframework.security:spring-security-core:$springSecurityVersion")
+    implementation("org.springframework.security:spring-security-core")
 
     // test
     testImplementation project(':cogni-libs')

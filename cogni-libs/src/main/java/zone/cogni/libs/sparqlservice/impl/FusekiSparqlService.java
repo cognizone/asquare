@@ -1,36 +1,36 @@
 package zone.cogni.libs.sparqlservice.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.ContentType;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
-import zone.cogni.libs.sparqlservice.SparqlService;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static zone.cogni.libs.core.utils.HttpClientUtils.execute;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.function.Function;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionBuilder;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
+import org.springframework.http.MediaType;
+import zone.cogni.libs.core.utils.HttpClientUtils;
+import zone.cogni.libs.sparqlservice.SparqlService;
 
-import static zone.cogni.libs.sparqlservice.impl.HttpHelper.checkAndDiscardResponse;
-import static zone.cogni.libs.sparqlservice.impl.HttpHelper.createAuthenticationHttpContext;
-
+/**
+ * SparqlService implementation for Fuseki, backed by JDK11 HttpClient
+ */
 public class FusekiSparqlService implements SparqlService {
 
   private final FusekiConfig config;
-  private final Header authHeader;
-  private final HttpClientContext authenticationHttpContext;
+
+  private final HttpClient httpClient;
 
   @Deprecated
   public FusekiSparqlService(Config config) {
@@ -39,58 +39,47 @@ public class FusekiSparqlService implements SparqlService {
 
   public FusekiSparqlService(FusekiConfig config) {
     this.config = config;
-    if (StringUtils.isNoneBlank(config.getUser(), config.getPassword())) {
-      String authEncoded = Base64.getEncoder().encodeToString((config.getUser() + ":" + config.getPassword()).getBytes(StandardCharsets.UTF_8));
-      authHeader = new BasicHeader("Authorization", "Basic " + authEncoded);
-      authenticationHttpContext = createAuthenticationHttpContext(config.getUser(), config.getPassword());
-    }
-    else {
-      authHeader = null; //we're allowed to send null value to the "setHeader" method (whop whop)
-      authenticationHttpContext = null;
-    }
+    httpClient = HttpClientUtils.createHttpClientBuilder(config.getUser(), config.getPassword()).build();
   }
 
+  private QueryExecutionBuilder getQueryExecutionBuilder() {
+    return QueryExecutionHTTPBuilder.service(config.getQueryUrl()).httpClient(httpClient);
+  }
 
   @Override
   public void uploadTtlFile(File file) {
+    final String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(file.toURI().toString(), StandardCharsets.UTF_8);
+    final HttpRequest request;
     try {
-      String sparqlUrl = config.getGraphStoreUrl() + "?graph=" + StringUtils.removeEnd(file.getName(), ".ttl");
-
-      Response response = Request.Post(sparqlUrl)
-              .setHeader("Content-Type", config.getTurtleMimeType() + ";charset=utf-8")
-              .setHeader(authHeader)
-              .bodyFile(file, ContentType.create(config.getTurtleMimeType(), StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
+      request = HttpRequest
+          .newBuilder(URI.create(sparqlUrl))
+          .POST(BodyPublishers.ofFile(file.toPath()))
+          .header(CONTENT_TYPE, config.getTurtleMimeType() + ";charset=utf-8")
+          .build();
+    } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
+    execute(request, httpClient);
   }
 
   @Override
   public Model queryForModel(String query) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), query, null, null, authenticationHttpContext)) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return queryExecution.execConstruct();
     }
   }
 
   @Override
   public void executeUpdateQuery(String updateQuery) {
-    try {
-      Response response = Request
-              .Post(config.getUpdateUrl())
-              .setHeader(authHeader)
-              .body(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("update", updateQuery)), StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    final HttpRequest request = HttpRequest
+        .newBuilder(URI.create(config.getUpdateUrl()))
+        .POST(BodyPublishers.ofString("update=" + URLEncoder.encode(updateQuery,
+                StandardCharsets.UTF_8)))
+        .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        .build();
+    System.out.println(request);
+    execute(request, httpClient);
   }
-
 
   @Override
   @Deprecated
@@ -109,34 +98,29 @@ public class FusekiSparqlService implements SparqlService {
   }
 
   private void upload(Model model, String graphUri, boolean replace) {
-    String insertUrl = config.getGraphStoreUrl() + "?graph=" + graphUri;
+    String insertUrl = config.getGraphStoreUrl() + "?graph=" + URLEncoder.encode(graphUri,
+        StandardCharsets.UTF_8);
     StringWriter writer = new StringWriter();
-    try {
-      model.write(writer, "ttl");
-      Response response = (replace ? Request.Put(insertUrl) : Request.Post(insertUrl))  //Put replaces the graph, Post adds data
-              .setHeader("Content-Type", config.getTurtleMimeType() + ";charset=utf-8")
-              .setHeader(authHeader)
-              .bodyByteArray(writer.toString().getBytes(), ContentType.create(config.getTurtleMimeType(), StandardCharsets.UTF_8))
-              .execute();
-      checkAndDiscardResponse(response);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    model.write(writer, "ttl");
+    final BodyPublisher p = BodyPublishers.ofByteArray(writer.toString().getBytes());
+    final HttpRequest.Builder builder = HttpRequest
+        .newBuilder(URI.create(insertUrl))
+        .header(CONTENT_TYPE, config.getTurtleMimeType() + ";charset=utf-8");
+
+    final HttpRequest request = (replace ? builder.PUT(p) : builder.POST(p)).build();
+    execute(request, httpClient);
   }
 
   @Override
   public <R> R executeSelectQuery(String query, Function<ResultSet, R> resultHandler) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), query, null, null, authenticationHttpContext)) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(query).build()) {
       return resultHandler.apply(queryExecution.execSelect());
     }
   }
 
   @Override
   public boolean executeAskQuery(String askQuery) {
-    //pass default graph, method without default graph doesn't use the HttpContext !!!
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(config.getQueryUrl(), askQuery, null, null, authenticationHttpContext)) {
+    try (QueryExecution queryExecution = getQueryExecutionBuilder().query(askQuery).build()) {
       return queryExecution.execAsk();
     }
   }

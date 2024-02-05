@@ -4,11 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zone.cogni.sem.jena.JenaUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;

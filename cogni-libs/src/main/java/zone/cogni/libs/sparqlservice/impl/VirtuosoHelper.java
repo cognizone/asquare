@@ -1,13 +1,13 @@
 package zone.cogni.libs.sparqlservice.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VirtuosoHelper {
 
@@ -27,5 +27,15 @@ public class VirtuosoHelper {
       model.add(statement.getSubject(), statement.getPredicate(), newObject);
     });
     return model;
+  }
+
+  public static String getVirtuosoUpdateUrl(final String sparqlEndpointUrl,
+      final String graphIri) {
+    return getVirtuosoGspFromSparql(sparqlEndpointUrl) + "?" + (StringUtils.isBlank(graphIri)
+        ? "default" : ("graph=" + graphIri));
+  }
+
+  public static String getVirtuosoGspFromSparql(final String sparqlEndpointUrl) {
+    return StringUtils.substringBeforeLast(sparqlEndpointUrl, "/") + "/sparql-graph-crud-auth";
   }
 }

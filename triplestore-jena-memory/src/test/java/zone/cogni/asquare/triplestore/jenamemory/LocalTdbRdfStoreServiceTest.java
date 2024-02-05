@@ -3,6 +3,7 @@ package zone.cogni.asquare.triplestore.jenamemory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -484,6 +485,11 @@ class LocalTdbRdfStoreServiceTest {
                 }
 
                 @Override
+                public void forEachRemaining(Consumer<? super QuerySolution> consumer) {
+
+                }
+
+                @Override
                 public QuerySolution nextSolution() {
                   return null;
                 }
@@ -506,6 +512,21 @@ class LocalTdbRdfStoreServiceTest {
                 @Override
                 public Model getResourceModel() {
                   return null;
+                }
+
+                @Override
+                public ResultSetRewindable rewindable() {
+                  return ResultSet.super.rewindable();
+                }
+
+                @Override
+                public ResultSet materialise() {
+                  return ResultSet.super.materialise();
+                }
+
+                @Override
+                public void close() {
+
                 }
               }
       );
