@@ -11,28 +11,45 @@ public class SparqlUtilsTest {
 
   @Test
   public void test() {
-    testEscape("A\ncomment"); // test newline
-    testEscape("A\\comment"); // test backslash
-    testEscape("A\bcomment"); // test backspace
-    testEscape("I'mAComment"); // test single quote
-    testEscape("A\fcomment"); // test form feed
-    testEscape("A\tcomment");  // test tab
-    testEscape("A\rcomment"); // test carriage return
-    testEscape("com\"ment"); // test double quotes
+    // test single quotes
+    testEscape("A\ncomment", '\''); // test newline
+    testEscape("A\\comment", '\''); // test backslash
+    testEscape("A\bcomment", '\''); // test backspace
+    testEscape("I'mAComment", '\''); // test single quote
+    testEscape("A\fcomment", '\''); // test form feed
+    testEscape("A\tcomment", '\'');  // test tab
+    testEscape("A\rcomment", '\''); // test carriage return
+    testEscape("com\"ment", '\''); // test double quotes
+    testEscape("This\nis\\A\bco'mment\fthat\ttests\rall\"the\tcases", '\''); // test all cases
+    testEscape("A\\ncomment", '\''); // test mixed case
+    testEscape("A\b\tcomment", '\''); // test mixed case
+
+    // test double quotes
+    testEscape("A\ncomment", '\"'); // test newline
+    testEscape("A\\comment", '\"'); // test backslash
+    testEscape("A\bcomment", '\"'); // test backspace
+    testEscape("I'mAComment", '\"'); // test single quote
+    testEscape("A\fcomment", '\"'); // test form feed
+    testEscape("A\tcomment", '\"');  // test tab
+    testEscape("A\rcomment", '\"'); // test carriage return
+    testEscape("com\"ment", '\"'); // test double quotes
+    testEscape("This\nis\\A\bco'mment\fthat\ttests\rall\"the\tcases", '\"'); // test all cases
+    testEscape("A\\ncomment", '\"'); // test mixed case
+    testEscape("A\b\tcomment", '\"'); // test mixed case
   }
 
-  private void testEscape(String value) {
-    initializeSource(value);
+  private void testEscape(String value, char quote) {
+    initializeSource(value, quote);
     confirmResult(value);
   }
 
-  private void initializeSource(String value) {
+  private void initializeSource(String value, char quote) {
     jenaModelSparqlService.executeUpdateQuery(
       "PREFIX jolux: <http://data.legilux.public.lu/resource/ontology/jolux#> " +
       "INSERT DATA { " +
       "  GRAPH <" + GRAPH_URI + "> { " +
       "    <" + URI + "> a jolux:LegalAnalysis. " +
-      "    <" + URI + "> jolux:impactFromLegalResourceComment \"" + SparqlUtils.escapeString(value) + "\"" +
+      "    <" + URI + "> jolux:impactFromLegalResourceComment " + quote + SparqlUtils.escapeString(value) + quote +
       "  }" +
       "}"
     );
