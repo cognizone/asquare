@@ -112,7 +112,9 @@ class DateFormatsTest {
   @Test
   public void now_as_xsd_datetime_format() {
     // given
-    Date now = new Date();
+    TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"));
+    long time = System.currentTimeMillis();
+    Date now = new Date(time - time % 10); //ms end with 0, because if  oldBeforePlus = "2024-02-05T15:58:33.280" then newBeforePlus = "2024-02-05T15:58:33.28" (just to "test" this)
 
     // when
     String oldFormatter = DateFormats.formatXsdDateTimeFormatOld(now);
