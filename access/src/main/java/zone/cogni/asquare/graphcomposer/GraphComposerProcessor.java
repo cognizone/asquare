@@ -152,6 +152,12 @@ public class GraphComposerProcessor {
 
           log.info("GraphComposer has started processing attributes for subject {}", subjectUri);
           for (GraphComposerAttribute attribute : subject.getAttributes()) {
+            boolean isIgnore = attribute.isIgnore();
+            if(isIgnore) {
+              log.info("Ignoring attribute: {}", attribute);
+              continue;
+            }
+
             String objectType = attribute.getObjectType(context);
             String object = attribute.getObject(context);
             String predicate = attribute.getPredicate(context);

@@ -13,6 +13,7 @@ public class GraphComposerAttribute {
   private String object;
   private String unique;
   private String replace;
+  private String ignore;
 
   private String versionParameter;
   private String versionPredicate;
@@ -118,6 +119,18 @@ public class GraphComposerAttribute {
     return Boolean.parseBoolean(replace);
   }
 
+  public void setIgnore(String ignore) {
+    this.ignore = ignore;
+  }
+
+  public String getIgnore() {
+    return ignore;
+  }
+
+  public boolean isIgnore() {
+    return Boolean.parseBoolean(ignore);
+  }
+
   public String toString() {
     String str = "[";
     if (StringUtils.isNotBlank(predicate)) {
@@ -131,6 +144,12 @@ public class GraphComposerAttribute {
     }
     if (StringUtils.isNotBlank(unique)) {
       str += " unique: \"" + unique + "\",";
+    }
+    if (StringUtils.isNotBlank(replace)) {
+      str += " replace: \"" + replace + "\",";
+    }
+    if (StringUtils.isNotBlank(ignore)) {
+      str += " ignore: \"" + ignore + "\",";
     }
     return StringUtils.removeEnd(str, ",") + " ]";
   }
