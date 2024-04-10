@@ -38,7 +38,7 @@ public class GraphIndexService {
   private final IndexConfigProvider indexConfigProvider;
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
-  private final Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier;
+  private final Function<String, ObjectNode> parentChildSupplier;
   private final ElasticStore elasticsearchStore;
   private final JsonConversionFactory jsonConversion;
 
@@ -46,7 +46,7 @@ public class GraphIndexService {
                            GraphApplicationViewFactory applicationViewFactory,
                            JsonConversionFactory jsonConversion) {
     this.applicationViewFactory = applicationViewFactory;
-    this.topLevelObjectSupplier = indexConfigProvider.getTopLevelObjectSupplier();
+    this.parentChildSupplier = indexConfigProvider.getParentChildSupplier();
     this.jsonConversion = jsonConversion;
     this.indexConfigProvider = indexConfigProvider;
     this.applicationProfileSupplier = indexConfigProvider.getApplicationProfileSupplier();
@@ -86,8 +86,9 @@ public class GraphIndexService {
         }
       }
 
-      if (topLevelObjectSupplier != null) {
-        topLevelObjectSupplier.apply(resourceIndex);
+      if (parentChildSupplier != null) {
+        ObjectNode objectNodeMap = parentChildSupplier.apply(resourceIndex.getType());
+        json.set("my_join_field", objectNodeMap);
       }
 
       if (params.hasGraph()) {

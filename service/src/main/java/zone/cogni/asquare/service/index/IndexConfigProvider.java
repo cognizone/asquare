@@ -24,39 +24,39 @@ public class IndexConfigProvider {
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final ElasticStore elasticStore;
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
-  private final Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier;
+  private final Function<String, ObjectNode> parentChildSupplier;
 
   public IndexConfigProvider(RdfStoreService rdfStoreService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
                              Elasticsearch7Store elasticStore,
                              Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
-                             Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier) {
+                             Function<String, ObjectNode> parentChildSupplier) {
     this.rdfStoreService = rdfStoreService;
     this.sparqlService = new SparqlServiceImpl(rdfStoreService);
     this.elasticStore = elasticStore;
     this.applicationProfileSupplier = applicationProfileSupplier;
     this.facetConversionSupplier = facetConversionSupplier;
-    this.topLevelObjectSupplier = topLevelObjectSupplier;
+    this.parentChildSupplier = parentChildSupplier;
   }
 
   public IndexConfigProvider(RdfStoreService rdfStoreService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
-                             Elasticsearch7Store elasticStore, Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier) {
-    this(rdfStoreService, applicationProfileSupplier, elasticStore, null, null);
+                             Elasticsearch7Store elasticStore, Function<String, ObjectNode> parentChildSupplier) {
+    this(rdfStoreService, applicationProfileSupplier, elasticStore, null, parentChildSupplier);
   }
 
   public IndexConfigProvider(SparqlService sparqlService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
-                             Elasticsearch7Store elasticStore, Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier) {
-    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, null, topLevelObjectSupplier);
+                             Elasticsearch7Store elasticStore, Function<String, ObjectNode> parentChildSupplier) {
+    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, null, parentChildSupplier);
   }
 
   public IndexConfigProvider(SparqlService sparqlService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
                              Elasticsearch7Store elasticStore,
                              Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
-                             Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier) {
-    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, facetConversionSupplier, topLevelObjectSupplier);
+                             Function<String, ObjectNode> parentChildSupplier) {
+    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, facetConversionSupplier, parentChildSupplier);
   }
 
   public RdfStoreService getRdfStoreService() {
@@ -75,8 +75,8 @@ public class IndexConfigProvider {
     return facetConversionSupplier;
   }
 
-  public Function<ResourceIndex, Map<String, ObjectNode>> getTopLevelObjectSupplier() {
-    return topLevelObjectSupplier;
+  public Function<String, ObjectNode> getParentChildSupplier() {
+    return parentChildSupplier;
   }
 
   public ElasticStore getElasticStore() {
