@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import zone.cogni.asquare.access.ApplicationView;
-import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.graph.GraphApplicationViewFactory;
 import zone.cogni.asquare.access.graph.GraphViewService;
 import zone.cogni.asquare.access.graph.SaveUtilities;
@@ -19,6 +18,7 @@ import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.async.AsyncContext;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
@@ -38,6 +38,7 @@ public class GraphIndexService {
   private final IndexConfigProvider indexConfigProvider;
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
+  private final Function<ResourceIndex, Map<String, ObjectNode>> topLevelObjectSupplier;
   private final ElasticStore elasticsearchStore;
   private final JsonConversionFactory jsonConversion;
 
@@ -45,6 +46,7 @@ public class GraphIndexService {
                            GraphApplicationViewFactory applicationViewFactory,
                            JsonConversionFactory jsonConversion) {
     this.applicationViewFactory = applicationViewFactory;
+    this.topLevelObjectSupplier = indexConfigProvider.getTopLevelObjectSupplier();
     this.jsonConversion = jsonConversion;
     this.indexConfigProvider = indexConfigProvider;
     this.applicationProfileSupplier = indexConfigProvider.getApplicationProfileSupplier();
@@ -82,6 +84,10 @@ public class GraphIndexService {
         if (facets != null) {
           json.set("facets", facets);
         }
+      }
+
+      if (topLevelObjectSupplier != null) {
+        topLevelObjectSupplier.apply(resourceIndex);
       }
 
       if (params.hasGraph()) {
