@@ -14,7 +14,6 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
 import java.io.File;
-import java.util.Map;
 import java.util.function.Function;
 
 public class IndexConfigProvider {

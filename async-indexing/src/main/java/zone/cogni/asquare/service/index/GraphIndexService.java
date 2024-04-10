@@ -87,8 +87,8 @@ public class GraphIndexService {
       }
 
       if (parentChildSupplier != null) {
-        ObjectNode objectNodeMap = parentChildSupplier.apply(resourceIndex.getType());
-        json.set("my_join_field", objectNodeMap);
+        ObjectNode joinFieldNode = parentChildSupplier.apply(resourceIndex.getType());
+        json.set("my_join_field", joinFieldNode);
       }
 
       if (params.hasGraph()) {
