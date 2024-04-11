@@ -1,6 +1,8 @@
 package zone.cogni.asquare.service.index;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.springframework.core.io.FileSystemResource;
@@ -13,49 +15,54 @@ import zone.cogni.asquare.virtuoso.SparqlRdfStoreService;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
+import javax.annotation.Nullable;
 import java.io.File;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Builder
+@AllArgsConstructor
 public class IndexConfigProvider {
 
   private final RdfStoreService rdfStoreService;
   private final SparqlService sparqlService;
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final ElasticStore elasticStore;
+  @Nullable
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
-  private final Function<String, ObjectNode> parentChildSupplier;
+  @Nullable
+  private final Consumer<ObjectNode> postIndexInterceptor;
 
-  public IndexConfigProvider(RdfStoreService rdfStoreService,
-                             Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
-                             Elasticsearch7Store elasticStore,
-                             Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
-                             Function<String, ObjectNode> parentChildSupplier) {
+  public IndexConfigProvider( RdfStoreService rdfStoreService,
+                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
+                              Elasticsearch7Store elasticStore,
+                             @Nullable Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
+                             @Nullable Consumer<ObjectNode> postIndexInterceptor) {
     this.rdfStoreService = rdfStoreService;
     this.sparqlService = new SparqlServiceImpl(rdfStoreService);
     this.elasticStore = elasticStore;
     this.applicationProfileSupplier = applicationProfileSupplier;
     this.facetConversionSupplier = facetConversionSupplier;
-    this.parentChildSupplier = parentChildSupplier;
+    this.postIndexInterceptor = postIndexInterceptor;
   }
 
   public IndexConfigProvider(RdfStoreService rdfStoreService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
-                             Elasticsearch7Store elasticStore, Function<String, ObjectNode> parentChildSupplier) {
-    this(rdfStoreService, applicationProfileSupplier, elasticStore, null, parentChildSupplier);
+                             Elasticsearch7Store elasticStore) {
+    this(rdfStoreService, applicationProfileSupplier, elasticStore, null, null);
   }
 
   public IndexConfigProvider(SparqlService sparqlService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
-                             Elasticsearch7Store elasticStore, Function<String, ObjectNode> parentChildSupplier) {
-    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, null, parentChildSupplier);
+                             Elasticsearch7Store elasticStore) {
+    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, null, null);
   }
 
   public IndexConfigProvider(SparqlService sparqlService,
                              Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
                              Elasticsearch7Store elasticStore,
-                             Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
-                             Function<String, ObjectNode> parentChildSupplier) {
-    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, facetConversionSupplier, parentChildSupplier);
+                             Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier) {
+    this(new SparqlRdfStoreService(sparqlService), applicationProfileSupplier, elasticStore, facetConversionSupplier, null);
   }
 
   public RdfStoreService getRdfStoreService() {
@@ -74,8 +81,8 @@ public class IndexConfigProvider {
     return facetConversionSupplier;
   }
 
-  public Function<String, ObjectNode> getParentChildSupplier() {
-    return parentChildSupplier;
+  public Consumer<ObjectNode> getPostIndexInterceptor() {
+    return postIndexInterceptor;
   }
 
   public ElasticStore getElasticStore() {

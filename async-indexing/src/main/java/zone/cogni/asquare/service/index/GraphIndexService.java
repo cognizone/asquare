@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import zone.cogni.asquare.access.ApplicationView;
-import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.graph.GraphApplicationViewFactory;
 import zone.cogni.asquare.access.graph.GraphViewService;
 import zone.cogni.asquare.access.graph.SaveUtilities;
@@ -19,6 +18,7 @@ import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.async.AsyncContext;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Service
@@ -38,7 +39,7 @@ public class GraphIndexService {
   private final IndexConfigProvider indexConfigProvider;
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
-  private final Function<String, ObjectNode> parentChildSupplier;
+  private final Consumer<ObjectNode> postIndexInterceptor;
   private final ElasticStore elasticsearchStore;
   private final JsonConversionFactory jsonConversion;
 
@@ -46,7 +47,7 @@ public class GraphIndexService {
                            GraphApplicationViewFactory applicationViewFactory,
                            JsonConversionFactory jsonConversion) {
     this.applicationViewFactory = applicationViewFactory;
-    this.parentChildSupplier = indexConfigProvider.getParentChildSupplier();
+    this.postIndexInterceptor = indexConfigProvider.getPostIndexInterceptor();
     this.jsonConversion = jsonConversion;
     this.indexConfigProvider = indexConfigProvider;
     this.applicationProfileSupplier = indexConfigProvider.getApplicationProfileSupplier();
@@ -75,21 +76,8 @@ public class GraphIndexService {
 
       ObjectNode json = jsonConversion.getTypedResourceToJson().withTypedResource(resource).get();
 
-      if (facetConversionSupplier != null) {
-        Function<TypedResource, ObjectNode> facetConversion = facetConversionSupplier.apply(resourceIndex);
-        ObjectNode facets = null;
-        if (facetConversion != null) {
-          facets = facetConversion.apply(resource);
-        }
-        if (facets != null) {
-          json.set("facets", facets);
-        }
-      }
-
-      if (parentChildSupplier != null) {
-        ObjectNode joinFieldNode = parentChildSupplier.apply(resourceIndex.getType());
-        json.set("content_join_field", joinFieldNode);
-      }
+      executeFacetConversion(resourceIndex, resource, json);
+      executePostIndexInterceptor(json);
 
       if (params.hasGraph()) {
         json.set(IndexService.INDEX_GRAPH_NAME, new TextNode(params.getGraph()));
@@ -114,6 +102,24 @@ public class GraphIndexService {
       log.error("Indexing of {} failed unexpectedly", resourceIndex.getUri(), ex);
     }
     return false;
+  }
+
+  private void executeFacetConversion(ResourceIndex resourceIndex, TypedResource resource, ObjectNode json) {
+    if (facetConversionSupplier != null) {
+      Function<TypedResource, ObjectNode> facetConversion = facetConversionSupplier.apply(resourceIndex);
+      if (facetConversion != null) {
+        ObjectNode facets = facetConversion.apply(resource);
+        if (facets != null) {
+          json.set("facets", facets);
+        }
+      }
+    }
+  }
+
+  private void executePostIndexInterceptor(ObjectNode json) {
+    if (postIndexInterceptor != null) {
+      postIndexInterceptor.accept(json);
+    }
   }
 
   @Deprecated
