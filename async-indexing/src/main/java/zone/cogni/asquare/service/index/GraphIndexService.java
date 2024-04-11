@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Service
@@ -39,7 +39,7 @@ public class GraphIndexService {
   private final IndexConfigProvider indexConfigProvider;
   private final Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier;
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
-  private final Consumer<ObjectNode> postIndexInterceptor;
+  private final BiConsumer<ObjectNode, String> postIndexInterceptor;
   private final ElasticStore elasticsearchStore;
   private final JsonConversionFactory jsonConversion;
 
@@ -77,7 +77,7 @@ public class GraphIndexService {
       ObjectNode json = jsonConversion.getTypedResourceToJson().withTypedResource(resource).get();
 
       executeFacetConversion(resourceIndex, resource, json);
-      executePostIndexInterceptor(json);
+      executePostIndexInterceptor(json, resourceIndex.getType());
 
       if (params.hasGraph()) {
         json.set(IndexService.INDEX_GRAPH_NAME, new TextNode(params.getGraph()));
@@ -116,9 +116,9 @@ public class GraphIndexService {
     }
   }
 
-  private void executePostIndexInterceptor(ObjectNode json) {
+  private void executePostIndexInterceptor(ObjectNode json, String type) {
     if (postIndexInterceptor != null) {
-      postIndexInterceptor.accept(json);
+      postIndexInterceptor.accept(json, type);
     }
   }
 

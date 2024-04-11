@@ -17,7 +17,7 @@ import zone.cogni.libs.sparqlservice.SparqlService;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Builder
@@ -31,13 +31,13 @@ public class IndexConfigProvider {
   @Nullable
   private final Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier;
   @Nullable
-  private final Consumer<ObjectNode> postIndexInterceptor;
+  private final BiConsumer<ObjectNode, String> postIndexInterceptor;
 
   public IndexConfigProvider( RdfStoreService rdfStoreService,
                               Function<ResourceIndex, ApplicationProfile> applicationProfileSupplier,
                               Elasticsearch7Store elasticStore,
                              @Nullable Function<ResourceIndex, Function<TypedResource, ObjectNode>> facetConversionSupplier,
-                             @Nullable Consumer<ObjectNode> postIndexInterceptor) {
+                             @Nullable BiConsumer<ObjectNode, String> postIndexInterceptor) {
     this.rdfStoreService = rdfStoreService;
     this.sparqlService = new SparqlServiceImpl(rdfStoreService);
     this.elasticStore = elasticStore;
@@ -81,7 +81,7 @@ public class IndexConfigProvider {
     return facetConversionSupplier;
   }
 
-  public Consumer<ObjectNode> getPostIndexInterceptor() {
+  public BiConsumer<ObjectNode, String> getPostIndexInterceptor() {
     return postIndexInterceptor;
   }
 
