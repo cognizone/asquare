@@ -105,21 +105,17 @@ public class GraphIndexService {
   }
 
   private void executeFacetConversion(ResourceIndex resourceIndex, TypedResource resource, ObjectNode json) {
-    if (facetConversionSupplier != null) {
-      Function<TypedResource, ObjectNode> facetConversion = facetConversionSupplier.apply(resourceIndex);
-      if (facetConversion != null) {
-        ObjectNode facets = facetConversion.apply(resource);
-        if (facets != null) {
-          json.set("facets", facets);
-        }
-      }
-    }
+    if (facetConversionSupplier == null) return;
+    Function<TypedResource, ObjectNode> facetConversion = facetConversionSupplier.apply(resourceIndex);
+    if (facetConversion == null) return;
+    ObjectNode facets = facetConversion.apply(resource);
+    if (facets == null) return;
+    json.set("facets", facets);
   }
 
   private void executePostIndexInterceptor(ObjectNode json, String type) {
-    if (postIndexInterceptor != null) {
-      postIndexInterceptor.accept(json, type);
-    }
+    if (postIndexInterceptor == null) return;
+    postIndexInterceptor.accept(json, type);
   }
 
   @Deprecated
