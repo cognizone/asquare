@@ -32,6 +32,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated
+ * <p>
+ * The IRI generation functionality has been extracted into an independent project <a href="https://github.com/cognizone/semanticz-irigenerator">...</a>.
+ * Please refer to the documentation of that project for example usage and more information. The project is available on Maven central.
+ * Its first version can be found as `zone.cogni.semanticz:semanticz-irigenerator:1.0.0`.
+ */
+@Deprecated(forRemoval = true)
 public class UriGeneratorCalculator {
   private static final Logger log = LoggerFactory.getLogger(UriGeneratorCalculator.class);
 

@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 public class UriGeneratorRoot {
 
   public static UriGeneratorRoot load(InputStreamSource resource) {

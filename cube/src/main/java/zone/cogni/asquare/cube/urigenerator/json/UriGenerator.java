@@ -2,6 +2,10 @@ package zone.cogni.asquare.cube.urigenerator.json;
 
 import java.util.List;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 public class UriGenerator {
 
   private String id;

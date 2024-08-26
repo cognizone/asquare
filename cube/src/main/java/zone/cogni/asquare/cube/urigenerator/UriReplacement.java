@@ -8,6 +8,10 @@ import org.apache.jena.rdf.model.Statement;
 
 import java.util.List;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 public class UriReplacement {
 
   public static void replace(Model model, String original, String replacement) {

@@ -11,6 +11,10 @@ import zone.cogni.sem.jena.JenaUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 @SpringBootTest(classes = UriGeneratorCalculatorTestConfig.class)
 public class UriGeneratorCalculatorTest {
 
