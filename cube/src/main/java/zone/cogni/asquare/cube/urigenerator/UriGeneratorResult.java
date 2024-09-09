@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 public class UriGeneratorResult {
 
   private UriGenerator generator;

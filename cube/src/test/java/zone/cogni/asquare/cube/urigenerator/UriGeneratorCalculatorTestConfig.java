@@ -8,6 +8,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.SpelService;
 
+/**
+ * @deprecated, see {@link zone.cogni.asquare.cube.urigenerator.UriGeneratorCalculator}
+ */
+@Deprecated(forRemoval = true)
 @Configuration
 @Import(SpelService.class)
 public class UriGeneratorCalculatorTestConfig {
