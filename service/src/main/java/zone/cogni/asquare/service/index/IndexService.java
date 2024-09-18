@@ -198,7 +198,7 @@ public class IndexService {
                      "        {" +
                      "          \"range\": {" +
                      "            \"" + INDEX_TIMESTAMP_MS_NAME + "\": {" +
-                     "              \"lt\": " + latestTimestamp + "" +
+                     "              \"lt\": " + latestTimestamp +
                      "            }" +
                      "          }" +
                      "        }" +
@@ -362,7 +362,7 @@ public class IndexService {
     return reindexSimpleExecution(resources, rdfStoreService);
   }
 
-  private Map<String, Long> reindexSimpleExecution(List<ResourceIndex> resources, RdfStoreService rdfStoreService) {
+  public Map<String, Long> reindexSimpleExecution(List<ResourceIndex> resources, RdfStoreService rdfStoreService) {
 
     StopWatch watch = new StopWatch();
     watch.start();
