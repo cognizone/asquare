@@ -206,7 +206,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   private ClientHttpRequestFactory clientHttpRequestFactory(int readTimeout, int connectTimeout) {
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
-    factory.setReadTimeout(readTimeout);
+    //factory.setReadTimeout(readTimeout);
     factory.setConnectTimeout(connectTimeout);
 
     return factory;

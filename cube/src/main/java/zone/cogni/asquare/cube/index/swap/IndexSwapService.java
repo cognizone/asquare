@@ -36,7 +36,7 @@ public class IndexSwapService {
   private RestTemplate calculateRestTemplate(ElasticsearchMetadata.Configuration configuration) {
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
     factory.setConnectTimeout(configuration.getConnectTimeout());
-    factory.setReadTimeout(configuration.getReadTimeout());
+    //factory.setReadTimeout(configuration.getReadTimeout());
 
     return new RestTemplate(factory);
   }
