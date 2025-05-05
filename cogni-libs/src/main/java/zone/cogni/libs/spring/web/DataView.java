@@ -8,8 +8,8 @@ import zone.cogni.libs.core.utils.StringHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 import static zone.cogni.libs.spring.utils.ResourceHelper.toByteArray;

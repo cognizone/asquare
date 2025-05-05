@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 /**

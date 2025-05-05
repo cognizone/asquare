@@ -11,10 +11,10 @@ buildscript {
     guavaVersion = '30.0-jre'
     httpComponentsVersion = '4.5.13'
     jenaVersion = '4.10.0'
-    springBootVersion = '2.7.18'
-    springSecurityVersion = '5.8.9'
-//    springBootVersion = '3.3.3'
-//    springSecurityVersion = '6.4.5'
+//    springBootVersion = '2.7.18'
+//    springSecurityVersion = '5.8.9'
+    springBootVersion = '3.3.6'
+    springSecurityVersion = '6.4.5'
     springSecuritySaml2CoreVersion = '1.0.10.RELEASE'
     set('snakeyaml.version','2.0')
   }
@@ -87,6 +87,7 @@ subprojects {
       dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
       dependency("org.apache.httpcomponents:fluent-hc:$httpComponentsVersion")
       dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
+      dependency("org.apache.httpcomponents.client5:httpclient5:5.2.1")
       dependency("org.apache.jena:jena-arq:$jenaVersion")
       dependency("org.apache.jena:jena-core:$jenaVersion")
       dependency("org.apache.jena:jena-rdfconnection:$jenaVersion")
@@ -122,8 +123,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -249,7 +250,7 @@ subprojects {
 
 idea {
   project {
-    languageLevel = "1.8"
+    languageLevel = '17'
   }
 }
 
@@ -607,6 +608,7 @@ project('service') {
     api('joda-time:joda-time')
     api('org.apache.commons:commons-collections4')
     api('org.apache.commons:commons-lang3')
+    api("org.apache.httpcomponents.client5:httpclient5")
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
     api('org.apache.poi:poi')

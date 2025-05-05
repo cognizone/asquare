@@ -18,7 +18,7 @@ import zone.cogni.core.spring.ResourceHelper;
 import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
