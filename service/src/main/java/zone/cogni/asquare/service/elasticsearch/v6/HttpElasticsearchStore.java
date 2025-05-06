@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
@@ -33,6 +34,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -228,8 +230,9 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    protected void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException {
-      switch (statusCode.series()) {
+    protected void handleError(ClientHttpResponse response, HttpStatusCode statusCode) throws IOException {
+      HttpStatus.Series series = HttpStatus.Series.resolve(statusCode.value());
+      switch (Objects.requireNonNull(series)) {
         case CLIENT_ERROR:
           throw new ElasticClientError(statusCode, response.getStatusText(),
                                        response.getHeaders(), getResponseBody(response), getCharset(response));
@@ -245,7 +248,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
 
   public static class ElasticClientError extends HttpClientErrorException {
 
-    public ElasticClientError(HttpStatus statusCode, String statusText,
+    public ElasticClientError(HttpStatusCode statusCode, String statusText,
                               @Nullable HttpHeaders responseHeaders, @Nullable byte[] responseBody, @Nullable Charset responseCharset) {
       super(statusCode, statusText, responseHeaders, responseBody, responseCharset);
     }

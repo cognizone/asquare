@@ -26,9 +26,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.saml.SAMLAuthenticationProvider;
 import org.springframework.security.saml.SAMLBootstrap;
 import org.springframework.security.saml.SAMLEntryPoint;
@@ -85,7 +84,7 @@ import zone.cogni.asquare.security.saml.extension.service.RoleMappingService;
 import zone.cogni.asquare.security.saml.extension.spring.SAMLUserAttributesMapping;
 import zone.cogni.asquare.security.saml.extension.spring.SAMLUserDetailsServiceImpl;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -96,7 +95,7 @@ import java.util.Timer;
 
 @Configuration
 @Import({RoleMappingService.class, SAMLUserDetailsServiceImpl.class, SAMLUserAttributesMapping.class})
-public class SamlSecurityAdapter extends WebSecurityConfigurerAdapter implements InitializingBean, DisposableBean {
+public class SamlSecurityAdapter implements InitializingBean, DisposableBean {
 
   private final static Logger log = LoggerFactory.getLogger(SamlSecurityAdapter.class.getName());
 
@@ -420,19 +419,21 @@ public class SamlSecurityAdapter extends WebSecurityConfigurerAdapter implements
   }
 
   @Bean
-  public SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter() throws Exception {
+  public SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter(
+          AuthenticationManager authenticationManager) {
     SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter = new SAMLWebSSOHoKProcessingFilter();
     samlWebSSOHoKProcessingFilter.setAuthenticationSuccessHandler(successRedirectHandler());
-    samlWebSSOHoKProcessingFilter.setAuthenticationManager(authenticationManager());
+    samlWebSSOHoKProcessingFilter.setAuthenticationManager(authenticationManager);
     samlWebSSOHoKProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
     return samlWebSSOHoKProcessingFilter;
   }
 
   // Processing filter for WebSSO profile messages
   @Bean
-  public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
+  public SAMLProcessingFilter samlWebSSOProcessingFilter(
+          AuthenticationManager authenticationManager) {
     SAMLProcessingFilter samlWebSSOProcessingFilter = new SAMLProcessingFilter();
-    samlWebSSOProcessingFilter.setAuthenticationManager(authenticationManager());
+    samlWebSSOProcessingFilter.setAuthenticationManager(authenticationManager);
     samlWebSSOProcessingFilter.setAuthenticationSuccessHandler(successRedirectHandler());
     samlWebSSOProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
     return samlWebSSOProcessingFilter;
@@ -536,34 +537,26 @@ public class SamlSecurityAdapter extends WebSecurityConfigurerAdapter implements
    * @throws Exception
    */
   @Bean
-  public FilterChainProxy samlFilter() throws Exception {
-    List<SecurityFilterChain> chains = new ArrayList<SecurityFilterChain>();
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"),
-                                              samlEntryPoint()));
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"),
-                                              samlLogoutFilter()));
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"),
-                                              metadataDisplayFilter()));
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"),
-                                              samlWebSSOProcessingFilter()));
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"),
-                                              samlWebSSOHoKProcessingFilter()));
-    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"),
-                                              samlLogoutProcessingFilter()));
+  public FilterChainProxy samlFilterInternal(
+          SAMLEntryPoint samlEntryPoint,
+          SAMLLogoutFilter samlLogoutFilter,
+          MetadataDisplayFilter metadataDisplayFilter,
+          SAMLProcessingFilter samlWebSSOProcessingFilter,
+          SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter,
+          SAMLLogoutProcessingFilter samlLogoutProcessingFilter) {
+    List<SecurityFilterChain> chains = new ArrayList<>();
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"), samlEntryPoint));
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"), samlLogoutFilter));
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"), metadataDisplayFilter));
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"), samlWebSSOProcessingFilter));
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"), samlWebSSOHoKProcessingFilter));
+    chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"), samlLogoutProcessingFilter));
     return new FilterChainProxy(chains);
   }
 
-  /**
-   * Returns the authentication manager currently used by Spring.
-   * It represents a bean definition with the aim allow wiring from
-   * other classes performing the Inversion of Control (IoC).
-   *
-   * @throws Exception
-   */
   @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
   }
 
   /**
@@ -574,37 +567,28 @@ public class SamlSecurityAdapter extends WebSecurityConfigurerAdapter implements
    */
 
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain samlWebSecurityFilterChain(HttpSecurity http,
+                                                        @Qualifier("samlFilterInternal") FilterChainProxy samlFilter,
+                                                        MetadataGeneratorFilter metadataGeneratorFilter,
+                                                        SAMLEntryPoint samlEntryPoint) throws Exception {
+    http
+            .csrf(csrf -> csrf.disable()) // Configure CSRF
+            .httpBasic(httpBasic -> httpBasic
+                    .realmName(realmName)
+                    .authenticationEntryPoint(samlEntryPoint)
+            )
+            .addFilterBefore(metadataGeneratorFilter, ChannelProcessingFilter.class)
+            .addFilterAfter(samlFilter, BasicAuthenticationFilter.class)
+            .addFilterBefore(samlFilter, CsrfFilter.class)
+            .authorizeHttpRequests(authorize -> authorize
+                                           .requestMatchers("/saml/**").permitAll()
+                                           .anyRequest().authenticated()
+                                   // .requestMatchers(protectedRequestMatcher).authenticated()
+            )
+            .logout(logout -> logout.disable()); // Configure logout
 
-    http.csrf().disable();
-    http
-      .httpBasic()
-      .realmName(realmName)
-      .authenticationEntryPoint(samlEntryPoint());
-    http
-      .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
-      .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
-      .addFilterBefore(samlFilter(), CsrfFilter.class);
-    http
-      .authorizeRequests()
-      .antMatchers("/saml/**").permitAll()
-      .anyRequest().authenticated();
-      //.requestMatchers(protectedRequestMatcher).authenticated();
-
-    http
-      .logout().disable();    // The logout procedure is already handled by SAML filters.
-  }
-
-  /**
-   * Sets a custom authentication provider.
-   *
-   * @param auth SecurityBuilder used to create an AuthenticationManager.
-   * @throws Exception
-   */
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) {
-    auth.authenticationProvider(samlAuthenticationProvider());
+    return http.build();
   }
 
   @Override

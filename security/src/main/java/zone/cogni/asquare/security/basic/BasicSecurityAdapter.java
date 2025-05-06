@@ -4,16 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -28,7 +30,7 @@ import javax.inject.Inject;
 import java.util.LinkedHashMap;
 
 @Configuration
-public class BasicSecurityAdapter extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class BasicSecurityAdapter implements WebMvcConfigurer {
 
   private static final Logger log = LoggerFactory.getLogger(BasicSecurityAdapter.class);
 
@@ -81,31 +83,32 @@ public class BasicSecurityAdapter extends WebSecurityConfigurerAdapter implement
     return entryPoint;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.httpBasic()
-        .realmName(realmName)
-        .and().authorizeRequests().requestMatchers(protectedRequestMatcher).authenticated()
-        .and()
-        .formLogin()
-        .loginProcessingUrl("/login")
-        .successHandler(authenticationSuccessHandler)
-        .and()
-        .logout()
-        .logoutUrl("/logout")
-        .clearAuthentication(true)
-        .invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID")
-        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(delegatingEntryPoint())
-        .and()
-        .cors()
-        .and()
-        .csrf()
-        .disable()
-        .httpBasic();
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(protectedRequestMatcher).authenticated()
+                    .anyRequest().permitAll()
+            )
+            .formLogin(form -> form
+                    .loginProcessingUrl("/login")
+                    .successHandler(authenticationSuccessHandler)
+            )
+            .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+            )
+            .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint(delegatingEntryPoint())
+            )
+            .cors(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .httpBasic(basic -> basic.realmName(realmName));
+
+    return http.build();
   }
 
   @Override

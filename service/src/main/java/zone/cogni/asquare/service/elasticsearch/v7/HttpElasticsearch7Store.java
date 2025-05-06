@@ -12,11 +12,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,6 +35,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,13 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
 
   public HttpElasticsearch7Store(String url, Boolean urlEncodedId, String username, String password) {
     this(url, urlEncodedId);
-    restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(username, password));
+    restTemplate.getInterceptors().add((request, body, execution) -> {
+      String plainCreds = username + ":" + password;
+      String base64Creds = java.util.Base64.getEncoder().encodeToString(plainCreds.getBytes(StandardCharsets.UTF_8));
+
+      request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);
+      return execution.execute(request, body);
+    });
   }
 
   @Override
@@ -254,8 +261,9 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    protected void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException {
-      switch (statusCode.series()) {
+    protected void handleError(ClientHttpResponse response, HttpStatusCode statusCode) throws IOException {
+      HttpStatus.Series series = HttpStatus.Series.resolve(statusCode.value());
+      switch (Objects.requireNonNull(series)) {
         case CLIENT_ERROR:
           throw new ElasticClientError(statusCode, response.getStatusText(),
                                        response.getHeaders(), getResponseBody(response), getCharset(response));
@@ -271,7 +279,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
 
   public static class ElasticClientError extends HttpClientErrorException {
 
-    public ElasticClientError(HttpStatus statusCode, String statusText,
+    public ElasticClientError(HttpStatusCode statusCode, String statusText,
                               @Nullable HttpHeaders responseHeaders,
                               @Nullable byte[] responseBody,
                               @Nullable Charset responseCharset) {
