@@ -2,6 +2,7 @@ package zone.cogni.asquare.security2.saml2;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,7 @@ import org.springframework.security.saml2.provider.service.authentication.Saml2A
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.saml2.provider.service.metadata.OpenSamlMetadataResolver;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
-import org.springframework.security.saml2.provider.service.servlet.filter.Saml2WebSsoAuthenticationFilter;
+import org.springframework.security.saml2.provider.service.web.authentication.Saml2WebSsoAuthenticationFilter;
 import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
 import org.springframework.security.saml2.provider.service.web.RelyingPartyRegistrationResolver;
 import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilter;
@@ -23,6 +24,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.web.SecurityFilterChain;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -37,16 +40,20 @@ public class Saml2HttpConfigurer extends AbstractHttpConfigurer<Saml2HttpConfigu
   private final BasicAuthHandler basicAuthHandler;
   private final Saml2Properties saml2Properties;
 
-  @Override
-  public void init(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain saml2SecurityFilterChain(HttpSecurity http) throws Exception {
     RelyingPartyRegistrationResolver relyingPartyRegistrationResolver = new DefaultRelyingPartyRegistrationResolver(relyingPartyRegistrationRepository);
     Saml2MetadataFilter metadataFilter = new Saml2MetadataFilter(relyingPartyRegistrationResolver, new OpenSamlMetadataResolver());
 
     http
-            .saml2Login().and()
+            .saml2Login(saml2 -> {});
+
+    http
             .addFilterBefore(this::basicAuthFilter, Saml2WebSsoAuthenticationFilter.class)
             .addFilterBefore(metadataFilter, Saml2WebSsoAuthenticationFilter.class)
             .addFilterAfter(this::patchAuthenticationObjectFilter, Saml2WebSsoAuthenticationFilter.class);
+
+    return http.build();
   }
 
   @Override

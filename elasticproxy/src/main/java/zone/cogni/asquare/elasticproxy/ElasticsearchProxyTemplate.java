@@ -24,7 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.exceptions.TemplateEngineException;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.ByteArrayInputStream;
@@ -203,7 +203,7 @@ public class ElasticsearchProxyTemplate {
       Response response = restClient.performRequest(request);
       HttpStatus status = HttpStatus.resolve(response.getStatusLine().getStatusCode());
 
-      if (status.is2xxSuccessful()) {
+      if (Objects.requireNonNull(status).is2xxSuccessful()) {
         return ResponseEntity.ok().body(new InputStreamResource(response.getEntity().getContent()));
       }
       return ResponseEntity.status(status).build();

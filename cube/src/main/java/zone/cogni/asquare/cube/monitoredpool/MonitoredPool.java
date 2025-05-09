@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -203,9 +203,9 @@ public class MonitoredPool {
       log.info(StringUtils.center("pool '" + context.getPoolName() + "' summary", 32));
       log.info("================================");
       log.info("");
-      log.info("          total: " + results.size());
-      log.info("        success: " + results.stream().filter(r -> r.isSuccess()).count());
-      log.info("         failed: " + results.stream().filter(r -> !r.isSuccess()).count());
+      log.info("          total: {}", results.size());
+      log.info("        success: {}", results.stream().filter(r -> r.isSuccess()).count());
+      log.info("         failed: {}", results.stream().filter(r -> !r.isSuccess()).count());
       log.info("");
       log.info("");
     };

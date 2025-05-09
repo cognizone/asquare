@@ -534,7 +534,6 @@ public class SamlSecurityAdapter implements InitializingBean, DisposableBean {
    * Define the security filter chain in order to support SSO Auth by using SAML 2.0
    *
    * @return Filter chain proxy
-   * @throws Exception
    */
   @Bean
   public FilterChainProxy samlFilterInternal(
