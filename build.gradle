@@ -448,7 +448,28 @@ project('cogni-libs') {
 
     // test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation("org.apache.jena:jena-fuseki-main")
+    testImplementation("org.apache.jena:jena-fuseki-main") {
+      exclude group: 'io.micrometer', module: 'micrometer-core'
+    }
+    implementation("io.micrometer:micrometer-core:1.13.8")
+    testImplementation('io.micrometer:micrometer-registry-prometheus:1.13.8')
+  }
+
+  dependencies {
+    constraints {
+      implementation("io.micrometer:micrometer-core") {
+        version { strictly "1.13.8" }
+      }
+      implementation("io.micrometer:micrometer-commons") {
+        version { strictly "1.13.8" }
+      }
+      implementation("io.micrometer:micrometer-observation") {
+        version { strictly "1.13.8" }
+      }
+      implementation("io.micrometer:micrometer-registry-prometheus") {
+        version { strictly "1.13.8" }
+      }
+    }
   }
 }
 
