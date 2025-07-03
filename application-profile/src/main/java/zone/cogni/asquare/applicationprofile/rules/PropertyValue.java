@@ -1,8 +1,8 @@
 package zone.cogni.asquare.applicationprofile.rules;
 
+import jakarta.annotation.Nullable;
 import zone.cogni.asquare.applicationprofile.model.Rule;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class PropertyValue implements Rule, Comparable<Rule> {

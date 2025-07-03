@@ -1,5 +1,6 @@
 package zone.cogni.asquare.service.queryapi.filter;
 
+import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Resource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile.Attribute;
@@ -7,7 +8,6 @@ import zone.cogni.asquare.rdf.BasicRdfValue;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

@@ -1,5 +1,6 @@
 package zone.cogni.asquare.graphcomposer;
 
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.AccessException;
@@ -11,7 +12,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import zone.cogni.asquare.rdf.RdfValue;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

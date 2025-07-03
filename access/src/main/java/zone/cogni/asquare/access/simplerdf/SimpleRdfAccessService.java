@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Streams;
 import io.vavr.Tuple2;
 import io.vavr.control.Option;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.Query;
@@ -44,7 +45,6 @@ import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 import zone.cogni.sem.jena.JenaUtils;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

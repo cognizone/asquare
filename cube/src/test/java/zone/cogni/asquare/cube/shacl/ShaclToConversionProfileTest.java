@@ -1,13 +1,12 @@
 package zone.cogni.asquare.cube.shacl;
 
+import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.convertor.json.CompactConversionProfile;
 import zone.cogni.libs.jena.utils.JenaUtils;
-
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

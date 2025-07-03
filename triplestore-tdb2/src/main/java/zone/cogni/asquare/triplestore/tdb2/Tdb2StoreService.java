@@ -1,6 +1,8 @@
 package zone.cogni.asquare.triplestore.tdb2;
 
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -19,8 +21,6 @@ import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.File;
 

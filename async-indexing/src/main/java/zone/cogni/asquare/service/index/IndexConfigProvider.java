@@ -1,6 +1,7 @@
 package zone.cogni.asquare.service.index;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,6 @@ import zone.cogni.asquare.virtuoso.SparqlRdfStoreService;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.function.BiConsumer;
 import java.util.function.Function;

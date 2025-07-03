@@ -2,6 +2,8 @@ package zone.cogni.asquare.edit;
 
 import com.google.common.base.Preconditions;
 import io.vavr.control.Option;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,6 @@ import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.web.rest.controller.exceptions.BadInputException;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
