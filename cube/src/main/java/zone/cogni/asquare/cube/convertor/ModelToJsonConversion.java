@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Preconditions;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.keyvalue.DefaultMapEntry;
 import org.apache.jena.datatypes.RDFDatatype;
@@ -30,7 +31,6 @@ import zone.cogni.asquare.cube.convertor.json.ApplicationProfileToConversionProf
 import zone.cogni.asquare.cube.convertor.json.ConversionProfile;
 import zone.cogni.libs.jena.utils.JenaUtils;
 
-import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
