@@ -1,6 +1,7 @@
 package zone.cogni.asquare.cube.rules;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -13,7 +14,6 @@ import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
-import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;

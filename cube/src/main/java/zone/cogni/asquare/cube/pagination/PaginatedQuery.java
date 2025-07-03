@@ -3,6 +3,7 @@ package zone.cogni.asquare.cube.pagination;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.query.QuerySolution;
@@ -19,7 +20,6 @@ import zone.cogni.sem.jena.template.JenaQueryUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

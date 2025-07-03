@@ -1,5 +1,6 @@
 package zone.cogni.asquare.triplestore.jenamemory;
 
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -18,7 +19,6 @@ import zone.cogni.core.spring.ResourceHelper;
 import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,5 +1,7 @@
 package zone.cogni.asquare.cube.rules;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -10,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +82,7 @@ class SparqlRulesDebugger implements Runnable {
       log.debug("Q{} has {} result{} {}",
                 numberOfLines, resultCount, plural, queryPart);
       if (!rows.isEmpty()) {
-        log.trace("    " + rows);
+        log.trace("    {}", rows);
       }
     }
   }

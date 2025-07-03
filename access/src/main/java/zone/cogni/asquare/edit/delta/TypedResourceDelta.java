@@ -1,5 +1,6 @@
 package zone.cogni.asquare.edit.delta;
 
+import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
@@ -9,7 +10,6 @@ import zone.cogni.asquare.applicationprofile.rules.RdfType;
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.rdf.RdfValue;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -3,10 +3,10 @@ package zone.cogni.asquare.cube.jsondiff;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
