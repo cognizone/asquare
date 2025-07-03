@@ -1,9 +1,9 @@
 package zone.cogni.asquare.edit.delta;
 
+import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Statement;
 import zone.cogni.asquare.edit.DeltaResource;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
