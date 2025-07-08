@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file contains project-specific instructions and context for AI code assistants working with this repository.
 
 ## Project Overview
 
@@ -51,9 +51,6 @@ ASquare is a comprehensive Java library for semantic web development, focusing o
 
 ### Publishing
 ```bash
-# Publish to Cognizone Archiva
-./gradlew publish -DpublishToCognizoneArchiva -Darchiva.username=xxx -Darchiva.password=xxx
-
 # Publish to Cognizone Nexus
 ./gradlew publish -DpublishToCognizoneNexus -Dnexus.username=xxx -Dnexus.password=xxx
 

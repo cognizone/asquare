@@ -88,7 +88,7 @@ public class IndexConfigProvider {
    * @deprecated Use {@link RdfStoreSparqlService}
    */
   @Deprecated
-  public static class SparqlServiceImpl implements SparqlService {
+  static class SparqlServiceImpl implements SparqlService {
     private final RdfStoreService rdfStoreService;
 
     public SparqlServiceImpl(RdfStoreService rdfStoreService) {
