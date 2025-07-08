@@ -9,77 +9,52 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 public class AsyncUtils {
 
   private static final Logger log = LoggerFactory.getLogger(AsyncUtils.class);
-  private static final Class<? extends Callable> adapterClass;
-  private static final Class workerClass;
-  private static final Field callableInFutureTask;
-  private static final Field runnableInAdapter;
-  private static final Field taskInWorker;
-  private static String workerClassName = "java.util.concurrent.ThreadPoolExecutor$Worker";
-
-  static {
-    // Preparing accessors for callable task and runnable adapter of a proxied async service method call
-    try {
-      callableInFutureTask = FutureTask.class.getDeclaredField("callable");
-      callableInFutureTask.setAccessible(true);//NOSONAR making accessible dummy callableInFutureTask is safe
-      Runnable runnable = () -> {
-        throw new UnsupportedOperationException();
-      };
-      adapterClass = Executors.callable(runnable).getClass();
-      runnableInAdapter = adapterClass.getDeclaredField("task");
-      runnableInAdapter.setAccessible(true);//NOSONAR making accessible dummy runnableInAdapter is safe
-
-      workerClass = Arrays.stream(ThreadPoolExecutor.class.getDeclaredClasses()).filter(c -> workerClassName.equals(c.getName()))
-                          .findFirst()
-                          .orElseThrow(() -> new NoClassDefFoundError("Can not get Worker class definition from ThreadPoolExecutor."));
-
-      taskInWorker = workerClass.getDeclaredField("firstTask");
-      taskInWorker.setAccessible(true);//NOSONAR making accessible dummy taskInWorker is safe
-    }
-    catch (NoSuchFieldException e) {
-      throw new ExceptionInInitializerError(e);
-    }
-  }
+  
+  // InheritableThreadLocal to store async context, which propagates to child threads
+  private static final InheritableThreadLocal<Map<String, Object>> asyncContextHolder = new InheritableThreadLocal<>();
 
   private AsyncUtils() {
   }
 
-  public static Object findCallable(Runnable task) throws IllegalAccessException {
-    if (task instanceof FutureTask) {
-      return callableInFutureTask.get(task);
-    }
-    else if (workerClass.isInstance(task)) {
-      return taskInWorker.get(task);
-    }
-    throw new ClassCastException("Only callable FutureTask and thread Worker are supported");
+  /**
+   * Store async context in ThreadLocal
+   */
+  public static void setAsyncContext(Map<String, Object> context) {
+    asyncContextHolder.set(context != null ? new HashMap<>(context) : null);
   }
 
+  /**
+   * Clear async context from ThreadLocal
+   */
+  public static void clearAsyncContext() {
+    asyncContextHolder.remove();
+  }
+
+  /**
+   * In Java 17+, we can't safely extract callables from FutureTask internals.
+   * This method now returns the task as-is.
+   */
+  public static Object findCallable(Runnable task) {
+    // Return task as-is without reflection
+    return task;
+  }
+
+  /**
+   * In Java 17+, we can't safely unwrap tasks using reflection.
+   * This method now returns the task as-is.
+   */
   public static Object findRealTask(Runnable task) {
-    try {
-      Object callable = findCallable(task);
-      if (adapterClass.isInstance(callable)) {
-        return runnableInAdapter.get(callable);
-      }
-      else {
-        return callable;
-      }
-    }
-    catch (IllegalAccessException e) {
-      throw new IllegalStateException(e);
-    }
+    // Return task as-is without reflection
+    return task;
   }
 
   public static AsyncContext findAsyncContextAnnotation(Annotation[] annotations) {
@@ -140,30 +115,16 @@ public class AsyncUtils {
   }
 
   /**
-   * Method is trying to explore executed task to find and collect map of method parameters annotated with
+   * Get async context from ThreadLocal storage.
+   * This replaces the reflection-based exploration of FutureTask internals.
    *
    * @param runnable - executed FutureTask executed by Spring TaskExecutor
    * @return collected async context values mapped by name
-   * @AsyncContext and mapping their values by name.
-   * <p>
-   * For example for execution someService.serviceMethod("this is 1", "this is 2") of given "serviceMethod" getAsyncContext will produce map {"var1":"this is 1", "var2":"this is 2"}
-   * public void serviceMethod(@AsyncContext("var1") String v1, @AsyncContext("var2") String v2) { ... }
    */
   public static Map<String, Object> getAsyncContext(Runnable runnable) {
-    // Need to recover real task because spring makes dynamic proxy adapter around callable serviceMethod
-    final Object dynamicAdvisedInterceptor = findRealTask(runnable);
-
-    // Try to collect @AsyncContext parameters over all proxied methods
-    for (Field field : dynamicAdvisedInterceptor.getClass().getDeclaredFields()) {
-      field.setAccessible(true);//NOSONAR safe attempt to try set accessible
-      if (field.isAccessible()) {//TODO replace it with trySetAccessible when this code will be migrated to Java 11
-        MethodInvocation methodInvocation = findMethodInvocation(field, dynamicAdvisedInterceptor);
-        if (methodInvocation != null) {
-          return findAsyncParams(methodInvocation);
-        }
-      }
-    }
-    return new HashMap<>();
+    // Get context from ThreadLocal instead of using reflection
+    Map<String, Object> context = asyncContextHolder.get();
+    return context != null ? new HashMap<>(context) : new HashMap<>();
   }
 
   public static <T> boolean timeoutWhileDone(CompletableFuture<T> future, int timeout) {

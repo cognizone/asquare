@@ -389,7 +389,15 @@ project('asquareroot') {
 project('async-indexing') {
   dependencies {
     // projects
-    api project(':service')
+    api project(':service') // TODO: Remove after moving jsonconversion and elasticsearch.v7 packages
+    api project(':access')
+    api project(':application-profile')
+    api project(':cogni-core')
+    api project(':cogni-libs')
+    api project(':cogni-sem')
+    api project(':elastic-service')
+    api project(':triplestore')
+    api project(':triplestore-jena-memory')
 
     // spring
     api('org.springframework.boot:spring-boot-starter')

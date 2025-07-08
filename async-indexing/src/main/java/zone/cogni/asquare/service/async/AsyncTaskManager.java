@@ -61,6 +61,7 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
         final CompletableFuture<Object> cfuture = new CompletableFuture<>();
 
         Map<String, Object> asyncContext = AsyncUtils.getAsyncContext(runnable);
+        log.debug("TaskDecorator: Got async context from ThreadLocal: {}", asyncContext);
         final Object asyncKey = asyncKeyFn.apply(asyncContext);
 
         log.info(
@@ -79,9 +80,13 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
 
         onQueueFn.accept(cfuture, asyncContext);
 
+        // Clear the context from the main thread after capturing it
+        AsyncUtils.clearAsyncContext();
+
         return new AsyncRunnable(
           runnable,
           asyncKey,
+          asyncContext,
           this::setLastExecutionStart,
           this::setLastExecutionStop,
           cfuture,
@@ -195,6 +200,7 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
 
     private final Runnable runnable;
     private final Object asyncKey;
+    private final Map<String, Object> asyncContext;
     private final Consumer<LocalDateTime> setLastExecutionStart;
     private final Consumer<LocalDateTime> setLastExecutionStop;
     private final CompletableFuture<Object> cfuture;
@@ -203,6 +209,7 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
 
     public AsyncRunnable(Runnable runnable,
                          Object asyncKey,
+                         Map<String, Object> asyncContext,
                          Consumer<LocalDateTime> setLastExecutionStart,
                          Consumer<LocalDateTime> setLastExecutionStop,
                          CompletableFuture<Object> cfuture,
@@ -210,6 +217,7 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
                          Map<Object, LocalDateTime> executionTime) {
       this.runnable = runnable;
       this.asyncKey = asyncKey;
+      this.asyncContext = asyncContext;
       this.setLastExecutionStart = setLastExecutionStart;
       this.setLastExecutionStop = setLastExecutionStop;
       this.cfuture = cfuture;
@@ -223,6 +231,9 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
       setLastExecutionStart.accept(LocalDateTime.now());
       executionTime.put(asyncKey, LocalDateTime.now());
 
+      // Set async context before running the task
+      AsyncUtils.setAsyncContext(asyncContext);
+      
       try {
         runnable.run();
       }
@@ -235,6 +246,9 @@ public class AsyncTaskManager extends ThreadPoolTaskExecutor {
         log.error("Async method execution completed with an exception: {}", ex);
       }
       finally {
+        // Clear async context after execution
+        AsyncUtils.clearAsyncContext();
+        threadLocalCompletableFuture.remove();
         executionMap.remove(asyncKey);
         executionTime.remove(asyncKey);
         setLastExecutionStop.accept(LocalDateTime.now());
