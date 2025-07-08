@@ -1,5 +1,6 @@
 package zone.cogni.actionlogger;
 
+import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import javax.inject.Inject;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ControllerWithLogger.class)
