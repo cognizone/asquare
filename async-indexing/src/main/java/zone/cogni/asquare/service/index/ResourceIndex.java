@@ -1,7 +1,5 @@
 package zone.cogni.asquare.service.index;
 
-import java.util.Objects;
-
 public class ResourceIndex {
   private final String graph;
   private final String uri;
