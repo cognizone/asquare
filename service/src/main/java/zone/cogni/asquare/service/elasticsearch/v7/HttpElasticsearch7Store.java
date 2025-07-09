@@ -3,9 +3,12 @@ package zone.cogni.asquare.service.elasticsearch.v7;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Preconditions;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -16,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,6 +38,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -65,7 +69,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
 
   public HttpElasticsearch7Store(String url, Boolean urlEncodedId, String username, String password) {
     this(url, urlEncodedId);
-    restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(username, password));
+    restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(username, password));
   }
 
   @Override
@@ -146,11 +150,8 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   @Override
   public ObjectNode getDocumentById(String indexName, String id, Params params) {
     URI uri = createUri(indexName, id, params);
-
-    ObjectNode response = restTemplate.getForObject(uri, ObjectNode.class);
-    Preconditions.checkNotNull(response);
-
-    return response;
+    return Optional.ofNullable(restTemplate.getForObject(uri, ObjectNode.class))
+                   .orElseThrow(() -> new NullPointerException("No document found with id: " + id));
   }
 
   @Override
@@ -204,12 +205,16 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   }
 
   private ClientHttpRequestFactory clientHttpRequestFactory(int readTimeout, int connectTimeout) {
-    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    RequestConfig requestConfig = RequestConfig.custom()
+                                               .setResponseTimeout(Timeout.ofMilliseconds(readTimeout))
+                                               .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectTimeout))
+                                               .build();
 
-    factory.setReadTimeout(readTimeout);
-    factory.setConnectTimeout(connectTimeout);
+    CloseableHttpClient httpClient = HttpClients.custom()
+                                                .setDefaultRequestConfig(requestConfig)
+                                                .build();
 
-    return factory;
+    return new HttpComponentsClientHttpRequestFactory(httpClient);
   }
 
   private URI getPathFor(String indexName, Operation operation, Params params) {
@@ -230,7 +235,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
 
     // a-square v 0.2.0
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
     builder.path(String.join("/", "", indexName, "_doc"));
 
@@ -254,17 +259,22 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    protected void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException {
+    public void handleError(ClientHttpResponse response) throws IOException {
+      int statusValue = response.getStatusCode()
+                                .value();
+      HttpStatus statusCode = HttpStatus.resolve(statusValue);
+
+      if (statusCode == null) {
+        throw new UnknownHttpStatusCodeException(statusValue, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
+      }
+
       switch (statusCode.series()) {
         case CLIENT_ERROR:
-          throw new ElasticClientError(statusCode, response.getStatusText(),
-                                       response.getHeaders(), getResponseBody(response), getCharset(response));
+          throw new ElasticClientError(statusCode, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
         case SERVER_ERROR:
-          throw new HttpServerErrorException(statusCode, response.getStatusText(),
-                                             response.getHeaders(), getResponseBody(response), getCharset(response));
+          throw new HttpServerErrorException(statusCode, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
         default:
-          throw new UnknownHttpStatusCodeException(statusCode.value(), response.getStatusText(),
-                                                   response.getHeaders(), getResponseBody(response), getCharset(response));
+          throw new UnknownHttpStatusCodeException(statusValue, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
       }
     }
   }

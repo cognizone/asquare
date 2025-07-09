@@ -3,7 +3,7 @@ package zone.cogni.asquare.triplestore.sparqlendpoint;
 import com.google.common.base.Preconditions;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionBuilder;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -45,15 +45,10 @@ public class SparqlEndpointDatabase implements RdfStoreService {
   @Override
   public <R> R executeSelectQuery(Query query, QuerySolutionMap bindings, JenaResultSetHandler<R> resultSetHandler, String context) {
     Preconditions.checkNotNull(resource);
-
-    if (log.isDebugEnabled()) log.debug("Select {} - {} \n{}",
-                                        context == null ? "" : "--- " + context + " --- ",
-                                        bindings,
-                                        query);
-
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(resource, query)) {
-      queryExecution.setInitialBinding(bindings);
-
+    if (log.isDebugEnabled()) log.debug("Select {} - {} \n{}", context == null ? "" : "--- " + context + " --- ", bindings, query);
+    QueryExecutionBuilder builder = QueryExecution.service(resource).query(query);
+    applyBindings(builder, bindings);
+    try (QueryExecution queryExecution = builder.build()) {
       ResultSet resultSet = queryExecution.execSelect();
       return resultSetHandler.handle(resultSet);
     }
@@ -62,9 +57,9 @@ public class SparqlEndpointDatabase implements RdfStoreService {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     Preconditions.checkNotNull(resource);
-
-    try (QueryExecution queryExecution = QueryExecutionFactory.sparqlService(resource, query)) {
-      queryExecution.setInitialBinding(bindings);
+    QueryExecutionBuilder builder = QueryExecution.service(resource).query(query);
+    applyBindings(builder, bindings);
+    try (QueryExecution queryExecution = builder.build()) {
       return queryExecution.execAsk();
     }
   }
@@ -72,16 +67,23 @@ public class SparqlEndpointDatabase implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     Preconditions.checkNotNull(resource);
-    try (QueryExecution queryExecution = QueryExecution.service(resource).query(query).build()) {
-      //  TODO is it used?
-      //   if (modelContentType != null) queryExecution.setModelContentType(modelContentType);
-      if (!bindings.asMap().isEmpty()) queryExecution.setInitialBinding(bindings);
+    //  TODO is it used?
+    //   if (modelContentType != null) queryExecution.setModelContentType(modelContentType);
+
+    QueryExecutionBuilder builder = QueryExecution.service(resource).query(query);
+    applyBindings(builder, bindings);
+    try (QueryExecution queryExecution = builder.build()) {
       return queryExecution.execConstruct();
     }
     catch (Exception e) {
       log.error("Query failed: \n{}", query);
       throw e;
     }
+  }
+
+  private void applyBindings(QueryExecutionBuilder builder, QuerySolutionMap bindings) {
+    if (bindings == null || bindings.asMap().isEmpty()) return;
+    builder.substitution(bindings);
   }
 
   @Override

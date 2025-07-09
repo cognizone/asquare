@@ -14,8 +14,8 @@ include 'cube'
 include 'elastic-components'
 include 'elastic-service'
 include 'elasticproxy'
-include 'security'
-include 'security2'
+// include 'security' should be replaced by https://github.com/cognizone/security
+// include 'security2' should be replaced by https://github.com/cognizone/security
 include 'service'
 include 'transactional'
 include 'triplestore'
