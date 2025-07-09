@@ -259,7 +259,7 @@ public class JenaUtils {
   private static RDFReaderI getReaderByRdfSyntax(Model model, String language) {
     Lang lang = RDFLanguages.nameToLang(language);
     if (lang == null) {
-      return model.getReader("RDF/XML"); // default lang that was used in jena 4
+      return model.getReader(Lang.RDFXML.getName()); // default lang that was used in jena 4
     }
     return model.getReader(language);
   }
