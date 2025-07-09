@@ -17,6 +17,8 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.RDFReaderI;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,12 +257,11 @@ public class JenaUtils {
   }
 
   private static RDFReaderI getReaderByRdfSyntax(Model model, String language) {
-    try {
-      return model.getReader(language);
+    Lang lang = RDFLanguages.nameToLang(language);
+    if (lang == null) {
+      return model.getReader("RDF/XML"); // default lang that was used in jena 4
     }
-    catch (IllegalStateException ignored) {
-      return model.getReader();
-    }
+    return model.getReader(language);
   }
 
   private static String getRdfSyntax(org.springframework.core.io.Resource resource) {

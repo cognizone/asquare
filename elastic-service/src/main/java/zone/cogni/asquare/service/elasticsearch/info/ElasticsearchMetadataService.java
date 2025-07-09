@@ -1,6 +1,10 @@
 package zone.cogni.asquare.service.elasticsearch.info;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -18,9 +22,16 @@ public class ElasticsearchMetadataService {
   }
 
   private RestTemplate calculateRestTemplate(ElasticsearchMetadata.Configuration configuration) {
-    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-    factory.setConnectTimeout(configuration.getConnectTimeout());
-    factory.setReadTimeout(configuration.getReadTimeout());
+    RequestConfig requestConfig = RequestConfig.custom()
+                                               .setResponseTimeout(Timeout.ofMilliseconds(configuration.getReadTimeout())) // setConnectionTimeout seems to be deprecated
+                                               .setConnectionRequestTimeout(Timeout.ofMilliseconds(configuration.getConnectTimeout()))
+                                               .build();
+
+    CloseableHttpClient httpClient = HttpClients.custom()
+                                                .setDefaultRequestConfig(requestConfig)
+                                                .build();
+
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 
     return new RestTemplate(factory);
   }

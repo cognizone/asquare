@@ -3,25 +3,34 @@ import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 buildscript {
   ext {
-    apachePoiVersion = '5.2.2'
-    commonsLang3Version = '3.11'
-    commonsCodecVersion = '1.15'
-    commonsIoVersion = '2.11.0'
+    apachePoiVersion = '5.4.1'
+    cglibVersion = "3.3.0"
+    commonsLang3Version = '3.17.0'
+    commonsCodecVersion = '1.18.0'
+    commonsCollectionsVersion = "4.5.0"
+    commonsIoVersion = '2.19.0'
+    commonsPool2Version = "2.12.1"
     elasticsearchVersion = '7.5.2'
-    guavaVersion = '30.0-jre'
-    httpComponentsVersion = '4.5.13'
-    jenaVersion = '4.10.0'
-    springBootVersion = '2.7.18'
-    springSecurityVersion = '5.8.9'
-    springSecuritySaml2CoreVersion = '1.0.10.RELEASE'
+    guavaVersion = '33.4.8-jre'
+    httpclient5Version = "5.5"
+    httpComponentsVersion = '4.5.14'
+    jacksonVersion = "2.19.1"
+    jakartaInjectVersion = "2.0.1"
+    jenaVersion = '5.4.0'
+    jodaTimeVersion = "2.14.0"
+    jsonldJavaVersion= '0.13.2'
+    ognlVersion = "3.3.4"
+    springBootVersion = '3.5.3'
+    springSecurityVersion = '6.4.5'
     set('snakeyaml.version','2.0')
+    vavrVersion = "1.0.0-alpha-4"
   }
 }
 
 plugins {
-  id "pl.allegro.tech.build.axion-release" version "1.13.3"
+  id 'pl.allegro.tech.build.axion-release' version '1.18.18'
   id "idea"
-  id "io.spring.dependency-management" version "1.0.11.RELEASE"
+  id "io.spring.dependency-management" version "1.1.7"
   id "org.springframework.boot" version "${springBootVersion}" apply false
   id "java"
   id "maven-publish"
@@ -40,7 +49,7 @@ scmVersion {
             'release/.*': 'release-v',
             'hotfix/.*' : 'hotfix-v'
     ]
-    initialVersion = {
+    initialVersion {
       final TagProperties rules,
       final ScmPosition position -> "0.5.0-fixed"
     }
@@ -75,43 +84,41 @@ subprojects {
     }
     dependencies {
       // libs
-      dependency("com.google.guava:guava:$guavaVersion")
-      dependency("commons-codec:commons-codec:$commonsCodecVersion")
-      dependency("commons-io:commons-io:$commonsIoVersion")
-      dependency('io.vavr:vavr:0.9.2')
-      dependency('javax.inject:javax.inject:1')
-      dependency('joda-time:joda-time:2.9.9')
-      dependency('org.apache.commons:commons-collections4:4.4')
-      dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
-      dependency("org.apache.httpcomponents:fluent-hc:$httpComponentsVersion")
-      dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
-      dependency("org.apache.jena:jena-arq:$jenaVersion")
-      dependency("org.apache.jena:jena-core:$jenaVersion")
-      dependency("org.apache.jena:jena-rdfconnection:$jenaVersion")
-      dependency("org.apache.jena:jena-shacl:$jenaVersion")
-      dependency("org.apache.jena:jena-tdb:$jenaVersion")
-      dependency("org.apache.jena:jena-tdb2:$jenaVersion")
-      dependency("org.apache.poi:poi:$apachePoiVersion")
-      dependency("org.apache.poi:poi-ooxml:$apachePoiVersion")
-      dependency("org.elasticsearch:elasticsearch:$elasticsearchVersion")
-      dependency('org.apache.commons:commons-pool2:2.11.1')
-      dependency('cglib:cglib:3.3.0')
-
+      dependency("com.google.guava:guava:${guavaVersion}")
+      dependency("commons-codec:commons-codec:${commonsCodecVersion}")
+      dependency("commons-io:commons-io:${commonsIoVersion}")
+      dependency("io.vavr:vavr:${vavrVersion}")
+      dependency("jakarta.inject:jakarta.inject-api:${jakartaInjectVersion}")
+      dependency("joda-time:joda-time:${jodaTimeVersion}")
+      dependency("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+      dependency("org.apache.commons:commons-lang3:${commonsLang3Version}")
+      dependency("org.apache.httpcomponents:fluent-hc:${httpComponentsVersion}")
+      dependency("org.apache.httpcomponents:httpclient:${httpComponentsVersion}")
+      dependency("org.apache.jena:jena-arq:${jenaVersion}")
+      dependency("org.apache.jena:jena-core:${jenaVersion}")
+      dependency("org.apache.jena:jena-rdfconnection:${jenaVersion}")
+      dependency("org.apache.jena:jena-shacl:${jenaVersion}")
+      dependency("org.apache.jena:jena-tdb2:${jenaVersion}")
+      dependency("org.apache.httpcomponents.client5:httpclient5:${httpclient5Version}")
+      dependency("org.apache.poi:poi:${apachePoiVersion}")
+      dependency("org.apache.poi:poi-ooxml:${apachePoiVersion}")
+      dependency("org.elasticsearch:elasticsearch:${elasticsearchVersion}")
+      dependency("org.apache.commons:commons-pool2:${commonsPool2Version}")
+      dependency("cglib:cglib:${cglibVersion}")
+      dependency("com.github.jsonld-java:jsonld-java:${jsonldJavaVersion}")
       // spring
-      dependency("org.springframework.boot:spring-boot-starter:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-json:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-      dependency("org.springframework.security:spring-security-core:$springSecurityVersion")
-      dependency("org.springframework.security.extensions:spring-security-saml2-core:$springSecuritySaml2CoreVersion")
-
+      dependency("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-json:${springBootVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+      dependency("org.springframework.security:spring-security-core:${springSecurityVersion}")
+      dependency("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
       // test
-      dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
-      dependency("org.elasticsearch.test:framework:$elasticsearchVersion")
-      dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-      dependency("org.apache.jena:jena-fuseki-main:$jenaVersion")
+      dependency("ognl:ognl:${ognlVersion}") // seems thymeleaf needs this library
+      dependency("org.elasticsearch.test:framework:${elasticsearchVersion}")
+      dependency("org.apache.jena:jena-fuseki-main:${jenaVersion}")
     }
   }
 
@@ -120,8 +127,8 @@ subprojects {
     compileOnly 'org.projectlombok:lombok'
   }
 
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -367,7 +374,7 @@ project('asquareroot') {
     api project(':access')
     api project(':cogni-libs')
     api project(':cogni-sem')
-    api project(':security')
+    // api project(':security')
     api project(':service')
     api project(':triplestore')
 
@@ -430,7 +437,7 @@ project('cogni-libs') {
     // libs
     api('com.google.guava:guava')
     api('commons-io:commons-io')
-    api('javax.inject:javax.inject')
+    api('jakarta.inject:jakarta.inject-api')
     api('joda-time:joda-time')
     api('org.apache.commons:commons-lang3')
     api('org.apache.httpcomponents:fluent-hc')
@@ -501,6 +508,7 @@ project('cube') {
     api('org.apache.jena:jena-arq')
     api('org.apache.jena:jena-core')
     api('org.apache.jena:jena-shacl')
+    api("com.fasterxml.jackson.core:jackson-databind")
 
     // spring
     implementation("org.springframework.security:spring-security-core")
@@ -508,6 +516,8 @@ project('cube') {
     // test
     testImplementation project(':cogni-libs')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('com.github.jsonld-java:jsonld-java')
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
   }
 }
 
@@ -533,6 +543,7 @@ project('elastic-service') {
 
     // spring
     api('org.springframework.boot:spring-boot-starter-json')
+    api("org.apache.httpcomponents.client5:httpclient5")
   }
 }
 
@@ -557,7 +568,7 @@ project('elasticproxy') {
   }
 }
 
-project('security') {
+/*project('security') {
   dependencies {
     // projects
     api project(':service')
@@ -574,11 +585,12 @@ project('security') {
     api('org.springframework.boot:spring-boot-starter-json')
     api('org.springframework.boot:spring-boot-starter-security')
     api('org.springframework.boot:spring-boot-starter-web')
-    api("org.springframework.security.extensions:spring-security-saml2-core")
+    api('org.springframework.boot:spring-boot-starter-security')
+    api('org.springframework.security:spring-security-saml2-service-provider')
   }
-}
+}*/
 
-project('security2') {
+/*project('security2') {
   dependencies {
     // projects
     api project(':cogni-core')
@@ -592,7 +604,7 @@ project('security2') {
     api('org.springframework.boot:spring-boot-starter-security')
     api('org.springframework.security:spring-security-saml2-service-provider')
   }
-}
+}*/
 
 project('service') {
   dependencies {
@@ -651,7 +663,7 @@ project('triplestore-jena-memory') {
     api project(':triplestore')
 
     // libs
-    api('org.apache.jena:jena-tdb')
+    api('org.apache.jena:jena-tdb2')
 
     // TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

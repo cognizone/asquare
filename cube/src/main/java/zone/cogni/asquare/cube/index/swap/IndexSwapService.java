@@ -1,6 +1,12 @@
 package zone.cogni.asquare.cube.index.swap;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -9,7 +15,6 @@ import zone.cogni.asquare.service.elasticsearch.ElasticStore;
 import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
 import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataService;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,20 +39,29 @@ public class IndexSwapService {
   }
 
   private RestTemplate calculateRestTemplate(ElasticsearchMetadata.Configuration configuration) {
-    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-    factory.setConnectTimeout(configuration.getConnectTimeout());
-    factory.setReadTimeout(configuration.getReadTimeout());
+    RequestConfig requestConfig = RequestConfig.custom()
+                                               .setResponseTimeout(Timeout.ofMilliseconds(configuration.getReadTimeout())) // setConnectionTimeout seems to be deprecated
+                                               .setConnectionRequestTimeout(Timeout.ofMilliseconds(configuration.getConnectTimeout()))
+                                               .build();
+
+    CloseableHttpClient httpClient = HttpClients.custom()
+                                                .setDefaultRequestConfig(requestConfig)
+                                                .build();
+
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 
     return new RestTemplate(factory);
   }
 
+  @Nullable
   public ElasticsearchMetadata.Index getIndexForAlias(@Nonnull String alias) {
     ElasticsearchMetadata elasticsearchMetadata = elasticsearchMetadataService.getElasticsearchMetadata(elasticStore);
     List<ElasticsearchMetadata.Index> indexes =
-            elasticsearchMetadata.getIndexes()
-                                 .stream()
-                                 .filter(index -> index.getAliases().contains(alias))
-                                 .collect(Collectors.toList());
+      elasticsearchMetadata.getIndexes()
+                           .stream()
+                           .filter(index -> index.getAliases()
+                                                 .contains(alias))
+                           .toList();
 
     if (indexes.size() > 1) {
       String indexNames = indexes.stream().map(ElasticsearchMetadata.Index::getName).collect(Collectors.joining(", "));

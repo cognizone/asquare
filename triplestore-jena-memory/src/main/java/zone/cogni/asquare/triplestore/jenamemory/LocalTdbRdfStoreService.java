@@ -1,25 +1,23 @@
 package zone.cogni.asquare.triplestore.jenamemory;
 
-
 import org.apache.jena.atlas.RuntimeIOException;
+import org.apache.jena.dboe.base.file.FileException;
+import org.apache.jena.dboe.base.file.Location;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryCancelledException;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.Syntax;
 import org.apache.jena.query.TxnType;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.system.Txn;
-import org.apache.jena.tdb.StoreConnection;
-import org.apache.jena.tdb.TDBException;
-import org.apache.jena.tdb.TDBFactory;
-import org.apache.jena.tdb.base.file.ChannelManager;
-import org.apache.jena.tdb.base.file.FileException;
-import org.apache.jena.tdb.base.file.Location;
+import org.apache.jena.tdb2.TDB2Factory;
+import org.apache.jena.tdb2.TDBException;
+import org.apache.jena.tdb2.sys.StoreConnection;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -83,7 +81,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       this.tdbLocation, this.firstResultTimeout, this.firstResultTimeUnit, this.overallTimeout, this.overallTimeUnit
     );
 
-    this.dataset = TDBFactory.createDataset(tdbLocationFolder.getAbsolutePath());
+    this.dataset = TDB2Factory.connectDataset(tdbLocationFolder.getAbsolutePath());
     initialize(initFolder);
     this.ready.set(true);
     log.info(".. .. Done creating TDB store - {}", tdbLocation);
@@ -298,17 +296,11 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   public void forceRelease() {
     log.warn("Trying to release forcefully the {} TDB all views ....", tdbLocation);
     close();
-    final Location location = Location.create(tdbLocation);
-    try{
-      StoreConnection.expel(location, true);
+    try {
+      StoreConnection.release(Location.create(tdbLocation));
     }
-    catch (final FileException | RuntimeIOException e) {
-      final String journalPath = StoreConnection.getExisting(location).getTransactionManager().getJournal().getFilename();
-      log.warn(
-        "... couldn't expel the {} StoreConnection, trying to release the transaction journal: {}",
-        tdbLocation, journalPath, e
-      );
-      ChannelManager.release(journalPath);
+    catch (FileException | RuntimeIOException e) {
+      log.error("Failed to close dataset for {}: {}", tdbLocation, e.getMessage(), e);
     }
     log.warn("{} TDB all connections are force released", tdbLocation);
   }
@@ -363,7 +355,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       causesMsg.append("        * init path is not a folder\n");
       isValid = false;
     }
-    if (!dataset.getDefaultModel().isEmpty()) {
+    if (!Txn.calculateRead(dataset, () -> dataset.getDefaultModel().isEmpty())) {
       causesMsg.append("        * store is not empty\n");
       isValid = false;
     }
@@ -381,25 +373,31 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
     return isValid;
   }
 
-  public QueryExecution createQueryExecution(final String query) {
-    return timeoutQueryExecution(QueryExecutionFactory.create(query, dataset));
+  public QueryExecution createQueryExecution(String query) {
+    QueryExecutionDatasetBuilder queryExecutionDatasetBuilder = QueryExecution.dataset(dataset)
+                                                                              .query(query);
+    return timeoutQueryExecution(queryExecutionDatasetBuilder);
   }
 
-  public QueryExecution createQueryExecution(final Query query) {
+  public QueryExecution createQueryExecution(Query query) {
     return createQueryExecution(query, null);
   }
 
-  public QueryExecution createQueryExecution(final Query query, final QuerySolutionMap bindings) {
-    final QueryExecution queryExecution = bindings == null || bindings.asMap().isEmpty()
-      ? QueryExecutionFactory.create(query, dataset)
-      : QueryExecutionFactory.create(query, dataset, bindings);
-
-    return timeoutQueryExecution(queryExecution);
+  public QueryExecution createQueryExecution(Query query, QuerySolutionMap bindings) {
+    QueryExecutionDatasetBuilder queryExecutionDatasetBuilder = QueryExecution.dataset(dataset)
+                                                                              .query(query);
+    if (bindings != null && !bindings.asMap()
+                                     .isEmpty()) {
+      queryExecutionDatasetBuilder.substitution(bindings);
+    }
+    return timeoutQueryExecution(queryExecutionDatasetBuilder);
   }
 
-  private QueryExecution timeoutQueryExecution(final QueryExecution queryExecution) {
-    queryExecution.setTimeout(firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
-    return queryExecution;
+  // Internal method to apply timeout and build the execution
+  private QueryExecution timeoutQueryExecution(QueryExecutionDatasetBuilder queryExecutionDatasetBuilder) {
+    return queryExecutionDatasetBuilder.initialTimeout(firstResultTimeout, firstResultTimeUnit)
+                                       .overallTimeout(overallTimeout, overallTimeUnit)
+                                       .build();
   }
 
   protected <T> T safeQuery(final Supplier<T> supplier, final QueryExecution queryExecution) {

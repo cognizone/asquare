@@ -7,7 +7,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.sparql.core.DatasetGraphFactory;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -59,8 +58,12 @@ public class JenaModelSparqlService implements SparqlService {
 
     private Dataset getDatasetForSelect() {
         if (simulateRelaxedVirtuosoSparqlSelect) {
-            Dataset relaxedDataset = DatasetFactory.wrap(DatasetGraphFactory.cloneStructure(dataset.asDatasetGraph()));
-            relaxedDataset.asDatasetGraph().setDefaultGraph(relaxedDataset.asDatasetGraph().getUnionGraph());
+            // Create a new in-memory dataset
+            Dataset relaxedDataset = DatasetFactory.create();
+            // Set default model to the union of all named graphs
+            relaxedDataset.setDefaultModel(dataset.getUnionModel());
+            // Copy named graphs from original
+            dataset.listNames().forEachRemaining(name -> relaxedDataset.addNamedModel(name, dataset.getNamedModel(name)));
             return relaxedDataset;
         }
         return dataset;
