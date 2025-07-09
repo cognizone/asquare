@@ -1,0 +1,74 @@
+[versions]
+apachePoiVersion = '5.4.1'
+cglibVersion = "3.3.0"
+commonsLang3Version = '3.17.0'
+commonsCodecVersion = '1.18.0'
+commonsCollectionsVersion = "4.5.0"
+commonsIoVersion = '2.19.0'
+commonsPool2Version = "2.12.1"
+elasticsearchVersion = '7.5.2'
+guavaVersion = '33.4.8-jre'
+httpclient5Version = "5.5"
+httpComponentsVersion = '4.5.14'
+jacksonVersion = "2.19.1"
+jakartaInjectVersion = "2.0.1"
+jenaVersion = '5.4.0'
+jodaTimeVersion = "2.14.0"
+jsonldJavaVersion= '0.13.2'
+junitVersion = "5.10.2"
+lombokVersion = "1.18.38"
+ognlVersion = "3.3.4"
+snakeyaml = "2.0"
+springBootVersion = '3.5.3'
+springSecurityVersion = '6.4.5'
+vavrVersion = "1.0.0-alpha-4"
+
+[libraries]
+cglib = { module = "cglib:cglib", version.ref = "cglibVersion" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3Version" }
+commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
+commons-collections = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollectionsVersion" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
+commons-pool2 = { module = "org.apache.commons:commons-pool2", version.ref = "commonsPool2Version" }
+elasticsearch = { module = "org.elasticsearch:elasticsearch", version.ref = "elasticsearchVersion" }
+elasticsearch-rest-client = { module = "org.elasticsearch.client:elasticsearch-rest-client", version.ref = "elasticsearchVersion" }
+elasticsearch-test = { module = "org.elasticsearch.test:framework", version.ref = "elasticsearchVersion" }
+guava = { module = "com.google.guava:guava", version.ref = "guavaVersion" }
+httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpComponentsVersion" }
+httpclient-fluent = { module = "org.apache.httpcomponents:fluent-hc", version.ref = "httpComponentsVersion" }
+httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpclient5Version" }
+jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInjectVersion" }
+jena-core = { module = "org.apache.jena:jena-core", version.ref = "jenaVersion" }
+jena-arq = { module = "org.apache.jena:jena-arq", version.ref = "jenaVersion" }
+jena-tdb2 = { module = "org.apache.jena:jena-tdb2", version.ref = "jenaVersion" }
+jena-shacl = { module = "org.apache.jena:jena-shacl", version.ref = "jenaVersion" }
+jena-rdfconnection = { module = "org.apache.jena:jena-rdfconnection", version.ref = "jenaVersion" }
+jena-fuseki-main = { module = "org.apache.jena:jena-fuseki-main", version.ref = "jenaVersion" }
+joda-time = { module = "joda-time:joda-time", version.ref = "jodaTimeVersion" }
+jsonld-java = { module = "com.github.jsonld-java:jsonld-java", version.ref = "jsonldJavaVersion" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
+ognl = { module = "ognl:ognl", version.ref = "ognlVersion" }
+poi = { module = "org.apache.poi:poi", version.ref = "apachePoiVersion" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoiVersion" }
+snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
+spring-boot-starter-aop = { module = "org.springframework.boot:spring-boot-starter-aop", version.ref = "springBootVersion" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBootVersion" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springBootVersion" }
+spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf", version.ref = "springBootVersion" }
+spring-boot-starter-json = { module = "org.springframework.boot:spring-boot-starter-json", version.ref = "springBootVersion" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "springBootVersion" }
+spring-security-core = { module = "org.springframework.security:spring-security-core", version.ref = "springSecurityVersion" }
+spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "springSecurityVersion" }
+vavr = { module = "io.vavr:vavr", version.ref = "vavrVersion" }
+
+[plugins]
+axion-release = { id = "pl.allegro.tech.build.axion-release", version = "1.18.18" }
+idea = { id = "idea" }
+spring-boot = { id = "org.springframework.boot", version.ref = "springBootVersion" }
+java = { id = "java" }
+maven-publish = { id = "maven-publish" }
+dependency-check = { id = "org.owasp.dependencycheck", version = "7.4.4" }
