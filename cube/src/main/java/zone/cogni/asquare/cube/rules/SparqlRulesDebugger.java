@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
  * Very useful for debugging delete/insert statements.
  * </p>
  */
-class SparqlRulesDebugger implements Runnable {
+public class SparqlRulesDebugger implements Runnable {
 
   private static final Logger log = LoggerFactory.getLogger(SparqlRulesDebugger.class);
 
