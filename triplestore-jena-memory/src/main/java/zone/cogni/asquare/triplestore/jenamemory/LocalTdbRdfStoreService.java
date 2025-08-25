@@ -363,7 +363,9 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       causesMsg.append("        * init path is not a folder\n");
       isValid = false;
     }
-    if (!dataset.getDefaultModel().isEmpty()) {
+
+    boolean isEmpty = Txn.calculateRead(this.dataset, () -> this.dataset.getDefaultModel().isEmpty());
+    if (!isEmpty) {
       causesMsg.append("        * store is not empty\n");
       isValid = false;
     }
