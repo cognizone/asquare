@@ -52,6 +52,7 @@ subprojects {
   apply plugin: "idea"
   apply plugin: "io.spring.dependency-management"
   apply plugin: 'maven-publish'
+  apply plugin: 'signing'
   apply plugin: 'project-report'
 
   repositories {
