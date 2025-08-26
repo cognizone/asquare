@@ -120,24 +120,57 @@ subprojects {
     useJUnitPlatform()
   }
 
-  task sourcesJar(type: Jar) {
-    description = 'Creates sources JAR.'
-    archiveClassifier = 'sources'
+//  task sourcesJar(type: Jar) {
+//    description = 'Creates sources JAR.'
+//    archiveClassifier = 'sources'
+//
+//    from sourceSets.main.allSource
+//  }
 
-    from sourceSets.main.allSource
+  java {
+    withJavadocJar()
+    withSourcesJar()
   }
 
   publishing {
     publications {
       mavenJava(MavenPublication) {
         from components.java
-        artifact sourcesJar
+//        artifact sourcesJar
         versionMapping {
           usage('java-api') {
             fromResolutionOf('runtimeClasspath')
           }
           usage('java-runtime') {
             fromResolutionResult()
+          }
+        }
+        pom {
+          name = "${project.name}"
+          packaging = 'jar'
+          // optionally artifactId can be defined here
+          description = 'Cognizone asquare'
+          url = '<https://github.com/cognizone/asquare>'
+
+          scm {
+            connection = 'scm:git:git@<https://github.com/cognizone/asquare.git>'
+            developerConnection = 'scm:git:git@github.com:cognizone/asquare.git'
+            url = '<https://github.com/cognizone/asquare>'
+          }
+
+          licenses {
+            license {
+              name = 'The Apache License, Version 2.0'
+              url = '<http://www.apache.org/licenses/LICENSE-2.0.txt>'
+            }
+          }
+
+          developers {
+            developer {
+              id = 'cognizone'
+              name = 'Cognizone'
+              email = 'cognizone-lib-dev@cogni.zone'
+            }
           }
         }
       }
