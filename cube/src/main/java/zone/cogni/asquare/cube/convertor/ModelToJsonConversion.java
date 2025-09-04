@@ -33,7 +33,9 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -562,6 +564,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         addToJsonAsSingle(attributeNode, "xsd:date", getTextNode(literalToDate(literal)));
         return;
       }
+      if (XSDDatatype.XSDtime.equals(datatype)) {
+        addToJsonAsSingle(attributeNode, "xsd:time", getTextNode(literalToTime(literal)));
+        return;
+      }
       if (XSDDatatype.XSDdateTime.equals(datatype)) {
         addToJsonAsSingle(attributeNode, "xsd:dateTime", getTextNode(literalToDateTime(literal)));
         return;
@@ -631,6 +637,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       }
       if (XSDDatatype.XSDdate.equals(datatype)) {
         addToArrayNode(attributeNode, "xsd:date", getTextNode(literalToDate(literal)));
+        return;
+      }
+      if (XSDDatatype.XSDtime.equals(datatype)) {
+        addToArrayNode(attributeNode, "xsd:time", getTextNode(literalToTime(literal)));
         return;
       }
       if (XSDDatatype.XSDdateTime.equals(datatype)) {
@@ -803,6 +813,10 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
   private String literalToDate(Literal literal) {
     return LocalDate.parse(literal.getLexicalForm()).toString();
+  }
+
+  private String literalToTime(Literal literal) {
+    return LocalTime.parse(literal.getLexicalForm()).format(DateTimeFormatter.ISO_TIME);
   }
 
   /**
