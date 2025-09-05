@@ -273,11 +273,11 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
 
   protected String literalToTime(Literal literal) {
     try {
-      LocalTime localTime = LocalTime.parse(literal.getLexicalForm());
+      LocalTime localTime = LocalTime.parse(literal.getLexicalForm(), DateTimeFormatter.ISO_LOCAL_TIME);
       return localTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
     }
     catch (Exception exception) {
-      throw new RuntimeException("Failed to convert literal to Date: " + literal, exception);
+      throw new RuntimeException("Failed to convert literal to Time: " + literal, exception);
     }
   }
 

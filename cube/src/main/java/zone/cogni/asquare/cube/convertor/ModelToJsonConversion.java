@@ -816,7 +816,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
   }
 
   private String literalToTime(Literal literal) {
-    return LocalTime.parse(literal.getLexicalForm()).format(DateTimeFormatter.ISO_TIME);
+    return LocalTime.parse(literal.getLexicalForm()).format(DateTimeFormatter.ISO_LOCAL_TIME);
   }
 
   /**
