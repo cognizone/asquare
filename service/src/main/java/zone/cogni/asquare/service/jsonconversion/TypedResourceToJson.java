@@ -26,6 +26,7 @@ import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -84,8 +85,8 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
 
   private void setSingleData() {
     ObjectNode data = jsonRoot.putObject("data");
-    List<TypedResource> included =  handleTypedResource(data, typedResource)
-        .collect(Collectors.toList());
+    List<TypedResource> included = handleTypedResource(data, typedResource)
+            .collect(Collectors.toList());
 
     handleDeeperIncluded(included);
   }
@@ -94,8 +95,8 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     ArrayNode data = jsonRoot.putArray("data");
 
     List<TypedResource> included = this.typedResources.stream()
-        .flatMap(resource -> handleTypedResource(data.addObject(), resource))
-        .collect(Collectors.toList());
+                                                      .flatMap(resource -> handleTypedResource(data.addObject(), resource))
+                                                      .collect(Collectors.toList());
 
     handleDeeperIncluded(included);
   }
@@ -103,9 +104,9 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
   private void handleDeeperIncluded(List<TypedResource> included) {
     while (!included.isEmpty()) {
       included = included.stream()
-          .filter(this::isUnexploredResource)
-          .flatMap(resource -> handleTypedResource(getOrCreateArray(jsonRoot, "included").addObject(), resource))
-          .collect(Collectors.toList());
+                         .filter(this::isUnexploredResource)
+                         .flatMap(resource -> handleTypedResource(getOrCreateArray(jsonRoot, "included").addObject(), resource))
+                         .collect(Collectors.toList());
     }
   }
 
@@ -118,13 +119,13 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     ApplicationProfile.Type type = typedResource.getType();
 
     Consumer<String> typeAdder = type.getSuperClassIds().size() > 1
-        ? s -> addToJsonAsList(object, "type", s)
-        : s -> addToJsonAsSingle(object, "type", s);
+                                 ? s -> addToJsonAsList(object, "type", s)
+                                 : s -> addToJsonAsSingle(object, "type", s);
 
     type.getSuperClassIds().forEach(typeAdder);
 
     return typedResource.getType().getAttributes().values().stream()
-        .flatMap(attribute -> handleAttribute(object, typedResource, attribute));
+                        .flatMap(attribute -> handleAttribute(object, typedResource, attribute));
   }
 
   private Stream<TypedResource> handleAttribute(ObjectNode object, TypedResource typedResource, ApplicationProfile.Attribute attribute) {
@@ -193,6 +194,7 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     String shortTypeUri = prefixCcService.getShortenedUri(typeUri);
 
     if (XSDDatatype.XSDdate.getURI().equals(typeUri)) map.put(shortTypeUri, literalToDate(value.getLiteral()));
+    else if (XSDDatatype.XSDtime.getURI().equals(typeUri)) map.put(shortTypeUri, literalToTime(value.getLiteral()));
     else if (XSDDatatype.XSDdateTime.getURI().equals(typeUri)) map.put(shortTypeUri, literalToDateTime(value.getLiteral()));
   }
 
@@ -202,7 +204,7 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     if (value.isLiteral()) {
       Literal literal = value.getLiteral();
       String shortTypeUri = Try.of(() -> prefixCcService.getShortenedUri(literal.getDatatypeURI()))
-        .recover(IllegalStateException.class, literal.getDatatypeURI()).get();
+                               .recover(IllegalStateException.class, literal.getDatatypeURI()).get();
 
       Object litValue = literal.getValue();
       if (litValue instanceof BaseDatatype.TypedValue) litValue = ((BaseDatatype.TypedValue) litValue).lexicalValue;
@@ -231,7 +233,7 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
       if (value.isLiteral()) {
         RDFDatatype datatype = value.getLiteral().getDatatype();
         if (RDFLangString.rdfLangString.equals(datatype)) return RdfValueCase.Language;
-        if (XSDDatatype.XSDdate.equals(datatype) || XSDDatatype.XSDdateTime.equals(datatype)) return RdfValueCase.Date;
+        if (XSDDatatype.XSDdate.equals(datatype) || XSDDatatype.XSDtime.equals(datatype) || XSDDatatype.XSDdateTime.equals(datatype)) return RdfValueCase.Date;
       }
       else if (value.isResource()) {
         return RdfValueCase.Resource;
@@ -266,6 +268,16 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     }
     catch (Exception exception) {
       throw new RuntimeException("Failed to convert literal to Date: " + literal, exception);
+    }
+  }
+
+  protected String literalToTime(Literal literal) {
+    try {
+      LocalTime localTime = LocalTime.parse(literal.getLexicalForm(), DateTimeFormatter.ISO_LOCAL_TIME);
+      return localTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
+    }
+    catch (Exception exception) {
+      throw new RuntimeException("Failed to convert literal to Time: " + literal, exception);
     }
   }
 
