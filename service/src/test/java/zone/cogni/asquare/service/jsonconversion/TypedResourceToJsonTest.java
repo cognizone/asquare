@@ -19,10 +19,26 @@ class TypedResourceToJsonTest {
   }
 
   @Test
+  public void workingToTime() {
+    String time1 = typedResourceToJson.literalToTime(getTimeLiteral("12:31"));
+    Assertions.assertEquals(time1, "12:31:00");
+    String time2 = typedResourceToJson.literalToTime(getTimeLiteral("12:34:56"));
+    Assertions.assertEquals(time2, "12:34:56");
+  }
+
+  @Test
   public void wrongDates() {
     Assertions.assertThrows(RuntimeException.class, this::xxInDateShouldFail);
     Assertions.assertThrows(RuntimeException.class, this::wrongDayShouldFail);
     Assertions.assertThrows(RuntimeException.class, this::withTimeShouldFail);
+  }
+
+  @Test
+  public void wrongTimes() {
+    Assertions.assertThrows(RuntimeException.class, () -> wrongTimeShouldFail("12:xx:00"));
+    Assertions.assertThrows(RuntimeException.class, () -> wrongTimeShouldFail("T12:34:00"));
+    Assertions.assertThrows(RuntimeException.class, () -> wrongTimeShouldFail("12:44:11+02:00"));
+    Assertions.assertThrows(RuntimeException.class, () -> wrongTimeShouldFail("12:44:11Z"));
   }
 
   private void xxInDateShouldFail() {
@@ -37,8 +53,15 @@ class TypedResourceToJsonTest {
     typedResourceToJson.literalToDate(getDateLiteral("1894-06-01T12:30"));
   }
 
+  private void wrongTimeShouldFail(String time) {
+    typedResourceToJson.literalToTime(getTimeLiteral(time));
+  }
 
   private Literal getDateLiteral(String value) {
     return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDdate);
+  }
+
+  private Literal getTimeLiteral(String value) {
+    return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDtime);
   }
 }
