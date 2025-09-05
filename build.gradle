@@ -185,16 +185,6 @@ subprojects {
       }
     }
     repositories {
-      if (project.hasProperty("publishToCognizoneArchiva")) {
-        maven {
-          credentials {
-            username = System.properties['archiva.username']
-            password = System.properties['archiva.password']
-          }
-          name = 'public'
-          url = System.properties['archiva.url']
-        }
-      }
       if (project.hasProperty("publishToCognizoneNexus")) {
         maven {
           credentials {
@@ -223,13 +213,11 @@ subprojects {
     }
   }
 
-
   signing {
-    if (project.hasProperty("publishToMavenCentral")) {
+    if (project.hasProperty("signArtifacts")) {
       sign publishing.publications.mavenJava
     }
   }
-
 
   tasks.withType(Javadoc) {
     failOnError false
