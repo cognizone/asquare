@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.rules;
 
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -8,7 +9,6 @@ import zone.cogni.asquare.cube.spel.NamedTemplate;
 import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
-import javax.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.Comparator;
 import java.util.HashMap;
