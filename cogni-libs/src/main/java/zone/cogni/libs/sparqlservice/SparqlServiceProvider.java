@@ -1,5 +1,6 @@
 package zone.cogni.libs.sparqlservice;
 
+import jakarta.inject.Inject;
 import org.springframework.core.env.Environment;
 import zone.cogni.libs.core.CognizoneException;
 import zone.cogni.libs.sparqlservice.impl.Config;
@@ -10,8 +11,6 @@ import zone.cogni.libs.sparqlservice.impl.GraphDBSparqlService;
 import zone.cogni.libs.sparqlservice.impl.JenaModelSparqlService;
 import zone.cogni.libs.sparqlservice.impl.StardogSparqlService;
 import zone.cogni.libs.sparqlservice.impl.VirtuosoSparqlService;
-
-import javax.inject.Inject;
 
 public class SparqlServiceProvider {
   private final String configPrefix;

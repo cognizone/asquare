@@ -43,7 +43,7 @@ public class RdfParserUtils {
 
   private static RDFNode parseRdfNode(Model model, Node node) {
     if (node.isURI()) return model.createResource(node.getURI());
-    if (node.isBlank()) return model.createResource(new AnonId(node.getBlankNodeId()));
+    if (node.isBlank()) return model.createResource(new AnonId(node.getBlankNodeLabel()));
     if (StringUtils.isNotBlank(node.getLiteralLanguage())) return model.createLiteral(node.getLiteralLexicalForm(), node.getLiteralLanguage());
     if (StringUtils.isNotBlank(node.getLiteralDatatypeURI())) return model.createTypedLiteral(node.getLiteralLexicalForm(), node.getLiteralDatatype());
     return model.createLiteral(node.getLiteralLexicalForm());
@@ -63,7 +63,7 @@ public class RdfParserUtils {
       RDFParser.create().lang(RDFLanguages.TTL).fromString("<http://www.w3.org/2000/01/rdf-schema#Resource> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>" + ttlTerm + " .").parse(stream);
     }
     catch (Exception e) {
-      Preconditions.checkArgument(false, "Failed to parse rdf term from serialized ttl form '" + ttlTerm + "': " + e.getMessage());
+      throw new IllegalArgumentException("Failed to parse RDF term from serialized ttl form '" + ttlTerm + "': " + e.getMessage());
     }
     return stream.getCollected().stream().findFirst().get().getObject();
   }

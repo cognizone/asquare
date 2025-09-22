@@ -1,11 +1,11 @@
 package zone.cogni.asquare.cube.index;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**

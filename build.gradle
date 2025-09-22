@@ -1,31 +1,13 @@
 import pl.allegro.tech.build.axion.release.domain.properties.TagProperties
 import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
-buildscript {
-  ext {
-    apachePoiVersion = '5.2.2'
-    commonsLang3Version = '3.11'
-    commonsCodecVersion = '1.15'
-    commonsIoVersion = '2.11.0'
-    elasticsearchVersion = '7.5.2'
-    guavaVersion = '30.0-jre'
-    httpComponentsVersion = '4.5.13'
-    jenaVersion = '4.10.0'
-    springBootVersion = '2.7.18'
-    springSecurityVersion = '5.8.9'
-    springSecuritySaml2CoreVersion = '1.0.10.RELEASE'
-    set('snakeyaml.version','2.0')
-  }
-}
-
 plugins {
-  id "pl.allegro.tech.build.axion-release" version "1.13.3"
-  id "idea"
-  id "io.spring.dependency-management" version "1.0.11.RELEASE"
-  id "org.springframework.boot" version "${springBootVersion}" apply false
-  id "java"
-  id "maven-publish"
-  id "org.owasp.dependencycheck" version "7.4.4" apply false
+  alias(libs.plugins.axion.release)
+  alias(libs.plugins.idea)
+  alias(libs.plugins.spring.boot) apply false
+  alias(libs.plugins.java)
+  alias(libs.plugins.maven.publish)
+  alias(libs.plugins.dependency.check) apply false
 }
 
 repositories {
@@ -40,7 +22,7 @@ scmVersion {
             'release/.*': 'release-v',
             'hotfix/.*' : 'hotfix-v'
     ]
-    initialVersion = {
+    initialVersion {
       final TagProperties rules,
       final ScmPosition position -> "0.5.0-fixed"
     }
@@ -69,59 +51,17 @@ subprojects {
     maven { url 'https://build.shibboleth.net/nexus/content/repositories/releases/' }
   }
 
-  dependencyManagement {
-    imports {
-      mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
-    }
-    dependencies {
-      // libs
-      dependency("com.google.guava:guava:$guavaVersion")
-      dependency("commons-codec:commons-codec:$commonsCodecVersion")
-      dependency("commons-io:commons-io:$commonsIoVersion")
-      dependency('io.vavr:vavr:0.9.2')
-      dependency('javax.inject:javax.inject:1')
-      dependency('joda-time:joda-time:2.9.9')
-      dependency('org.apache.commons:commons-collections4:4.4')
-      dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
-      dependency("org.apache.httpcomponents:fluent-hc:$httpComponentsVersion")
-      dependency("org.apache.httpcomponents:httpclient:$httpComponentsVersion")
-      dependency("org.apache.jena:jena-arq:$jenaVersion")
-      dependency("org.apache.jena:jena-core:$jenaVersion")
-      dependency("org.apache.jena:jena-rdfconnection:$jenaVersion")
-      dependency("org.apache.jena:jena-shacl:$jenaVersion")
-      dependency("org.apache.jena:jena-tdb:$jenaVersion")
-      dependency("org.apache.jena:jena-tdb2:$jenaVersion")
-      dependency("org.apache.poi:poi:$apachePoiVersion")
-      dependency("org.apache.poi:poi-ooxml:$apachePoiVersion")
-      dependency("org.elasticsearch:elasticsearch:$elasticsearchVersion")
-      dependency('org.apache.commons:commons-pool2:2.11.1')
-      dependency('cglib:cglib:3.3.0')
-
-      // spring
-      dependency("org.springframework.boot:spring-boot-starter:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-json:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
-      dependency("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-      dependency("org.springframework.security:spring-security-core:$springSecurityVersion")
-      dependency("org.springframework.security.extensions:spring-security-saml2-core:$springSecuritySaml2CoreVersion")
-
-      // test
-      dependency("ognl:ognl:3.1.12") // seems thymeleaf needs this library
-      dependency("org.elasticsearch.test:framework:$elasticsearchVersion")
-      dependency("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-      dependency("org.apache.jena:jena-fuseki-main:$jenaVersion")
-    }
-  }
-
   dependencies {
-    annotationProcessor 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    testImplementation platform(libs.junit.bom)
+    testImplementation libs.junit.api
+    testRuntimeOnly libs.junit.engine
   }
 
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -263,21 +203,21 @@ project('access') {
     api project(':triplestore-jena-memory')
 
     // libs
-    api('com.google.guava:guava')
-    api('commons-codec:commons-codec')
-    api('commons-io:commons-io')
-    api('io.vavr:vavr')
-    api('org.apache.commons:commons-lang3')
-    api('org.apache.httpcomponents:httpclient')
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-shacl')
+    api libs.guava
+    api libs.commons.codec
+    api libs.commons.io
+    api libs.vavr
+    api libs.commons.lang3
+    api libs.httpclient
+    api libs.jena.arq
+    api libs.jena.shacl
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-aop')
-    api('org.springframework.boot:spring-boot-starter-web')
+    api libs.spring.boot.starter.aop
+    api libs.spring.boot.starter.web
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
@@ -287,16 +227,16 @@ project('action-logger') {
     api project(':service')
 
     // libs
-    api('org.apache.commons:commons-collections4')
-    api('org.apache.commons:commons-lang3')
+    api libs.commons.collections
+    api libs.commons.lang3
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-aop')
-    api('org.springframework.boot:spring-boot-starter-json')
-    api('org.springframework.boot:spring-boot-starter-web')
+    api libs.spring.boot.starter.aop
+    api libs.spring.boot.starter.json
+    api libs.spring.boot.starter.web
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
@@ -306,18 +246,18 @@ project('application-profile') {
     api project(':cogni-core')
 
     // libs
-    api('com.google.guava:guava')
-    api('commons-io:commons-io')
-    api('io.vavr:vavr')
-    api('org.apache.jena:jena-core')
+    api libs.guava
+    api libs.commons.io
+    api libs.vavr
+    api libs.jena.core
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-json')
-    api('org.springframework.boot:spring-boot-starter-thymeleaf')
+    api libs.spring.boot.starter.json
+    api libs.spring.boot.starter.thymeleaf
 
     // test
-    testImplementation('ognl:ognl')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.ognl
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
@@ -329,16 +269,16 @@ project('application-profile-owl') {
     api project(':application-profile')
 
     // libs
-    api('com.google.guava:guava')
-    api('io.vavr:vavr')
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-core')
+    api libs.guava
+    api libs.vavr
+    api libs.jena.arq
+    api libs.jena.core
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
+    api libs.spring.boot.starter
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
@@ -350,13 +290,13 @@ project('application-profile-shacl') {
     api project(':cogni-sem')
 
     // libs
-    api('com.google.guava:guava')
-    api('commons-io:commons-io')
-    api('io.vavr:vavr')
-    api('org.apache.jena:jena-core')
+    api libs.guava
+    api libs.commons.io
+    api libs.vavr
+    api libs.jena.core
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
+    api libs.spring.boot.starter
   }
 }
 
@@ -367,21 +307,21 @@ project('asquareroot') {
     api project(':access')
     api project(':cogni-libs')
     api project(':cogni-sem')
-    api project(':security')
+    // api project(':security')
     api project(':service')
     api project(':triplestore')
 
     // libs
-    api('org.apache.jena:jena-arq')
-    api('org.elasticsearch:elasticsearch')
-    api("org.elasticsearch.test:framework")
+    api libs.jena.arq
+    api libs.elasticsearch
+    api libs.elasticsearch.test
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
-    api('org.springframework.boot:spring-boot-starter-security')
-    api('org.springframework.boot:spring-boot-starter-test')
-    api('org.springframework.boot:spring-boot-starter-web')
-    api('org.springframework.security:spring-security-test')
+    api libs.spring.boot.starter
+    api libs.spring.boot.starter.security
+    api libs.spring.boot.starter.test
+    api libs.spring.boot.starter.web
+    api libs.spring.security.test
   }
 }
 
@@ -400,11 +340,11 @@ project('async-indexing') {
     api project(':triplestore-jena-memory')
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
-    api('org.springframework.boot:spring-boot-starter-aop')
+    api libs.spring.boot.starter
+    api libs.spring.boot.starter.aop
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
@@ -412,39 +352,39 @@ project('async-indexing') {
 project('cogni-core') {
   dependencies {
     // libs
-    api('com.google.guava:guava')
-    api('commons-io:commons-io')
-    api('joda-time:joda-time')
-    api('org.apache.commons:commons-lang3')
+    api libs.guava
+    api libs.commons.io
+    api libs.joda.time
+    api libs.commons.lang3
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-json')
+    api libs.spring.boot.starter.json
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
 project('cogni-libs') {
   dependencies {
     // libs
-    api('com.google.guava:guava')
-    api('commons-io:commons-io')
-    api('javax.inject:javax.inject')
-    api('joda-time:joda-time')
-    api('org.apache.commons:commons-lang3')
-    api('org.apache.httpcomponents:fluent-hc')
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-core')
-    api('org.apache.jena:jena-rdfconnection')
-    api('io.vavr:vavr')
+    api libs.guava
+    api libs.commons.io
+    api libs.jakarta.inject
+    api libs.joda.time
+    api libs.commons.lang3
+    api libs.httpclient.fluent
+    api libs.jena.arq
+    api libs.jena.core
+    api libs.jena.rdfconnection
+    api libs.vavr
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-web')
+    api libs.spring.boot.starter.web
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation("org.apache.jena:jena-fuseki-main")
+    testImplementation libs.spring.boot.starter.test
+    testImplementation libs.jena.fuseki.main
   }
 }
 
@@ -454,15 +394,15 @@ project('cogni-sem') {
     api project(':cogni-core')
 
     // libs
-    api('com.google.guava:guava')
-    api('org.apache.jena:jena-core')
-    api('org.apache.jena:jena-arq')
+    api libs.guava
+    api libs.jena.core
+    api libs.jena.arq
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
+    api libs.spring.boot.starter
 
     // TESTING
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
     testImplementation project(':cogni-libs')
   }
 }
@@ -491,23 +431,25 @@ project('cube') {
     api project(':elastic-service')
     api project(':triplestore')
     api project(':triplestore-jena-memory')
-
     // libs
-    api('com.google.guava:guava')
-    api('io.vavr:vavr')
-    api('joda-time:joda-time')
-    api('org.apache.commons:commons-collections4')
-    api('org.apache.commons:commons-lang3')
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-core')
-    api('org.apache.jena:jena-shacl')
+    api libs.guava
+    api libs.vavr
+    api libs.joda.time
+    api libs.commons.collections
+    api libs.commons.lang3
+    api libs.jena.arq
+    api libs.jena.core
+    api libs.jena.shacl
+   // TODO api libs.jackson.databind
 
     // spring
-    implementation("org.springframework.security:spring-security-core")
+    implementation libs.spring.security.core
 
     // test
     testImplementation project(':cogni-libs')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
+    testImplementation libs.jsonld.java
+//    testImplementation libs.jackson.databind
   }
 }
 
@@ -518,7 +460,7 @@ project('elastic-components') {
     api project(':service')
 
     // libs
-    api('org.elasticsearch:elasticsearch')
+    api libs.elasticsearch
   }
 }
 
@@ -527,37 +469,39 @@ project('elastic-service') {
     // projects
     api project(':cogni-core')
 
-    // libs
-    api('org.apache.commons:commons-collections4')
-    api('org.apache.commons:commons-lang3')
+   // libs
+    api libs.commons.collections
+    api libs.commons.lang3
 
-    // spring
-    api('org.springframework.boot:spring-boot-starter-json')
+   // spring
+    api libs.spring.boot.starter.json
+    api libs.httpclient5
   }
 }
 
 
 // IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
 project('elasticproxy') {
-  dependencyManagement {
+/*  dependencyManagement {
     dependencies {
       dependency('org.elasticsearch.client:elasticsearch-rest-client:6.8.10')
     }
-  }
+  }*/
 
   dependencies {
     // libs
-    api('commons-io:commons-io')
-    api('org.apache.httpcomponents:httpclient')
-    api('org.elasticsearch.client:elasticsearch-rest-client')
+    api libs.commons.io
+    api libs.httpclient
+    api libs.elasticsearch
+    api libs.elasticsearch.rest.client
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-thymeleaf')
-    api('org.springframework.boot:spring-boot-starter-web')
+    api libs.spring.boot.starter.thymeleaf
+    api libs.spring.boot.starter.web
   }
 }
 
-project('security') {
+/*project('security') {
   dependencies {
     // projects
     api project(':service')
@@ -574,11 +518,12 @@ project('security') {
     api('org.springframework.boot:spring-boot-starter-json')
     api('org.springframework.boot:spring-boot-starter-security')
     api('org.springframework.boot:spring-boot-starter-web')
-    api("org.springframework.security.extensions:spring-security-saml2-core")
+    api('org.springframework.boot:spring-boot-starter-security')
+    api('org.springframework.security:spring-security-saml2-service-provider')
   }
-}
+}*/
 
-project('security2') {
+/*project('security2') {
   dependencies {
     // projects
     api project(':cogni-core')
@@ -592,7 +537,7 @@ project('security2') {
     api('org.springframework.boot:spring-boot-starter-security')
     api('org.springframework.security:spring-security-saml2-service-provider')
   }
-}
+}*/
 
 project('service') {
   dependencies {
@@ -607,29 +552,29 @@ project('service') {
     api project(':triplestore-jena-memory')
 
     // libs
-    api('com.google.guava:guava')
-    api('commons-io:commons-io')
-    api('io.vavr:vavr')
-    api('joda-time:joda-time')
-    api('org.apache.commons:commons-collections4')
-    api('org.apache.commons:commons-lang3')
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-core')
-    api('org.apache.poi:poi')
-    api('org.apache.poi:poi-ooxml')
+    api libs.guava
+    api libs.commons.io
+    api libs.vavr
+    api libs.joda.time
+    api libs.commons.collections
+    api libs.commons.lang3
+    api libs.jena.arq
+    api libs.jena.core
+    api libs.poi
+    api libs.poi.ooxml
 
     // spring
-    api('org.springframework.boot:spring-boot-starter-json')
+    api libs.spring.boot.starter.json
 
     // test
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation libs.spring.boot.starter.test
   }
 }
 
 project('transactional') {
   dependencies {
     // spring
-    api('org.springframework.boot:spring-boot-starter-aop')
+    api libs.spring.boot.starter.aop
   }
 }
 
@@ -639,7 +584,7 @@ project('triplestore') {
     api project(':cogni-sem')
 
     // libs
-    api('org.apache.jena:jena-arq')
+    api libs.jena.arq
   }
 }
 
@@ -651,10 +596,10 @@ project('triplestore-jena-memory') {
     api project(':triplestore')
 
     // libs
-    api('org.apache.jena:jena-tdb')
+    api libs.jena.tdb2
 
     // TESTING
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation libs.spring.boot.starter.test
   }
 
   test {
@@ -672,16 +617,15 @@ project('triplestore-tdb2') {
     api project(':transactional')
 
     // libs
-    api('org.apache.jena:jena-arq')
-    api('org.apache.jena:jena-tdb2')
+    api libs.jena.arq
+    api libs.jena.tdb2
 
     // spring
-    api('org.springframework.boot:spring-boot-starter')
+    api libs.spring.boot.starter
 
     // test
-    testImplementation('io.vavr:vavr')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-  }
+    testImplementation libs.vavr
+    testImplementation libs.spring.boot.starter.test  }
 }
 
 project('triplestore-pool-api') {
@@ -690,7 +634,7 @@ project('triplestore-pool-api') {
     compileOnly project(':triplestore')
 
     // libs
-    compileOnly('org.apache.commons:commons-pool2')
+    compileOnly libs.commons.pool2
   }
 }
 
@@ -701,11 +645,11 @@ project('triplestore-tdb-pool') {
     api project(':triplestore-jena-memory')
 
     // libs
-    api('org.apache.commons:commons-pool2')
-    api('cglib:cglib')
+    api libs.commons.pool2
+    api libs.cglib
 
     // TESTING
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation libs.spring.boot.starter.test
   }
 
   test {

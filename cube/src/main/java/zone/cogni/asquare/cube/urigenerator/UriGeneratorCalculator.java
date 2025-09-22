@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.urigenerator;
 
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -18,7 +19,6 @@ import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
-import javax.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;

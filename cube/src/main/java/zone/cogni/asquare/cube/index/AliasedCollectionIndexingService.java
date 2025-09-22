@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.index;
 
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -14,7 +15,6 @@ import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataServic
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;

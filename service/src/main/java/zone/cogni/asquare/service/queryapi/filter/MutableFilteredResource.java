@@ -1,12 +1,12 @@
 package zone.cogni.asquare.service.queryapi.filter;
 
+import jakarta.annotation.Nonnull;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.AttributeConversion;
 import zone.cogni.asquare.edit.MutableResource;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 

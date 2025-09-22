@@ -1,6 +1,6 @@
 package zone.cogni.actionlogger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class ServiceWithLoggers2 {
 

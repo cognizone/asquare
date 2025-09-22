@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -33,6 +37,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -77,7 +82,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
       restTemplate.delete(path);
     }
     catch (ElasticClientError e) {
-      if (e.getRawStatusCode() == 404) {
+      if (e.getStatusCode().is4xxClientError()) {
         log.info("Tried to delete index '{}', but it didn't exist", indexName);
         return;
       }
@@ -179,12 +184,16 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   }
 
   private ClientHttpRequestFactory clientHttpRequestFactory(int readTimeout, int connectTimeout) {
-    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    RequestConfig requestConfig = RequestConfig.custom()
+                                               .setResponseTimeout(Timeout.ofMilliseconds(readTimeout))
+                                               .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectTimeout))
+                                               .build();
 
-    factory.setReadTimeout(readTimeout);
-    factory.setConnectTimeout(connectTimeout);
+    CloseableHttpClient httpClient = HttpClients.custom()
+                                                .setDefaultRequestConfig(requestConfig)
+                                                .build();
 
-    return factory;
+    return new HttpComponentsClientHttpRequestFactory(httpClient);
   }
 
   private URI createUri(String indexName, String type, String id, Params params) {
@@ -228,17 +237,26 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    protected void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException {
+    public void handleError(ClientHttpResponse response) throws IOException {
+      int statusValue = response.getStatusCode()
+                                .value();
+      HttpStatus statusCode = HttpStatus.resolve(statusValue);
+      if (statusCode == null) {
+        throw new UnknownHttpStatusCodeException(statusValue, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
+      }
+
       switch (statusCode.series()) {
         case CLIENT_ERROR:
           throw new ElasticClientError(statusCode, response.getStatusText(),
-                                       response.getHeaders(), getResponseBody(response), getCharset(response));
+            response.getHeaders(), getResponseBody(response), getCharset(response));
+
         case SERVER_ERROR:
           throw new HttpServerErrorException(statusCode, response.getStatusText(),
-                                             response.getHeaders(), getResponseBody(response), getCharset(response));
+            response.getHeaders(), getResponseBody(response), getCharset(response));
+
         default:
           throw new UnknownHttpStatusCodeException(statusCode.value(), response.getStatusText(),
-                                                   response.getHeaders(), getResponseBody(response), getCharset(response));
+            response.getHeaders(), getResponseBody(response), getCharset(response));
       }
     }
   }
@@ -263,7 +281,6 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
     public String getMessage() {
       return String.join(System.getProperty("line.separator"), super.getMessage(), getResponseAsString());
     }
-
 
   }
 }

@@ -1,9 +1,9 @@
 package zone.cogni.libs.core.utils;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.joda.time.format.ISODateTimeFormat;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.text.ParseException;

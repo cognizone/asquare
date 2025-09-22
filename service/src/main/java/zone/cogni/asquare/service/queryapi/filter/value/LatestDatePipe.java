@@ -2,6 +2,7 @@ package zone.cogni.asquare.service.queryapi.filter.value;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import org.joda.time.DateTime;
 import zone.cogni.asquare.access.ApplicationView.AttributeMatcher;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile.Attribute;
@@ -9,7 +10,6 @@ import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.queryapi.filter.AbstractDepthFilterPipe;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;

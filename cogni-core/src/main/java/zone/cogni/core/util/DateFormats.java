@@ -1,11 +1,11 @@
 package zone.cogni.core.util;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.text.ParseException;

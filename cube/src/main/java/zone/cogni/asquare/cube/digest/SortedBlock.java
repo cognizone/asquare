@@ -1,5 +1,6 @@
 package zone.cogni.asquare.cube.digest;
 
+import jakarta.annotation.Nonnull;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +9,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
