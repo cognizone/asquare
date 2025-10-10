@@ -108,14 +108,22 @@ public class ElasticsearchAccessService implements ElasticAccessService {
 
   @Override
   public List<? extends TypedResource> findAll(ApplicationProfile.Type type) {
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-            .query(QueryBuilders.termQuery("data.type.keyword", type.getClassId()))
-            .fetchSource(true);
-
-    ObjectNode searchRequestBody = toObjectNode(searchSourceBuilder);
+    ObjectNode searchRequestBody = buildFindAllQuery(type.getClassId());
     ObjectNode searchResponseBody = elasticStore.search(indexName, searchRequestBody);
 
     return getTypedResourcesFrom(searchResponseBody);
+  }
+
+  /**
+   * Builds the Elasticsearch query for finding all resources of a specific type.
+   * Package-private for testing.
+   */
+  ObjectNode buildFindAllQuery(String typeClassId) {
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+            .query(QueryBuilders.termQuery("data.type.keyword", typeClassId))
+            .fetchSource(true);
+
+    return toObjectNode(searchSourceBuilder);
   }
 
   private List<? extends TypedResource> getTypedResourcesFrom(ObjectNode searchResponseBody) {
