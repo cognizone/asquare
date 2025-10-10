@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -126,16 +124,6 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
                          .withApplicationView(new ApplicationView(this, applicationProfile))
                          .withJsonRoot(jsonRoot)
                          .get();
-  }
-
-
-  private ObjectNode toObjectNode(SearchSourceBuilder searchSourceBuilder) {
-    try {
-      return (ObjectNode) objectMapper.readTree(searchSourceBuilder.toString());
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public ObjectNode getRawDocument(String id) {

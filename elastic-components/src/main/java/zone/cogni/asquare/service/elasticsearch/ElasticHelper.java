@@ -3,10 +3,6 @@ package zone.cogni.asquare.service.elasticsearch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-
-import java.io.IOException;
 
 public enum ElasticHelper {
   ;
@@ -35,14 +31,21 @@ public enum ElasticHelper {
 
   @Nonnull
   public static ObjectNode buildFindAllQuery(@Nonnull String typeClassId) {
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-            .query(QueryBuilders.termQuery("data.type.keyword", typeClassId))
-            .fetchSource(true);
-    try {
-      return (ObjectNode) new ObjectMapper().readTree(searchSourceBuilder.toString());
-    }
-    catch (IOException e) {
-      throw new RuntimeException("Failed to create ObjectNode from SearchSourceBuilder", e);
-    }
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode root = mapper.createObjectNode();
+
+    // Build query.term["data.type.keyword"]
+    ObjectNode query = root.putObject("query");
+    ObjectNode term = query.putObject("term");
+    ObjectNode termField = term.putObject("data.type.keyword");
+    termField.put("value", typeClassId);
+    termField.put("boost", 1.0);
+
+    // Build _source with empty includes/excludes arrays
+    ObjectNode source = root.putObject("_source");
+    source.putArray("includes");
+    source.putArray("excludes");
+
+    return root;
   }
 }
