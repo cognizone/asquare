@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
+import zone.cogni.asquare.service.elasticsearch.ElasticHelper;
 import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
@@ -104,11 +105,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
 
   @Override
   public List<? extends TypedResource> findAll(ApplicationProfile.Type type) {
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-      .query(QueryBuilders.termQuery("data.type.keyword", type.getClassId()))
-      .fetchSource(true);
-
-    ObjectNode searchRequestBody = toObjectNode(searchSourceBuilder);
+    ObjectNode searchRequestBody = ElasticHelper.buildFindAllQuery(type.getClassId());
     ObjectNode searchResponseBody = elasticStore.search(indexName, searchRequestBody);
 
     return getTypedResourcesFrom(searchResponseBody);
