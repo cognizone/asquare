@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +16,13 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
-import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
+import zone.cogni.asquare.service.elasticsearch.ElasticHelper;
+import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
@@ -108,22 +108,10 @@ public class ElasticsearchAccessService implements ElasticAccessService {
 
   @Override
   public List<? extends TypedResource> findAll(ApplicationProfile.Type type) {
-    ObjectNode searchRequestBody = buildFindAllQuery(type.getClassId());
+    ObjectNode searchRequestBody = ElasticHelper.buildFindAllQuery(type.getClassId());
     ObjectNode searchResponseBody = elasticStore.search(indexName, searchRequestBody);
 
     return getTypedResourcesFrom(searchResponseBody);
-  }
-
-  /**
-   * Builds the Elasticsearch query for finding all resources of a specific type.
-   * Package-private for testing.
-   */
-  ObjectNode buildFindAllQuery(String typeClassId) {
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-            .query(QueryBuilders.termQuery("data.type.keyword", typeClassId))
-            .fetchSource(true);
-
-    return toObjectNode(searchSourceBuilder);
   }
 
   private List<? extends TypedResource> getTypedResourcesFrom(ObjectNode searchResponseBody) {

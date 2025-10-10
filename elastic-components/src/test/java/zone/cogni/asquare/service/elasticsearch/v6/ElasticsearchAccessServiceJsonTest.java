@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
+import zone.cogni.asquare.service.elasticsearch.ElasticHelper;
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test to examine the exact JSON output from the current Elasticsearch QueryBuilders implementation.
- * This tests the ACTUAL production code from ElasticsearchAccessService.buildFindAllQuery().
+ * This tests the ACTUAL production code from ElasticHelper.buildFindAllQuery().
  */
 public class ElasticsearchAccessServiceJsonTest {
 
@@ -19,22 +20,13 @@ public class ElasticsearchAccessServiceJsonTest {
 
     @Test
     public void testCurrentQueryBuilderJsonOutput() throws IOException {
-        // Create a minimal service instance (dependencies not needed for buildFindAllQuery)
-        ElasticsearchAccessService service = new ElasticsearchAccessService(
-            "test-index",
-            "test-type",
-            null,  // elasticStore not used by buildFindAllQuery
-            null,  // applicationProfile not used by buildFindAllQuery
-            null   // jsonConversion not used by buildFindAllQuery
-        );
-
-        // Test with actual production method
+        // Test the actual production method
         String typeClassId = "http://example.org/Person";
-        ObjectNode searchRequestBody = service.buildFindAllQuery(typeClassId);
+        ObjectNode searchRequestBody = ElasticHelper.buildFindAllQuery(typeClassId);
 
         // Print the results for visual inspection
         System.out.println("=== CURRENT ELASTICSEARCH V6 QUERY ===");
-        System.out.println("Method: ElasticsearchAccessService.buildFindAllQuery()");
+        System.out.println("Method: ElasticHelper.buildFindAllQuery()");
         System.out.println();
         System.out.println("=== Pretty-Printed JSON ===");
         System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(searchRequestBody));
