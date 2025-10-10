@@ -7,27 +7,12 @@ import jakarta.annotation.Nonnull;
 public enum ElasticHelper {
   ;
 
-  // NOTE: queryBuildToSearchRequest methods have been removed due to Elasticsearch licensing concerns.
+  // NOTE: queryBuildToSearchRequest(QueryBuilder, Integer size) methods removed due to licensing.
   //
-  // OLD CODE (removed):
-  //   queryBuildToSearchRequest(QueryBuilder queryBuilder)
-  //   queryBuildToSearchRequest(QueryBuilder queryBuilder, Integer size)
+  // These methods converted Elasticsearch QueryBuilder objects to JSON (ObjectNode) via
+  // SearchSourceBuilder serialization. Optionally added a size parameter.
   //
-  // These methods took an Elasticsearch QueryBuilder object, converted it to SearchSourceBuilder,
-  // then serialized it to JSON (ObjectNode). The optional size parameter set the result size.
-  //
-  // MIGRATION GUIDE:
-  // Build your Elasticsearch query JSON directly using Jackson ObjectNode instead of QueryBuilder.
-  //
-  // Example replacement:
-  //   OLD: ElasticHelper.queryBuildToSearchRequest(QueryBuilders.matchQuery("field", "value"), 10)
-  //   NEW: ObjectMapper mapper = new ObjectMapper();
-  //        ObjectNode query = mapper.createObjectNode();
-  //        query.putObject("query").putObject("match").put("field", "value");
-  //        query.put("size", 10);
-  //
-  // This approach avoids the Elasticsearch JAR dependency (Elastic License 2.0) and keeps the
-  // project Apache 2.0 compatible.
+  // Replacement: Build Elasticsearch query JSON directly using Jackson ObjectNode instead.
 
   @Nonnull
   public static ObjectNode buildFindAllQuery(@Nonnull String typeClassId) {
