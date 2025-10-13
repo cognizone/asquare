@@ -1,138 +1,157 @@
 # CLAUDE.md
 
-This file contains project-specific instructions and context for AI code assistants working with this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Build System and Common Commands
 
-ASquare is a comprehensive Java library for semantic web development, focusing on RDF data management, SPARQL querying, and semantic application development. It's a multi-module Gradle project with 25 modules providing various functionalities for working with RDF triplestores, application profiles, and semantic data.
+This is a multi-module Gradle project using Spring Boot 2.7.18 and Java 11.
 
-## Build and Development Commands
-
-### Building the Project
+### Build Commands
 ```bash
-# Clean and build all modules
+# Build all modules
+./gradlew build
+
+# Build specific module
+./gradlew :cube:build
+
+# Run tests for all modules
+./gradlew test
+
+# Run tests for specific module
+./gradlew :cube:test
+
+# Clean build
 ./gradlew clean build
 
-# Build without running tests
-./gradlew build -x test
-
-# Build a specific module
-./gradlew :access:build
-./gradlew :application-profile:build
-
-# Install to local Maven repository
+# Publish to local Maven repository
 ./gradlew publishToMavenLocal
 ```
 
-### Running Tests
+### Development Commands
 ```bash
-# Run all tests
-./gradlew test
+# Generate dependency reports
+./gradlew dependencyReport
 
-# Run tests for a specific module
-./gradlew :access:test
-./gradlew :cogni-core:test
-
-# Run a single test class
-./gradlew :access:test --tests "zone.cogni.asquare.access.simplerdf.SimpleRdfAccessServicePropertiesTest"
-
-# Run tests with debug output
-./gradlew test --debug
-```
-
-### Code Quality and Security
-```bash
-# Run OWASP dependency vulnerability check
+# Check for security vulnerabilities
 ./gradlew dependencyCheckAnalyze
 
-# Generate project dependency reports
-./gradlew projectReport
+# Generate Javadoc
+./gradlew javadoc
 ```
 
-### Publishing
+## Architecture Overview
+
+**asquare** is a Java semantic development library that provides a comprehensive framework for working with RDF data, application profiles, and semantic web technologies. The architecture follows a layered approach with clear separation of concerns.
+
+### Core Modules
+
+**Foundation Layer:**
+- `cogni-core`: Core utilities, JSON handling, Spring configurations
+- `cogni-libs`: Jena integration, HTTP clients, basic semantic operations
+- `cogni-sem`: Semantic web abstractions, RDF utilities, prefix management
+
+**Data Access Layer:**
+- `access`: Main access service abstraction, TypedResource pattern
+- `triplestore*`: RDF store implementations (Jena Memory, TDB2, generic SPARQL endpoints)
+- `elastic-service`: Elasticsearch abstraction layer
+
+**Business Logic Layer:**
+- `cube`: Core data transformation engine, JSON↔RDF conversion, SPARQL operations
+- `service`: High-level business services, data processing pipelines
+
+**Configuration Layer:**
+- `application-profile*`: Schema definition system using JSON-based profiles
+- Application profiles define types, attributes, validation rules, and drive all data operations
+
+**Infrastructure Layer:**
+- `security*`: Authentication, authorization, SAML integration
+- `async-indexing`: Asynchronous data indexing
+- `action-logger`: Request/response logging and auditing
+
+### Key Architectural Patterns
+
+1. **Application Profile-Driven Development**: All data operations are constrained by JSON-based application profiles that define semantic schemas
+2. **TypedResource Pattern**: Strongly-typed resource abstraction over RDF data
+3. **Delta Resources**: Command pattern for tracking changes with optimistic concurrency
+4. **Multi-Store Strategy**: Unified API supporting multiple RDF backends (TDB2, Virtuoso, in-memory)
+5. **Conversion Pipeline**: Configurable JSON↔RDF transformation engine
+6. **Graph-Aware Operations**: Full support for named graphs and multi-graph operations
+
+### Key Interfaces
+
+- `AccessService`: Main entry point for data access operations
+- `TypedResource`: Represents RDF resources with application profile constraints
+- `DeltaResource`: Handles resource mutations and change tracking
+- `RdfStoreService`: Abstraction over SPARQL-capable RDF stores
+- `ApplicationProfile`: Schema definition and validation system
+
+## Testing
+
+The project uses JUnit 5 with Spring Boot Test. Each module has comprehensive test coverage.
+
+### Test Structure
+- Unit tests: `src/test/java`
+- Test resources: `src/test/resources`
+- Integration tests use `@SpringBootTest`
+- Some modules use embedded Elasticsearch and in-memory RDF stores for testing
+
+### Running Tests
 ```bash
-# Publish to Cognizone Nexus
-./gradlew publish -DpublishToCognizoneNexus -Dnexus.username=xxx -Dnexus.password=xxx
+# All tests
+./gradlew test
 
-# Publish to Maven Central staging
-./gradlew publish -DpublishToMavenCentral -Dossrh.username=xxx -Dossrh.password=xxx
+# Specific module tests
+./gradlew :cube:test
+
+# Test with specific profile
+./gradlew test -Dspring.profiles.active=test
 ```
 
-## Architecture and Module Structure
+## Module Dependencies
 
-### Core Architecture
-The project follows a modular architecture with clear separation of concerns:
+The dependency graph flows from foundation → data access → business logic → infrastructure:
 
-1. **Core Foundation** (`cogni-core`, `cogni-libs`, `cogni-sem`): Basic utilities, Spring integration, and semantic web utilities
-2. **RDF Access Layer** (`access`): Provides interfaces for accessing RDF data through SPARQL, with implementations for various triplestores
-3. **Application Profiles** (`application-profile*`): JSON-based configuration for defining RDF data models and validation rules
-4. **Storage Backends** (`triplestore-*`): Different implementations for RDF storage (in-memory, TDB2, pooled connections)
-5. **Elasticsearch Integration** (`elastic-*`): Indexing and searching RDF data
-6. **Security** (`security`, `security2`): SAML authentication and Spring Security integration
+```
+access ← service ← security, action-logger
+  ↑
+cube ← elastic-components
+  ↑
+application-profile* ← application-profile-owl, application-profile-shacl
+  ↑
+triplestore* ← triplestore-pool-api, triplestore-tdb-pool
+  ↑
+cogni-core, cogni-libs, cogni-sem
+```
 
-### Key Design Patterns
+## Development Guidelines
 
-1. **Service Pattern**: Most functionality is exposed through Spring services (e.g., `AccessService`, `SparqlService`)
-2. **Factory Pattern**: Used for creating views and configurations (e.g., `ApplicationViewFactory`)
-3. **Aspect-Oriented Programming**: Used for logging (`@LoggedAction`) and async operations (`@Async`)
-4. **Builder Pattern**: Used for constructing complex objects (e.g., `TypedResourceBuilder`)
+### Working with Application Profiles
+- Application profiles are JSON files that define the semantic schema
+- They drive all TypedResource operations and validation
+- Located in `src/main/resources` or `src/test/resources`
+- Use CURIE notation for compact URI representation
 
-### Module Dependencies
-- All modules depend on `cogni-core` for basic utilities
-- `access` module is central to RDF operations
-- `application-profile` modules build on top of `access` for model validation
-- `asquareroot` provides test utilities for all modules
+### Working with RDF Data
+- Use `AccessService` for high-level operations
+- Use `TypedResource` for strongly-typed resource access
+- Use `DeltaResource` for mutations
+- Leverage `ConversionProfile` for JSON↔RDF transformations
 
-## Key Technologies and Versions
+### SPARQL Operations
+- Use `SpelService` for template-based SPARQL with parameter binding
+- Template files use `.sparql.spel` extension
+- Support for both SELECT and CONSTRUCT queries
 
-- **Java**: 11
-- **Spring Boot**: 2.7.18
-- **Spring Security**: 5.8.9
-- **Apache Jena**: 4.10.0 (RDF/SPARQL framework)
-- **Elasticsearch**: 7.5.2
-- **Lombok**: For reducing boilerplate code
-- **JUnit**: 5 (via Spring Boot Test)
+### Configuration
+- Spring profiles control different deployment scenarios
+- Use `@ConditionalOnProperty` for optional features
+- Configuration classes use `@Import` for cross-module dependencies
 
-## Testing Approach
+## Key Files and Locations
 
-### Test Utilities (asquareroot module)
-- `@EnableEmbeddedElastic`: Provides embedded Elasticsearch for integration tests
-- `InMemoryRdfStoreService`: In-memory RDF store for unit tests
-- `@WithMockAsquareUser`: Mock authentication for security tests
-- Base test classes: `A2EmbeddedEnvironmentsJUnit5` for common test setup
-
-### Test Data
-- Application profiles: `.ap.json` files define data models
-- RDF test data: `.ttl`, `.rdf`, `.trig` files contain sample RDF data
-- SPARQL queries: `.sparql` files for testing query functionality
-
-## Development Notes
-
-1. **Lombok Configuration**: The project uses Lombok with chained accessors enabled. Ensure your IDE has Lombok support.
-
-2. **Memory Settings**: Some modules (like `triplestore-jena-memory`) have specific JVM memory settings for tests.
-
-3. **Feature Flags**: The project uses feature flags (see `FeatureFlag.java`) for controlling functionality.
-
-4. **Spring Profiles**: Different Spring configurations are available for various environments.
-
-5. **RDF Focus**: This is primarily an RDF/semantic web library. Understanding RDF, SPARQL, and semantic web concepts is essential.
-
-6. **Application Profiles**: The `.ap.json` files define JSON-based schemas for RDF data validation and are central to the framework's functionality.
-
-## Common Development Tasks
-
-When implementing new features:
-1. Add appropriate Spring service annotations
-2. Include `@LoggedAction` for operations that should be logged
-3. Write tests using the utilities in `asquareroot`
-4. Follow the existing module structure and naming conventions
-5. Update application profiles if adding new RDF types or properties
-
-## Java 17 Compatibility
-
-The async-indexing module has been updated to be Java 17 compatible by removing reflection on JDK internals:
-- `AsyncUtils` now uses ThreadLocal for context storage instead of reflection
-- `AsyncAspect` captures context before task submission
-- `AsyncRunnable` preserves context during execution
-- Tests have been updated to work without reflection-based task unwrapping
+- `/build.gradle`: Root build configuration with all module dependencies
+- `/settings.gradle`: Module inclusion configuration
+- `/lombok.config`: Lombok configuration
+- Each module follows standard Maven directory structure
+- Application profiles typically in `src/main/resources/*.ap.json`
+- SPARQL templates in `src/main/resources/**/*.sparql.spel`

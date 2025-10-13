@@ -291,7 +291,17 @@ project('application-profile-shacl') {
   }
 }
 
-// IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
+// ============================================================================
+// asquareroot - TEST INFRASTRUCTURE LIBRARY
+// ============================================================================
+// This module provides embedded Elasticsearch and RDF stores for testing.
+//
+// IMPORTANT: This is a TEST-ONLY library and should NEVER be used in production.
+// External projects should depend on this with 'testImplementation' scope only.
+//
+// Elasticsearch 7.5.2 is Apache 2.0 licensed (license change happened at 7.11)
+// Dependencies are 'implementation' to prevent transitive exposure of ES classes
+// ============================================================================
 project('asquareroot') {
   dependencies {
     // projects
@@ -304,8 +314,8 @@ project('asquareroot') {
 
     // libs
     api libs.jena.arq
-    api libs.elasticsearch
-    api libs.elasticsearch.test
+    implementation libs.elasticsearch         // Apache 2.0, not exposed transitively
+    implementation libs.elasticsearch.test    // Apache 2.0, not exposed transitively
 
     // spring
     api libs.spring.boot.starter
@@ -313,6 +323,29 @@ project('asquareroot') {
     api libs.spring.boot.starter.test
     api libs.spring.boot.starter.web
     api libs.spring.security.test
+  }
+
+  // Customize POM to indicate this is a test library
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        pom {
+          name = 'asquare Test Infrastructure'
+          description = 'Test utilities and embedded services for asquare (Elasticsearch, RDF). This library should only be used with test scope (<scope>test</scope> in Maven or testImplementation in Gradle).'
+
+          // Add developers note about test-only usage
+          developers {
+            developer {
+              name = 'asquare Development Team'
+              email = 'asquare-dev@cogni.zone'
+              organization = 'Cognizone'
+              organizationUrl = 'https://www.cogni.zone'
+              roles = ['developer']
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -483,7 +516,7 @@ project('elasticproxy') {
     // libs
     api libs.commons.io
     api libs.httpclient
-    api libs.elasticsearch
+    // api libs.elasticsearch  // REMOVED: Not used - only REST client needed
     api libs.elasticsearch.rest.client
 
     // spring
