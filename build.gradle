@@ -477,14 +477,10 @@ project('cube') {
   }
 }
 
-// IMPORTANT: license of elasticsearch is not compatible with Apache 2.0 ?!
 project('elastic-components') {
   dependencies {
     // projects
     api project(':service')
-
-    // libs
-    api libs.elasticsearch
   }
 }
 

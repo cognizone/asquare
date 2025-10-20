@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import zone.cogni.asquare.access.AccessType;
 import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.access.ElasticAccessService;
+import zone.cogni.asquare.service.elasticsearch.ElasticHelper;
 import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.access.simplerdf.RdfResource;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
@@ -104,11 +103,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
 
   @Override
   public List<? extends TypedResource> findAll(ApplicationProfile.Type type) {
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
-      .query(QueryBuilders.termQuery("data.type.keyword", type.getClassId()))
-      .fetchSource(true);
-
-    ObjectNode searchRequestBody = toObjectNode(searchSourceBuilder);
+    ObjectNode searchRequestBody = ElasticHelper.buildFindAllQuery(type.getClassId());
     ObjectNode searchResponseBody = elasticStore.search(indexName, searchRequestBody);
 
     return getTypedResourcesFrom(searchResponseBody);
@@ -129,16 +124,6 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
                          .withApplicationView(new ApplicationView(this, applicationProfile))
                          .withJsonRoot(jsonRoot)
                          .get();
-  }
-
-
-  private ObjectNode toObjectNode(SearchSourceBuilder searchSourceBuilder) {
-    try {
-      return (ObjectNode) objectMapper.readTree(searchSourceBuilder.toString());
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public ObjectNode getRawDocument(String id) {
