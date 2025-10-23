@@ -86,16 +86,15 @@ class LocalTdbRdfStoreServiceTest {
   void tearDown() throws IOException {
     store.close();
     try (final Stream<Path> walk = Files.walk(tdbPath)) {
-      walk
-              .sorted(Comparator.reverseOrder())
-              .forEach(path -> {
-                try {
-                  Files.delete(path);
-                }
-                catch (final IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
+      walk.sorted(Comparator.reverseOrder())
+          .forEach(path -> {
+            try {
+              Files.delete(path);
+            }
+            catch (final IOException e) {
+              throw new RuntimeException(e);
+            }
+          });
     }
   }
 
@@ -150,10 +149,10 @@ class LocalTdbRdfStoreServiceTest {
       expectedValues.add(-unique);
 
       executor.submit(() -> s.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
       ));
       executor.submit(() -> s.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
       ));
     }
 
@@ -163,22 +162,22 @@ class LocalTdbRdfStoreServiceTest {
     assertDifferentSizes(stores);
 
     assertEquals(
-            startingSize + expectedValues.size(), stores.get(0).size(),
-            () -> {
-              expectedValues.removeAll(
-                      store.constructAllTriples().listObjectsOfProperty(
-                                   ResourceFactory.createResource("http://test.com/subject"),
-                                   ResourceFactory.createProperty("http://test.com/predicate")
-                           ).toList().stream()
-                           .map(RDFNode::asLiteral)
-                           .map(Literal::getInt)
-                           .collect(Collectors.toSet())
-              );
-              return "Missing triples (" + expectedValues.size() + "): " + expectedValues.stream()
-                                                                                         .sorted()
-                                                                                         .map(String::valueOf)
-                                                                                         .collect(Collectors.joining(", "));
-            }
+        startingSize + expectedValues.size(), stores.get(0).size(),
+        () -> {
+          expectedValues.removeAll(
+              store.constructAllTriples().listObjectsOfProperty(
+                       ResourceFactory.createResource("http://test.com/subject"),
+                       ResourceFactory.createProperty("http://test.com/predicate")
+                   ).toList().stream()
+                   .map(RDFNode::asLiteral)
+                   .map(Literal::getInt)
+                   .collect(Collectors.toSet())
+          );
+          return "Missing triples (" + expectedValues.size() + "): " + expectedValues.stream()
+                                                                                     .sorted()
+                                                                                     .map(String::valueOf)
+                                                                                     .collect(Collectors.joining(", "));
+        }
     );
 
     store.close();
@@ -199,10 +198,10 @@ class LocalTdbRdfStoreServiceTest {
       expectedValues.add(-unique);
 
       executor.submit(() -> store.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
       ));
       executor.submit(() -> store.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
       ));
     }
 
@@ -211,22 +210,22 @@ class LocalTdbRdfStoreServiceTest {
     validateTurtleSerialization();
 
     assertEquals(
-            startingSize + expectedValues.size(), store.size(),
-            () -> {
-              expectedValues.removeAll(
-                      store.constructAllTriples().listObjectsOfProperty(
-                                   ResourceFactory.createResource("http://test.com/subject"),
-                                   ResourceFactory.createProperty("http://test.com/predicate")
-                           ).toList().stream()
-                           .map(RDFNode::asLiteral)
-                           .map(Literal::getInt)
-                           .collect(Collectors.toSet())
-              );
-              return "Missing triples (" + expectedValues.size() + "): " + expectedValues.stream()
-                                                                                         .sorted()
-                                                                                         .map(String::valueOf)
-                                                                                         .collect(Collectors.joining(", "));
-            }
+        startingSize + expectedValues.size(), store.size(),
+        () -> {
+          expectedValues.removeAll(
+              store.constructAllTriples().listObjectsOfProperty(
+                       ResourceFactory.createResource("http://test.com/subject"),
+                       ResourceFactory.createProperty("http://test.com/predicate")
+                   ).toList().stream()
+                   .map(RDFNode::asLiteral)
+                   .map(Literal::getInt)
+                   .collect(Collectors.toSet())
+          );
+          return "Missing triples (" + expectedValues.size() + "): " + expectedValues.stream()
+                                                                                     .sorted()
+                                                                                     .map(String::valueOf)
+                                                                                     .collect(Collectors.joining(", "));
+        }
     );
 
     store.close();
@@ -240,7 +239,7 @@ class LocalTdbRdfStoreServiceTest {
 
     final List<LocalTdbRdfStoreService> stores = IntStream.range(0, nbrOfTries)
                                                           .mapToObj(i -> new LocalTdbRdfStoreService(tdbPath.toFile(), null))
-                                                          .collect(Collectors.toList());
+                                                          .toList();
 
     final ExecutorService executor = Executors.newFixedThreadPool((2 * nbrOfTries) + 1);
     for (int i = 0; i < nbrOfTries; i++) {
@@ -248,10 +247,10 @@ class LocalTdbRdfStoreServiceTest {
       final int unique = i + 1;
 
       executor.submit(() -> s.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
       ));
       executor.submit(() -> s.executeUpdateQuery(
-              "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
+          "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + (-unique) + " . }"
       ));
 
       if (i == (nbrOfTries / 2)) {
@@ -303,7 +302,7 @@ class LocalTdbRdfStoreServiceTest {
       while (true) {
         final int unique = i++;
         store.executeUpdateQuery(
-                "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
+            "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
         );
       }
     };
@@ -329,7 +328,7 @@ class LocalTdbRdfStoreServiceTest {
       while (true) {
         final int unique = i++;
         s.executeUpdateQuery(
-                "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
+            "INSERT DATA { <http://test.com/subject> <http://test.com/predicate> " + unique + " . }"
         );
       }
     };
@@ -380,7 +379,7 @@ class LocalTdbRdfStoreServiceTest {
 
     final List<LocalTdbRdfStoreService> stores = IntStream.range(0, nbrOfTries)
                                                           .mapToObj(i -> new LocalTdbRdfStoreService(tdbPath.toFile(), null))
-                                                          .collect(Collectors.toList());
+                                                          .toList();
 
     final ExecutorService executor = Executors.newFixedThreadPool(2 * nbrOfTries);
     for (int i = 0; i < nbrOfTries; i++) {
@@ -422,17 +421,24 @@ class LocalTdbRdfStoreServiceTest {
   @Test
   void testAddDataWithGraphUri() {
     Assertions.assertThrows(RuntimeException.class, () ->
-                                    store.addData(ModelFactory.createDefaultModel(), "test")
-            , "Add data with graph not supported");
+                                store.addData(ModelFactory.createDefaultModel(), "test")
+        , "Add data with graph not supported");
   }
 
   @Test
-  void testTimeoutQuery() {
-    // not sure why this keeps failing on my laptop
+  void testTimeoutQueryConfiguration() {
+    // Test that timeout parameters are correctly stored and accessible
     final LocalTdbRdfStoreService timeoutStore = new LocalTdbRdfStoreService(
-            tdbPath.toFile(), 1L, TimeUnit.NANOSECONDS, 1L, TimeUnit.NANOSECONDS
+        tdbPath.toFile(), 1L, TimeUnit.NANOSECONDS, 2L, TimeUnit.NANOSECONDS
     );
+
+    assertEquals(1L, timeoutStore.getFirstResultTimeout());
+    assertEquals(TimeUnit.NANOSECONDS, timeoutStore.getFirstResultTimeUnit());
+    assertEquals(2L, timeoutStore.getOverallTimeout());
+    assertEquals(TimeUnit.NANOSECONDS, timeoutStore.getOverallTimeUnit());
+
     Assertions.assertThrows(RuntimeException.class, getConstructAllTriples(timeoutStore));
+    timeoutStore.close();
   }
 
   private Executable getConstructAllTriples(LocalTdbRdfStoreService timeoutStore) {
@@ -454,7 +460,7 @@ class LocalTdbRdfStoreServiceTest {
     // load spam into memory
     final List<String> spam = IntStream.range(0, 300000)
                                        .mapToObj(i -> "text takes 80 bytes " + i) // 80 bytes + the size of i as string
-                                       .collect(Collectors.toList());
+                                       .toList();
 
     assertThrows(TooManyResultsException.class, () -> {
       final List<String> result = new MemoryAwareListResultSetHandler<String>() {
@@ -469,66 +475,66 @@ class LocalTdbRdfStoreServiceTest {
           return "text takes 80 bytes " + UUID.randomUUID();
         }
       }.handle(
-              new ResultSet() {
+          new ResultSet() {
 
-                private int counter;
+            private int counter;
 
-                @Override
-                public boolean hasNext() {
-                  return true;
-                }
+            @Override
+            public boolean hasNext() {
+              return true;
+            }
 
-                @Override
-                public QuerySolution next() {
-                  ++counter;
-                  return null;
-                }
+            @Override
+            public QuerySolution next() {
+              ++counter;
+              return null;
+            }
 
-                @Override
-                public void forEachRemaining(Consumer<? super QuerySolution> consumer) {
+            @Override
+            public void forEachRemaining(Consumer<? super QuerySolution> consumer) {
 
-                }
+            }
 
-                @Override
-                public QuerySolution nextSolution() {
-                  return null;
-                }
+            @Override
+            public QuerySolution nextSolution() {
+              return null;
+            }
 
-                @Override
-                public Binding nextBinding() {
-                  return null;
-                }
+            @Override
+            public Binding nextBinding() {
+              return null;
+            }
 
-                @Override
-                public int getRowNumber() {
-                  return counter;
-                }
+            @Override
+            public int getRowNumber() {
+              return counter;
+            }
 
-                @Override
-                public List<String> getResultVars() {
-                  return null;
-                }
+            @Override
+            public List<String> getResultVars() {
+              return null;
+            }
 
-                @Override
-                public Model getResourceModel() {
-                  return null;
-                }
+            @Override
+            public Model getResourceModel() {
+              return null;
+            }
 
-                @Override
-                public ResultSetRewindable rewindable() {
-                  return ResultSet.super.rewindable();
-                }
+            @Override
+            public ResultSetRewindable rewindable() {
+              return ResultSet.super.rewindable();
+            }
 
-                @Override
-                public ResultSet materialise() {
-                  return ResultSet.super.materialise();
-                }
+            @Override
+            public ResultSet materialise() {
+              return ResultSet.super.materialise();
+            }
 
-                @Override
-                public void close() {
+            @Override
+            public void close() {
 
-                }
-              }
+            }
+          }
       );
     });
   }
@@ -556,5 +562,165 @@ class LocalTdbRdfStoreServiceTest {
                                            .collect(Collectors.toSet());
 
     assertEquals(1, differentSizes.size());
+  }
+
+
+  @Test
+  void testLombokGetters() {
+    // Test the new Lombok @Getter annotations
+    Assertions.assertNotNull(store.getTdbLocation());
+    Assertions.assertNotNull(store.getDataset());
+    Assertions.assertEquals(LocalTdbRdfStoreService.DEFAULT_FIRST_RESULT_TIMEOUT, store.getFirstResultTimeout());
+    Assertions.assertEquals(LocalTdbRdfStoreService.DEFAULT_FIRST_RESULT_TIME_UNIT, store.getFirstResultTimeUnit());
+    Assertions.assertEquals(LocalTdbRdfStoreService.DEFAULT_OVERALL_RESULT_TIMEOUT, store.getOverallTimeout());
+    Assertions.assertEquals(LocalTdbRdfStoreService.DEFAULT_OVERALL_RESULT_TIME_UNIT, store.getOverallTimeUnit());
+  }
+
+  @Test
+  void testGraphOperations() {
+    // Test graphExists method
+    Assertions.assertFalse(store.graphExists("http://nonexistent.com/graph"));
+
+    // Add some data to a graph and test existence
+    store.executeUpdateQuery("INSERT DATA { GRAPH <http://test.com/graph> { <http://test.com/s> <http://test.com/p> <http://test.com/o> } }");
+    Assertions.assertTrue(store.graphExists("http://test.com/graph"));
+  }
+
+  @Test
+  void testSelectQueryWithBindings() {
+    // Add test data
+    store.executeUpdateQuery("INSERT DATA { <http://test.com/subject1> <http://test.com/name> 'Alice' . <http://test.com/subject2> <http://test.com/name> 'Bob' . }");
+
+    // Test SELECT query with bindings
+    final org.apache.jena.query.QuerySolutionMap bindings = new org.apache.jena.query.QuerySolutionMap();
+    bindings.add("targetName", ResourceFactory.createPlainLiteral("Alice"));
+
+    final org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(
+        "SELECT ?subject WHERE { ?subject <http://test.com/name> ?targetName }"
+    );
+
+    final List<String> results = store.executeSelectQuery(query, bindings, resultSet -> {
+      final List<String> subjects = new ArrayList<>();
+      while (resultSet.hasNext()) {
+        final org.apache.jena.query.QuerySolution solution = resultSet.next();
+        subjects.add(solution.getResource("subject").getURI());
+      }
+      return subjects;
+    }, "testContext");
+
+    assertEquals(1, results.size());
+    assertEquals("http://test.com/subject1", results.get(0));
+  }
+
+  @Test
+  void testSelectQueryWithoutBindings() {
+    // Add test data
+    store.executeUpdateQuery("INSERT DATA { <http://test.com/subject1> <http://test.com/type> <http://test.com/Person> . }");
+
+    final List<String> results = store.executeSelectQuery(
+        "SELECT ?subject WHERE { ?subject <http://test.com/type> <http://test.com/Person> }",
+        resultSet -> {
+          final List<String> subjects = new ArrayList<>();
+          while (resultSet.hasNext()) {
+            final org.apache.jena.query.QuerySolution solution = resultSet.next();
+            subjects.add(solution.getResource("subject").getURI());
+          }
+          return subjects;
+        },
+        "testSelectContext"
+    );
+
+    assertEquals(1, results.size());
+    assertEquals("http://test.com/subject1", results.get(0));
+  }
+
+  @Test
+  void testAskQueryWithBindings() {
+    // Add test data
+    store.executeUpdateQuery("INSERT DATA { <http://test.com/subject1> <http://test.com/type> <http://test.com/Person> . }");
+
+    final org.apache.jena.query.QuerySolutionMap bindings = new org.apache.jena.query.QuerySolutionMap();
+    bindings.add("subject", ResourceFactory.createResource("http://test.com/subject1"));
+
+    final org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(
+        "ASK { ?subject <http://test.com/type> <http://test.com/Person> }"
+    );
+
+    final boolean result = store.executeAskQuery(query, bindings);
+    Assertions.assertTrue(result);
+  }
+
+  @Test
+  void testAskQueryWithJenaBooleanHandler() {
+    // Add test data
+    store.executeUpdateQuery("INSERT DATA { <http://test.com/subject1> <http://test.com/exists> true . }");
+
+    final String result = store.executeAskQuery(
+        "ASK { <http://test.com/subject1> <http://test.com/exists> true }",
+        exists -> exists ? "Found" : "Not Found"
+    );
+
+    assertEquals("Found", result);
+  }
+
+  @Test
+  void testConstructQueryWithBindings() {
+    // Add test data
+    store.executeUpdateQuery("INSERT DATA { <http://test.com/subject1> <http://test.com/name> 'Test' . }");
+
+    final org.apache.jena.query.QuerySolutionMap bindings = new org.apache.jena.query.QuerySolutionMap();
+    bindings.add("targetSubject", ResourceFactory.createResource("http://test.com/subject1"));
+
+    final org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(
+        "CONSTRUCT { ?targetSubject <http://test.com/reconstructed> true } WHERE { ?targetSubject <http://test.com/name> ?name }"
+    );
+
+    final Model result = store.executeConstructQuery(query, bindings);
+    Assertions.assertFalse(result.isEmpty());
+    Assertions.assertTrue(result.contains(
+        ResourceFactory.createResource("http://test.com/subject1"),
+        ResourceFactory.createProperty("http://test.com/reconstructed"),
+        ResourceFactory.createTypedLiteral(true)
+    ));
+  }
+
+  @Test
+  void testBasicModelOperations() {
+    final long initialSize = store.size();
+    Assertions.assertFalse(store.isEmpty());
+
+    // Test delete operation
+    store.delete();
+    Assertions.assertTrue(store.isEmpty());
+    assertEquals(0, store.size());
+
+    // Test addData operation
+    final Model testModel = ModelFactory.createDefaultModel();
+    testModel.add(ResourceFactory.createResource("http://test.com/s"),
+                  ResourceFactory.createProperty("http://test.com/p"),
+                  ResourceFactory.createResource("http://test.com/o"));
+
+    store.addData(testModel);
+    Assertions.assertFalse(store.isEmpty());
+    assertEquals(1, store.size());
+  }
+
+  @Test
+  void testErrorHandlingWithInvalidQuery() {
+    // Test with malformed SPARQL
+    Assertions.assertThrows(Exception.class, () ->
+        store.executeUpdateQuery("INVALID SPARQL QUERY"));
+  }
+
+  @Test
+  void testResourceCleanupAfterException() {
+    try {
+      store.executeUpdateQuery("INVALID SPARQL QUERY");
+    }
+    catch (Exception e) {
+      // Expected - test that store is still functional after error
+      Assertions.assertDoesNotThrow(() -> store.size());
+      Assertions.assertDoesNotThrow(() -> store.isEmpty());
+    }
   }
 }

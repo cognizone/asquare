@@ -13,7 +13,6 @@ import zone.cogni.asquare.triplestore.pool.key.LocalTdbPoolKey;
  * @see zone.cogni.asquare.triplestore.jenamemory.LocalTdbRdfStoreService
  * @see zone.cogni.asquare.triplestore.pool.factory.BaseRdfStoreServiceFactory
  * @see RdfStoreServiceFactory
- *
  * @since 0.5.3
  */
 public class LocalTdbRdfStoreServiceFactory extends BaseRdfStoreServiceFactory<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> {
@@ -22,9 +21,7 @@ public class LocalTdbRdfStoreServiceFactory extends BaseRdfStoreServiceFactory<L
    * Create an instance that can be served by the pool.
    *
    * @param key the key used when constructing the object
-   *
    * @return an instance that can be served by the pool
-   *
    * @throws Exception if there is a problem creating a new instance,
    *                   this will be propagated to the code requesting an object.
    */

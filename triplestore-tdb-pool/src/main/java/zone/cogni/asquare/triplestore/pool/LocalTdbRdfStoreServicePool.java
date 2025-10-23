@@ -1,5 +1,6 @@
 package zone.cogni.asquare.triplestore.pool;
 
+import lombok.Getter;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PoolUtils;
 import org.apache.commons.pool2.impl.AbandonedConfig;
@@ -20,12 +21,12 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
 
   /**
    * Default pool configuration.
-   *
+   * <p>
    * This configuration object is shared, but it is not thread safe for any kind of changes.
    * It is only here to reuse it in case the caller only wants to change a few options but not all.
-   *
    */
   public static final GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> DEFAULT_CONFIGURATION = new GenericKeyedObjectPoolConfig<>();
+
   static {
     DEFAULT_CONFIGURATION.setFairness(true);
     DEFAULT_CONFIGURATION.setMaxTotalPerKey(15);
@@ -40,12 +41,12 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
 
   /**
    * Default abandoned configuration.
-   *
+   * <p>
    * This configuration object is shared, but it is not thread safe for any kind of changes.
    * It is only here to reuse it in case the caller only wants to change a few options but not all.
-   *
    */
   public static final AbandonedConfig DEFAULT_ABANDONED_CONFIGURATION = new AbandonedConfig();
+
   static {
     DEFAULT_ABANDONED_CONFIGURATION.setLogAbandoned(true);
     DEFAULT_ABANDONED_CONFIGURATION.setRequireFullStackTrace(true);
@@ -65,23 +66,30 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   // genericPool is the configurable base pool implementation
   // pool is the final pool instance where we have wrappers around the base genericPool implementation
   private final GenericKeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> genericPool;
+  /**
+   * -- GETTER --
+   *
+   * @return the org.apache.commons.pool.KeyedObjectPool class
+   */
+  @Getter
   private final KeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> pool;
 
   private static class SingletonHolder {
     static {
-      if(configuration == null) {
+      if (configuration == null) {
         configuration = DEFAULT_CONFIGURATION;
       }
-      if(abandonedConfiguration == null) {
+      if (abandonedConfiguration == null) {
         abandonedConfiguration = DEFAULT_ABANDONED_CONFIGURATION;
       }
-      if(erodingFactor == null) {
+      if (erodingFactor == null) {
         erodingFactor = 1.0f;
       }
-      if(erodingPerKey == null) {
+      if (erodingPerKey == null) {
         erodingPerKey = true;
       }
     }
+
     public static final LocalTdbRdfStoreServicePool INSTANCE = new LocalTdbRdfStoreServicePool();
   }
 
@@ -92,40 +100,35 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
   /**
    * This implementation does not guarantee thread safety against parallel call of
    * {@code LocalTdbRdfStoreServicePool#configure} and {@code LocalTdbRdfStoreServicePool#getInstance}.
-   *
+   * <p>
    * This is up to the caller to make sure configuration happens safely before getInstance.
-   *
+   * <p>
    * Note: this is a hacky solution but without having Spring Singleton Bean technique used here
-   *       it's hard to keep the pool as singleton. And this type of singleton pattern makes configuration a bit more difficult.
-   *
+   * it's hard to keep the pool as singleton. And this type of singleton pattern makes configuration a bit more difficult.
+   * <p>
    * We decorate the pool with eroding pool that adaptively decreases its size when idle objects are
    * no longer needed. This is intended as an always thread-safe alternative
    * to using an idle object evictor provided by many pool implementations.
    * This is also an effective way to shrink FIFO ordered pools that experience load spikes.
    *
-   * @param poolCnf
-*               a simple "struct" encapsulating the configuration for a {@link GenericKeyedObjectPool}.
-   * @param abandonedConfig
-   *            configuration settings for abandoned object removal.
-   * @param factor
-   *            a positive value to scale the rate at which the pool tries to
-   *            reduce its size. If 0 &lt; factor &lt; 1 then the pool
-   *            shrinks more aggressively. If 1 &lt; factor then the pool
-   *            shrinks less aggressively.
-   * @param perKey
-   *            when true, each key is treated independently in the eroding pool
-   *
+   * @param poolCnf         a simple "struct" encapsulating the configuration for a {@link GenericKeyedObjectPool}.
+   * @param abandonedConfig configuration settings for abandoned object removal.
+   * @param factor          a positive value to scale the rate at which the pool tries to
+   *                        reduce its size. If 0 &lt; factor &lt; 1 then the pool
+   *                        shrinks more aggressively. If 1 &lt; factor then the pool
+   *                        shrinks less aggressively.
+   * @param perKey          when true, each key is treated independently in the eroding pool
    * @throws IllegalAccessException when the caller tries to set the configuration more than one time.
    */
-  public static synchronized void configure (
-    final GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> poolCnf,
-    final AbandonedConfig abandonedConfig,
-    final Float factor,
-    final Boolean perKey
+  public static synchronized void configure(
+      final GenericKeyedObjectPoolConfig<PoolableLocalTdbRdfStoreService> poolCnf,
+      final AbandonedConfig abandonedConfig,
+      final Float factor,
+      final Boolean perKey
   ) throws IllegalAccessException {
     // we don't allow multiple configuration calls, pool can be configured only once
-    if(
-      configuration != null || abandonedConfiguration != null || erodingFactor != null || erodingPerKey != null
+    if (
+        configuration != null || abandonedConfiguration != null || erodingFactor != null || erodingPerKey != null
     ) {
       throw new IllegalAccessException("Pool configuration can be set only once and then it cannot be modified later.");
     }
@@ -141,10 +144,10 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    * <li>When positive, the idle object evictor thread starts.</li>
    * <li>When non-positive, no idle object evictor thread runs.</li>
    * </ul>
-   *
+   * <p>
    * (it is not intended to be used in production environments, mainly for testing purposes)
    *
-   * @param timeBetweenEvictionRuns   duration to sleep between evictor runs
+   * @param timeBetweenEvictionRuns duration to sleep between evictor runs
    */
   public static synchronized void setTimeBetweenEvictionRuns(final Duration timeBetweenEvictionRuns) {
     getInstance().genericPool.setTimeBetweenEvictionRuns(timeBetweenEvictionRuns);
@@ -152,7 +155,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
 
   /**
    * Sets the timeout before an abandoned object can be removed.
-   *
+   * <p>
    * (it is not intended to be used in production environments, mainly for testing purposes)
    *
    * @param removeAbandonedTimeout new abandoned timeout
@@ -167,8 +170,7 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    *
    * @throws UnsupportedOperationException when this implementation doesn't
    *                                       support the operation
-   *
-   * @throws Exception if the pool cannot be cleared
+   * @throws Exception                     if the pool cannot be cleared
    */
   public void clear() throws Exception {
     getPool().clear();
@@ -179,11 +181,9 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
    * the given {@code key} (optional operation).
    *
    * @param key the key to clear
-   *
    * @throws UnsupportedOperationException when this implementation doesn't
    *                                       support the operation
-   *
-   * @throws Exception if the key cannot be cleared
+   * @throws Exception                     if the key cannot be cleared
    */
   public void clear(final LocalTdbPoolKey key) throws Exception {
     getPool().clear(key);
@@ -209,23 +209,16 @@ public final class LocalTdbRdfStoreServicePool implements Closeable {
     genericPool = new GenericKeyedObjectPool<>(new LocalTdbRdfStoreServiceFactory(), configuration, abandonedConfiguration);
 
     pool = PoolUtils.erodingPool(
-      //TODO:  make ProxiedKeyedObjectPool work and replace genericPool with:
-      //       new ProxiedKeyedObjectPool<>(genericPool, new CglibProxySource<>(PoolableLocalTdbRdfStoreService.class)),
-      //       the underlying problem here is that LocalTdbRdfStoreService configures the TDB from inside the constructor
-      //       and CglibProxySource uses Cglib which means it creates the new instance with no-parameter constructor
-      //       then copies the data later from the original object that is about to be proxied
-      genericPool, erodingFactor, erodingPerKey
+        //TODO:  make ProxiedKeyedObjectPool work and replace genericPool with:
+        //       new ProxiedKeyedObjectPool<>(genericPool, new CglibProxySource<>(PoolableLocalTdbRdfStoreService.class)),
+        //       the underlying problem here is that LocalTdbRdfStoreService configures the TDB from inside the constructor
+        //       and CglibProxySource uses Cglib which means it creates the new instance with no-parameter constructor
+        //       then copies the data later from the original object that is about to be proxied
+        genericPool, erodingFactor, erodingPerKey
     );
     genericPool.setSwallowedExceptionListener(e -> log.error("Swallowed exception from pool ({})", pool, e));
 
     log.info("LocalTdbRdfStoreServicePool is created: {}", pool);
   }
 
-  /**
-   *
-   * @return the org.apache.commons.pool.KeyedObjectPool class
-   */
-  public KeyedObjectPool<LocalTdbPoolKey, PoolableLocalTdbRdfStoreService> getPool() {
-    return pool;
-  }
 }

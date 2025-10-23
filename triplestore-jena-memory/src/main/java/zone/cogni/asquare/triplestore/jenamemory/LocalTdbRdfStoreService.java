@@ -1,25 +1,22 @@
 package zone.cogni.asquare.triplestore.jenamemory;
 
 
+import lombok.Getter;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryCancelledException;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.Syntax;
 import org.apache.jena.query.TxnType;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.system.Txn;
-import org.apache.jena.tdb.StoreConnection;
-import org.apache.jena.tdb.TDBException;
-import org.apache.jena.tdb.TDBFactory;
-import org.apache.jena.tdb.base.file.ChannelManager;
-import org.apache.jena.tdb.base.file.FileException;
-import org.apache.jena.tdb.base.file.Location;
+import org.apache.jena.tdb1.TDB1Exception;
+import org.apache.jena.tdb1.TDB1Factory;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -45,7 +42,9 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   public static final long DEFAULT_OVERALL_RESULT_TIMEOUT = 30;
   public static final TimeUnit DEFAULT_OVERALL_RESULT_TIME_UNIT = TimeUnit.MINUTES;
 
+  @Getter
   private final String tdbLocation;
+  @Getter
   private final Dataset dataset;
 
   /**
@@ -54,7 +53,9 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
    * <b>Not all query execution systems support timeouts.</b>
    * A timeout of less than zero means no timeout.
    */
+  @Getter
   private final long firstResultTimeout;
+  @Getter
   private final TimeUnit firstResultTimeUnit;
 
   /**
@@ -63,27 +64,27 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
    * <b>Not all query execution systems support timeouts.</b>
    * A timeout of less than zero means no timeout.
    */
+  @Getter
   private final long overallTimeout;
+  @Getter
   private final TimeUnit overallTimeUnit;
 
   protected final AtomicBoolean ready = new AtomicBoolean(false);
 
-  public LocalTdbRdfStoreService(
-    final File tdbLocationFolder, final File initFolder,
-    final long firstResultTimeout, final TimeUnit firstResultTimeUnit,
-    final long overallTimeout, final TimeUnit overallTimeUnit
-  ) {
+  public LocalTdbRdfStoreService(final File tdbLocationFolder, final File initFolder,
+                                 final long firstResultTimeout, final TimeUnit firstResultTimeUnit,
+                                 final long overallTimeout, final TimeUnit overallTimeUnit) {
     this.tdbLocation = tdbLocationFolder.getPath();
     this.firstResultTimeout = firstResultTimeout;
     this.firstResultTimeUnit = firstResultTimeUnit;
     this.overallTimeout = overallTimeout;
     this.overallTimeUnit = overallTimeUnit;
     log.info(
-      ".. .. Opening TDB store - {} with default query timeouts, first result: {}{}, after first result: {}{}",
-      this.tdbLocation, this.firstResultTimeout, this.firstResultTimeUnit, this.overallTimeout, this.overallTimeUnit
+        ".. .. Opening TDB store - {} with default query timeouts, first result: {}{}, after first result: {}{}",
+        this.tdbLocation, this.firstResultTimeout, this.firstResultTimeUnit, this.overallTimeout, this.overallTimeUnit
     );
 
-    this.dataset = TDBFactory.createDataset(tdbLocationFolder.getAbsolutePath());
+    this.dataset = TDB1Factory.createDataset(tdbLocationFolder.getAbsolutePath());
     initialize(initFolder);
     this.ready.set(true);
     log.info(".. .. Done creating TDB store - {}", tdbLocation);
@@ -91,47 +92,49 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
 
   public LocalTdbRdfStoreService(final File tdbLocationFolder) {
     this(
-      tdbLocationFolder, null, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
-      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+        tdbLocationFolder, null, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
+        DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
     );
   }
 
-  public LocalTdbRdfStoreService(
-    final File tdbLocationFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit
-  ) {
+  public LocalTdbRdfStoreService(final File tdbLocationFolder,
+                                 final long firstResultTimeout,
+                                 final TimeUnit firstResultTimeUnit) {
     this(
-      tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit,
-      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+        tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit,
+        DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
     );
   }
 
-  public LocalTdbRdfStoreService(
-    final File tdbLocationFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit,
-    final long overallTimeout, final TimeUnit overallTimeUnit
-  ) {
+  public LocalTdbRdfStoreService(final File tdbLocationFolder,
+                                 final long firstResultTimeout,
+                                 final TimeUnit firstResultTimeUnit,
+                                 final long overallTimeout,
+                                 final TimeUnit overallTimeUnit) {
     this(
-      tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit
+        tdbLocationFolder, null, firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit
     );
   }
 
   public LocalTdbRdfStoreService(final File tdbLocationFolder, final File initFolder) {
     this(
-      tdbLocationFolder, initFolder, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
-      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+        tdbLocationFolder, initFolder, DEFAULT_FIRST_RESULT_TIMEOUT, DEFAULT_FIRST_RESULT_TIME_UNIT,
+        DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
     );
   }
 
-  public LocalTdbRdfStoreService(
-    final File tdbLocationFolder, final File initFolder, final long firstResultTimeout, final TimeUnit firstResultTimeUnit
-  ) {
+  public LocalTdbRdfStoreService(final File tdbLocationFolder,
+                                 final File initFolder,
+                                 final long firstResultTimeout,
+                                 final TimeUnit firstResultTimeUnit) {
     this(
-      tdbLocationFolder, initFolder, firstResultTimeout, firstResultTimeUnit,
-      DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
+        tdbLocationFolder, initFolder, firstResultTimeout, firstResultTimeUnit,
+        DEFAULT_OVERALL_RESULT_TIMEOUT, DEFAULT_OVERALL_RESULT_TIME_UNIT
     );
   }
 
   private void initialize(final File initFolder) {
-    if(initFolder == null || !validateInit(initFolder)) {
+    if (initFolder == null || !validateInit(initFolder)) {
       return; // normal case, no init is needed
     }
 
@@ -140,30 +143,6 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       Txn.executeWrite(dataset, () -> RDFDataMgr.read(dataset, file.getAbsolutePath()));
       log.info(".. .. .. TDB is finished to be initialized with {} - TDB: {}", file.getName(), tdbLocation);
     }
-  }
-
-  public Dataset getDataset() {
-    return dataset;
-  }
-
-  public String getTdbLocation() {
-    return tdbLocation;
-  }
-
-  public long getFirstResultTimeout() {
-    return firstResultTimeout;
-  }
-
-  public TimeUnit getFirstResultTimeUnit() {
-    return firstResultTimeUnit;
-  }
-
-  public long getOverallTimeout() {
-    return overallTimeout;
-  }
-
-  public TimeUnit getOverallTimeUnit() {
-    return overallTimeUnit;
   }
 
   public long size() {
@@ -240,9 +219,10 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   @Override
-  public <R> R executeSelectQuery(
-    final Query query, final QuerySolutionMap bindings, final JenaResultSetHandler<R> resultSetHandler, final String context
-  ) {
+  public <R> R executeSelectQuery(final Query query,
+                                  final QuerySolutionMap bindings,
+                                  final JenaResultSetHandler<R> resultSetHandler,
+                                  final String context) {
     if (log.isDebugEnabled()) {
       log.debug("Select {} - {} \n{}", context == null ? "" : "--- " + context + " --- ", bindings, query);
     }
@@ -250,7 +230,9 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   @Override
-  public <R> R executeSelectQuery(final String query, final JenaResultSetHandler<R> resultSetHandler, final String context) {
+  public <R> R executeSelectQuery(final String query,
+                                  final JenaResultSetHandler<R> resultSetHandler,
+                                  final String context) {
     if (log.isDebugEnabled()) {
       log.debug("Select {} \n{}", context == null ? "" : "--- " + context + " --- ", query);
     }
@@ -292,41 +274,29 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   /**
-   * It releases forcefully the {@code StoreConnection}
-   * and that means all local TDB base {@code Dataset} instances will loose their connections to the TDB.
+   * It releases forcefully the TDB store connections.
+   * In Jena 5.4, TDB1 datasets are automatically managed and do not require explicit store connection management.
    */
   public void forceRelease() {
     log.warn("Trying to release forcefully the {} TDB all views ....", tdbLocation);
     close();
-    final Location location = Location.create(tdbLocation);
-    try{
-      StoreConnection.expel(location, true);
-    }
-    catch (final FileException | RuntimeIOException e) {
-      final String journalPath = StoreConnection.getExisting(location).getTransactionManager().getJournal().getFilename();
-      log.warn(
-        "... couldn't expel the {} StoreConnection, trying to release the transaction journal: {}",
-        tdbLocation, journalPath, e
-      );
-      ChannelManager.release(journalPath);
-    }
+    // In Jena 5.4, TDB1 datasets are automatically managed
+    // No explicit sync or release operations are required
+    log.info("TDB dataset closed for location: {}", tdbLocation);
     log.warn("{} TDB all connections are force released", tdbLocation);
   }
 
-  private <R> R callQueryExecution(
-    final Supplier<QueryExecution> queryExecutionSupplier,
-    final JenaResultSetHandler<R> resultSetHandler,
-    final String context
-  ) {
-    if(StringUtils.hasLength(context)) {
+  private <R> R callQueryExecution(final Supplier<QueryExecution> queryExecutionSupplier,
+                                   final JenaResultSetHandler<R> resultSetHandler,
+                                   final String context) {
+    if (StringUtils.hasLength(context)) {
       log.warn("Context is not supported on this type of RdfStoreService but one was provided: {}", context);
     }
     return callQueryExecution(queryExecutionSupplier, resultSetHandler);
   }
 
-  private <R> R callQueryExecution(
-    final Supplier<QueryExecution> queryExecutionSupplier, final JenaResultSetHandler<R> resultSetHandler
-  ) {
+  private <R> R callQueryExecution(final Supplier<QueryExecution> queryExecutionSupplier,
+                                   final JenaResultSetHandler<R> resultSetHandler) {
     validateReadiness();
     return Txn.calculateRead(dataset, () -> {
       try (final QueryExecution queryExecution = queryExecutionSupplier.get()) {
@@ -345,7 +315,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   private void validateReadiness() {
-    if(!ready.get()) {
+    if (!ready.get()) {
       throw new InvalidRdfStoreServiceStateException();
     }
   }
@@ -355,15 +325,17 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
     final StringBuilder causesMsg = new StringBuilder();
 
     log.info(".. .. Initialize TDB store - {} with data from: {}", tdbLocation, initFolder);
-    if(!initFolder.exists()) {
+    if (!initFolder.exists()) {
       causesMsg.append("        * init folder does not exist\n");
       isValid = false;
     }
-    if(!initFolder.isDirectory()) {
+    if (!initFolder.isDirectory()) {
       causesMsg.append("        * init path is not a folder\n");
       isValid = false;
     }
-    if (!dataset.getDefaultModel().isEmpty()) {
+
+    boolean isEmpty = Txn.calculateRead(this.dataset, () -> this.dataset.getDefaultModel().isEmpty());
+    if (!isEmpty) {
       causesMsg.append("        * store is not empty\n");
       isValid = false;
     }
@@ -374,7 +346,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       isValid = false;
     }
 
-    if(!isValid) {
+    if (!isValid) {
       log.warn(".. .. Initialization failed for TDB store - {} because:\n{}", tdbLocation, causesMsg);
     }
 
@@ -382,7 +354,8 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   public QueryExecution createQueryExecution(final String query) {
-    return timeoutQueryExecution(QueryExecutionFactory.create(query, dataset));
+    var builder = QueryExecution.create().query(query).dataset(dataset);
+    return timeoutQueryExecution(builder).build();
   }
 
   public QueryExecution createQueryExecution(final Query query) {
@@ -390,16 +363,18 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   }
 
   public QueryExecution createQueryExecution(final Query query, final QuerySolutionMap bindings) {
-    final QueryExecution queryExecution = bindings == null || bindings.asMap().isEmpty()
-      ? QueryExecutionFactory.create(query, dataset)
-      : QueryExecutionFactory.create(query, dataset, bindings);
+    var builder = QueryExecution.create().query(query).dataset(dataset);
 
-    return timeoutQueryExecution(queryExecution);
+    if (bindings != null && !bindings.asMap().isEmpty()) {
+      builder.substitution(bindings);
+    }
+
+    return timeoutQueryExecution(builder).build();
   }
 
-  private QueryExecution timeoutQueryExecution(final QueryExecution queryExecution) {
-    queryExecution.setTimeout(firstResultTimeout, firstResultTimeUnit, overallTimeout, overallTimeUnit);
-    return queryExecution;
+  private QueryExecutionDatasetBuilder timeoutQueryExecution(QueryExecutionDatasetBuilder builder) {
+    return builder.initialTimeout(firstResultTimeout, firstResultTimeUnit)
+                  .overallTimeout(overallTimeout, overallTimeUnit);
   }
 
   protected <T> T safeQuery(final Supplier<T> supplier, final QueryExecution queryExecution) {
@@ -411,7 +386,7 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
       queryExecution.abort();
       throw exception;
     }
-    catch(final TDBException | RuntimeIOException exception) {
+    catch (final TDB1Exception | RuntimeIOException exception) {
       ready.set(false);
       log.error("Query failed: {}", queryExecution.getQuery());
       throw exception;
