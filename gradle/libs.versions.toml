@@ -21,7 +21,7 @@ ognlVersion = "3.3.4"
 snakeyaml = "2.0"
 springBootVersion = '3.5.3'
 springSecurityVersion = '6.4.5'
-vavrVersion = "1.0.0-alpha-4"
+vavrVersion = "0.10.4"
 
 [libraries]
 cglib = { module = "cglib:cglib", version.ref = "cglibVersion" }
