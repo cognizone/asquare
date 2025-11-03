@@ -66,8 +66,7 @@ subprojects {
   targetCompatibility = JavaVersion.VERSION_17
 
   group = 'zone.cogni.asquare'
-  //version = scmVersion.version
-    version = '0.8.4'
+  version = scmVersion.version
 
   compileJava.options.encoding = "UTF-8"
   compileTestJava.options.encoding = "UTF-8"
