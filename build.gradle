@@ -616,6 +616,7 @@ project('triplestore-jena-memory') {
     api project(':triplestore')
 
     // libs
+    api libs.jena.tdb1
     api libs.jena.tdb2
 
     // TESTING

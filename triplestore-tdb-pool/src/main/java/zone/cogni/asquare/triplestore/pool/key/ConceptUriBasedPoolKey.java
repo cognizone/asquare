@@ -1,17 +1,19 @@
 package zone.cogni.asquare.triplestore.pool.key;
 
+import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
 
+@Getter
 public class ConceptUriBasedPoolKey implements RdfStoreServicePoolKey<String> {
 
   private final Path dirPath;
 
   public ConceptUriBasedPoolKey(final Path basePath, final String conceptUri) {
-    if(basePath == null || !StringUtils.hasText(conceptUri)) {
+    if (basePath == null || !StringUtils.hasText(conceptUri)) {
       throw new IllegalArgumentException("Arguments cannot be null");
     }
     this.dirPath = basePath.resolve(uriToDirName(conceptUri));
@@ -26,15 +28,11 @@ public class ConceptUriBasedPoolKey implements RdfStoreServicePoolKey<String> {
     return dirPath.toAbsolutePath().toString();
   }
 
-  public Path getDirPath() {
-    return dirPath;
-  }
-
   public static String uriToDirName(final String uri) {
     return uri.replace('/', '_')
-      .replace(':', '_')
-      .replace('#', '_')
-      .toLowerCase();
+              .replace(':', '_')
+              .replace('#', '_')
+              .toLowerCase();
   }
 
   @Override

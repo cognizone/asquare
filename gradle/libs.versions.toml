@@ -40,6 +40,7 @@ httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", versio
 jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInjectVersion" }
 jena-core = { module = "org.apache.jena:jena-core", version.ref = "jenaVersion" }
 jena-arq = { module = "org.apache.jena:jena-arq", version.ref = "jenaVersion" }
+jena-tdb1 = { module = "org.apache.jena:jena-tdb1", version.ref = "jenaVersion" }
 jena-tdb2 = { module = "org.apache.jena:jena-tdb2", version.ref = "jenaVersion" }
 jena-shacl = { module = "org.apache.jena:jena-shacl", version.ref = "jenaVersion" }
 jena-rdfconnection = { module = "org.apache.jena:jena-rdfconnection", version.ref = "jenaVersion" }
