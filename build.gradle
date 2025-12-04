@@ -72,6 +72,10 @@ subprojects {
 
   test {
     useJUnitPlatform()
+    // Increase test memory for memory-intensive TDB tests
+    jvmArgs('-Xmx1g', '-Xms512m')
+    // Set test timeout to handle long-running parallel tests
+    timeout = Duration.ofMinutes(10)
   }
 
   jar {
@@ -624,9 +628,10 @@ project('triplestore-jena-memory') {
   }
 
   test {
-    minHeapSize = "256m"
-    maxHeapSize = "256m"
-    jvmArgs "-XX:MaxMetaspaceSize=128m"
+    // Increased memory for parallel TDB tests with concurrent threads
+    minHeapSize = "512m"
+    maxHeapSize = "2g"
+    jvmArgs "-XX:MaxMetaspaceSize=256m"
   }
 }
 
