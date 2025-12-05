@@ -550,10 +550,20 @@ class LocalTdbRdfStoreServiceTest {
 
   private void shutDown(final ExecutorService executor) throws InterruptedException {
     executor.shutdown();
-    if (!executor.awaitTermination(1L, TimeUnit.MINUTES)) {
-      log.info(" ... still running threads: {}", executor.shutdownNow());
-      fail("Couldn't stop thread pool after specified time");
+
+    // Try graceful shutdown first (2 minutes - enough time for tasks to complete)
+    if (!executor.awaitTermination(2L, TimeUnit.MINUTES)) {
+      log.warn("Executor did not terminate gracefully within 2 minutes, forcing shutdown...");
+      List<Runnable> remainingTasks = executor.shutdownNow();
+      log.info("Forcefully stopped executor, {} tasks were cancelled", remainingTasks.size());
+
+      // Give additional time for cleanup after forced shutdown (30 seconds)
+      if (!executor.awaitTermination(30L, TimeUnit.SECONDS)) {
+        log.error("Executor still did not terminate after forced shutdown");
+        fail("Couldn't stop thread pool even after forced shutdown (total wait time: 2.5 minutes)");
+      }
     }
+    log.debug("Executor terminated successfully");
   }
 
   private void assertDifferentSizes(final List<LocalTdbRdfStoreService> stores) {
