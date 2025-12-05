@@ -208,8 +208,8 @@ class PoolableLocalTdbRdfStoreServiceTest {
   @Test
   void testActivateObjectWithExistingTransaction() throws Exception {
     try(PoolableLocalTdbRdfStoreService service = new PoolableLocalTdbRdfStoreService(tdbLocation)) {
-      // Manually start a transaction
-      service.getDataset().begin();
+      // Manually start a transaction using the proper TDB1 approach
+      service.getDataset().begin(org.apache.jena.query.TxnType.READ_COMMITTED_PROMOTE);
       assertTrue(service.getDataset().isInTransaction());
 
       // Activate should handle existing transaction

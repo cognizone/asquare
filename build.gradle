@@ -679,8 +679,9 @@ project('triplestore-tdb-pool') {
   }
 
   test {
-    minHeapSize = "64m"
-    maxHeapSize = "64m"
-    jvmArgs "-XX:MaxMetaspaceSize=128m"
+    // Increased memory for TDB pooling tests
+    minHeapSize = "256m"
+    maxHeapSize = "1g"
+    jvmArgs "-XX:MaxMetaspaceSize=256m"
   }
 }
