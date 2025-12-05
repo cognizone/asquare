@@ -627,12 +627,6 @@ project('triplestore-jena-memory') {
     testImplementation libs.spring.boot.starter.test
   }
 
-  test {
-    // Increased memory for parallel TDB tests with concurrent threads
-    minHeapSize = "512m"
-    maxHeapSize = "2g"
-    jvmArgs "-XX:MaxMetaspaceSize=256m"
-  }
 }
 
 project('triplestore-tdb2') {
@@ -678,9 +672,4 @@ project('triplestore-tdb-pool') {
     testImplementation libs.spring.boot.starter.test
   }
 
-  test {
-    minHeapSize = "64m"
-    maxHeapSize = "64m"
-    jvmArgs "-XX:MaxMetaspaceSize=128m"
-  }
 }
