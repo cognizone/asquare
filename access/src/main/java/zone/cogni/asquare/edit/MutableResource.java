@@ -1,10 +1,10 @@
 package zone.cogni.asquare.edit;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.TypedResource;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -25,7 +25,7 @@ import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.libs.core.utils.ApacheHttpClientUtils;
 import zone.cogni.libs.sparqlservice.impl.Config;
 

@@ -1,6 +1,5 @@
 package zone.cogni.asquare.cube.sort;
 
-import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -9,6 +8,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 

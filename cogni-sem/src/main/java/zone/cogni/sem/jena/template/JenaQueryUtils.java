@@ -67,7 +67,7 @@ public abstract class JenaQueryUtils {
   }
 
   public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    return QueryExecutionFactory.create(sparql, model, querySolution);
+    return QueryExecution.model(model).query(sparql).substitution(querySolution).build();
   }
 
   public static void closeQuietly(QueryExecution queryExecution) {

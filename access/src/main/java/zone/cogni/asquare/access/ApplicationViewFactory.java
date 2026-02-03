@@ -10,7 +10,7 @@ import zone.cogni.asquare.access.simplerdf.SimpleRdfAccessService;
 import zone.cogni.asquare.applicationprofile.json.ApplicationProfileConfig;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InMemoryDatabase;
 import zone.cogni.asquare.triplestore.jenamemory.JenaModel;
 

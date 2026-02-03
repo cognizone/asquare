@@ -1,7 +1,6 @@
 package zone.cogni.asquare.cube.index;
 
 import com.google.common.collect.Lists;
-import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -15,8 +14,9 @@ import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadata;
 import zone.cogni.asquare.service.elasticsearch.info.ElasticsearchMetadataService;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;

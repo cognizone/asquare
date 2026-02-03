@@ -8,7 +8,7 @@ import zone.cogni.asquare.access.simplerdf.SimpleRdfAccessService;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
 import zone.cogni.asquare.edit.DeltaResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.util.function.CachingSupplier;
 

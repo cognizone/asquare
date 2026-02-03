@@ -10,7 +10,7 @@ import org.apache.jena.shared.Lock;
 import org.apache.jena.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 import java.util.function.Supplier;
@@ -96,7 +96,7 @@ public class InMemoryDatabase implements RdfStoreService {
                                           bindings,
                                           query);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(jenaModel.get()).query(query).substitution(bindings).build()) {
         ResultSet resultSet = queryExecution.execSelect();
         return resultSetHandler.handle(resultSet);
       }
@@ -110,7 +110,7 @@ public class InMemoryDatabase implements RdfStoreService {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(jenaModel.get()).query(query).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
       catch (RuntimeException e) {
@@ -123,7 +123,7 @@ public class InMemoryDatabase implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(jenaModel.get()).query(query).substitution(bindings).build()) {
         if (log.isTraceEnabled()) log.trace("Running construct query: \n{}", query);
         return queryExecution.execConstruct();
       }

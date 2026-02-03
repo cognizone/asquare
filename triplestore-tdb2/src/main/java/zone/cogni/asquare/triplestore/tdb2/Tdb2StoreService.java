@@ -17,7 +17,7 @@ import org.apache.jena.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 

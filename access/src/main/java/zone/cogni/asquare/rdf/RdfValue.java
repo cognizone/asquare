@@ -1,9 +1,10 @@
 package zone.cogni.asquare.rdf;
 
-import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Supertype of

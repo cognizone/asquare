@@ -1,9 +1,9 @@
 package zone.cogni.asquare.applicationprofile.model.basic.def;
 
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
 import zone.cogni.asquare.applicationprofile.rules.Extra;
 
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

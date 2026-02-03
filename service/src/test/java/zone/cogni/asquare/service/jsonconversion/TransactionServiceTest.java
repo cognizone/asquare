@@ -23,7 +23,7 @@ import zone.cogni.asquare.edit.EditableAccessService;
 import zone.cogni.asquare.edit.MutableResource;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.ApplicationViewTestConfig;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
 import java.io.IOException;

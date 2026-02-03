@@ -1,7 +1,6 @@
 package zone.cogni.asquare.cube.index;
 
 import jakarta.annotation.Nonnull;
-
 import java.util.List;
 
 public interface FolderBasedIndexingService {

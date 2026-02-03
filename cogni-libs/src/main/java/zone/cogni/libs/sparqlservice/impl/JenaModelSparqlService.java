@@ -7,6 +7,10 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.DatasetGraph;
+import org.apache.jena.sparql.core.DatasetGraphFactory;
+import org.apache.jena.sparql.core.DatasetGraphWrapper;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -58,13 +62,16 @@ public class JenaModelSparqlService implements SparqlService {
 
     private Dataset getDatasetForSelect() {
         if (simulateRelaxedVirtuosoSparqlSelect) {
-            // Create a new in-memory dataset
-            Dataset relaxedDataset = DatasetFactory.create();
-            // Set default model to the union of all named graphs
-            relaxedDataset.setDefaultModel(dataset.getUnionModel());
-            // Copy named graphs from original
-            dataset.listNames().forEachRemaining(name -> relaxedDataset.addNamedModel(name, dataset.getNamedModel(name)));
-            return relaxedDataset;
+            // In Jena 5, we create a new dataset where default graph is the union graph
+            DatasetGraph dsg = DatasetGraphFactory.cloneStructure(dataset.asDatasetGraph());
+            // Create a new DatasetGraph that uses union graph as default
+            DatasetGraph unionDsg = new DatasetGraphWrapper(dsg) {
+                @Override
+                public Graph getDefaultGraph() {
+                    return getUnionGraph();
+                }
+            };
+            return DatasetFactory.wrap(unionDsg);
         }
         return dataset;
     }

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.util.ReflectionTestUtils;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquareroot.elastic.EmbeddedElasticsearch7Store;
 import zone.cogni.asquareroot.sparql.InMemoryRdfStoreService;
 import zone.cogni.libs.services.extfolder.ExtFolderServiceFactory;

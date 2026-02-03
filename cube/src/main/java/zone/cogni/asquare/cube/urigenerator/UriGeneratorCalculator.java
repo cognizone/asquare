@@ -1,6 +1,5 @@
 package zone.cogni.asquare.cube.urigenerator;
 
-import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -15,10 +14,11 @@ import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.TemplateService;
 import zone.cogni.asquare.cube.urigenerator.json.UriGenerator;
 import zone.cogni.asquare.cube.urigenerator.json.UriGeneratorRoot;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.template.JenaResultSetHandlers;
 
+import jakarta.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;

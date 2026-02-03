@@ -13,7 +13,7 @@ import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile.Attr
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.edit.MutableResource;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

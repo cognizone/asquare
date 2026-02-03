@@ -13,7 +13,7 @@ import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.SparqlSelectToJson;
 import zone.cogni.asquare.cube.util.TimingUtil;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.util.Map;
 import java.util.concurrent.Callable;

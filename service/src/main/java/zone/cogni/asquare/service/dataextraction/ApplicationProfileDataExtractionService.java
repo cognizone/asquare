@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.access.AccessService;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.util.List;
 

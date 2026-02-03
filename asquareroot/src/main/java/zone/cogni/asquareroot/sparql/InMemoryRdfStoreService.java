@@ -5,7 +5,7 @@ import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.virtuoso.VirtuosoApacheHttpClientRdfStoreService;
 import zone.cogni.libs.sparqlservice.impl.JenaModelSparqlService;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;

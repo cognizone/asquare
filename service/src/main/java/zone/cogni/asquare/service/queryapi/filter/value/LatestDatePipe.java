@@ -2,14 +2,16 @@ package zone.cogni.asquare.service.queryapi.filter.value;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
-import org.joda.time.DateTime;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import zone.cogni.asquare.access.ApplicationView.AttributeMatcher;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile.Attribute;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.queryapi.filter.AbstractDepthFilterPipe;
 
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -52,11 +54,26 @@ public class LatestDatePipe extends AbstractDepthFilterPipe implements ValueFilt
     return Comparator.comparing(v -> getDateValue((TypedResource) v, attributeId));
   }
 
-  private DateTime getDateValue(TypedResource typedResource, String attribute) {
+  private Instant getDateValue(TypedResource typedResource, String attribute) {
     return Optional.ofNullable(typedResource.getValue(attribute))
         .map(val -> ((RdfValue) val).getLiteral().getString())
-        .map(DateTime::parse)
-        .orElse(new DateTime(Long.MIN_VALUE));
+        .map(this::parseToInstant)
+        .orElse(Instant.ofEpochMilli(Long.MIN_VALUE));
+  }
+
+  private Instant parseToInstant(String dateStr) {
+    try {
+      // Try parsing as ZonedDateTime (ISO format with timezone)
+      return ZonedDateTime.parse(dateStr).toInstant();
+    } catch (Exception e1) {
+      try {
+        // Try parsing as Instant directly
+        return Instant.parse(dateStr);
+      } catch (Exception e2) {
+        // Return minimum value if parsing fails
+        return Instant.ofEpochMilli(Long.MIN_VALUE);
+      }
+    }
   }
 
   @Override

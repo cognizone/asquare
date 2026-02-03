@@ -3,13 +3,13 @@ package zone.cogni.asquare.triplestore.sparqlendpoint;
 import com.google.common.base.Preconditions;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionBuilder;
+import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
 public class SparqlEndpointRdfStoreService implements RdfStoreService {
@@ -54,9 +54,7 @@ public class SparqlEndpointRdfStoreService implements RdfStoreService {
                                         bindings,
                                         query);
 
-    QueryExecutionBuilder builder = QueryExecution.service(rdfStoreUrl).query(query);
-    try (QueryExecution queryExecution = builder.build()) {
-      applyBindings(builder, bindings);
+    try (QueryExecution queryExecution = QueryExecution.service(rdfStoreUrl).query(query).substitution(bindings).build()) {
       ResultSet resultSet = queryExecution.execSelect();
       return resultSetHandler.handle(resultSet);
     }
@@ -66,9 +64,7 @@ public class SparqlEndpointRdfStoreService implements RdfStoreService {
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     Preconditions.checkNotNull(rdfStoreUrl);
 
-    QueryExecutionBuilder builder = QueryExecution.service(rdfStoreUrl).query(query);
-    try (QueryExecution queryExecution = builder.build()) {
-      applyBindings(builder, bindings);
+    try (QueryExecution queryExecution = QueryExecution.service(rdfStoreUrl).query(query).substitution(bindings).build()) {
       return queryExecution.execAsk();
     }
   }
@@ -76,21 +72,16 @@ public class SparqlEndpointRdfStoreService implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     Preconditions.checkNotNull(rdfStoreUrl);
-    QueryExecutionBuilder builder = QueryExecution.service(rdfStoreUrl).query(query);
-    try (QueryExecution queryExecution = builder.build()) {
+    try (QueryExecution queryExecution = bindings.asMap().isEmpty() 
+        ? QueryExecution.service(rdfStoreUrl).query(query).build()
+        : QueryExecution.service(rdfStoreUrl).query(query).substitution(bindings).build()) {
       //  TODO    if (modelContentType != null) queryExecution.setModelContentType(modelContentType);
-      applyBindings(builder, bindings);
       return queryExecution.execConstruct();
     }
     catch (Exception e) {
       log.error("Query failed: \n{}", query);
       throw e;
     }
-  }
-
-  private void applyBindings(QueryExecutionBuilder builder, QuerySolutionMap bindings) {
-    if (bindings == null || bindings.asMap().isEmpty()) return;
-    builder.substitution(bindings);
   }
 
   @Override
