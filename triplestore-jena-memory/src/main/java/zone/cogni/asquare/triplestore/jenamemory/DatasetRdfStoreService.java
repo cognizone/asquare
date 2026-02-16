@@ -10,7 +10,7 @@ import org.apache.jena.shared.Lock;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.libs.jena.utils.DatasetHelper;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
@@ -45,7 +45,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Select", query, bindings, context);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.dataset(dataset).query(query).substitution(bindings).build()) {
         return resultSetHandler.handle(queryExecution.execSelect());
       }
     });
@@ -56,7 +56,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Ask", query, bindings, null);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.dataset(dataset).query(query).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
     });
@@ -68,7 +68,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Construct", query, bindings, null);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.dataset(dataset).query(query).substitution(bindings).build()) {
         return queryExecution.execConstruct();
       }
     });

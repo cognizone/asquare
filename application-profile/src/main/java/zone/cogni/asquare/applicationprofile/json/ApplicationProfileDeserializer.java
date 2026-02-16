@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
-import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,7 @@ import zone.cogni.asquare.applicationprofile.rules.PropertyValue;
 import zone.cogni.asquare.applicationprofile.rules.RdfType;
 import zone.cogni.core.spring.ResourceHelper;
 
+import jakarta.annotation.Nonnull;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

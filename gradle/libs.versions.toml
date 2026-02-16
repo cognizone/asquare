@@ -21,6 +21,7 @@ ognlVersion = "3.3.4"
 snakeyaml = "2.0"
 springBootVersion = '3.5.3'
 springSecurityVersion = '6.4.5'
+semanticzConnectorsVersion = "1.0.0"
 vavrVersion = "0.10.7"
 
 [libraries]
@@ -54,6 +55,7 @@ lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 ognl = { module = "ognl:ognl", version.ref = "ognlVersion" }
 poi = { module = "org.apache.poi:poi", version.ref = "apachePoiVersion" }
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoiVersion" }
+semanticz-connectors-common = { module = "zone.cogni.semanticz:semanticz-connectors-common", version.ref = "semanticzConnectorsVersion" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
 spring-boot-starter-aop = { module = "org.springframework.boot:spring-boot-starter-aop", version.ref = "springBootVersion" }

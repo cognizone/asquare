@@ -2,7 +2,6 @@ package zone.cogni.asquare.service.queryapi.filter.value;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -14,6 +13,7 @@ import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.queryapi.filter.AbstractDepthFilterPipe;
 
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

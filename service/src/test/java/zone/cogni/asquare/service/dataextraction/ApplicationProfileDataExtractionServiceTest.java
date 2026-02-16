@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import zone.cogni.asquare.applicationprofile.json.ApplicationProfileConfig;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.sparqlendpoint.SparqlEndpointRdfStoreService;
 
 import java.io.FileWriter;

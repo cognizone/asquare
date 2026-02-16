@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import zone.cogni.asquare.cube.spel.NamedTemplate;
 import zone.cogni.asquare.cube.spel.TemplateService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
 

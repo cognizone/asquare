@@ -1,10 +1,10 @@
 package zone.cogni.asquare.service.elasticsearch.collapsedap;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import zone.cogni.asquare.applicationprofile.json.ApplicationProfileSimpleJson;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.model.basic.CollapseApplicationProfile;
 
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 

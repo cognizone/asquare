@@ -6,7 +6,7 @@ import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.edit.DeltaResource;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.util.List;
 import java.util.function.Supplier;

@@ -9,7 +9,7 @@ import zone.cogni.asquare.access.AccessService;
 import zone.cogni.asquare.access.simplerdf.SimpleRdfAccessService;
 import zone.cogni.asquare.applicationprofile.json.ApplicationProfileConfig;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.util.function.Supplier;
 

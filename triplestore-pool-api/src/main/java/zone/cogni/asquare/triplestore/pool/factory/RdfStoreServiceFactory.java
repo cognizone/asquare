@@ -1,7 +1,7 @@
 package zone.cogni.asquare.triplestore.pool.factory;
 
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.pool.PoolableRdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.RdfStoreServicePoolKey;
 

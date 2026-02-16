@@ -1,6 +1,6 @@
 package zone.cogni.asquare.triplestore.pool;
 
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.pool.key.RdfStoreServicePoolKey;
 
 public interface PoolableRdfStoreService<K extends RdfStoreServicePoolKey<?>> extends RdfStoreService {

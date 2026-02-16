@@ -18,7 +18,7 @@ import zone.cogni.asquare.applicationprofile.json.ApplicationProfileConfig;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.util.function.CachingSupplier;
 import zone.cogni.sem.jena.JenaUtils;

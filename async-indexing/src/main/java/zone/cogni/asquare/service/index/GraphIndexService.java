@@ -20,7 +20,7 @@ import zone.cogni.asquare.service.async.AsyncContext;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
 import zone.cogni.asquare.service.elasticsearch.Params;
 import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 import zone.cogni.libs.sparqlservice.SparqlService;
 

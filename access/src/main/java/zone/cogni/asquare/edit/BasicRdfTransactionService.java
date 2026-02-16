@@ -9,7 +9,7 @@ import zone.cogni.asquare.applicationprofile.model.SingleValueRule;
 import zone.cogni.asquare.applicationprofile.rules.RdfType;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 
 import java.util.Collections;
 import java.util.HashSet;

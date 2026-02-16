@@ -1,11 +1,11 @@
 package zone.cogni.asquare.rdf;
 
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.apache.jena.rdf.model.Literal;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 

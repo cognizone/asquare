@@ -16,7 +16,7 @@ import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.sparql2json.PropertyConversion;
 import zone.cogni.asquare.cube.spel.TemplateService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
 import zone.cogni.core.util.function.CachingSupplier;

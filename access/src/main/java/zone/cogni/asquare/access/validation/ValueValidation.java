@@ -36,7 +36,7 @@ import zone.cogni.asquare.applicationprofile.rules.Range;
 import zone.cogni.asquare.applicationprofile.rules.RdfType;
 import zone.cogni.asquare.applicationprofile.rules.ResourceReference;
 import zone.cogni.asquare.applicationprofile.rules.SubClassOf;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.RdfStatements;
 

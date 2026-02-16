@@ -1,11 +1,10 @@
 package zone.cogni.core.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.text.ParseException;
@@ -61,10 +60,19 @@ public class DateFormats {
 
     if (format == Format.FULLXMLDATETIME) {
       try {
-        return ISODateTimeFormat.dateTime().parseDateTime(value).toDate();
+        // Parse ISO 8601 format with timezone using java.time
+        java.time.ZonedDateTime zdt = java.time.ZonedDateTime.parse(value, java.time.format.DateTimeFormatter.ISO_DATE_TIME);
+        return Date.from(zdt.toInstant());
       }
-      catch (IllegalArgumentException ignored) {
-        return null;
+      catch (Exception ignored) {
+        try {
+          // Try with offset date time or instant
+          Instant instant = Instant.parse(value);
+          return Date.from(instant);
+        }
+        catch (Exception ignored2) {
+          return null;
+        }
       }
     }
 
@@ -138,7 +146,10 @@ public class DateFormats {
   public static String format(Date date, Format format) {
     if (date == null) return "";
     if (format == Format.FULLXMLDATETIME) {
-      return ISODateTimeFormat.dateTime().print(date.getTime());
+      // Format to ISO 8601 format with timezone using java.time
+      Instant instant = date.toInstant();
+      java.time.ZonedDateTime zdt = java.time.ZonedDateTime.ofInstant(instant, java.time.ZoneId.systemDefault());
+      return zdt.format(java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
     return getDateFormat(format).format(date);
   }
@@ -279,7 +290,7 @@ public class DateFormats {
      */
     XMLDATETIME("yyyy-MM-dd'T'HH:mm:ss", true, true),
     /**
-     * Format yyyy-MM-dd'T'HH:mm:ss.SSSZ (with jodaTime)
+     * Format yyyy-MM-dd'T'HH:mm:ss.SSSZ (ISO 8601 with timezone)
      */
     FULLXMLDATETIME(XML_DATE_TIME_FORMAT, true, true),
     /**

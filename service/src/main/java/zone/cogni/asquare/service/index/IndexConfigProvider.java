@@ -14,7 +14,7 @@ import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
 import zone.cogni.asquare.service.elasticsearch.v7.Elasticsearch7Store;
 import zone.cogni.asquare.sparqlservice.RdfStoreSparqlService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.virtuoso.SparqlRdfStoreService;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;

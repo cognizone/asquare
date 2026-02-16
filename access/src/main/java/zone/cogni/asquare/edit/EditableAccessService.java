@@ -7,7 +7,7 @@ import zone.cogni.asquare.access.ApplicationView;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 
 import java.util.List;

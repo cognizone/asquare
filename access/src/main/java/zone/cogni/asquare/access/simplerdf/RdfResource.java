@@ -1,13 +1,13 @@
 package zone.cogni.asquare.access.simplerdf;
 
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Resource;
 import zone.cogni.asquare.access.AccessService;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

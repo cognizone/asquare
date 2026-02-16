@@ -1,6 +1,5 @@
 package zone.cogni.asquare.edit;
 
-import jakarta.annotation.Nonnull;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
@@ -12,6 +11,7 @@ import zone.cogni.asquare.applicationprofile.rules.Range;
 import zone.cogni.asquare.rdf.BasicRdfValue;
 import zone.cogni.asquare.rdf.RdfValue;
 
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Supplier;
 

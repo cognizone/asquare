@@ -195,6 +195,6 @@ public class JenaQueryTemplate {
   }
 
   public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    return create(sparql, model, querySolution);
+    return QueryExecution.model(model).query(sparql).substitution(querySolution).build();
   }
 }

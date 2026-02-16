@@ -3,7 +3,7 @@ package zone.cogni.asquare.sparqlservice;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.springframework.core.io.FileSystemResource;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.libs.jena.utils.JenaUtils;
 import zone.cogni.libs.sparqlservice.SparqlService;
 

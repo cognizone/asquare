@@ -13,7 +13,7 @@ import org.springframework.core.io.ClassPathResource;
 import zone.cogni.asquare.cube.monitoredpool.MonitoredPool;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.DatasetRdfStoreService;
 import zone.cogni.libs.jena.utils.JenaUtils;
 

@@ -21,7 +21,7 @@ import zone.cogni.asquare.transactional.ASquareTransaction;
 import zone.cogni.asquare.transactional.ASquareTransactionType;
 import zone.cogni.asquare.transactional.ASquareTransactional;
 import zone.cogni.asquare.transactional.ASquareTransactionalAspect;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 
 import java.util.UUID;

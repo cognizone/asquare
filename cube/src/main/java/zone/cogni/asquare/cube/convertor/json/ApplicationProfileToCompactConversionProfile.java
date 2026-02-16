@@ -1,10 +1,10 @@
 package zone.cogni.asquare.cube.convertor.json;
 
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.model.basic.def.ApplicationProfileDef;
 
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;

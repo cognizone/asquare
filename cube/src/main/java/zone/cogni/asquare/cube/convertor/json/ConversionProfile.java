@@ -2,13 +2,13 @@ package zone.cogni.asquare.cube.convertor.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.springframework.core.io.InputStreamSource;
 
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;

@@ -1,8 +1,9 @@
 package zone.cogni.libs.core;
 
-import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.helpers.MessageFormatter;
+
+import jakarta.annotation.Nonnull;
 
 public class CognizoneException extends RuntimeException {
 

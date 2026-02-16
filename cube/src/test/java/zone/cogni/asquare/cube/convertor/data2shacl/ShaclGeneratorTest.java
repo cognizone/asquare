@@ -18,7 +18,7 @@ import zone.cogni.asquare.cube.convertor.json.CompactConversionProfileToConversi
 import zone.cogni.asquare.cube.convertor.json.ConversionProfile;
 import zone.cogni.asquare.cube.pagination.PaginatedQuery;
 import zone.cogni.asquare.cube.spel.SpelService;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 import zone.cogni.sem.jena.JenaUtils;
 

@@ -1,6 +1,5 @@
 package zone.cogni.asquare.triplestore.jenamemory;
 
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -14,11 +13,12 @@ import org.apache.jena.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.core.spring.ResourceHelper;
 import zone.cogni.sem.jena.JenaUtils;
 import zone.cogni.sem.jena.template.JenaResultSetHandler;
 
+import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,7 +100,7 @@ public class InternalRdfStoreService implements RdfStoreService {
                                           bindings,
                                           query);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(model).query(query).substitution(bindings).build()) {
         ResultSet resultSet = queryExecution.execSelect();
         return resultSetHandler.handle(resultSet);
       }
@@ -114,7 +114,7 @@ public class InternalRdfStoreService implements RdfStoreService {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(model).query(query).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
       catch (RuntimeException e) {
@@ -127,7 +127,7 @@ public class InternalRdfStoreService implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model, bindings)) {
+      try (QueryExecution queryExecution = QueryExecution.model(model).query(query).substitution(bindings).build()) {
         if (log.isTraceEnabled()) log.trace("Running construct query: \n{}", query);
         return queryExecution.execConstruct();
       }
@@ -184,4 +184,6 @@ public class InternalRdfStoreService implements RdfStoreService {
     return model;
   }
 
+  public void close() {
+  }
 }

@@ -14,9 +14,10 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.RDFLangString;
 import org.apache.jena.rdf.model.Literal;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
 import zone.cogni.asquare.applicationprofile.rules.MaxCardinality;
@@ -26,7 +27,6 @@ import zone.cogni.asquare.rdf.RdfValue;
 import zone.cogni.asquare.rdf.TypedResource;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -85,8 +85,8 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
 
   private void setSingleData() {
     ObjectNode data = jsonRoot.putObject("data");
-    List<TypedResource> included = handleTypedResource(data, typedResource)
-            .collect(Collectors.toList());
+    List<TypedResource> included =  handleTypedResource(data, typedResource)
+        .collect(Collectors.toList());
 
     handleDeeperIncluded(included);
   }
@@ -95,8 +95,8 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     ArrayNode data = jsonRoot.putArray("data");
 
     List<TypedResource> included = this.typedResources.stream()
-                                                      .flatMap(resource -> handleTypedResource(data.addObject(), resource))
-                                                      .collect(Collectors.toList());
+        .flatMap(resource -> handleTypedResource(data.addObject(), resource))
+        .collect(Collectors.toList());
 
     handleDeeperIncluded(included);
   }
@@ -104,9 +104,9 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
   private void handleDeeperIncluded(List<TypedResource> included) {
     while (!included.isEmpty()) {
       included = included.stream()
-                         .filter(this::isUnexploredResource)
-                         .flatMap(resource -> handleTypedResource(getOrCreateArray(jsonRoot, "included").addObject(), resource))
-                         .collect(Collectors.toList());
+          .filter(this::isUnexploredResource)
+          .flatMap(resource -> handleTypedResource(getOrCreateArray(jsonRoot, "included").addObject(), resource))
+          .collect(Collectors.toList());
     }
   }
 
@@ -119,13 +119,13 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     ApplicationProfile.Type type = typedResource.getType();
 
     Consumer<String> typeAdder = type.getSuperClassIds().size() > 1
-                                 ? s -> addToJsonAsList(object, "type", s)
-                                 : s -> addToJsonAsSingle(object, "type", s);
+        ? s -> addToJsonAsList(object, "type", s)
+        : s -> addToJsonAsSingle(object, "type", s);
 
     type.getSuperClassIds().forEach(typeAdder);
 
     return typedResource.getType().getAttributes().values().stream()
-                        .flatMap(attribute -> handleAttribute(object, typedResource, attribute));
+        .flatMap(attribute -> handleAttribute(object, typedResource, attribute));
   }
 
   private Stream<TypedResource> handleAttribute(ObjectNode object, TypedResource typedResource, ApplicationProfile.Attribute attribute) {
@@ -194,7 +194,6 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     String shortTypeUri = prefixCcService.getShortenedUri(typeUri);
 
     if (XSDDatatype.XSDdate.getURI().equals(typeUri)) map.put(shortTypeUri, literalToDate(value.getLiteral()));
-    else if (XSDDatatype.XSDtime.getURI().equals(typeUri)) map.put(shortTypeUri, literalToTime(value.getLiteral()));
     else if (XSDDatatype.XSDdateTime.getURI().equals(typeUri)) map.put(shortTypeUri, literalToDateTime(value.getLiteral()));
   }
 
@@ -204,7 +203,7 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     if (value.isLiteral()) {
       Literal literal = value.getLiteral();
       String shortTypeUri = Try.of(() -> prefixCcService.getShortenedUri(literal.getDatatypeURI()))
-                               .recover(IllegalStateException.class, literal.getDatatypeURI()).get();
+        .recover(IllegalStateException.class, literal.getDatatypeURI()).get();
 
       Object litValue = literal.getValue();
       if (litValue instanceof BaseDatatype.TypedValue) litValue = ((BaseDatatype.TypedValue) litValue).lexicalValue;
@@ -233,7 +232,7 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
       if (value.isLiteral()) {
         RDFDatatype datatype = value.getLiteral().getDatatype();
         if (RDFLangString.rdfLangString.equals(datatype)) return RdfValueCase.Language;
-        if (XSDDatatype.XSDdate.equals(datatype) || XSDDatatype.XSDtime.equals(datatype) || XSDDatatype.XSDdateTime.equals(datatype)) return RdfValueCase.Date;
+        if (XSDDatatype.XSDdate.equals(datatype) || XSDDatatype.XSDdateTime.equals(datatype)) return RdfValueCase.Date;
       }
       else if (value.isResource()) {
         return RdfValueCase.Resource;
@@ -271,23 +270,31 @@ public class TypedResourceToJson implements Supplier<ObjectNode> {
     }
   }
 
-  protected String literalToTime(Literal literal) {
-    try {
-      LocalTime localTime = LocalTime.parse(literal.getLexicalForm(), DateTimeFormatter.ISO_LOCAL_TIME);
-      return localTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
-    }
-    catch (Exception exception) {
-      throw new RuntimeException("Failed to convert literal to Time: " + literal, exception);
-    }
-  }
-
   private String literalToDateTime(Literal literal) {
-    //todo: remove joda
-    return dateTime2string(ISODateTimeFormat.dateTimeParser().parseDateTime(literal.getLexicalForm()));
+    return dateTime2string(parseDateTime(literal.getLexicalForm()));
   }
 
-  private String dateTime2string(DateTime dateTime) {
-    return dateTime == null ? null : dateTime.withZone(DateTimeZone.UTC).toString(ISODateTimeFormat.dateTime());
+  private ZonedDateTime parseDateTime(String dateTimeStr) {
+    try {
+      // Try parsing as ZonedDateTime
+      return ZonedDateTime.parse(dateTimeStr);
+    } catch (DateTimeParseException e1) {
+      try {
+        // Try parsing with ISO_DATE_TIME formatter
+        return ZonedDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_DATE_TIME);
+      } catch (DateTimeParseException e2) {
+        // Try parsing as LocalDateTime and assume UTC
+        try {
+          return java.time.LocalDateTime.parse(dateTimeStr).atZone(ZoneOffset.UTC);
+        } catch (DateTimeParseException e3) {
+          throw new RuntimeException("Failed to parse datetime: " + dateTimeStr, e3);
+        }
+      }
+    }
+  }
+
+  private String dateTime2string(ZonedDateTime dateTime) {
+    return dateTime == null ? null : dateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
   }
 
   private ObjectNode getOrCreateObject(ObjectNode node, String fieldName) {

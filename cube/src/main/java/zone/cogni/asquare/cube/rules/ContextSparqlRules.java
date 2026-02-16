@@ -1,6 +1,5 @@
 package zone.cogni.asquare.cube.rules;
 
-import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -9,6 +8,7 @@ import zone.cogni.asquare.cube.spel.NamedTemplate;
 import zone.cogni.asquare.cube.spel.SpelService;
 import zone.cogni.asquare.triplestore.jenamemory.InternalRdfStoreService;
 
+import jakarta.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class ContextSparqlRules {
 
     private final SpelService spelService;
     private final List<Resource> rules;
-    private final Map<String, String> context;
+    private final Map<String, Object> context;
 
     public ContextSparqlRules(@Nonnull SpelService spelService,
                               @Nonnull List<Resource> rules) {
@@ -32,16 +32,32 @@ public class ContextSparqlRules {
 
     public ContextSparqlRules(@Nonnull SpelService spelService,
                               @Nonnull List<Resource> rules,
-                              @Nonnull Map<String, String> context) {
+                              @Nonnull Map<String, ?> context) {
         this.spelService = spelService;
         this.rules = rules;
-        this.context = context;
+        this.context = new HashMap<>(context);
     }
 
     @Nonnull
     public Model convert(@Nonnull Model model, @Nonnull String uri) {
-        HashMap<String, String> fullContext = new HashMap<>(context);
+        return convert(model, uri, Map.of());
+    }
+
+    /**
+     * Converts the model using the rules with additional context variables.
+     * The uri is added to context as "uri", and extraContext values are merged in.
+     * This allows passing user info (userUri, username, userGroups) to initialize rules.
+     *
+     * @param model the RDF model to transform
+     * @param uri the URI to add to context as "uri"
+     * @param extraContext additional context variables (e.g., userUri, userGroups)
+     * @return the transformed model
+     */
+    @Nonnull
+    public Model convert(@Nonnull Model model, @Nonnull String uri, @Nonnull Map<String, Object> extraContext) {
+        HashMap<String, Object> fullContext = new HashMap<>(context);
         fullContext.put("uri", uri);
+        fullContext.putAll(extraContext);
 
         return convert(model, fullContext);
     }
@@ -51,7 +67,7 @@ public class ContextSparqlRules {
         return convert(model, context);
     }
 
-    private Model convert(@Nonnull Model model, @Nonnull Map<String, String> fullContext) {
+    private Model convert(@Nonnull Model model, @Nonnull Map<String, Object> fullContext) {
         InternalRdfStoreService rdfStore = getRdfStore(model);
         asSortedNamedTemplates()
                 .forEach(namedTemplate -> {

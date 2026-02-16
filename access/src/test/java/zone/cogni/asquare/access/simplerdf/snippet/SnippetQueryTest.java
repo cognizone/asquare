@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zone.cogni.asquare.access.simplerdf.SimpleRdfAccessService;
 import zone.cogni.asquare.applicationprofile.prefix.PrefixCcService;
 import zone.cogni.asquare.applicationprofile.rules.Snippet;
-import zone.cogni.asquare.triplestore.RdfStoreService;
+import zone.cogni.semanticz.connectors.general.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.InMemoryDatabase;
 import zone.cogni.asquare.triplestore.jenamemory.JenaModel;
 

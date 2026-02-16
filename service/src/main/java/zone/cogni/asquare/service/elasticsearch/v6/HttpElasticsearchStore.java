@@ -6,17 +6,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -37,7 +29,6 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -82,7 +73,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
       restTemplate.delete(path);
     }
     catch (ElasticClientError e) {
-      if (e.getStatusCode().is4xxClientError()) {
+      if (e.getRawStatusCode() == 404) {
         log.info("Tried to delete index '{}', but it didn't exist", indexName);
         return;
       }
@@ -184,16 +175,12 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   }
 
   private ClientHttpRequestFactory clientHttpRequestFactory(int readTimeout, int connectTimeout) {
-    RequestConfig requestConfig = RequestConfig.custom()
-                                               .setResponseTimeout(Timeout.ofMilliseconds(readTimeout))
-                                               .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectTimeout))
-                                               .build();
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
-    CloseableHttpClient httpClient = HttpClients.custom()
-                                                .setDefaultRequestConfig(requestConfig)
-                                                .build();
+    factory.setReadTimeout(readTimeout);
+    factory.setConnectTimeout(connectTimeout);
 
-    return new HttpComponentsClientHttpRequestFactory(httpClient);
+    return factory;
   }
 
   private URI createUri(String indexName, String type, String id, Params params) {
@@ -235,39 +222,28 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   }
 
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
-
     @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-      int statusValue = response.getStatusCode()
-                                .value();
-      HttpStatus statusCode = HttpStatus.resolve(statusValue);
-      if (statusCode == null) {
-        throw new UnknownHttpStatusCodeException(statusValue, response.getStatusText(), response.getHeaders(), getResponseBody(response), getCharset(response));
+    protected void handleError(ClientHttpResponse response,
+                               HttpStatusCode statusCode,
+                               @Nullable URI url,
+                               @Nullable HttpMethod method) throws IOException {
+      if (statusCode.is4xxClientError()) {
+        throw new ElasticClientError(statusCode, response.getStatusText(),
+                response.getHeaders(), getResponseBody(response), getCharset(response));
       }
-
-      switch (statusCode.series()) {
-        case CLIENT_ERROR:
-          throw new ElasticClientError(statusCode, response.getStatusText(),
-            response.getHeaders(), getResponseBody(response), getCharset(response));
-
-        case SERVER_ERROR:
-          throw new HttpServerErrorException(statusCode, response.getStatusText(),
-            response.getHeaders(), getResponseBody(response), getCharset(response));
-
-        default:
-          throw new UnknownHttpStatusCodeException(statusCode.value(), response.getStatusText(),
-            response.getHeaders(), getResponseBody(response), getCharset(response));
-      }
+      // For 5xx and anything else, use the framework’s default handling
+      super.handleError(response, statusCode, url, method);
     }
   }
 
   public static class ElasticClientError extends HttpClientErrorException {
 
-    public ElasticClientError(HttpStatus statusCode, String statusText,
-                              @Nullable HttpHeaders responseHeaders, @Nullable byte[] responseBody, @Nullable Charset responseCharset) {
+    public ElasticClientError(HttpStatusCode statusCode, String statusText,
+                              @Nullable HttpHeaders responseHeaders,
+                              @Nullable byte[] responseBody,
+                              @Nullable Charset responseCharset) {
       super(statusCode, statusText, responseHeaders, responseBody, responseCharset);
     }
-
 
     public JsonNode getResponse() {
       return Try.of(() -> new ObjectMapper().readTree(getResponseBodyAsByteArray())).get();
@@ -281,6 +257,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
     public String getMessage() {
       return String.join(System.getProperty("line.separator"), super.getMessage(), getResponseAsString());
     }
+
 
   }
 }

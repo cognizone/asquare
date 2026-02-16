@@ -1,8 +1,6 @@
 package zone.cogni.asquare.applicationprofile.model.basic;
 
 import com.google.common.base.Preconditions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.applicationprofile.model.Rule;
@@ -16,6 +14,8 @@ import zone.cogni.asquare.applicationprofile.rules.RdfTypes;
 import zone.cogni.asquare.applicationprofile.rules.Snippet;
 import zone.cogni.asquare.applicationprofile.rules.SubClassOf;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

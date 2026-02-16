@@ -1,9 +1,9 @@
 package zone.cogni.asquare.rdf;
 
-import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
 
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 public class BasicRdfValue implements RdfValue {

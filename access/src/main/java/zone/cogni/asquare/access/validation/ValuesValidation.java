@@ -1,6 +1,5 @@
 package zone.cogni.asquare.access.validation;
 
-import jakarta.annotation.Nonnull;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.shacl.vocabulary.SHACLM;
@@ -14,6 +13,7 @@ import zone.cogni.asquare.applicationprofile.rules.Range;
 import zone.cogni.asquare.rdf.TypedResource;
 import zone.cogni.sem.jena.RdfStatements;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

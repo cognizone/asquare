@@ -198,6 +198,7 @@ project('access') {
     api project(':triplestore-jena-memory')
 
     // libs
+    api libs.semanticz.connectors.common
     api libs.guava
     api libs.commons.codec
     api libs.commons.io
@@ -460,6 +461,7 @@ project('cube') {
     api project(':triplestore')
     api project(':triplestore-jena-memory')
     // libs
+    api libs.semanticz.connectors.common
     api libs.guava
     api libs.vavr
     api libs.joda.time
@@ -576,6 +578,7 @@ project('service') {
     api project(':triplestore-jena-memory')
 
     // libs
+    api libs.semanticz.connectors.common
     api libs.guava
     api libs.commons.io
     api libs.vavr
@@ -620,6 +623,7 @@ project('triplestore-jena-memory') {
     api project(':triplestore')
 
     // libs
+    api libs.semanticz.connectors.common
     api libs.jena.tdb1
     api libs.jena.tdb2
 

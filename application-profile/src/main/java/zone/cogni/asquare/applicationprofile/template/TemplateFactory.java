@@ -1,6 +1,5 @@
 package zone.cogni.asquare.applicationprofile.template;
 
-import jakarta.annotation.Nonnull;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,7 @@ import org.thymeleaf.context.IContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
