@@ -47,7 +47,7 @@ public class ModelHasher implements Function<Model, byte[]> {
             StringRdfVisitor visitor = new StringRdfVisitor();
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
             return model.listStatements().toList().stream()
-                        .map(s -> visitor.visitStmt(s.getSubject(), s))
+                        .map(s -> visitor.visitStmt(s.getModel().createStatementTerm(s), s))
                         .map(String::getBytes)
                         .map(sha256::digest)
                         .reduce(ModelHasher::elementWiseXOr)

@@ -20,14 +20,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
  *   <li>single quoted string</li>
  *   <li>multiline string using escapes</li>
  *   <li>allow character escapes</li>
- *   <li><strike>hexadecimal numbers</strike></li>
- *   <li><strike>leading or trailing decimal point</strike></li>
+ *   <li><s>hexadecimal numbers</s></li>
+ *   <li><s>leading or trailing decimal point</s></li>
  *   <li>negative and positive infinity and NaN</li>
- *   <li><strike>explicit plus sign</strike></li>
+ *   <li><s>explicit plus sign</s></li>
  *   <li>single and multiline comments</li>
- *   <li><strike>additional whitespace</strike></li>
+ *   <li><s>additional whitespace</s></li>
  * </ul>
- * </p>
  */
 public class Json5Light {
 

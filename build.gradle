@@ -1,6 +1,3 @@
-import pl.allegro.tech.build.axion.release.domain.properties.TagProperties
-import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
-
 plugins {
   alias(libs.plugins.axion.release)
   alias(libs.plugins.idea)
@@ -23,10 +20,6 @@ scmVersion {
             'release/.*': 'release-v',
             'hotfix/.*' : 'hotfix-v'
     ]
-    initialVersion {
-      final TagProperties rules,
-      final ScmPosition position -> "0.5.0-fixed"
-    }
   }
   nextVersion {
     suffix = "SNAPSHOT"
@@ -59,10 +52,11 @@ subprojects {
     testImplementation platform(libs.junit.bom)
     testImplementation libs.junit.api
     testRuntimeOnly libs.junit.engine
+    testRuntimeOnly libs.junit.launcher
   }
 
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -173,7 +167,7 @@ subprojects {
   }
 
 
-  tasks.withType(Javadoc) {
+  tasks.withType(Javadoc).configureEach {
     failOnError false
   }
 
@@ -182,7 +176,7 @@ subprojects {
 
 idea {
   project {
-    languageLevel = "1.8"
+    languageLevel = "21"
   }
 }
 
@@ -535,7 +529,6 @@ project('elasticproxy') {
     api('commons-codec:commons-codec')
     api('org.apache.commons:commons-collections4')
     api('io.vavr:vavr')
-    api('javax.inject:javax.inject')
     api('org.apache.commons:commons-lang3')
 
     // spring

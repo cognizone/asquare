@@ -69,7 +69,6 @@ import java.util.function.Function;
  *       <p>Note: in case a blank node is used as an object, it would already be included in a set of the first case</p>
  *     </li>
  *   </ol>
- * </p>
  * <p>
  *   Finally, it should be noted that if a blank node is an "object" but it can be reached via 2 different paths
  *   the algorithm would not work, so we must fail at the start.

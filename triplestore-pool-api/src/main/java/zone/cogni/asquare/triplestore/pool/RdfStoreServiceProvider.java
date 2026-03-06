@@ -20,12 +20,11 @@ import java.util.function.Function;
  * <p>
  * Example of use:
  * </p>
- * <pre style="border:solid thin; padding: 1ex;"
- * > @RequestScope ->
+ * <pre style="border:solid thin; padding: 1ex;">
  * <code style="color:#0C0">@Bean</code>
  * <code style="color:#0C0">@RequestScope</code>
- * RdfStoreServiceProvider&lt;...> rdfStoreServiceProvider() {
- *   return new RdfStoreServiceProvider<>(...);
+ * RdfStoreServiceProvider&lt;...&gt; rdfStoreServiceProvider() {
+ *   return new RdfStoreServiceProvider&lt;&gt;(...);
  * }</pre>
  *
  * @param <K>

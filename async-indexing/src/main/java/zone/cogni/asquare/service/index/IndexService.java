@@ -354,7 +354,7 @@ public class IndexService {
    *
    * @param rdfStoreService the service used for the desired triple store
    * @param sparqlQuery     the SPARQL query that selects the resources to be indexed
-   * @return Map<String, Long> with information about the indexing results
+   * @return {@code Map<String, Long>} with information about the indexing results
    */
   public Map<String, Long> reindexSimple(RdfStoreService rdfStoreService, String sparqlQuery) {
     log.info("Launching reindexing for query {}", sparqlQuery);
