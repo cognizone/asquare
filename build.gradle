@@ -55,8 +55,8 @@ subprojects {
     testRuntimeOnly libs.junit.launcher
   }
 
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -176,7 +176,7 @@ subprojects {
 
 idea {
   project {
-    languageLevel = "21"
+    languageLevel = "17"
   }
 }
 
