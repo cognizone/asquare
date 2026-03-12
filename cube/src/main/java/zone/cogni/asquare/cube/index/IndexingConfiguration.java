@@ -1,7 +1,9 @@
 package zone.cogni.asquare.cube.index;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import io.vavr.control.Try;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
@@ -29,15 +31,12 @@ public class IndexingConfiguration {
 
   private static final String indent = "        ";
 
+  @Setter
   private List<IndexingConfiguration.Index> indexConfigurations;
   private Boolean initializationFailure;
 
   public List<IndexingConfiguration.Index> getIndexConfigurations() {
     return Collections.unmodifiableList(indexConfigurations);
-  }
-
-  public void setIndexConfigurations(List<IndexingConfiguration.Index> indexConfigurations) {
-    this.indexConfigurations = indexConfigurations;
   }
 
   /**
@@ -154,25 +153,15 @@ public class IndexingConfiguration {
       log.warn("{}     facets/* queries are missing", indent);
   }
 
+  @Setter
+  @Getter
   public static class Index {
 
     private String name;
     private Resource settingsResource;
     private List<Partition> partitions;
 
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public Resource getSettingsResource() {
-      return settingsResource;
-    }
-
-    /**
+      /**
      * Returns settings as JSON.
      *
      * @return <code>elastic-settings.json</code> in <code>index</code> folder as an <code>ObjectNode</code>
@@ -183,23 +172,11 @@ public class IndexingConfiguration {
                              .get();
     }
 
-    public void setSettingsResource(Resource settingsResource) {
-      this.settingsResource = settingsResource;
-    }
-
-    public boolean isValidSettingsResource() {
+      public boolean isValidSettingsResource() {
       return settingsResource != null && settingsResource.exists();
     }
 
-    public List<Partition> getPartitions() {
-      return partitions;
-    }
-
-    public void setPartitions(List<Partition> partitionConfigurations) {
-      this.partitions = partitionConfigurations;
-    }
-
-    public List<Partition> getValidPartitions() {
+      public List<Partition> getValidPartitions() {
       return partitions.stream()
                        .filter(Partition::isValid)
                        .collect(Collectors.toList());
@@ -223,6 +200,7 @@ public class IndexingConfiguration {
 
   public static class Partition {
 
+    @Setter
     private String name;
     private List<Resource> selectQueryResources;
     private List<String> selectQueries;
@@ -233,10 +211,6 @@ public class IndexingConfiguration {
 
     public String getName() {
       return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
     }
 
     public List<Resource> getSelectQueryResources() {

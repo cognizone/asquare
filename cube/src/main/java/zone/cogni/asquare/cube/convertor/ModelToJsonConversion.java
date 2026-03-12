@@ -1,12 +1,14 @@
 package zone.cogni.asquare.cube.convertor;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.NumericNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.BooleanNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.NumericNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import com.google.common.base.Preconditions;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.collections4.MapUtils;
@@ -54,6 +56,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
   private static final Logger log = LoggerFactory.getLogger(ModelToJsonConversion.class);
 
+  @Setter
+  @Getter
   public static class Configuration {
     /**
      * JSON contains a field "rootType" which sets the main type like "Dog" without its superclasses.
@@ -85,79 +89,23 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
 
     private boolean contextEnabled;
 
-    public boolean isLogIssues() {
-      return logIssues;
-    }
-
-    public void setLogIssues(boolean logIssues) {
-      this.logIssues = logIssues;
-    }
-
-    public Set<String> getIgnoredProperties() {
-      return ignoredProperties;
-    }
-
-    public void setIgnoredProperties(Set<String> ignoredProperties) {
-      this.ignoredProperties = ignoredProperties;
-    }
-
-    public boolean isIgnoredProperty(String property) {
+      public boolean isIgnoredProperty(String property) {
       return this.ignoredProperties.contains(property);
     }
 
-    public JsonRootType getJsonRootType() {
-      return jsonRootType;
-    }
-
-    public boolean isJsonRootType(JsonRootType jsonRootType) {
+      public boolean isJsonRootType(JsonRootType jsonRootType) {
       return this.jsonRootType == jsonRootType;
     }
 
-    public void setJsonRootType(JsonRootType jsonRootType) {
-      this.jsonRootType = jsonRootType;
-    }
-
-    public JsonType getJsonType() {
-      return jsonType;
-    }
-
-    public boolean isJsonType(JsonType jsonType) {
+      public boolean isJsonType(JsonType jsonType) {
       return this.jsonType == jsonType;
     }
 
-    public void setJsonType(JsonType jsonType) {
-      this.jsonType = jsonType;
-    }
-
-    public ModelType getModelType() {
-      return modelType;
-    }
-
-    public boolean isModelType(ModelType modelType) {
+      public boolean isModelType(ModelType modelType) {
       return this.modelType == modelType;
     }
 
-    public void setModelType(ModelType modelType) {
-      this.modelType = modelType;
-    }
-
-    public boolean isInverseAttributesSupported() {
-      return inverseAttributesSupported;
-    }
-
-    public void setInverseAttributesSupported(boolean inverseAttributesSupported) {
-      this.inverseAttributesSupported = inverseAttributesSupported;
-    }
-
-    public boolean isContextEnabled() {
-      return contextEnabled;
-    }
-
-    public void setContextEnabled(boolean contextEnabled) {
-      this.contextEnabled = contextEnabled;
-    }
-
-    public void check() {
+      public void check() {
       if (jsonRootType == null || jsonType == null || modelType == null)
         throw new RuntimeException("Please configure all of 'jsonRootType', 'jsonType' and 'modelType'.");
 
@@ -475,7 +423,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         throw new RuntimeException("attribute " + attribute.getAttributeId() + " has values " + values);
       }
 
-      TextNode singleReference = referencesNode.textNode(values.get(0).asResource().getURI());
+      StringNode singleReference = referencesNode.stringNode(values.getFirst().asResource().getURI());
 
       String configuredAttribute = configureString(model, attribute.getAttributeId());
       referencesNode.set(configuredAttribute, singleReference);
@@ -532,7 +480,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
                 .size() + " values: " + values);
       }
 
-      RDFNode rdfNode = values.get(0);
+      RDFNode rdfNode = values.getFirst();
       ObjectNode attributeNode = getOrCreateObjectNode(attributesNode, configuredAttributeId);
 
       if (rdfNode.isAnon()) throw new RuntimeException("blank nodes are not supported");
@@ -553,7 +501,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return;
       }
       if (XSDDatatype.XSDstring.equals(datatype)) {
-        addToJsonAsSingle(attributeNode, "xsd:string", getTextNode(literal.getString()));
+        addToJsonAsSingle(attributeNode, "xsd:string", getStringNode(literal.getString()));
         return;
       }
       if (XSDDatatype.XSDboolean.equals(datatype)) {
@@ -561,15 +509,15 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return;
       }
       if (XSDDatatype.XSDdate.equals(datatype)) {
-        addToJsonAsSingle(attributeNode, "xsd:date", getTextNode(literalToDate(literal)));
+        addToJsonAsSingle(attributeNode, "xsd:date", getStringNode(literalToDate(literal)));
         return;
       }
       if (XSDDatatype.XSDtime.equals(datatype)) {
-        addToJsonAsSingle(attributeNode, "xsd:time", getTextNode(literalToTime(literal)));
+        addToJsonAsSingle(attributeNode, "xsd:time", getStringNode(literalToTime(literal)));
         return;
       }
       if (XSDDatatype.XSDdateTime.equals(datatype)) {
-        addToJsonAsSingle(attributeNode, "xsd:dateTime", getTextNode(literalToDateTime(literal)));
+        addToJsonAsSingle(attributeNode, "xsd:dateTime", getStringNode(literalToDateTime(literal)));
         return;
       }
       if (XSDDatatype.XSDint.equals(datatype)) {
@@ -593,11 +541,11 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return;
       }
       if (XSDDatatype.XSDanyURI.equals(datatype)) {
-        addToJsonAsSingle(attributeNode, "xsd:anyURI", getTextNode(literal.getLexicalForm()));
+        addToJsonAsSingle(attributeNode, "xsd:anyURI", getStringNode(literal.getLexicalForm()));
         return;
       }
       if (datatype != null) {
-        addToJsonAsSingle(attributeNode, datatype.getURI(), getTextNode(literal.getLexicalForm()));
+        addToJsonAsSingle(attributeNode, datatype.getURI(), getStringNode(literal.getLexicalForm()));
         return;
       }
 
@@ -612,7 +560,7 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
       ObjectNode attributeNode = getOrCreateObjectNode(attributesNode, attributeId);
 
       if (rdfNode.isURIResource()) {
-        addToArrayNode(attributeNode, "rdfs:Resource", getTextNode(rdfNode.asResource().getURI()));
+        addToArrayNode(attributeNode, "rdfs:Resource", getStringNode(rdfNode.asResource().getURI()));
         return;
       }
 
@@ -624,11 +572,11 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         ObjectNode langStringNode = getOrCreateObjectNode(attributeNode, "rdf:langString");
 
         String language = literal.getLanguage();
-        addToArrayNode(langStringNode, language, getTextNode(literal.getString()));
+        addToArrayNode(langStringNode, language, getStringNode(literal.getString()));
         return;
       }
       if (XSDDatatype.XSDstring.equals(datatype)) {
-        addToArrayNode(attributeNode, "xsd:string", getTextNode(literal.getString()));
+        addToArrayNode(attributeNode, "xsd:string", getStringNode(literal.getString()));
         return;
       }
       if (XSDDatatype.XSDboolean.equals(datatype)) {
@@ -636,15 +584,15 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return;
       }
       if (XSDDatatype.XSDdate.equals(datatype)) {
-        addToArrayNode(attributeNode, "xsd:date", getTextNode(literalToDate(literal)));
+        addToArrayNode(attributeNode, "xsd:date", getStringNode(literalToDate(literal)));
         return;
       }
       if (XSDDatatype.XSDtime.equals(datatype)) {
-        addToArrayNode(attributeNode, "xsd:time", getTextNode(literalToTime(literal)));
+        addToArrayNode(attributeNode, "xsd:time", getStringNode(literalToTime(literal)));
         return;
       }
       if (XSDDatatype.XSDdateTime.equals(datatype)) {
-        addToArrayNode(attributeNode, "xsd:dateTime", getTextNode(literalToDateTime(literal)));
+        addToArrayNode(attributeNode, "xsd:dateTime", getStringNode(literalToDateTime(literal)));
         return;
       }
       if (XSDDatatype.XSDint.equals(datatype)) {
@@ -664,11 +612,11 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
         return;
       }
       if (XSDDatatype.XSDanyURI.equals(datatype)) {
-        addToArrayNode(attributeNode, "xsd:anyURI", getTextNode(literal.getLexicalForm()));
+        addToArrayNode(attributeNode, "xsd:anyURI", getStringNode(literal.getLexicalForm()));
         return;
       }
       if (datatype != null) {
-        addToArrayNode(attributeNode, datatype.getURI(), getTextNode(literal.getLexicalForm()));
+        addToArrayNode(attributeNode, datatype.getURI(), getStringNode(literal.getLexicalForm()));
         return;
       }
 
@@ -838,8 +786,8 @@ public class ModelToJsonConversion implements BiFunction<Model, String, ObjectNo
     return stringValue;
   }
 
-  private TextNode getTextNode(String value) {
-    return JsonNodeFactory.instance.textNode(value);
+  private StringNode getStringNode(String value) {
+    return JsonNodeFactory.instance.stringNode(value);
   }
 
   private BooleanNode getBooleanNode(boolean value) {

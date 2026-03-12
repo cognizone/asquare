@@ -1,6 +1,6 @@
 package zone.cogni.asquare.cube.convertor;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.function.BiFunction;

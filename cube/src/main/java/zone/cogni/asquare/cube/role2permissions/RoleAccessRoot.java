@@ -1,7 +1,8 @@
 package zone.cogni.asquare.cube.role2permissions;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,9 @@ public class RoleAccessRoot {
   public static RoleAccessRoot load(InputStreamSource resource, Set<String> operationIds) {
     try {
       log.info("load json {}", resource);
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+      ObjectMapper objectMapper = JsonMapper.builder()
+          .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+          .build();
 
       RoleAccessRoot result = objectMapper.readValue(resource.getInputStream(), RoleAccessRoot.class);
 

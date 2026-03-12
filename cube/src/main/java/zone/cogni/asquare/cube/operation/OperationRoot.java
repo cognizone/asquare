@@ -2,7 +2,9 @@ package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -123,8 +125,12 @@ public class OperationRoot {
     }
   }
 
+  @Setter
+  @Getter
   private boolean singleFile;
+  @Setter
   private Map<String, String> prefixes;
+  @Setter
   private List<OperationGroup> operationGroups;
 
   private final Map<String, OperationGroup> operationGroupMap = new TreeMap<>();
@@ -132,31 +138,15 @@ public class OperationRoot {
 
   private Set<String> operationIds;
 
-  public boolean isSingleFile() {
-    return singleFile;
-  }
-
-  public void setSingleFile(boolean singleFile) {
-    this.singleFile = singleFile;
-  }
-
-  public Map<String, String> getPrefixes() {
+    public Map<String, String> getPrefixes() {
     return prefixes == null ? Collections.emptyMap() : prefixes;
   }
 
-  public void setPrefixes(Map<String, String> prefixes) {
-    this.prefixes = prefixes;
-  }
-
-  public List<OperationGroup> getOperationGroups() {
+    public List<OperationGroup> getOperationGroups() {
     return operationGroups == null ? Collections.emptyList() : operationGroups;
   }
 
-  public void setOperationGroups(List<OperationGroup> operationGroups) {
-    this.operationGroups = operationGroups;
-  }
-
-  public void validate() {
+    public void validate() {
     makeParentStructure();
 
     List<String> errorMessages = new ArrayList<>();
@@ -248,7 +238,7 @@ public class OperationRoot {
       else current.getOperationGroup(id);
     }
 
-    return current.getOperation(path.get(path.size() - 1));
+    return current.getOperation(path.getLast());
   }
 
   private void makeParentStructure() {
@@ -381,7 +371,7 @@ public class OperationRoot {
       }
     }
 
-    String operationId = path.get(path.size() - 1);
+    String operationId = path.getLast();
     Operation referencedOperation = currentGroup.getOperation(operationId);
     if (referencedOperation == null) {
       errorMessages.add(errorMessageIntro + "cannot find operation '" + operationId + "'");

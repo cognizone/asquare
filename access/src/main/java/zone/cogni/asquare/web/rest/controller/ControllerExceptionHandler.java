@@ -1,9 +1,7 @@
 package zone.cogni.asquare.web.rest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -59,10 +57,7 @@ public class ControllerExceptionHandler {
   }
 
   private ObjectNode convertToJson(Exception exception, HttpStatus status) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-
-    JsonNodeFactory nodeFactory = objectMapper.getNodeFactory();
+    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
     ObjectNode exceptionNode = nodeFactory.objectNode();
     exceptionNode.put("logref", exception.getClass().getSimpleName());

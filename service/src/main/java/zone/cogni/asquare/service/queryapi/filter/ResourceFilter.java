@@ -1,7 +1,7 @@
 package zone.cogni.asquare.service.queryapi.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.MultiValueMap;
@@ -74,7 +74,7 @@ public class ResourceFilter {
     List<AttributeFilterPipe> active = attributeFilters
         .stream()
         .filter(pipe -> pipe.isActiveForDepth(depth))
-        .collect(Collectors.toList());
+        .toList();
 
     return active.isEmpty()
         || active.stream().allMatch(pipe -> pipe.getFilter().test(attribute));
@@ -83,7 +83,7 @@ public class ResourceFilter {
   public final <T extends RdfValue> Stream<T> filterValues(int dept, Attribute attribute, List<T> values) {
     Stream<T> stream = values.stream();
 
-    for (ValueFilterPipe filter : getValueFilterPipes(dept).collect(Collectors.toList())) {
+    for (ValueFilterPipe filter : getValueFilterPipes(dept).toList()) {
       stream = filter.filterStream(attribute, stream);
     }
     return stream;

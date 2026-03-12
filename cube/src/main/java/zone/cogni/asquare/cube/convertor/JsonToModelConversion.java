@@ -1,7 +1,7 @@
 package zone.cogni.asquare.cube.convertor;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.datatypes.BaseDatatype;
@@ -40,10 +40,15 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
   public JsonToModelConversion(PrefixCcService prefixCcService, ConversionProfile conversionProfile) {
     this(prefixCcService, conversionProfile, new ModelToJsonConversion.Configuration());
     log.warn(
-            "\n\t---------------------------------------------------------------------------------------------" +
-            "\n\t  Please switch to JsonToModelConversion(PrefixCcService, ConversionProfile, Configuration)" +
-            "\n\t  also make sure Configuration is same in JsonToModelConversion and ModelToJsonConversion" +
-            "\n\t---------------------------------------------------------------------------------------------"
+            """
+                    
+                    \t---------------------------------------------------------------------------------------------\
+                    
+                    \t  Please switch to JsonToModelConversion(PrefixCcService, ConversionProfile, Configuration)\
+                    
+                    \t  also make sure Configuration is same in JsonToModelConversion and ModelToJsonConversion\
+                    
+                    \t---------------------------------------------------------------------------------------------"""
     );
   }
 
@@ -110,8 +115,8 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     if (!root.has("attributes")) return;
 
     root.get("attributes")
-        .fields()
-        .forEachRemaining(attributeNames -> {
+        .properties()
+        .forEach(attributeNames -> {
           String attributeName = attributeNames.getKey();
 
           ConversionProfile.Attribute attribute = type.getByAttributeId(attributeName);
@@ -126,8 +131,8 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
                             Resource uri,
                             JsonNode attributeValueNode) {
     attributeValueNode
-            .fields()
-            .forEachRemaining(typeField -> {
+            .properties()
+            .forEach(typeField -> {
               String attributeType = typeField.getKey();
               JsonNode attributeValue = typeField.getValue();
 
@@ -154,8 +159,8 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     if (!root.has("references")) return;
 
     root.get("references")
-        .fields()
-        .forEachRemaining(attributeNames -> {
+        .properties()
+        .forEach(attributeNames -> {
           String attributeName = attributeNames.getKey();
           ConversionProfile.Attribute attribute = type.getByAttributeId(attributeName);
           if (attribute == null) {
@@ -233,8 +238,8 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
                             Resource uri,
                             JsonNode languagesNode) {
     languagesNode
-            .fields()
-            .forEachRemaining(languageNode -> {
+            .properties()
+            .forEach(languageNode -> {
               String language = languageNode.getKey();
               JsonNode languageValue = languageNode.getValue();
 

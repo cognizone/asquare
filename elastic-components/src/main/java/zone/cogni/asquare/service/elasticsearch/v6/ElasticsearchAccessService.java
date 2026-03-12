@@ -1,9 +1,9 @@
 package zone.cogni.asquare.service.elasticsearch.v6;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
@@ -26,7 +26,6 @@ import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,7 +101,7 @@ public class ElasticsearchAccessService implements ElasticAccessService {
                                                                  .get();
 
     Preconditions.checkState(typedResources.size() == 1);
-    return typedResources.get(0);
+    return typedResources.getFirst();
   }
 
   @Override

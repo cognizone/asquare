@@ -1,7 +1,7 @@
 package zone.cogni.asquare.cube.jsondiff;
 
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.HashSet;
 import java.util.Set;

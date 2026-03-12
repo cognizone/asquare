@@ -1,9 +1,9 @@
 package zone.cogni.asquare.service.elasticsearch.collapsedap;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.util.DefaultPrettyPrinter;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,7 +21,6 @@ import zone.cogni.asquare.applicationprofile.json.ApplicationProfileSimpleJson;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.applicationprofile.model.basic.CollapseApplicationProfile;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Configuration
@@ -67,19 +66,14 @@ public class ApplicationProfileDeployConfiguration implements ImportAware, Appli
 
   private void initResource() {
     log.info("initResource");
-    try {
-      ApplicationProfile applicationProfile = servicesProvider.getApplicationProfileConfig().getDeserializer().apply(resource);
-      ApplicationProfile collapse = new CollapseApplicationProfile().apply(applicationProfile);
-      JsonNode jsonNode = new ApplicationProfileSimpleJson().apply(collapse);
+    ApplicationProfile applicationProfile = servicesProvider.getApplicationProfileConfig().getDeserializer().apply(resource);
+    ApplicationProfile collapse = new CollapseApplicationProfile().apply(applicationProfile);
+    JsonNode jsonNode = new ApplicationProfileSimpleJson().apply(collapse);
 
-      ObjectMapper mapper = new ObjectMapper();
-      String json = mapper.writer(new DefaultPrettyPrinter()).writeValueAsString(jsonNode);
-      String patchedJson = json.replace("\"", "\\\"").replace("\r", "").replace("\n", "");
-      jsonElasticDocument = (ObjectNode) mapper.readTree("{\"json\":\"" + patchedJson + "\"}");
-    }
-    catch (IOException e) {
-      throw new RuntimeException("Init resource failed", e);
-    }
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writer().with(new DefaultPrettyPrinter()).writeValueAsString(jsonNode);
+    String patchedJson = json.replace("\"", "\\\"").replace("\r", "").replace("\n", "");
+    jsonElasticDocument = (ObjectNode) mapper.readTree("{\"json\":\"" + patchedJson + "\"}");
   }
 
   @Override

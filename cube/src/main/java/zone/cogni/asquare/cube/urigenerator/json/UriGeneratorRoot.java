@@ -1,6 +1,6 @@
 package zone.cogni.asquare.cube.urigenerator.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;

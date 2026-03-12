@@ -1,7 +1,7 @@
 package zone.cogni.asquare.service.elasticsearch;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
 
 public enum ElasticHelper {

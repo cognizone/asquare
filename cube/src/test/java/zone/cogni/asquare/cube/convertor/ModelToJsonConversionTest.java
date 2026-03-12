@@ -1,9 +1,9 @@
 package zone.cogni.asquare.cube.convertor;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import zone.cogni.libs.jena.utils.JenaUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -281,8 +280,8 @@ public class ModelToJsonConversionTest {
 
     JsonNode prefixNode = navigate(json, "context", "prefix");
     assertThat(prefixNode).isInstanceOf(ObjectNode.class);
-    assertThat(prefixNode.get("xsd")).isInstanceOf(TextNode.class);
-    assertThat(prefixNode.get("demo")).isInstanceOf(TextNode.class);
+    assertThat(prefixNode.get("xsd")).isInstanceOf(StringNode.class);
+    assertThat(prefixNode.get("demo")).isInstanceOf(StringNode.class);
     assertThat(prefixNode.get("demo").textValue()).isEqualTo("http://demo.com/onto#");
 
     assertThat(navigate(json, "data", "type").textValue()).isEqualTo("person:Person");
@@ -330,9 +329,7 @@ public class ModelToJsonConversionTest {
 
   private JsonNode lookup(JsonNode current, String uri) {
     ArrayNode arrayNode = (ArrayNode) current;
-    Iterator<JsonNode> elements = arrayNode.elements();
-    while (elements.hasNext()) {
-      JsonNode node = elements.next();
+    for (JsonNode node : arrayNode.elements()) {
       if (node.get("uri").isTextual() && node.get("uri").textValue().equals(uri))
         return node;
     }
@@ -347,7 +344,7 @@ public class ModelToJsonConversionTest {
       ArrayNode arrayNode = (ArrayNode) typeNode;
 
       Set<String> result = new HashSet<>();
-      arrayNode.elements().forEachRemaining(e -> result.add(e.textValue()));
+      arrayNode.elements().forEach(e -> result.add(e.textValue()));
       return result;
     }
 

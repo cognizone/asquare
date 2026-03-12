@@ -55,8 +55,8 @@ subprojects {
     testRuntimeOnly libs.junit.launcher
   }
 
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 
   group = 'zone.cogni.asquare'
   version = scmVersion.version
@@ -176,7 +176,7 @@ subprojects {
 
 idea {
   project {
-    languageLevel = "17"
+    languageLevel = "21"
   }
 }
 
@@ -226,6 +226,7 @@ project('action-logger') {
 
     // test
     testImplementation libs.spring.boot.starter.test
+    testImplementation libs.spring.boot.starter.webmvc.test
   }
 }
 
@@ -312,8 +313,14 @@ project('asquareroot') {
 
     // libs
     api libs.jena.arq
-    implementation libs.elasticsearch         // Apache 2.0, not exposed transitively
-    implementation libs.elasticsearch.test    // Apache 2.0, not exposed transitively
+    implementation(libs.elasticsearch) {       // Apache 2.0, not exposed transitively
+      exclude group: 'com.fasterxml.jackson.core'
+      exclude group: 'com.fasterxml.jackson.dataformat'
+    }
+    implementation(libs.elasticsearch.test) {  // Apache 2.0, not exposed transitively
+      exclude group: 'com.fasterxml.jackson.core'
+      exclude group: 'com.fasterxml.jackson.dataformat'
+    }
 
     // spring
     api libs.spring.boot.starter
@@ -493,6 +500,7 @@ project('elastic-service') {
 
    // spring
     api libs.spring.boot.starter.json
+    api libs.spring.boot.starter.web
     api libs.httpclient5
   }
 }
@@ -659,7 +667,7 @@ project('triplestore-tdb-pool') {
 
     // libs
     api libs.commons.pool2
-    api libs.cglib
+//    api libs.cglib
 
     // TESTING
     testImplementation libs.spring.boot.starter.test

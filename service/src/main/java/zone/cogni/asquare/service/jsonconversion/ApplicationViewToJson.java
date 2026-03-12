@@ -1,6 +1,6 @@
 package zone.cogni.asquare.service.jsonconversion;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import org.apache.jena.rdf.model.ResourceFactory;
 import zone.cogni.asquare.access.ApplicationView;
@@ -124,7 +124,7 @@ public class ApplicationViewToJson implements Supplier<ObjectNode> {
       if (data.isEmpty()) throw new NotFoundException("Resource of type " + dataType.getDescription() + " not found");
       Preconditions.checkState(data.size() == 1,
                                "Asked for one, but found many resources of type " + dataType.getDescription());
-      singleTypedResourceData = data.get(0);
+      singleTypedResourceData = data.getFirst();
     }
     else {
       typedResourceData = data;

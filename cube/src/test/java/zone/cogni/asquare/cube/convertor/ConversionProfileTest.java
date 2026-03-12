@@ -1,13 +1,11 @@
 package zone.cogni.asquare.cube.convertor;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 import zone.cogni.asquare.cube.convertor.json.ApplicationProfileToCompactConversionProfile;
 import zone.cogni.asquare.cube.convertor.json.ApplicationProfileToConversionProfile;
@@ -25,7 +23,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -47,7 +44,7 @@ public class ConversionProfileTest {
     // then
     assertThat(conversionModel.getTypes()).hasSize(1);
 
-    CompactConversionProfile.Type person = conversionModel.getTypes().get(0);
+    CompactConversionProfile.Type person = conversionModel.getTypes().getFirst();
     assertThat(person.getId()).isEqualTo("Person");
     assertThat(person.getType()).isEqualTo("http://demo.com/person/model#Person");
     assertThat(person.getAttributes()).hasSize(6);

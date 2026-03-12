@@ -1,6 +1,6 @@
 package zone.cogni.asquare.cube.index.swap;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -69,7 +69,7 @@ public class IndexSwapService {
     }
 
     return indexes.isEmpty() ? null
-                             : indexes.get(0);
+                             : indexes.getFirst();
   }
 
   public IndexSwapState getState(String aliasName, String indexPrefix) {

@@ -1,9 +1,9 @@
 package zone.cogni.asquare.cube.operation;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -46,7 +46,7 @@ public class OperationResultJsonConversion {
                                        List<String> uris) {
     ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
 
-    List<SingleGroupResult> results = uris.stream().map(uri-> operationResultProcessor.validate(context, uri)).collect(Collectors.toList());
+    List<SingleGroupResult> results = uris.stream().map(uri-> operationResultProcessor.validate(context, uri)).toList();
     results.forEach(result -> arrayNode.add(createGroupJson(result)));
 
     return arrayNode;

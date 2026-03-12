@@ -1,6 +1,6 @@
 package zone.cogni.asquare.applicationprofile.owl.applicationprofile;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

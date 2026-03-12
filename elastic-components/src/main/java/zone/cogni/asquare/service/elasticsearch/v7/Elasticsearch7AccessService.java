@@ -1,10 +1,11 @@
 package zone.cogni.asquare.service.elasticsearch.v7;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import lombok.Getter;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Try;
 import org.apache.jena.rdf.model.Resource;
@@ -27,13 +28,11 @@ import zone.cogni.asquare.service.jsonconversion.JsonConversionFactory;
 import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.web.rest.controller.exceptions.NotFoundException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
@@ -44,6 +43,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
 
   private static final Logger log = LoggerFactory.getLogger(Elasticsearch7AccessService.class);
 
+  @Getter
   private final String indexName;
   private final Elasticsearch7Store elasticStore;
   private final ApplicationProfile applicationProfile;
@@ -98,7 +98,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
                                                                  .get();
 
     Preconditions.checkState(typedResources.size() == 1);
-    return typedResources.get(0);
+    return typedResources.getFirst();
   }
 
   @Override
@@ -138,7 +138,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
   private ObjectNode handleFail(Throwable e) {
     return Match(e).of(
       Case($(instanceOf(HttpElasticsearch7Store.ElasticClientError.class)), () -> {
-        if (((HttpElasticsearch7Store.ElasticClientError) e).getRawStatusCode() == 404) {
+        if (((HttpElasticsearch7Store.ElasticClientError) e).getStatusCode().value() == 404) {
           throw new NotFoundException(e.getMessage());
         }
         throw (RuntimeException) e;
@@ -212,7 +212,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
       json.set("facets", facets);
     }
     if(params.hasGraph()) {
-      json.set("graph", new TextNode(params.getGraph()));
+      json.set("graph", new StringNode(params.getGraph()));
     }
 
     indexJson(json, indexName, resource.getResource().getURI(), params);
@@ -246,7 +246,7 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
 
     List<? extends TypedResource> typedResources = types.stream()
                                                         .flatMap(type -> sourceView.getRepository().findAll(type).stream())
-                                                        .collect(Collectors.toList());
+                                                        .toList();
 
     resetIndex(indexSettings);
 
@@ -290,10 +290,6 @@ public class Elasticsearch7AccessService implements ElasticAccessService {
     return () -> {
       if (counter.incrementAndGet() % 500 == 0) log.info(".. .. {}/{} ...", counter.get(), size);
     };
-  }
-
-  public String getIndexName() {
-    return indexName;
   }
 
   public ObjectNode rawSearch(ObjectNode query) {

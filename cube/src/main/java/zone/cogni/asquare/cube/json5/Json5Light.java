@@ -1,8 +1,8 @@
 package zone.cogni.asquare.cube.json5;
 
-import com.fasterxml.jackson.core.json.JsonReadFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public class Json5Light {
    * In case of multiline strings you MUST use double quotes e.g. <code>"multiline string here"</code>
    * </p>
    *
-   * @return a Jackson {@link com.fasterxml.jackson.databind.ObjectMapper ObjectMapper} with
+   * @return a Jackson {@link tools.jackson.databind.ObjectMapper ObjectMapper} with
    * as many features as possible enabled.
    */
   public static ObjectMapper getJson5Mapper() {
@@ -67,7 +67,7 @@ public class Json5Light {
     private final JsonMapper.Builder builder = JsonMapper.builder();
 
     public Builder allowEcmascriptIdentifier() {
-      builder.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES);
+      builder.enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES);
       return this;
     }
 

@@ -1,7 +1,8 @@
 package zone.cogni.asquare.service.elasticsearch.v6;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Getter;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import io.vavr.control.Try;
 import zone.cogni.asquare.service.elasticsearch.ElasticConfiguration;
 
@@ -14,6 +15,7 @@ public abstract class GenericElasticConfiguration implements ElasticConfiguratio
 
   public abstract String getHost();
   public abstract String getPort();
+  @Getter
   private ElasticsearchStore store;
   private final Boolean isIdUrlEncoded;
 
@@ -25,7 +27,4 @@ public abstract class GenericElasticConfiguration implements ElasticConfiguratio
     store = new HttpElasticsearchStore("http://" + getHost() + ":" + getPort(), isIdUrlEncoded);
   }
 
-  public ElasticsearchStore getStore(){
-    return store;
-  }
 }

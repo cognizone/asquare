@@ -1,7 +1,7 @@
 package zone.cogni.asquare.service.jsonconversion;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +40,7 @@ public class CachedApplicationViewToJson implements Supplier<ObjectNode> {
     }
 
     log.info(".. .. .. reading ...{}.", StringUtils.right(file.getPath(), 45));
-    try {
-      return (ObjectNode) new ObjectMapper().readTree(file);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return (ObjectNode) new ObjectMapper().readTree(file);
   }
 
   private void writeFile(ObjectNode jsonNodes) {

@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -40,7 +40,7 @@ public class LoggedActionAspectWebTest extends AbstractLoggedActionAspectTest {
     Assertions.assertThat(logReports)
               .hasSize(1);
 
-    Assertions.assertThat(logReports.get(0))
+    Assertions.assertThat(logReports.getFirst())
               .containsKey(LoggedActionModel.ReportKeys.httpHeaders);
   }
 }

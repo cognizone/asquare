@@ -1,7 +1,8 @@
 package zone.cogni.asquare.applicationprofile.owl.owl2ap.owl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import jakarta.annotation.Nonnull;
@@ -182,8 +183,9 @@ public class OwlRules {
   }
 
   public void print() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    ObjectMapper objectMapper = JsonMapper.builder()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .build();
 
     try {
       for (Rule rule : rules) {

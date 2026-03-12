@@ -1,31 +1,27 @@
 [versions]
 apachePoiVersion = '5.5.1'
-cglibVersion = "3.3.0"
-commonsLang3Version = '3.20.0'
-commonsCodecVersion = '1.21.0'
-commonsCollectionsVersion = "4.5.0"
-commonsIoVersion = '2.21.0'
-commonsPool2Version = "2.13.1"
-elasticsearchVersion = '7.5.2'
-guavaVersion = '33.5.0-jre'
-httpclient5Version = "5.6"
-httpComponentsVersion = '4.5.14'
-jacksonVersion = "2.21.1"
-jakartaInjectVersion = "2.0.1"
-jenaVersion = '5.6.0'
-jodaTimeVersion = "2.14.0"
-jsonldJavaVersion= '0.13.6'
-junitVersion = "5.14.3"
-junitPlatformVersion = "1.14.3"
-lombokVersion = "1.18.42"
-ognlVersion = "3.3.4"
-snakeyaml = "2.6"
-springBootVersion = '3.5.11'
-springSecurityVersion = '6.5.8'
-vavrVersion = "0.10.7"
+commonsLang3Version = '3.19.0'           # SB4 managed version (was 3.20.0)
+commonsCodecVersion = '1.21.0'           # SB4 managed version, unchanged
+commonsCollectionsVersion = "4.5.0"      # not managed by SB4, unchanged
+commonsIoVersion = '2.21.0'             # not managed by SB4, unchanged
+commonsPool2Version = "2.13.1"           # SB4 managed version, unchanged
+elasticsearchVersion = '7.5.2'           # pinned: Apache 2.0 license, intentionally kept for asquareroot test infra
+guavaVersion = '33.5.0-jre'             # not managed by SB4, latest stable
+httpclient5Version = "5.6"              # not managed by SB4, latest stable
+httpComponentsVersion = '4.5.14'        # not managed by SB4, latest stable (httpclient 4.x)
+jakartaInjectVersion = "2.0.1"          # Jakarta EE 11 compatible
+jenaVersion = '5.6.0'                   # not managed by SB4, latest stable
+jodaTimeVersion = "2.14.1"             # latest stable (was 2.14.0)
+jsonldJavaVersion = '0.13.6'            # not managed by SB4, latest stable
+junitVersion = "6.0.3"                  # SB4 ships JUnit Jupiter 6.0.x (was 5.14.3)
+lombokVersion = "1.18.42"              # not managed by SB4, latest stable
+ognlVersion = "3.3.4"                   # not managed by SB4, latest stable
+snakeyaml = "2.5"                       # SB4 managed version (was 2.6)
+springBootVersion = '4.0.2'             # upgraded from 3.5.11
+springSecurityVersion = '7.0.3'         # SB4 managed Spring Security 7 (was 6.5.8)
+vavrVersion = "0.10.6"                  # latest stable in 0.10.x line (was 0.10.7 — does not exist, latest is 0.10.6)
 
 [libraries]
-cglib = { module = "cglib:cglib", version.ref = "cglibVersion" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3Version" }
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
 commons-collections = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollectionsVersion" }
@@ -51,16 +47,17 @@ jsonld-java = { module = "com.github.jsonld-java:jsonld-java", version.ref = "js
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
-junit-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatformVersion" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }  # version managed by junit-bom
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 ognl = { module = "ognl:ognl", version.ref = "ognlVersion" }
 poi = { module = "org.apache.poi:poi", version.ref = "apachePoiVersion" }
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoiVersion" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
-spring-boot-starter-aop = { module = "org.springframework.boot:spring-boot-starter-aop", version.ref = "springBootVersion" }
+spring-boot-starter-aop = { module = "org.springframework.boot:spring-boot-starter-aspectj", version.ref = "springBootVersion" }  # renamed in SB4
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBootVersion" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springBootVersion" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test", version.ref = "springBootVersion" }
 spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf", version.ref = "springBootVersion" }
 spring-boot-starter-json = { module = "org.springframework.boot:spring-boot-starter-json", version.ref = "springBootVersion" }
 spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "springBootVersion" }

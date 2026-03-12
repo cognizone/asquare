@@ -1,10 +1,10 @@
 package zone.cogni.asquare.service.jsonconversion;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.JsonNodeType;
+import tools.jackson.databind.node.ObjectNode;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,8 +35,9 @@ public class ApplicationViewToJsonTest {
 
     ObjectNode node = config.getToJson().withDataTypeId("Settlement", true).get();
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    JsonMapper mapper = JsonMapper.builder()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .build();
     String written = Try.of(() -> mapper.writeValueAsString(node)).get();
     System.out.println(written);
     ObjectNode read = (ObjectNode) Try.of(() -> mapper.readTree(written.getBytes(StandardCharsets.UTF_8))).get();

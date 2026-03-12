@@ -1,6 +1,6 @@
 package zone.cogni.asquare.service.elasticsearch.v6;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 import zone.cogni.asquare.service.elasticsearch.ElasticStore;
 import zone.cogni.asquare.service.elasticsearch.Params;
 
