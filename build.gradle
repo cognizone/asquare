@@ -667,7 +667,6 @@ project('triplestore-tdb-pool') {
 
     // libs
     api libs.commons.pool2
-//    api libs.cglib
 
     // TESTING
     testImplementation libs.spring.boot.starter.test

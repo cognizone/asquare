@@ -1,23 +1,23 @@
 [versions]
 apachePoiVersion = '5.5.1'
-commonsLang3Version = '3.19.0'           # SB4 managed version (was 3.20.0)
-commonsCodecVersion = '1.21.0'           # SB4 managed version, unchanged
-commonsCollectionsVersion = "4.5.0"      # not managed by SB4, unchanged
+commonsLang3Version = '3.20.0'          # SB4 managed version (was 3.19.0)
+commonsCodecVersion = '1.21.0'          # SB4 managed version, unchanged
+commonsCollectionsVersion = "4.5.0"     # not managed by SB4, unchanged
 commonsIoVersion = '2.21.0'             # not managed by SB4, unchanged
-commonsPool2Version = "2.13.1"           # SB4 managed version, unchanged
-elasticsearchVersion = '7.5.2'           # pinned: Apache 2.0 license, intentionally kept for asquareroot test infra
+commonsPool2Version = "2.13.1"          # SB4 managed version, unchanged
+elasticsearchVersion = '7.5.2'          # pinned: Apache 2.0 license, intentionally kept for asquareroot test infra
 guavaVersion = '33.5.0-jre'             # not managed by SB4, latest stable
 httpclient5Version = "5.6"              # not managed by SB4, latest stable
 httpComponentsVersion = '4.5.14'        # not managed by SB4, latest stable (httpclient 4.x)
 jakartaInjectVersion = "2.0.1"          # Jakarta EE 11 compatible
 jenaVersion = '5.6.0'                   # not managed by SB4, latest stable
-jodaTimeVersion = "2.14.1"             # latest stable (was 2.14.0)
+jodaTimeVersion = "2.14.1"              # latest stable (was 2.14.0)
 jsonldJavaVersion = '0.13.6'            # not managed by SB4, latest stable
 junitVersion = "6.0.3"                  # SB4 ships JUnit Jupiter 6.0.x (was 5.14.3)
-lombokVersion = "1.18.42"              # not managed by SB4, latest stable
+lombokVersion = "1.18.42"               # not managed by SB4, latest stable
 ognlVersion = "3.3.4"                   # not managed by SB4, latest stable
-snakeyaml = "2.5"                       # SB4 managed version (was 2.6)
-springBootVersion = '4.0.2'             # upgraded from 3.5.11
+snakeyaml = "2.6"                       # SB4 managed version (was 2.5)
+springBootVersion = '4.0.3'             # upgraded from 3.5.11
 springSecurityVersion = '7.0.3'         # SB4 managed Spring Security 7 (was 6.5.8)
 vavrVersion = "0.10.6"                  # latest stable in 0.10.x line (was 0.10.7 — does not exist, latest is 0.10.6)
 
@@ -34,6 +34,7 @@ guava = { module = "com.google.guava:guava", version.ref = "guavaVersion" }
 httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpComponentsVersion" }
 httpclient-fluent = { module = "org.apache.httpcomponents:fluent-hc", version.ref = "httpComponentsVersion" }
 httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpclient5Version" }
+httpclient5-fluent = { module = "org.apache.httpcomponents.client5:httpclient5-fluent", version.ref = "httpclient5Version" }
 jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInjectVersion" }
 jena-core = { module = "org.apache.jena:jena-core", version.ref = "jenaVersion" }
 jena-arq = { module = "org.apache.jena:jena-arq", version.ref = "jenaVersion" }
