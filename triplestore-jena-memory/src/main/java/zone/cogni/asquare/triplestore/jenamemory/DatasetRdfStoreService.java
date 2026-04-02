@@ -3,6 +3,7 @@ package zone.cogni.asquare.triplestore.jenamemory;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -45,7 +46,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Select", query, bindings, context);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).dataset(dataset).substitution(bindings).build()) {
         return resultSetHandler.handle(queryExecution.execSelect());
       }
     });
@@ -56,7 +57,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Ask", query, bindings, null);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).dataset(dataset).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
     });
@@ -68,7 +69,7 @@ public class DatasetRdfStoreService implements RdfStoreService {
     return executeInLock(Lock.READ, () -> {
       traceQuery("Construct", query, bindings, null);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, dataset, bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).dataset(dataset).substitution(bindings).build()) {
         return queryExecution.execConstruct();
       }
     });

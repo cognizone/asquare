@@ -2,6 +2,7 @@ package zone.cogni.sem.jena.template;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -12,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
-import static org.apache.jena.query.QueryExecutionFactory.create;
+
+
 import static org.slf4j.LoggerFactory.getLogger;
 import static zone.cogni.sem.jena.template.JenaBooleanHandler.booleanAskResultExtractor;
 import static zone.cogni.sem.jena.template.JenaQueryUtils.closeQuietly;
@@ -195,6 +197,10 @@ public class JenaQueryTemplate {
   }
 
   public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    return create(sparql, model, querySolution);
+    QueryExecutionDatasetBuilder builder = QueryExecutionDatasetBuilder.create().model(model).query(sparql);
+    if (querySolution != null) {
+      builder.substitution(querySolution);
+    }
+    return builder.build();
   }
 }

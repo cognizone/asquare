@@ -2,6 +2,7 @@ package zone.cogni.asquare.triplestore.jenamemory;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
@@ -96,7 +97,7 @@ public class InMemoryDatabase implements RdfStoreService {
                                           bindings,
                                           query);
 
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(jenaModel.get()).substitution(bindings).build()) {
         ResultSet resultSet = queryExecution.execSelect();
         return resultSetHandler.handle(resultSet);
       }
@@ -110,7 +111,7 @@ public class InMemoryDatabase implements RdfStoreService {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(jenaModel.get()).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
       catch (RuntimeException e) {
@@ -123,7 +124,7 @@ public class InMemoryDatabase implements RdfStoreService {
   @Override
   public Model executeConstructQuery(Query query, QuerySolutionMap bindings) {
     return executeInLock(Lock.READ, () -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, jenaModel.get(), bindings)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(jenaModel.get()).substitution(bindings).build()) {
         if (log.isTraceEnabled()) log.trace("Running construct query: \n{}", query);
         return queryExecution.execConstruct();
       }
