@@ -3,7 +3,7 @@ package zone.cogni.sem.jena.template;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -67,7 +67,11 @@ public abstract class JenaQueryUtils {
   }
 
   public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    return QueryExecutionFactory.create(sparql, model, querySolution);
+    QueryExecutionDatasetBuilder builder = QueryExecutionDatasetBuilder.create().query(sparql).model(model);
+    if (querySolution != null) {
+      builder.substitution(querySolution);
+    }
+    return builder.build();
   }
 
   public static void closeQuietly(QueryExecution queryExecution) {
