@@ -11,7 +11,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
-import org.apache.jena.riot.lang.CollectorStreamTriples;
+import org.apache.jena.riot.lang.CollectorStreamRDF;
 
 public class RdfParserUtils {
 
@@ -58,13 +58,13 @@ public class RdfParserUtils {
   }
 
   private static Node parseRdfTermFrom(String ttlTerm) {
-    CollectorStreamTriples stream = new CollectorStreamTriples();
+    CollectorStreamRDF stream = new CollectorStreamRDF();
     try {
       RDFParser.create().lang(RDFLanguages.TTL).fromString("<http://www.w3.org/2000/01/rdf-schema#Resource> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>" + ttlTerm + " .").parse(stream);
     }
     catch (Exception e) {
       throw new IllegalArgumentException("Failed to parse RDF term from serialized ttl form '" + ttlTerm + "': " + e.getMessage());
     }
-    return stream.getCollected().stream().findFirst().get().getObject();
+    return stream.getTriples().stream().findFirst().get().getObject();
   }
 }
