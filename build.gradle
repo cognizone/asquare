@@ -176,7 +176,7 @@ subprojects {
 
 idea {
   project {
-    languageLevel = "17"
+    languageLevel = "21"
   }
 }
 
