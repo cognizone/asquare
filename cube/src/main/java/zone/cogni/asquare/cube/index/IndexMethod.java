@@ -27,7 +27,6 @@ import java.util.function.Supplier;
  *   <li>asynchronous</li>
  *   <li>synchronous</li>
  * </ul>
- * </p>
  *
  * <p>
  * For it too work it needs context
@@ -38,7 +37,6 @@ import java.util.function.Supplier;
  *   <li>a conversion profile from Jena Model to JSON</li>
  *   <li>a component to turn SPARQL into JSON for facets</li>
  * </ul>
- * </p>
  */
 public class IndexMethod {
 

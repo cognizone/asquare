@@ -85,7 +85,7 @@ import zone.cogni.asquare.security.saml.extension.service.RoleMappingService;
 import zone.cogni.asquare.security.saml.extension.spring.SAMLUserAttributesMapping;
 import zone.cogni.asquare.security.saml.extension.spring.SAMLUserDetailsServiceImpl;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

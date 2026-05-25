@@ -18,8 +18,8 @@ import zone.cogni.asquare.security.model.AuthenticationTokenMapper;
 import zone.cogni.asquare.security.model.UserDto;
 import zone.cogni.asquare.service.rest.model.RestResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

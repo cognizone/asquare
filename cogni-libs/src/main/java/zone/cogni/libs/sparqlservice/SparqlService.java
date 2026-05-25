@@ -52,7 +52,6 @@ public interface SparqlService {
    *     by doing a manual {@link #dropGraph(String)} and {@link #upload(Model, String)}.
    *   </li>
    * </ul>
-   * </p>
    *
    * @param graphUri uri of graph being updated
    * @param model new model which will be in the designated graph.

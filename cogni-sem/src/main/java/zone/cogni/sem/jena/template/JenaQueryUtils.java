@@ -3,12 +3,13 @@ package zone.cogni.sem.jena.template;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,12 +63,16 @@ public abstract class JenaQueryUtils {
     return newQueryExecution(model, sparql, null);
   }
 
-  public static QueryExecution newQueryExecution(Model model, String sparql, QuerySolution querySolution) {
+  public static QueryExecution newQueryExecution(Model model, String sparql, @Nullable QuerySolution querySolution) {
     return newQueryExecution(model, create(sparql, syntaxARQ), querySolution);
   }
 
-  public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    return QueryExecutionFactory.create(sparql, model, querySolution);
+  public static QueryExecution newQueryExecution(Model model, Query sparql, @Nullable QuerySolution querySolution) {
+    QueryExecutionDatasetBuilder builder = QueryExecutionDatasetBuilder.create().model(model).query(sparql);
+    if (querySolution != null) {
+      builder.substitution(querySolution);
+    }
+    return builder.build();
   }
 
   public static void closeQuietly(QueryExecution queryExecution) {

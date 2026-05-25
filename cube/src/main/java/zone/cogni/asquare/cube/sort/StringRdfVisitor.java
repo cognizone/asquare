@@ -8,6 +8,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StatementTerm;
 import org.apache.jena.vocabulary.XSD;
 
 /**
@@ -38,7 +39,7 @@ public class StringRdfVisitor implements RDFVisitor {
   }
 
   /**
-   * @return uri surrounded by < and >
+   * @return uri surrounded by {@literal <} and {@literal >}
    */
   @Override
   public String visitURI(Resource r, String uri) {
@@ -64,7 +65,7 @@ public class StringRdfVisitor implements RDFVisitor {
   }
 
   @Override
-  public String visitStmt(Resource r, Statement statement) {
+  public String visitStmt(StatementTerm r, Statement statement) {
     String result = "";
 
     Resource subject = statement.getSubject();

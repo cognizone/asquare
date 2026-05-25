@@ -9,7 +9,7 @@ public class Params {
   /**
    * The request {@code refresh} query parameter name.
    *
-   * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html</a>
+   * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html">Elasticsearch refresh docs</a>
    */
   public static final String REFRESH = "refresh";
 

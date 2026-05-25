@@ -24,7 +24,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import zone.cogni.asquare.security.service.PermissionService;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.LinkedHashMap;
 
 @Configuration

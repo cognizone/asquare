@@ -34,14 +34,14 @@ import static zone.cogni.asquare.cube.index.InternalIndexingServiceUtils.indexSy
  * Here is an expected folder structure for indexing:
  *
  * <pre>
- *   /rootFolder                <- root folder
- *     /name-1                  <- name of index
+ *   /rootFolder                &lt;- root folder
+ *     /name-1                  &lt;- name of index
  *       elastic-settings.json
- *       /collection-1-1        <- name of collection
- *         select-*.sparql      <- select uris for collection
- *         construct-*.sparql   <- select triples for uri
- *         /facets              <- folder for facet queries
- *           select-1.sparql    <- facet query
+ *       /collection-1-1        &lt;- name of collection
+ *         select-*.sparql      &lt;- select uris for collection
+ *         construct-*.sparql   &lt;- select triples for uri
+ *         /facets              &lt;- folder for facet queries
+ *           select-1.sparql    &lt;- facet query
  *           select-2.sparql
  *       /collection-1-2
  *         select-*.sparql
