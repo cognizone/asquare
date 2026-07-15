@@ -6,6 +6,8 @@ import org.apache.jena.query.QueryExecutionDatasetBuilder;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+
+import jakarta.annotation.Nullable;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 
@@ -194,8 +196,8 @@ public class JenaQueryTemplate {
     return newQueryExecution(model, sparql, null);
   }
 
-  public static QueryExecution newQueryExecution(Model model, Query sparql, QuerySolution querySolution) {
-    QueryExecutionDatasetBuilder builder = QueryExecutionDatasetBuilder.create().query(sparql).model(model);
+  public static QueryExecution newQueryExecution(Model model, Query sparql, @Nullable QuerySolution querySolution) {
+    QueryExecutionDatasetBuilder builder = QueryExecutionDatasetBuilder.create().model(model).query(sparql);
     if (querySolution != null) {
       builder.substitution(querySolution);
     }
