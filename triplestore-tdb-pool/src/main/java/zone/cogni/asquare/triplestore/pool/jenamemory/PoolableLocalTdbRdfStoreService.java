@@ -4,6 +4,8 @@ package zone.cogni.asquare.triplestore.pool.jenamemory;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.query.TxnType;
 import org.apache.jena.tdb1.TDB1Exception;
+import org.apache.jena.tdb1.base.file.Location;
+import org.apache.jena.tdb1.sys.StoreConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.cogni.asquare.triplestore.jenamemory.LocalTdbRdfStoreService;
@@ -103,9 +105,11 @@ public class PoolableLocalTdbRdfStoreService extends LocalTdbRdfStoreService imp
    */
   @Override
   public void destroyObject() throws Exception {
+    final StoreConnection connection = StoreConnection.getExisting(Location.create(getTdbLocation()));
     boolean connectionIsValid = true;
     try {
       PoolableRdfStoreService.super.destroyObject();
+      connectionIsValid = connection == null || connection.isValid();
     }
     catch (final TDB1Exception | RuntimeIOException e) {
       log.error("Problem during destroying the {} TDB object: {}.", getTdbLocation(), this, e);

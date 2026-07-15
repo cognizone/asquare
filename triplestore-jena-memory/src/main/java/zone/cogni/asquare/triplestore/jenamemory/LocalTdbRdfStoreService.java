@@ -17,6 +17,10 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.system.Txn;
 import org.apache.jena.tdb1.TDB1Exception;
 import org.apache.jena.tdb1.TDB1Factory;
+import org.apache.jena.tdb1.base.file.ChannelManager;
+import org.apache.jena.tdb1.base.file.FileException;
+import org.apache.jena.tdb1.base.file.Location;
+import org.apache.jena.tdb1.sys.StoreConnection;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -280,9 +284,25 @@ public class LocalTdbRdfStoreService implements RdfStoreService {
   public void forceRelease() {
     log.warn("Trying to release forcefully the {} TDB all views ....", tdbLocation);
     close();
-    // In Jena 5.4, TDB1 datasets are automatically managed
-    // No explicit sync or release operations are required
-    log.info("TDB dataset closed for location: {}", tdbLocation);
+    // expel(location, true) syncs the write-ahead journal into the base TDB files and
+    // evicts the JVM-wide StoreConnection cache entry. Without it, writes committed just
+    // before a force-release stay in the warm connection but never reach disk, and are
+    // lost on the next reopen (e.g. after a restart or pool eviction).
+    final Location location = Location.create(tdbLocation);
+    try {
+      StoreConnection.expel(location, true);
+    }
+    catch (final FileException | RuntimeIOException e) {
+      final String journalPath = StoreConnection.getExisting(location)
+                                                 .getTransactionManager()
+                                                 .getJournal()
+                                                 .getFilename();
+      log.warn(
+        "... couldn't expel the {} StoreConnection, trying to release the transaction journal: {}",
+        tdbLocation, journalPath, e
+      );
+      ChannelManager.release(journalPath);
+    }
     log.warn("{} TDB all connections are force released", tdbLocation);
   }
 
