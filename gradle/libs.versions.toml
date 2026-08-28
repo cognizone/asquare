@@ -10,15 +10,15 @@ guavaVersion = '33.5.0-jre'             # not managed by SB4, latest stable
 httpclient5Version = "5.6"              # not managed by SB4, latest stable
 httpComponentsVersion = '4.5.14'        # not managed by SB4, latest stable (httpclient 4.x)
 jakartaInjectVersion = "2.0.1"          # Jakarta EE 11 compatible
-jenaVersion = '6.0.0'                   # not managed by SB4, latest stable
+jenaVersion = '6.2.0'                   # not managed by SB4, latest stable
 jodaTimeVersion = "2.14.1"              # latest stable (was 2.14.0)
 jsonldJavaVersion = '0.13.6'            # not managed by SB4, latest stable
 junitVersion = "6.0.3"                  # SB4 ships JUnit Jupiter 6.0.x (was 5.14.3)
 lombokVersion = "1.18.42"               # not managed by SB4, latest stable
 ognlVersion = "3.3.4"                   # not managed by SB4, latest stable
 snakeyaml = "2.6"                       # ahead of SB4's managed 2.5
-springBootVersion = '4.0.7'             # upgraded from 3.5.11
-springSecurityVersion = '7.0.6'         # keep in sync with the Spring Security managed by springBootVersion
+springBootVersion = '4.1.1'             # current GA (4.2.0-M1 is a milestone, skipped)
+springSecurityVersion = '7.1.1'         # keep in sync with the Spring Security managed by springBootVersion
 vavrVersion = "0.10.6"                  # latest stable in 0.10.x line (was 0.10.7 — does not exist, latest is 0.10.6)
 
 [libraries]
