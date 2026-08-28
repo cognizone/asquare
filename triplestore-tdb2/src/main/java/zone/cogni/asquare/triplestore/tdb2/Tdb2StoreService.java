@@ -127,7 +127,7 @@ public class Tdb2StoreService implements RdfStoreService, Closeable {
                                         bindings,
                                         query);
     return transaction.read(() -> {
-      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(model).build()) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(model).substitution(bindings).build()) {
         ResultSet resultSet = queryExecution.execSelect();
         return resultSetHandler.handle(resultSet);
       }
@@ -141,9 +141,7 @@ public class Tdb2StoreService implements RdfStoreService, Closeable {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     return transaction.read(() -> {
-      QueryExecutionDatasetBuilder askBuilder = QueryExecutionDatasetBuilder.create().query(query).model(model);
-      if (!bindings.asMap().isEmpty()) askBuilder.substitution(bindings);
-      try (QueryExecution queryExecution = askBuilder.build()) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(model).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
       catch (RuntimeException e) {
