@@ -325,7 +325,8 @@ project('asquareroot') {
     // Elasticsearch 7.5.2 x-content runs on Jackson 2, but the main line is Jackson 3 (tools.jackson),
     // so spring-boot-starter-json no longer supplies com.fasterxml.jackson.core.
     // ES's own 2.8.11 is excluded above; put the current Jackson 2 back or XContentType fails with
-    // NoClassDefFoundError: com/fasterxml/jackson/core/JsonFactory
+    // NoClassDefFoundError: com/fasterxml/jackson/core/JsonFactory.
+    // Reached indirectly: EmbeddedElasticsearch7Store -> IndexRequest.source(..) -> XContentType.JSON
     implementation libs.jackson2.core
     implementation libs.jackson2.dataformat.cbor
     implementation libs.jackson2.dataformat.smile

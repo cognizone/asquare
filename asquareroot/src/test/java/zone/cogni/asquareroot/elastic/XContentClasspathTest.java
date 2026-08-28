@@ -16,7 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * <p>
  * Without them every call below fails with
  * NoClassDefFoundError: com/fasterxml/jackson/core/JsonFactory.
- * asquare itself never calls the XContent API, so nothing else in the build catches this.
+ * <p>
+ * asquare has no direct XContent call, but EmbeddedElasticsearch7Store reaches it through the
+ * Elasticsearch client - createIndex does IndexRequest.source(settings, Requests.INDEX_CONTENT_TYPE),
+ * which is XContentType.JSON. The only test covering that path, EmbeddedElasticTest, is disabled,
+ * so without the check below the build does not notice the missing Jackson 2 dependencies.
  */
 class XContentClasspathTest {
 
