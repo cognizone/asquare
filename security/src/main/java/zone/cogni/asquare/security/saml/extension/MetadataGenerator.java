@@ -38,114 +38,114 @@ import zone.cogni.asquare.security.saml.extension.entity.CHOrganization;
  */
 public class MetadataGenerator extends org.springframework.security.saml.metadata.MetadataGenerator {
 
-    CHContactPerson contactPerson = null;
-    CHOrganization organisation = null;
+  CHContactPerson contactPerson = null;
+  CHOrganization organisation = null;
 
-    /**
-     * Class logger.
-     */
-    protected static final Logger log = LoggerFactory.getLogger(org.springframework.security.saml.metadata.MetadataGenerator.class);
+  /**
+   * Class logger.
+   */
+  protected static final Logger log = LoggerFactory.getLogger(org.springframework.security.saml.metadata.MetadataGenerator.class);
 
-    /**
-     * Default constructor.
-     */
-    public MetadataGenerator() {
-        super();
+  /**
+   * Default constructor.
+   */
+  public MetadataGenerator() {
+    super();
+  }
+
+  /**
+   * get contact person
+   * @return contact person, null if not set previously
+   */
+  public CHContactPerson getContactPerson() {
+    return contactPerson;
+  }
+
+  /**
+   * set contact Person
+   * @param contactPerson contact person
+   */
+  public void setContactPerson(CHContactPerson contactPerson) {
+    this.contactPerson = contactPerson;
+  }
+
+  /**
+   * get organisation
+   * @return organisation, null if not set previously
+   */
+  public CHOrganization getOrganisation() {
+    return organisation;
+  }
+
+  /**
+   * set organisation
+   * @param organisation organisation
+   */
+  public void setOrganisation(CHOrganization organisation) {
+    this.organisation = organisation;
+  }
+
+  /**
+   *
+   */
+
+  @Override
+  public EntityDescriptor generateMetadata() {
+    EntityDescriptor entityDescriptor = super.generateMetadata();
+
+    if (contactPerson != null) {
+      ContactPersonBuilder cpBldr = new ContactPersonBuilder();
+      ContactPerson cp = cpBldr.buildObject();
+
+      cp.setType(contactPerson.getType());
+
+      CompanyBuilder cpyBldr = new CompanyBuilder();
+      Company cpy = cpyBldr.buildObject();
+      cpy.setName(contactPerson.getCompany());
+      cp.setCompany(cpy);
+
+      GivenNameBuilder gnBldr = new GivenNameBuilder();
+      GivenName gn = gnBldr.buildObject();
+      gn.setName(contactPerson.getGivenName());
+      cp.setGivenName(gn);
+
+      SurNameBuilder snBldr = new SurNameBuilder();
+      SurName sn = snBldr.buildObject();
+      sn.setName(contactPerson.getSurName());
+      cp.setSurName(sn);
+
+      EmailAddressBuilder emBldr = new EmailAddressBuilder();
+      EmailAddress em = emBldr.buildObject();
+      em.setAddress(contactPerson.getEmailAddress());
+      cp.getEmailAddresses().add(em);
+
+      TelephoneNumberBuilder tlBldr = new TelephoneNumberBuilder();
+      TelephoneNumber tl = tlBldr.buildObject();
+      tl.setNumber(contactPerson.getTelephoneNumber());
+      cp.getTelephoneNumbers().add(tl);
+
+      entityDescriptor.getContactPersons().add(cp);
     }
 
-    /**
-     * get contact person
-     * @return contact person, null if not set previously
-     */
-    public CHContactPerson getContactPerson() {
-        return contactPerson;
+    if (organisation != null) {
+      OrganizationBuilder orgBldr = new OrganizationBuilder();
+      Organization org = orgBldr.buildObject();
+
+      OrganizationName on = new OrganizationNameBuilder().buildObject();
+      on.setName(organisation.getName());
+      org.getOrganizationNames().add(on);
+
+      OrganizationDisplayName od = new OrganizationDisplayNameBuilder().buildObject();
+      od.setName(organisation.getDisplayName());
+      org.getDisplayNames().add(od);
+
+      OrganizationURL ou = new OrganizationURLBuilder().buildObject();
+      ou.setURL(organisation.getUrl());
+      org.getURLs().add(ou);
+
+      entityDescriptor.setOrganization(org);
     }
 
-    /**
-     * set contact Person
-     * @param contactPerson contact person
-     */
-    public void setContactPerson(CHContactPerson contactPerson) {
-        this.contactPerson = contactPerson;
-    }
-
-    /**
-     * get organisation
-     * @return organisation, null if not set previously
-     */
-    public CHOrganization getOrganisation() {
-        return organisation;
-    }
-
-    /**
-     * set organisation
-     * @param organisation organisation
-     */
-    public void setOrganisation(CHOrganization organisation) {
-        this.organisation = organisation;
-    }
-
-    /**
-     *
-     */
-
-    @Override
-    public EntityDescriptor generateMetadata() {
-        EntityDescriptor entityDescriptor = super.generateMetadata();
-
-        if (contactPerson != null) {
-            ContactPersonBuilder cpBldr = new ContactPersonBuilder();
-            ContactPerson cp = cpBldr.buildObject();
-
-            cp.setType(contactPerson.getType());
-
-            CompanyBuilder cpyBldr = new CompanyBuilder();
-            Company cpy = cpyBldr.buildObject();
-            cpy.setName(contactPerson.getCompany());
-            cp.setCompany(cpy);
-
-            GivenNameBuilder gnBldr = new GivenNameBuilder();
-            GivenName gn = gnBldr.buildObject();
-            gn.setName(contactPerson.getGivenName());
-            cp.setGivenName(gn);
-
-            SurNameBuilder snBldr = new SurNameBuilder();
-            SurName sn = snBldr.buildObject();
-            sn.setName(contactPerson.getSurName());
-            cp.setSurName(sn);
-
-            EmailAddressBuilder emBldr = new EmailAddressBuilder();
-            EmailAddress em = emBldr.buildObject();
-            em.setAddress(contactPerson.getEmailAddress());
-            cp.getEmailAddresses().add(em);
-
-            TelephoneNumberBuilder tlBldr = new TelephoneNumberBuilder();
-            TelephoneNumber tl = tlBldr.buildObject();
-            tl.setNumber(contactPerson.getTelephoneNumber());
-            cp.getTelephoneNumbers().add(tl);
-
-            entityDescriptor.getContactPersons().add(cp);
-        }
-
-        if (organisation != null) {
-            OrganizationBuilder orgBldr = new OrganizationBuilder();
-            Organization org = orgBldr.buildObject();
-
-            OrganizationName on = new OrganizationNameBuilder().buildObject();
-            on.setName(organisation.getName());
-            org.getOrganizationNames().add(on);
-
-            OrganizationDisplayName od = new OrganizationDisplayNameBuilder().buildObject();
-            od.setName(organisation.getDisplayName());
-            org.getDisplayNames().add(od);
-
-            OrganizationURL ou = new OrganizationURLBuilder().buildObject();
-            ou.setURL(organisation.getUrl());
-            org.getURLs().add(ou);
-
-            entityDescriptor.setOrganization(org);
-        }
-
-        return entityDescriptor;
-    }
+    return entityDescriptor;
+  }
 }
