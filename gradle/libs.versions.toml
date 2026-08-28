@@ -9,6 +9,7 @@ elasticsearchVersion = '7.5.2'          # pinned: Apache 2.0 license, intentiona
 guavaVersion = '33.5.0-jre'             # not managed by SB4, latest stable
 httpclient5Version = "5.6"              # not managed by SB4, latest stable
 httpComponentsVersion = '4.5.14'        # not managed by SB4, latest stable (httpclient 4.x)
+jackson2Version = '2.21.5'              # Jackson 2: required by Elasticsearch 7.5.2 x-content; main line is Jackson 3 (tools.jackson)
 jakartaInjectVersion = "2.0.1"          # Jakarta EE 11 compatible
 jenaVersion = '6.2.0'                   # not managed by SB4, latest stable
 jodaTimeVersion = "2.14.1"              # latest stable (was 2.14.0)
@@ -35,6 +36,10 @@ httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "h
 httpclient-fluent = { module = "org.apache.httpcomponents:fluent-hc", version.ref = "httpComponentsVersion" }
 httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpclient5Version" }
 httpclient5-fluent = { module = "org.apache.httpcomponents.client5:httpclient5-fluent", version.ref = "httpclient5Version" }
+jackson2-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson2Version" }
+jackson2-dataformat-cbor = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor", version.ref = "jackson2Version" }
+jackson2-dataformat-smile = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile", version.ref = "jackson2Version" }
+jackson2-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson2Version" }
 jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInjectVersion" }
 jena-core = { module = "org.apache.jena:jena-core", version.ref = "jenaVersion" }
 jena-arq = { module = "org.apache.jena:jena-arq", version.ref = "jenaVersion" }
@@ -61,6 +66,7 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test", version.ref = "springBootVersion" }
 spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf", version.ref = "springBootVersion" }
 spring-boot-starter-json = { module = "org.springframework.boot:spring-boot-starter-json", version.ref = "springBootVersion" }
+spring-boot-starter-restclient = { module = "org.springframework.boot:spring-boot-starter-restclient", version.ref = "springBootVersion" }
 spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "springBootVersion" }
 spring-security-core = { module = "org.springframework.security:spring-security-core", version.ref = "springSecurityVersion" }
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "springSecurityVersion" }
