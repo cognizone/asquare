@@ -1,6 +1,5 @@
 package zone.cogni.core.util;
 
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -12,11 +11,6 @@ public class JsonHelper {
           .build();
 
   public static String toJson(Object object) {
-    try {
-      return objectMapper.writeValueAsString(object);
-    }
-    catch (JacksonException e) {
-      throw new RuntimeException(e);
-    }
+    return objectMapper.writeValueAsString(object);
   }
 }

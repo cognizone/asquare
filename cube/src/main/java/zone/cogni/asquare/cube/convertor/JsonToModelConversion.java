@@ -41,13 +41,9 @@ public class JsonToModelConversion implements Function<JsonNode, Model> {
     this(prefixCcService, conversionProfile, new ModelToJsonConversion.Configuration());
     log.warn(
             """
-                    
                     \t---------------------------------------------------------------------------------------------\
-                    
                     \t  Please switch to JsonToModelConversion(PrefixCcService, ConversionProfile, Configuration)\
-                    
                     \t  also make sure Configuration is same in JsonToModelConversion and ModelToJsonConversion\
-                    
                     \t---------------------------------------------------------------------------------------------"""
     );
   }

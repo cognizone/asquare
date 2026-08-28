@@ -2,7 +2,6 @@ package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
@@ -533,6 +532,8 @@ public class OperationResultProcessor {
 
   public static class SingleGroupResult {
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @Getter
     private final OperationGroup operationGroup;
 
@@ -620,13 +621,7 @@ public class OperationResultProcessor {
     }
 
     public String toString() {
-      try {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
-      }
-      catch (JacksonException e) {
-        throw new RuntimeException("toString failed", e);
-      }
+      return objectMapper.writeValueAsString(this);
     }
   }
 
