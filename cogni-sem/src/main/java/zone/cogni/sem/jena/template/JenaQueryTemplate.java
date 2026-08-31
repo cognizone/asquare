@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
-
-
 import static org.slf4j.LoggerFactory.getLogger;
 import static zone.cogni.sem.jena.template.JenaBooleanHandler.booleanAskResultExtractor;
 import static zone.cogni.sem.jena.template.JenaQueryUtils.closeQuietly;

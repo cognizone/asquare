@@ -1,7 +1,7 @@
 package zone.cogni.asquare.service.index;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Streams;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Resource;
@@ -190,7 +190,7 @@ public class TypeIndexService {
     if(graphs.size() > 1) {
       log.warn("Resource {} is found in multiple graphs", instanceUri);
     }
-    return graphs.get(0);
+    return graphs.getFirst();
   }
 
   public String findGraphResourceUri(String instanceUri) {
@@ -225,6 +225,6 @@ public class TypeIndexService {
     if(graphs.size() > 1) {
       log.warn("Resource {} is found in multiple graphs", instanceUri);
     }
-    return graphs.get(0);
+    return graphs.getFirst();
   }
 }

@@ -2,7 +2,9 @@ package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,8 +52,8 @@ public class OperationRoot {
 
   private static List<OperationRoot> getOperationRoots(List<InputStreamSource> resources) {
     return resources.stream()
-                    .map(OperationRoot::load)
-                    .collect(Collectors.toList());
+        .map(OperationRoot::load)
+        .collect(Collectors.toList());
   }
 
   @SuppressWarnings("CodeBlock2Expr")
@@ -60,13 +62,13 @@ public class OperationRoot {
 
     Set<String> problems = new HashSet<>();
     operationRoots.forEach(operationRoot -> {
-      operationRoot.getPrefixes().forEach((k, v) -> {
-        String existingValue = result.get(k);
-        boolean hasProblemValue = existingValue != null && !Objects.equals(existingValue, v);
-        if (hasProblemValue) problems.add(k);
+        operationRoot.getPrefixes().forEach((k, v) -> {
+            String existingValue = result.get(k);
+            boolean hasProblemValue = existingValue != null && !Objects.equals(existingValue, v);
+            if (hasProblemValue) problems.add(k);
 
-        result.put(k, v);
-      });
+            result.put(k, v);
+        });
     });
 
     if (!problems.isEmpty())
@@ -91,14 +93,14 @@ public class OperationRoot {
 
     Set<String> problems = new HashSet<>();
     operationRoots.stream()
-                  .map(OperationRoot::getOperationGroups)
-                  .flatMap(Collection::stream)
-                  .forEach(operationGroup -> {
-                    String id = operationGroup.getId();
-                    if (operationGroupMap.containsKey(id)) problems.add(id);
+        .map(OperationRoot::getOperationGroups)
+        .flatMap(Collection::stream)
+        .forEach(operationGroup -> {
+            String id = operationGroup.getId();
+            if (operationGroupMap.containsKey(id)) problems.add(id);
 
-                    operationGroupMap.put(id, operationGroup);
-                  });
+            operationGroupMap.put(id, operationGroup);
+        });
 
     if (!problems.isEmpty())
       throw new RuntimeException("Some operation groups are defined more than once: " + problems);
@@ -117,14 +119,17 @@ public class OperationRoot {
 
       log.info("load json done");
       return result;
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new RuntimeException("Unable to load operation configuration.", e);
     }
   }
 
+  @Setter
+  @Getter
   private boolean singleFile;
+  @Setter
   private Map<String, String> prefixes;
+  @Setter
   private List<OperationGroup> operationGroups;
 
   private final Map<String, OperationGroup> operationGroupMap = new TreeMap<>();
@@ -132,28 +137,12 @@ public class OperationRoot {
 
   private Set<String> operationIds;
 
-  public boolean isSingleFile() {
-    return singleFile;
-  }
-
-  public void setSingleFile(boolean singleFile) {
-    this.singleFile = singleFile;
-  }
-
   public Map<String, String> getPrefixes() {
     return prefixes == null ? Collections.emptyMap() : prefixes;
   }
 
-  public void setPrefixes(Map<String, String> prefixes) {
-    this.prefixes = prefixes;
-  }
-
   public List<OperationGroup> getOperationGroups() {
     return operationGroups == null ? Collections.emptyList() : operationGroups;
-  }
-
-  public void setOperationGroups(List<OperationGroup> operationGroups) {
-    this.operationGroups = operationGroups;
   }
 
   public void validate() {
@@ -185,12 +174,12 @@ public class OperationRoot {
   private void makeOptionalStructure(OperationGroup operationGroup) {
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations()
-                    .forEach(this::makeOptionalStructure);
+          .forEach(this::makeOptionalStructure);
     }
 
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups()
-                    .forEach(this::makeOptionalStructure);
+          .forEach(this::makeOptionalStructure);
     }
   }
 
@@ -203,9 +192,9 @@ public class OperationRoot {
   @Nonnull
   private List<Operation> calculateOptionalOperations(Operation operation) {
     return operation.getOptional()
-                    .stream()
-                    .map(optionalPath -> findOperation(operation, optionalPath))
-                    .collect(Collectors.toList());
+        .stream()
+        .map(optionalPath -> findOperation(operation, optionalPath))
+        .collect(Collectors.toList());
   }
 
 
@@ -216,11 +205,11 @@ public class OperationRoot {
   private void makeRequiresStructure(OperationGroup operationGroup) {
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations()
-                    .forEach(this::makeRequiresStructure);
+          .forEach(this::makeRequiresStructure);
     }
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups()
-                    .forEach(this::makeRequiresStructure);
+          .forEach(this::makeRequiresStructure);
     }
   }
 
@@ -233,9 +222,9 @@ public class OperationRoot {
   @Nonnull
   private List<Operation> calculateRequiresOperations(Operation operation) {
     return operation.getRequires()
-                    .stream()
-                    .map(requiresPath -> findOperation(operation, requiresPath))
-                    .collect(Collectors.toList());
+        .stream()
+        .map(requiresPath -> findOperation(operation, requiresPath))
+        .collect(Collectors.toList());
   }
 
   private Operation findOperation(Operation operation, List<String> path) {
@@ -248,7 +237,7 @@ public class OperationRoot {
       else current.getOperationGroup(id);
     }
 
-    return current.getOperation(path.get(path.size() - 1));
+    return current.getOperation(path.getLast());
   }
 
   private void makeParentStructure() {
@@ -258,19 +247,19 @@ public class OperationRoot {
   private void makeParentStructure(OperationGroup operationGroup) {
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations()
-                    .forEach(operation -> {
-                      operation.setParent(operationGroup);
-                      operation.getPathId(); // make sure it is initialized
-                    });
+          .forEach(operation -> {
+              operation.setParent(operationGroup);
+              operation.getPathId(); // make sure it is initialized
+          });
     }
 
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups()
-                    .forEach(childGroup -> {
-                      childGroup.setParent(operationGroup);
-                      childGroup.getPathId(); // make sure it is initialized
-                      makeParentStructure(childGroup);
-                    });
+          .forEach(childGroup -> {
+              childGroup.setParent(operationGroup);
+              childGroup.getPathId(); // make sure it is initialized
+              makeParentStructure(childGroup);
+          });
     }
   }
 
@@ -288,11 +277,11 @@ public class OperationRoot {
 
     if (!duplicates.isEmpty()) {
       errorMessages.add("Duplicates groups found in path " + getPath(parent) +
-                        " and ids " + duplicates);
+              " and ids " + duplicates);
     }
 
     operationGroups.forEach(operationGroup -> {
-      validateIdsForGroup(errorMessages, parent, operationGroup);
+        validateIdsForGroup(errorMessages, parent, operationGroup);
     });
   }
 
@@ -321,13 +310,13 @@ public class OperationRoot {
 
     if (!duplicates.isEmpty())
       errorMessages.add("Duplicates operations found in path " + String.join("/", getPath(parent))
-                        + " and ids " + duplicates);
+              + " and ids " + duplicates);
   }
 
   private <T> Set<T> findDuplicates(Stream<T> stream) {
     Set<T> uniques = new HashSet<>();
     return stream.filter(e -> !uniques.add(e))
-                 .collect(Collectors.toSet());
+        .collect(Collectors.toSet());
   }
 
   private void validateOptional(List<String> errorMessages) {
@@ -337,13 +326,13 @@ public class OperationRoot {
   private void validateOptional(List<String> errorMessages, OperationGroup operationGroup) {
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups().forEach(childGroup -> {
-        validateOptional(errorMessages, childGroup);
+          validateOptional(errorMessages, childGroup);
       });
     }
 
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations().forEach(operation -> {
-        validateOptional(errorMessages, operation);
+          validateOptional(errorMessages, operation);
       });
     }
   }
@@ -352,7 +341,7 @@ public class OperationRoot {
     if (!operation.hasOptional()) return;
 
     operation.getOptional().forEach(optionalPath -> {
-      validateOptionalPath(errorMessages, operation, optionalPath);
+        validateOptionalPath(errorMessages, operation, optionalPath);
     });
   }
 
@@ -360,7 +349,7 @@ public class OperationRoot {
                                     Operation operation,
                                     List<String> path) {
     String errorMessageIntro = "invalid optional for operation '" + operation.getPathId() + "'" +
-                               " and requires '" + String.join("/", path) + "': ";
+        " and requires '" + String.join("/", path) + "': ";
 
     validatePath(errorMessages, operation, path, errorMessageIntro);
   }
@@ -373,7 +362,7 @@ public class OperationRoot {
 
       // skip * at end
       operationGroupId = operationGroupId.endsWith("*") ? operationGroupId.substring(0, operationGroupId.length() - 1)
-                                                        : operationGroupId;
+          : operationGroupId;
       currentGroup = currentGroup.getOperationGroup(operationGroupId);
       if (currentGroup == null) {
         errorMessages.add(errorMessageIntro + "cannot find group '" + operationGroupId + "'");
@@ -381,7 +370,7 @@ public class OperationRoot {
       }
     }
 
-    String operationId = path.get(path.size() - 1);
+    String operationId = path.getLast();
     Operation referencedOperation = currentGroup.getOperation(operationId);
     if (referencedOperation == null) {
       errorMessages.add(errorMessageIntro + "cannot find operation '" + operationId + "'");
@@ -395,13 +384,13 @@ public class OperationRoot {
   private void validateRequires(List<String> errorMessages, OperationGroup operationGroup) {
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups().forEach(childGroup -> {
-        validateRequires(errorMessages, childGroup);
+          validateRequires(errorMessages, childGroup);
       });
     }
 
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations().forEach(operation -> {
-        validateRequires(errorMessages, operation);
+          validateRequires(errorMessages, operation);
       });
     }
   }
@@ -411,7 +400,7 @@ public class OperationRoot {
     if (!operation.hasRequires()) return;
 
     operation.getRequires().forEach(requiresPath -> {
-      validateRequiresPath(errorMessages, operation, requiresPath);
+        validateRequiresPath(errorMessages, operation, requiresPath);
     });
   }
 
@@ -419,7 +408,7 @@ public class OperationRoot {
                                     Operation operation,
                                     List<String> path) {
     String errorMessageIntro = "invalid requires for operation '" + operation.getPathId() + "'" +
-                               " and requires '" + String.join("/", path) + "': ";
+        " and requires '" + String.join("/", path) + "': ";
 
     validatePath(errorMessages, operation, path, errorMessageIntro);
   }
@@ -433,12 +422,12 @@ public class OperationRoot {
 
     if (operationGroup.hasOperations()) {
       operationGroup.getOperations()
-                    .forEach(operation -> validateOperation(errorMessages, operation));
+          .forEach(operation -> validateOperation(errorMessages, operation));
     }
 
     if (operationGroup.hasOperationGroups()) {
       operationGroup.getOperationGroups()
-                    .forEach(childGroup -> validateOperations(errorMessages, childGroup));
+          .forEach(childGroup -> validateOperations(errorMessages, childGroup));
     }
   }
 
@@ -452,8 +441,7 @@ public class OperationRoot {
     if (operationGroup.hasSelectorQuery()) {
       try {
         operationGroup.getContextSelectorQuery(getPrefixQuery());
-      }
-      catch (RuntimeException e) {
+      } catch (RuntimeException e) {
         String sparql = operationGroup.getContextSelectorSparql(getPrefixQuery());
         errorMessages.add("Invalid selector for group path " + operationGroup.getPathId() + ": \n" + sparql);
       }
@@ -487,12 +475,10 @@ public class OperationRoot {
     Operation.TemplateType templateType = operation.getTemplateType();
     if (templateType == Operation.TemplateType.not_available) {
       errorMessages.add("Invalid operation template: \n" + operation.getFullTemplate());
-    }
-    else if (templateType == Operation.TemplateType.ask_query) {
+    } else if (templateType == Operation.TemplateType.ask_query) {
       try {
         operation.getContextQuery(getPrefixQuery());
-      }
-      catch (RuntimeException e) {
+      } catch (RuntimeException e) {
         errorMessages.add("Invalid query for operation: \n" + operation.getContextSparql(getPrefixQuery()));
       }
     }
@@ -502,11 +488,11 @@ public class OperationRoot {
   @JsonIgnore
   public String getPrefixQuery() {
     return getPrefixes().entrySet()
-                        .stream()
-                        .map(e -> "PREFIX "
-                                  + StringUtils.rightPad(e.getKey() + ":", 8) + " <" + e.getValue() + ">\n")
-                        .collect(Collectors.joining())
-           + "\n";
+        .stream()
+        .map(e -> "PREFIX "
+                + StringUtils.rightPad(e.getKey() + ":", 8) + " <" + e.getValue() + ">\n")
+        .collect(Collectors.joining())
+        + "\n";
   }
 
   public boolean hasOperationGroupWithId(String id) {
@@ -535,9 +521,9 @@ public class OperationRoot {
   public Set<String> getOperationIds() {
     if (operationIds == null) {
       operationIds = isSingleFile() ? Collections.unmodifiableSet(operationMap.keySet())
-                                    : operationMap.keySet().stream()
-                                                  .map(id -> StringUtils.removeStart(id, "root/"))
-                                                  .collect(Collectors.toSet());
+          : operationMap.keySet().stream()
+          .map(id -> StringUtils.removeStart(id, "root/"))
+          .collect(Collectors.toSet());
     }
 
     return operationIds;

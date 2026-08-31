@@ -1,9 +1,9 @@
 package zone.cogni.asquare.cube.sparql2json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Streams;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -132,7 +132,7 @@ public class SparqlSelectToJson {
   }
 
   private PropertyConversion getPropertyConversion(List<String> varNames) {
-    String lastVar = varNames.get(varNames.size() - 1);
+    String lastVar = varNames.getLast();
     return PropertyConversion.fromName(lastVar);
   }
 
@@ -177,7 +177,7 @@ public class SparqlSelectToJson {
       case takeFirstSorted:
         log.debug("ListExceptionHandling takeFirstSorted: comparing result to previous results.");
         String oldValue = current.get(lastLevel).textValue();
-        if (convertedValue.asText().compareTo(oldValue) < 0) current.put(lastLevel, convertedValue);
+        if (convertedValue.asText().compareTo(oldValue) < 0) current.set(lastLevel, convertedValue);
         break;
       case takeFirstInput:
         log.debug("ListExceptionHandling takeFirstInput: ignoring other results");

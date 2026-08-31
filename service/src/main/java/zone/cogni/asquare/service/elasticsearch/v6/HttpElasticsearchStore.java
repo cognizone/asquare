@@ -1,8 +1,8 @@
 package zone.cogni.asquare.service.elasticsearch.v6;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
@@ -37,7 +37,6 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -200,7 +199,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
 
     if (!urlEncodedId) {// a-square v 0.1.0 with single url encoding
       String path = String.join("/", url, indexName, type);
-      UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
+      UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(path);
       if (id != null) {
         String formattedId = Try.of(() -> URLEncoder.encode(id, StandardCharsets.UTF_8.displayName()))
                                 .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
@@ -214,7 +213,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
 
     // a-square v 0.2.0 with double encoding
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
     builder.path(String.join("/", "", indexName, type));
 
@@ -237,7 +236,7 @@ public class HttpElasticsearchStore implements ElasticsearchStore {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
+    public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
       int statusValue = response.getStatusCode()
                                 .value();
       HttpStatus statusCode = HttpStatus.resolve(statusValue);

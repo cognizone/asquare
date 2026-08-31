@@ -1,8 +1,9 @@
 package zone.cogni.asquare.cube.sparql2json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import lombok.Getter;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -138,8 +139,11 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     };
   }
 
+  @Getter
   private final String propertyName;
+  @Getter
   private final String key;
+  @Getter
   private final Function<RDFNode, JsonNode> conversion;
   private final boolean asList;
 
@@ -148,10 +152,6 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     this.key = key;
     this.conversion = conversion;
     this.asList = asList;
-  }
-
-  public String getKey() {
-    return key;
   }
 
   @Override
@@ -168,19 +168,11 @@ public class PropertyConversion implements Function<Model, JsonNode> {
     }
 
     if (nodes.size() > 1) throw new RuntimeException("Bigger collections are not supported (yet??)");
-    return nodes.isEmpty() ? null : nodes.get(0);
-  }
-
-  public String getPropertyName() {
-    return propertyName;
+    return nodes.isEmpty() ? null : nodes.getFirst();
   }
 
   public boolean isList() {
     return asList;
-  }
-
-  public Function<RDFNode, JsonNode> getConversion() {
-    return conversion;
   }
 
   @Nonnull

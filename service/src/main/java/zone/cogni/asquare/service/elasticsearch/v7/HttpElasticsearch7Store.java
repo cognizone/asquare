@@ -1,8 +1,8 @@
 package zone.cogni.asquare.service.elasticsearch.v7;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -87,7 +87,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
       restTemplate.delete(path);
     }
     catch (ElasticClientError e) {
-      if (e.getRawStatusCode() == 404) {
+      if (e.getStatusCode().value() == 404) {
         log.info("Tried to delete index '{}', but it didn't exist", indexName);
         return;
       }
@@ -218,7 +218,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   }
 
   private URI getPathFor(String indexName, Operation operation, Params params) {
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
     builder.path("/" + indexName);
     builder.path("/" + operation.name());
     if(params != null && !params.isEmpty()) builder.queryParams(params.toMultiValueMap());
@@ -259,7 +259,7 @@ public class HttpElasticsearch7Store implements Elasticsearch7Store {
   private static final class ElasticErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
+    public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
       int statusValue = response.getStatusCode()
                                 .value();
       HttpStatus statusCode = HttpStatus.resolve(statusValue);

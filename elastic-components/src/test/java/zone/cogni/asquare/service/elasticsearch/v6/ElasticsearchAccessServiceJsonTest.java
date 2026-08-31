@@ -1,8 +1,8 @@
 package zone.cogni.asquare.service.elasticsearch.v6;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import zone.cogni.asquare.service.elasticsearch.ElasticHelper;
 

@@ -1,8 +1,8 @@
 package zone.cogni.asquare.cube.operation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
@@ -48,6 +48,7 @@ public class OperationResultProcessor {
   private final OperationConfiguration configuration;
   private final SpelService spelService;
 
+  @Getter
   private final OperationRoot operationRoot;
 
   private final Map<String, Object> context = new HashMap<>();
@@ -98,11 +99,7 @@ public class OperationResultProcessor {
     log.info("Operation id's: {}",  String.join(", ", operationRoot.getOperationIds()));
   }
 
-  public OperationRoot getOperationRoot() {
-    return operationRoot;
-  }
-
-  public boolean validateAny(Supplier<Set<String>> permissions,
+    public boolean validateAny(Supplier<Set<String>> permissions,
                              Model model,
                              String uri,
                              Set<String> pathIds) {
@@ -276,7 +273,7 @@ public class OperationResultProcessor {
         throw new RuntimeException(message);
       }
 
-      String childContextUri = operationGroupUris.isEmpty() ? null : operationGroupUris.get(0);
+      String childContextUri = operationGroupUris.isEmpty() ? null : operationGroupUris.getFirst();
       createAndProcessGroup(context, rootGroup, childGroup, childContextUri);
     }
   }
@@ -336,7 +333,7 @@ public class OperationResultProcessor {
     List<SingleGroupResult> currentGroups = getSingleGroupResults(context, groupResult, path);
 
     boolean result = true;
-    String operationId = path.get(path.size() - 1);
+    String operationId = path.getLast();
     for (SingleGroupResult currentGroup : currentGroups) {
       OperationResult operationResult = getOrCreateOperationResult(context, currentGroup, operationId);
 
@@ -357,7 +354,7 @@ public class OperationResultProcessor {
   private List<SingleGroupResult> getSingleGroupResults(OperationValidationContext context, List<SingleGroupResult> rootResults, List<String> path) {
     if (path.isEmpty()) return rootResults;
 
-    String id = path.get(0);
+    String id = path.getFirst();
 
     List<SingleGroupResult> result;
     if (id.equals("..")) {
@@ -535,10 +532,15 @@ public class OperationResultProcessor {
 
   public static class SingleGroupResult {
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Getter
     private final OperationGroup operationGroup;
 
+    @Getter
     private final String contextUri;
 
+    @Getter
     @JsonIgnore
     private final SingleGroupResult parent;
 
@@ -549,18 +551,6 @@ public class OperationResultProcessor {
       this.operationGroup = operationGroup;
       this.contextUri = contextUri;
       this.parent = parent;
-    }
-
-    public OperationGroup getOperationGroup() {
-      return operationGroup;
-    }
-
-    public String getContextUri() {
-      return contextUri;
-    }
-
-    public SingleGroupResult getParent() {
-      return parent;
     }
 
     public boolean hasGroupResults() {
@@ -631,13 +621,7 @@ public class OperationResultProcessor {
     }
 
     public String toString() {
-      try {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
-      }
-      catch (JsonProcessingException e) {
-        throw new RuntimeException("toString failed", e);
-      }
+      return objectMapper.writeValueAsString(this);
     }
   }
 

@@ -1,6 +1,8 @@
 package zone.cogni.asquare.service.elasticsearch.info;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.databind.JsonNode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +36,10 @@ public class ElasticsearchMetadata {
       log.info("some metadata indexes not found in metadata sets: {}", disjunction);
 
     return statsIndexNames
-            .stream()
-            .sorted()
-            .map(this::buildIndex)
-            .collect(Collectors.toList());
+        .stream()
+        .sorted()
+        .map(this::buildIndex)
+        .collect(Collectors.toList());
   }
 
   public Index buildIndex(String indexName) {
@@ -59,6 +61,8 @@ public class ElasticsearchMetadata {
     return clusterState;
   }
 
+  @Setter
+  @Getter
   public static class Index {
     private String name;
     private String uuid;
@@ -66,54 +70,6 @@ public class ElasticsearchMetadata {
     private long documentCount;
     private long sizeInBytes;
     private List<String> aliases;
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getUuid() {
-      return uuid;
-    }
-
-    public void setUuid(String uuid) {
-      this.uuid = uuid;
-    }
-
-    public String getCreatedDate() {
-      return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-      this.createdDate = createdDate;
-    }
-
-    public long getDocumentCount() {
-      return documentCount;
-    }
-
-    public void setDocumentCount(long documentCount) {
-      this.documentCount = documentCount;
-    }
-
-    public long getSizeInBytes() {
-      return sizeInBytes;
-    }
-
-    public void setSizeInBytes(long sizeInBytes) {
-      this.sizeInBytes = sizeInBytes;
-    }
-
-    public List<String> getAliases() {
-      return aliases;
-    }
-
-    public void setAliases(List<String> aliases) {
-      this.aliases = aliases;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -139,10 +95,10 @@ public class ElasticsearchMetadata {
     }
 
     /**
-    * Determines the timeout in milliseconds until a connection is established.
-    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
-    * default = 3000
-    **/
+     * Determines the timeout in milliseconds until a connection is established.
+     * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+     * default = 3000
+     **/
     public void setConnectTimeout(int connectTimeout) {
       this.connectTimeout = connectTimeout;
     }
@@ -152,10 +108,10 @@ public class ElasticsearchMetadata {
     }
 
     /**
-    * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or, put differently, a maximum period inactivity between two consecutive data packets).
-    * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
-    * default = 1000
-    **/
+     * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or, put differently, a maximum period inactivity between two consecutive data packets).
+     * A timeout value of zero is interpreted as an infinite timeout. A negative value is interpreted as undefined (system default if applicable).
+     * default = 1000
+     **/
     public void setReadTimeout(int readTimeout) {
       this.readTimeout = readTimeout;
     }

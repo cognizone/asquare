@@ -1,9 +1,9 @@
 package zone.cogni.asquare.service.elasticsearch.info;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.collections4.IteratorUtils;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +23,7 @@ class Info_stats {
    */
   List<String> getIndexNames() {
     ObjectNode indexes = (ObjectNode) root.get("indices");
-    List<String> result = IteratorUtils.toList(indexes.fieldNames());
+    List<String> result = new ArrayList<>(indexes.propertyNames());
     Collections.sort(result);
     return result;
   }

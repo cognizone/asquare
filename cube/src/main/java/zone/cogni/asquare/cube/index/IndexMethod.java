@@ -1,6 +1,7 @@
 package zone.cogni.asquare.cube.index;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Getter;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -40,6 +41,7 @@ import java.util.function.Supplier;
  */
 public class IndexMethod {
 
+  @Getter
   public static class Configuration {
 
     public static final Configuration AsyncElasticsearch = new Configuration(Params.noRefresh());
@@ -51,9 +53,6 @@ public class IndexMethod {
       this.params = params;
     }
 
-    public Params getParams() {
-      return params;
-    }
   }
 
   private static final Logger log = LoggerFactory.getLogger(IndexMethod.class);

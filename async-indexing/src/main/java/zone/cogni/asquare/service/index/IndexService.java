@@ -1,9 +1,9 @@
 package zone.cogni.asquare.service.index;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.LongNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.LongNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.collections4.ListUtils;
@@ -23,7 +23,6 @@ import zone.cogni.asquare.triplestore.RdfStoreService;
 import zone.cogni.asquare.triplestore.jenamemory.DatasetRdfStoreService;
 import zone.cogni.sem.jena.model.ResultSetDto;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,31 +154,25 @@ public class IndexService {
 
     log.info("Queries processed with {} results", resources.size());
 
-    List<String> indexListToDelete = resources.stream().map(ResourceIndex::getIndex).distinct().collect(Collectors.toList());
+    List<String> indexListToDelete = resources.stream().map(ResourceIndex::getIndex).distinct().toList();
 
     // delete all documents matching this graph in elastic
-    try {
-      ObjectNode deleteQuery = (ObjectNode) (new ObjectMapper()).readTree(
-              "{" +
-              "  \"query\":{" +
-              "    \"bool\":{" +
-              "      \"must\":[{ " +
-              "        \"match\": {" +
-              "           \"graph\":\"" + graphUri + "\"" +
-              "          }" +
-              "        }" +
-              "      ]" +
-              "    }" +
-              "  }" +
-              "}");
+    ObjectNode deleteQuery = (ObjectNode) (new ObjectMapper()).readTree(
+            "{" +
+            "  \"query\":{" +
+            "    \"bool\":{" +
+            "      \"must\":[{ " +
+            "        \"match\": {" +
+            "           \"graph\":\"" + graphUri + "\"" +
+            "          }" +
+            "        }" +
+            "      ]" +
+            "    }" +
+            "  }" +
+            "}");
 
-      for (String indexName : indexListToDelete) {
-        indexConfigProvider.getElasticStore().deleteByQuery(indexName, deleteQuery);
-      }
-    }
-    catch (IOException e) {
-      log.error("Can not remove indexed graph {}", graphUri);
-      return ImmutableMap.of();
+    for (String indexName : indexListToDelete) {
+      indexConfigProvider.getElasticStore().deleteByQuery(indexName, deleteQuery);
     }
 
     // run index for all selected results
@@ -187,39 +180,34 @@ public class IndexService {
   }
 
   public void garbageCollect(List<String> sparqlQueries, RdfStoreService rdfStoreService, Consumer<List<ResourceIndex>> preProcessing, long latestTimestamp) {
-    List<ResourceIndex> resources = sparqlQueries.stream().flatMap(sparqlQuery -> findAllIndexResources(sparqlQuery, rdfStoreService).stream()).distinct().collect(Collectors.toList());
-    List<String> indexListToDelete = resources.stream().map(ResourceIndex::getIndex).distinct().collect(Collectors.toList());
+    List<ResourceIndex> resources = sparqlQueries.stream().flatMap(sparqlQuery -> findAllIndexResources(sparqlQuery, rdfStoreService).stream()).distinct().toList();
+    List<String> indexListToDelete = resources.stream().map(ResourceIndex::getIndex).distinct().toList();
 
     // delete all documents matching this graph in elastic
-    try {
-      String query = "{" +
-                     "  \"query\": {" +
-                     "    \"bool\": {" +
-                     "      \"must\": [" +
-                     "        {" +
-                     "          \"range\": {" +
-                     "            \"" + INDEX_TIMESTAMP_MS_NAME + "\": {" +
-                     "              \"lt\": " + latestTimestamp + "" +
-                     "            }" +
-                     "          }" +
-                     "        }" +
-                     "      ]" +
-                     "    }" +
-                     "  }" +
-                     "}";
+    String query = "{" +
+                   "  \"query\": {" +
+                   "    \"bool\": {" +
+                   "      \"must\": [" +
+                   "        {" +
+                   "          \"range\": {" +
+                   "            \"" + INDEX_TIMESTAMP_MS_NAME + "\": {" +
+                   "              \"lt\": " + latestTimestamp + "" +
+                   "            }" +
+                   "          }" +
+                   "        }" +
+                   "      ]" +
+                   "    }" +
+                   "  }" +
+                   "}";
 
-      ObjectNode deleteQuery = (ObjectNode) (new ObjectMapper()).readTree(query);
+    ObjectNode deleteQuery = (ObjectNode) (new ObjectMapper()).readTree(query);
 
-      for (String indexName : indexListToDelete) {
-        log.info("GC preparing to process index {} with query {}", indexName, query);
-        ObjectNode ack = indexConfigProvider.getElasticStore().deleteByQueryWithAck(indexName, deleteQuery, Params.waitFor());
-        if (ack != null) {
-          log.info("GC processed index {} with acknowledgement {}", indexName, ack);
-        }
+    for (String indexName : indexListToDelete) {
+      log.info("GC preparing to process index {} with query {}", indexName, query);
+      ObjectNode ack = indexConfigProvider.getElasticStore().deleteByQueryWithAck(indexName, deleteQuery, Params.waitFor());
+      if (ack != null) {
+        log.info("GC processed index {} with acknowledgement {}", indexName, ack);
       }
-    }
-    catch (IOException e) {
-      log.error("Can not collect garbage: ", e);
     }
 
   }
@@ -331,7 +319,7 @@ public class IndexService {
       interruptedGraphs.forEach(graphUri -> log.warn("Graph {} failed timeout", graphUri));
       List<ResourceIndex> tmpResources = resources
               .stream()
-              .filter(resource -> interruptedGraphs.stream().noneMatch(interruptedGraph -> resource.getGraph().equals(interruptedGraph))).collect(Collectors.toList());
+              .filter(resource -> interruptedGraphs.stream().noneMatch(interruptedGraph -> resource.getGraph().equals(interruptedGraph))).toList();
       resources.clear();
       resources.addAll(tmpResources);
     }

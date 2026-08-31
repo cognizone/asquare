@@ -1,8 +1,8 @@
 package zone.cogni.asquare.service.jsonconversion;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ import zone.cogni.asquare.service.ApplicationViewTestConfig;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,7 +40,7 @@ public class JsonToTypedResourceTest {
 
     ObjectNode json = (ObjectNode) config.getJson("jsonconversion/settlement.json");
 
-    MutableResource newResource = config.getJsonToUpdatableResource().withJsonRoot(json).get().get(0);
+    MutableResource newResource = Objects.requireNonNull(config.getJsonToUpdatableResource().withJsonRoot(json).get()).getFirst();
 
     ApplicationProfile.Type settlementType = newResource.getApplicationProfile().getType("Settlement");
 

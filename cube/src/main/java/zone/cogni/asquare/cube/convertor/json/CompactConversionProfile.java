@@ -1,8 +1,11 @@
 package zone.cogni.asquare.cube.convertor.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +35,9 @@ public class CompactConversionProfile {
 
   public static CompactConversionProfile read(InputStreamSource input) {
     try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+      ObjectMapper objectMapper = JsonMapper.builder()
+          .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+          .build();
       return objectMapper.readValue(input.getInputStream(), CompactConversionProfile.class);
     }
     catch (IOException e) {
@@ -42,7 +46,10 @@ public class CompactConversionProfile {
   }
 
   private Context context = new Context();
+  @Setter
+  @Getter
   private List<String> imports;
+  @Getter
   private List<Type> types = new ArrayList<>();
 
   public Context getContext() {
@@ -55,18 +62,6 @@ public class CompactConversionProfile {
     this.context = context;
   }
 
-
-  public List<String> getImports() {
-    return imports;
-  }
-
-  public void setImports(List<String> imports) {
-    this.imports = imports;
-  }
-
-  public List<Type> getTypes() {
-    return types;
-  }
 
   public Type getById(String id) {
     return types.stream()

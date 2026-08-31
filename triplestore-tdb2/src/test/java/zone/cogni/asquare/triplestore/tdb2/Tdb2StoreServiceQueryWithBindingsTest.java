@@ -58,15 +58,15 @@ public class Tdb2StoreServiceQueryWithBindingsTest {
   }
 
   @Test
-  public void selectIgnoresBindingsReturnsAll() {
-    // Tdb2StoreService.executeSelectQuery does not apply QuerySolutionMap bindings (pre-existing behavior)
+  public void selectWithBindingsReturnsFiltered() {
     List<String> results = store.executeSelectQuery(
       QueryFactory.create("SELECT ?name WHERE { ?person <" + NAME_PROP + "> ?name }"),
       bindingFor("person", PERSON_1),
       JenaResultSetHandlers.listResultSetHandler(qs -> qs.getLiteral("name").getString()),
       null);
 
-    assertEquals(2, results.size());
+    assertEquals(1, results.size());
+    assertEquals("Fred", results.get(0));
   }
 
   @Test

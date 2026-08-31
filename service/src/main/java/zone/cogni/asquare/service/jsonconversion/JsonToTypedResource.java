@@ -1,9 +1,9 @@
 package zone.cogni.asquare.service.jsonconversion;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.POJONode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeType;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.POJONode;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
@@ -102,8 +102,8 @@ public class JsonToTypedResource implements Supplier<List<MutableResource>> {
     ObjectNode attributes = (ObjectNode) objectNode.get("attributes");
     if (attributes == null) return;
 
-    attributes.fields()
-              .forEachRemaining(attributeField -> addAttributeField(parent, attributeField));
+    attributes.properties()
+              .forEach(attributeField -> addAttributeField(parent, attributeField));
   }
 
   private void addAttributeField(MutableResource parent, Map.Entry<String, JsonNode> attributeField) {
@@ -122,7 +122,7 @@ public class JsonToTypedResource implements Supplier<List<MutableResource>> {
   }
 
   private void addJsonNodeAttributeField(MutableResource parent, Map.Entry<String, JsonNode> attributeField, JsonNode value) {
-    value.fields().forEachRemaining(typeField -> {
+    value.properties().forEach(typeField -> {
       arrayOrSingleStream(typeField.getValue())
         .forEach(lit -> {
           addLiteral(attributeField.getKey(), typeField.getKey(), lit, parent);
@@ -212,8 +212,8 @@ public class JsonToTypedResource implements Supplier<List<MutableResource>> {
   }
 
   private void addLanguageJsonNode(MutableResource parent, String attributeId, JsonNode languageNode) {
-    languageNode.fields()
-                .forEachRemaining(langField -> {
+    languageNode.properties()
+                .forEach(langField -> {
                   arrayOrSingleStream(langField.getValue())
                     .forEach(lit -> addLiteral(parent, attributeId, getLangLiteral(langField.getKey(), lit.asText())));
                 });
@@ -251,7 +251,7 @@ public class JsonToTypedResource implements Supplier<List<MutableResource>> {
     ObjectNode references = (ObjectNode) objectNode.get("references");
     if (references == null) return;
 
-    references.fields().forEachRemaining(field -> addReferenceField(resource, field));
+    references.properties().forEach(field -> addReferenceField(resource, field));
   }
 
   private void addReferenceField(MutableResource resource, Map.Entry<String, JsonNode> referenceField) {

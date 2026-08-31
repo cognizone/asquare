@@ -1,8 +1,8 @@
 package zone.cogni.asquare.service.index;
 
-import com.fasterxml.jackson.databind.node.LongNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.LongNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
@@ -80,10 +80,10 @@ public class GraphIndexService {
       executePostIndexInterceptor(json, resourceIndex.getType());
 
       if (params.hasGraph()) {
-        json.set(IndexService.INDEX_GRAPH_NAME, new TextNode(params.getGraph()));
+        json.set(IndexService.INDEX_GRAPH_NAME, new StringNode(params.getGraph()));
       }
       else if(StringUtils.isNotBlank(resourceIndex.getGraph())) {
-        json.set(IndexService.INDEX_GRAPH_NAME, new TextNode(resourceIndex.getGraph()));
+        json.set(IndexService.INDEX_GRAPH_NAME, new StringNode(resourceIndex.getGraph()));
       }
 
       if(params.hasTimestamp()) {

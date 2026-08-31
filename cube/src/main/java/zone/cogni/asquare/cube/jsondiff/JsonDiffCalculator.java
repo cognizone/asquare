@@ -1,11 +1,10 @@
 package zone.cogni.asquare.cube.jsondiff;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeType;
+import tools.jackson.databind.node.ObjectNode;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -387,8 +386,8 @@ public class JsonDiffCalculator implements Function<JsonDiffInput, List<Differen
     ObjectNode fromObject = (ObjectNode) from;
     ObjectNode toObject = (ObjectNode) to;
 
-    List<String> fromFields = IteratorUtils.toList(fromObject.fieldNames());
-    List<String> toFields = IteratorUtils.toList(toObject.fieldNames());
+    List<String> fromFields = new ArrayList<>(fromObject.propertyNames());
+    List<String> toFields = new ArrayList<>(toObject.propertyNames());
 
     Collection<String> sourceOnly = CollectionUtils.removeAll(fromFields, toFields);
     sourceOnly.forEach(field -> {

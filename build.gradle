@@ -226,6 +226,7 @@ project('action-logger') {
 
     // test
     testImplementation libs.spring.boot.starter.test
+    testImplementation libs.spring.boot.starter.webmvc.test
   }
 }
 
@@ -312,8 +313,24 @@ project('asquareroot') {
 
     // libs
     api libs.jena.arq
-    implementation libs.elasticsearch         // Apache 2.0, not exposed transitively
-    implementation libs.elasticsearch.test    // Apache 2.0, not exposed transitively
+    implementation(libs.elasticsearch) {       // Apache 2.0, not exposed transitively
+      exclude group: 'com.fasterxml.jackson.core'
+      exclude group: 'com.fasterxml.jackson.dataformat'
+    }
+    implementation(libs.elasticsearch.test) {  // Apache 2.0, not exposed transitively
+      exclude group: 'com.fasterxml.jackson.core'
+      exclude group: 'com.fasterxml.jackson.dataformat'
+    }
+
+    // Elasticsearch 7.5.2 x-content runs on Jackson 2, but the main line is Jackson 3 (tools.jackson),
+    // so spring-boot-starter-json no longer supplies com.fasterxml.jackson.core.
+    // ES's own 2.8.11 is excluded above; put the current Jackson 2 back or XContentType fails with
+    // NoClassDefFoundError: com/fasterxml/jackson/core/JsonFactory.
+    // Reached indirectly: EmbeddedElasticsearch7Store -> IndexRequest.source(..) -> XContentType.JSON
+    implementation libs.jackson2.core
+    implementation libs.jackson2.dataformat.cbor
+    implementation libs.jackson2.dataformat.smile
+    implementation libs.jackson2.dataformat.yaml
 
     // spring
     api libs.spring.boot.starter
@@ -493,6 +510,9 @@ project('elastic-service') {
 
    // spring
     api libs.spring.boot.starter.json
+    // only RestTemplate is used here: starter-restclient keeps spring-web without
+    // dragging in Tomcat and Spring WebMVC
+    api libs.spring.boot.starter.restclient
     api libs.httpclient5
   }
 }
@@ -659,7 +679,6 @@ project('triplestore-tdb-pool') {
 
     // libs
     api libs.commons.pool2
-    api libs.cglib
 
     // TESTING
     testImplementation libs.spring.boot.starter.test

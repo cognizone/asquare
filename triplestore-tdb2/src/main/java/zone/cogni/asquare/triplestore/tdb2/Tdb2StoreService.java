@@ -7,7 +7,6 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionDatasetBuilder;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.query.ResultSet;
@@ -128,7 +127,7 @@ public class Tdb2StoreService implements RdfStoreService, Closeable {
                                         bindings,
                                         query);
     return transaction.read(() -> {
-      try (QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(model).substitution(bindings).build()) {
         ResultSet resultSet = queryExecution.execSelect();
         return resultSetHandler.handle(resultSet);
       }
@@ -142,9 +141,7 @@ public class Tdb2StoreService implements RdfStoreService, Closeable {
   @Override
   public boolean executeAskQuery(Query query, QuerySolutionMap bindings) {
     return transaction.read(() -> {
-      QueryExecutionDatasetBuilder askBuilder = QueryExecutionDatasetBuilder.create().query(query).model(model);
-      if (!bindings.asMap().isEmpty()) askBuilder.substitution(bindings);
-      try (QueryExecution queryExecution = askBuilder.build()) {
+      try (QueryExecution queryExecution = QueryExecutionDatasetBuilder.create().query(query).model(model).substitution(bindings).build()) {
         return queryExecution.execAsk();
       }
       catch (RuntimeException e) {

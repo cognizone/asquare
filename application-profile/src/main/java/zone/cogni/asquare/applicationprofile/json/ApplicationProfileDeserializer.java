@@ -1,10 +1,10 @@
 package zone.cogni.asquare.applicationprofile.json;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
@@ -39,7 +39,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,8 +69,9 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   }
 
   private static JsonNode asJsonNode(String json) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+    JsonMapper objectMapper = JsonMapper.builder()
+            .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+            .build();
 
     return Try.of(() -> objectMapper.readTree(json))
               .getOrElseThrow(e -> new RuntimeException("Json parsing failed.", e));
@@ -145,7 +145,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   private ApplicationProfileDef getBasicApplicationProfile(JsonNode applicationProfileNode) {
     ApplicationProfileBuilder applicationProfileBuilder = new ApplicationProfileBuilder();
 
-    applicationProfileNode.fields().forEachRemaining(entry -> {
+    applicationProfileNode.properties().forEach(entry -> {
       String field = entry.getKey();
       JsonNode node = entry.getValue();
 
@@ -207,7 +207,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   }
 
   private void fillType(TypeBuilder typeBuilder, JsonNode typeNode) {
-    typeNode.fields().forEachRemaining(entry -> {
+    typeNode.properties().forEach(entry -> {
       String field = entry.getKey();
       JsonNode node = entry.getValue();
 
@@ -232,9 +232,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   private List<PropertyValue> getPropertyValueList(JsonNode node) {
     List<PropertyValue> list = new ArrayList<>();
 
-    Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-    while (fields.hasNext()) {
-      Map.Entry<String, JsonNode> next = fields.next();
+    for (Map.Entry<String, JsonNode> next : node.properties()) {
       String field = next.getKey();
       JsonNode value = next.getValue();
 
@@ -244,7 +242,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   }
 
   private void fillTypeRules(TypeBuilder typeBuilder, JsonNode constraintsNode) {
-    constraintsNode.fields().forEachRemaining(entry -> {
+    constraintsNode.properties().forEach(entry -> {
       String field = entry.getKey();
       JsonNode node = entry.getValue();
 
@@ -279,7 +277,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
         Rule rule = createInstance(type);
 
         ObjectNode objectNode = (ObjectNode) ruleNode;
-        objectNode.fields().forEachRemaining(pair -> {
+        objectNode.properties().forEach(pair -> {
           String pairField = pair.getKey();
           JsonNode pairNode = pair.getValue();
 
@@ -320,7 +318,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
         List<Object> rules = new ArrayList<>();
 
         ObjectNode objectNode = (ObjectNode) ruleNode;
-        objectNode.fields().forEachRemaining(pair -> {
+        objectNode.properties().forEach(pair -> {
           String pairField = pair.getKey();
           JsonNode pairNode = pair.getValue();
 
@@ -340,7 +338,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
         Rule rule = createInstance(type);
 
         ObjectNode objectNode = (ObjectNode) ruleNode;
-        objectNode.fields().forEachRemaining(pair -> {
+        objectNode.properties().forEach(pair -> {
           String pairField = pair.getKey();
           JsonNode pairNode = pair.getValue();
 
@@ -459,7 +457,7 @@ public class ApplicationProfileDeserializer implements Function<InputStreamSourc
   }
 
   private void fillAttribute(AttributeBuilder attributeBuilder, JsonNode attributeNode) {
-    attributeNode.fields().forEachRemaining(entry -> {
+    attributeNode.properties().forEach(entry -> {
       String field = entry.getKey();
       JsonNode node = entry.getValue();
 

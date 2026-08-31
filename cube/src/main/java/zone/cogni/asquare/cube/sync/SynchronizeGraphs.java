@@ -1,6 +1,6 @@
 package zone.cogni.asquare.cube.sync;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -174,7 +174,7 @@ public class SynchronizeGraphs {
       if (rows.size() > 1) throw new RuntimeException("found to many rows: \n" + rows);
 
       if (rows.isEmpty()) return null;
-      Map<String, RDFNode> row = rows.get(0);
+      Map<String, RDFNode> row = rows.getFirst();
 
       if (row.size() != 1) throw new RuntimeException("found to many columns: \n" + row);
       RDFNode value = row.values().stream().findFirst().get();

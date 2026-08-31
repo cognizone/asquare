@@ -1,8 +1,9 @@
 package zone.cogni.asquare.cube.jsondiff;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -117,7 +118,7 @@ public class JsonDiffTest {
 
     // then
     assertThat(differences).hasSize(1);
-    assertThat(differences.get(0).getType()).isEqualTo(Difference.Type.different_boolean_values);
+    assertThat(differences.getFirst().getType()).isEqualTo(Difference.Type.different_boolean_values);
   }
 
   @Test
@@ -131,7 +132,7 @@ public class JsonDiffTest {
 
     // then
     assertThat(differences).hasSize(1);
-    assertThat(differences.get(0).getType()).isEqualTo(Difference.Type.different_decimal_values);
+    assertThat(differences.getFirst().getType()).isEqualTo(Difference.Type.different_decimal_values);
   }
 
 
@@ -148,7 +149,7 @@ public class JsonDiffTest {
 
     // then
     assertThat(differences).hasSize(1);
-    assertThat(differences.get(0).getType()).isEqualTo(Difference.Type.different_integer_values);
+    assertThat(differences.getFirst().getType()).isEqualTo(Difference.Type.different_integer_values);
   }
 
   private JsonDiffCalculator getDefaultJsonDiffCalculator() {
@@ -170,8 +171,7 @@ public class JsonDiffTest {
   private Supplier<JsonNode> getJsonNodeSupplier(String fromPath) {
     return () -> {
       try {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+        ObjectMapper objectMapper = JsonMapper.builder().enable(JsonReadFeature.ALLOW_JAVA_COMMENTS).build();
         return objectMapper.readTree(new ClassPathResource(fromPath).getInputStream());
       }
       catch (IOException e) {

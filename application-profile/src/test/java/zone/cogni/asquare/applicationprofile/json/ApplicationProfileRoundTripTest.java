@@ -1,7 +1,5 @@
 package zone.cogni.asquare.applicationprofile.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import zone.cogni.asquare.applicationprofile.model.basic.ApplicationProfile;
 
 import java.io.IOException;
