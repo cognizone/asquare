@@ -8,11 +8,11 @@ commonsIoVersion = '2.21.0'
 commonsPool2Version = "2.13.1"
 elasticsearchVersion = '7.5.2'
 guavaVersion = '33.5.0-jre'
-httpclient5Version = "5.6"
+httpclient5Version = "5.4.3"
 httpComponentsVersion = '4.5.14'
-jacksonVersion = "2.21.1"
+jacksonVersion = "2.21.5"
 jakartaInjectVersion = "2.0.1"
-jenaVersion = '6.0.0'
+jenaVersion = '6.2.0'
 jodaTimeVersion = "2.14.0"
 jsonldJavaVersion= '0.13.6'
 junitVersion = "5.14.3"
@@ -20,8 +20,8 @@ junitPlatformVersion = "1.14.3"
 lombokVersion = "1.18.42"
 ognlVersion = "3.3.4"
 snakeyaml = "2.6"
-springBootVersion = '3.5.11'
-springSecurityVersion = '6.5.8'
+springBootVersion = '3.5.16'
+springSecurityVersion = '6.5.11'
 vavrVersion = "0.10.7"
 
 [libraries]
@@ -57,6 +57,7 @@ ognl = { module = "ognl:ognl", version.ref = "ognlVersion" }
 poi = { module = "org.apache.poi:poi", version.ref = "apachePoiVersion" }
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoiVersion" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jacksonVersion" }
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
 spring-boot-starter-aop = { module = "org.springframework.boot:spring-boot-starter-aop", version.ref = "springBootVersion" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBootVersion" }

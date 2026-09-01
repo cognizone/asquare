@@ -49,6 +49,8 @@ subprojects {
     compileOnly libs.lombok
     annotationProcessor libs.lombok
 
+    api platform(libs.jackson.bom)
+
     testImplementation platform(libs.junit.bom)
     testImplementation libs.junit.api
     testRuntimeOnly libs.junit.engine
