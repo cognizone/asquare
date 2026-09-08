@@ -16,10 +16,11 @@ scmVersion {
   tag {
     prefix = "v"
     versionSeparator = ""
-    branchPrefix = [
-            'release/.*': 'release-v',
-            'hotfix/.*' : 'hotfix-v'
-    ]
+    // no branchPrefix, we use v{x.y.z}[-hotfixVesion] without prefix now
+//    branchPrefix = [
+//            'release/.*': 'release-v',
+//            'hotfix/.*' : 'hotfix-v'
+//    ]
   }
   nextVersion {
     suffix = "SNAPSHOT"
