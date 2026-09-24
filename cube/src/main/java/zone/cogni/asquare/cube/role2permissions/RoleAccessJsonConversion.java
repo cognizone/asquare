@@ -7,9 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.FactorGrantedAuthority;
 import zone.cogni.asquare.cube.util.TimingUtil;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,6 +45,9 @@ public class RoleAccessJsonConversion {
   @Nonnull
   private Set<String> getRoles(Authentication authentication) {
     return authentication.getAuthorities().stream()
+                         // Spring Security 7 authentication factors (FACTOR_PASSWORD, FACTOR_OTT, ...) are an auth-assurance
+                         // signal, not application roles - exclude them here so they never reach the role lookup.
+                         .filter(authority -> !(authority instanceof FactorGrantedAuthority))
                          .map(GrantedAuthority::getAuthority)
                          .map(this::authorityToRole)
                          .collect(Collectors.toSet());
@@ -59,7 +64,14 @@ public class RoleAccessJsonConversion {
 
 
     Set<String> permissions = roles.stream()
-                                   .map(role -> roleAccessRoot.getRoles().get(role))
+                                   .map(role -> {
+                                     Role found = roleAccessRoot.getRoles().get(role);
+                                     // defensive backstop: anything reaching here that isn't a declared role is skipped
+                                     // (factors are already excluded in getRoles) - logged so a real role typo stays visible.
+                                     if (found == null) log.warn("Ignoring '{}' - not a declared role in the role-access config", role);
+                                     return found;
+                                   })
+                                   .filter(Objects::nonNull)
                                    .map(Role::getRules)
                                    .flatMap(Collection::stream)
                                    .collect(Collectors.toSet());
