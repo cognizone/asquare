@@ -13,6 +13,7 @@ import zone.cogni.asquare.cube.util.TimingUtil;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class RoleAccessJsonConversion {
     return authentication.getAuthorities().stream()
                          // Spring Security 7 authentication factors (FACTOR_PASSWORD, FACTOR_OTT, ...) are an auth-assurance
                          // signal, not application roles - exclude them here so they never reach the role lookup.
-                         .filter(authority -> !(authority instanceof FactorGrantedAuthority))
+                         .filter(Predicate.not(FactorGrantedAuthority.class::isInstance))
                          .map(GrantedAuthority::getAuthority)
                          .map(this::authorityToRole)
                          .collect(Collectors.toSet());
@@ -64,13 +65,7 @@ public class RoleAccessJsonConversion {
 
 
     Set<String> permissions = roles.stream()
-                                   .map(role -> {
-                                     Role found = roleAccessRoot.getRoles().get(role);
-                                     // defensive backstop: anything reaching here that isn't a declared role is skipped
-                                     // (factors are already excluded in getRoles) - logged so a real role typo stays visible.
-                                     if (found == null) log.warn("Ignoring '{}' - not a declared role in the role-access config", role);
-                                     return found;
-                                   })
+                                   .map(this::getDeclaredRole)
                                    .filter(Objects::nonNull)
                                    .map(Role::getRules)
                                    .flatMap(Collection::stream)
@@ -78,5 +73,13 @@ public class RoleAccessJsonConversion {
 
     if (log.isDebugEnabled()) log.debug("calculated permissions in {} ms", TimingUtil.millisSinceStart(start, 3));
     return permissions;
+  }
+
+  // defensive backstop: anything reaching here that isn't a declared role is skipped
+  // (factors are already excluded in getRoles) - logged so a real role typo stays visible.
+  private Role getDeclaredRole(String role) {
+    Role found = roleAccessRoot.getRoles().get(role);
+    if (found == null) log.warn("Ignoring '{}' - not a declared role in the role-access config", role);
+    return found;
   }
 }
